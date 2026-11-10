@@ -338,7 +338,9 @@ shortcuts = ('<div class="catalogue-links"><a href="?pathway=LAUNCH" data-shortc
              '<a href="?style=full-lundy" data-shortcut="full-lundy">Browse full Lundy Loop versions</a></div>')
 strip = S.render_start_strip('Science', blurb, start_hrefs) + shortcuts
 current_html, r1 = S.render_current(D, 'Science', href_of, pack_href, {'Science': 'Science'}, DATA['styles'])
-packs_html, r2 = S.render_packs(cards, D['reference'], href_of, 'Science')
+# A pack ZIP held out of the publication (um-4 (a)) is linked at its archive download, like any other archived member.
+archived_link = lambda local: archive_href(str((PACKS.parent / local).relative_to(ROOT))) or local
+packs_html, r2 = S.render_packs([dict(c, links=[(label, archived_link(local)) for label, local in c['links']]) for c in cards], D['reference'], href_of, 'Science')
 def recorded_week(path: str):
     """The route's own bound week from SCIENCE_WEEK_BINDINGS (a record, never a path); None when
     the record binds none or more than one."""
