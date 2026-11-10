@@ -3029,12 +3029,12 @@ CATALOGUE_PINS = {
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L1/VOC_LAUNCH_A2_W08_L1.html": "f36d7fb4e5819639767cd627a1779709d3d7f00152c668d39c6462e44788065a",
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L2/VOC_LAUNCH_A2_W08_L2.html": "a75a50b647563adb992d86017284ba4999be3d2f3452661f57a6a27b182e0dc8",
         "kits/class_tools/Catch_up_Tracker.html": "6657a40b5021004bce00dfa6a06f727e11b8c32ee3609f6c760e204ff49a356f",
-        "kits/class_tools/Class_names.html": "bc14253681a283f670150b41dba75460b24fbba38302556185e45469cb9ecad3",
+        "kits/class_tools/Class_names.html": "124e7275e9143650b4eac843d03103a091c0fc2d1fc1adfab1b14193511db859",
         "kits/class_tools/My_tools.html": "8dfd0bd20b21aae64dec539b4f8d9d4bbfd88bc460fec91fe3e5c8163319598f",
         "kits/class_tools/Practical_log.html": "56cb7d7a6f847cec2ab69700137501589dd32710650ea2c6e9b5cfbab17911fd",
         "kits/class_tools/Requests.html": "c6f34336c15a5692ff6186bb2d0c26090b0c3593f8556496837ec1a437cb4f82",
         "kits/class_tools/Missed_last_week.html": "0c26efbd7d0e9a08a2b967a8029233b857e152e7a266a40826f2574bf2477035",
-        "kits/class_tools/Quick_capture.html": "6c983723c48827faa35486e9d1e52d101e758744949c578151dd9698271a1805",
+        "kits/class_tools/Quick_capture.html": "4292f57cebfd1607a5e12f59178caeeaa01a3f46ddc907e110490c449cb80d66",
         "kits/class_tools/Lesson_extras.html": "fee824e5858ae9b5bd56b9446fa1f340bce05ba6ae9f078b985beaa04937ae4a",
         "kits/class_tools/Retrieval_builder.html": "f178b9ab5008d00076c4db12556433d1094e935d927dea5eed3d336a289c9d87",
         "kits/class_tools/Coverage_map.html": "1fe6ee4e141fb5c9dbb4d080abd94632a3d01276076b9d6ab231ca713ecbd886",
@@ -3705,7 +3705,8 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-09 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 332c7c19, the merge of Site #627 (the education Pages deploy step waits 30 minutes instead of the default 10, after three green builds timed out at the upload) on top of Site #625. The digest is cut from the caller with its two 33b5bf93 lines (uses@ and builder_ref) replaced by 332c7c19 and nothing else changed.
 # Re-cut 2026-11-10 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 511cdc84, the merge of Site #628 (admission of the staff pages from Lessons #839: the grouped tools page, the tracker buttons, quick capture and lesson extras).
 # Re-cut 2026-11-10 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 5c7fa466, the merge of Site #629 (admission of the round-two staff pages from Lessons #841: tracker, tools page, class names and missed-last-week take new built digests; retrieval builder and coverage map arrive).
-    "lessons": "c918a7cb6f18d543c135530c2719c8f88d33f4712b5c8781f2b45559eb50aff2",
+# Re-cut 2026-11-10 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 9338868c, the merge of Site #630 (admission of quick capture v2 and the class names note carried by this same change).
+    "lessons": "d4a899acea3f5bacd968cf6795d2b309e15e20c5ff0f6742263ef10626bcff54",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
