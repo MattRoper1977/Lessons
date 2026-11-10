@@ -3,7 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Catch-up and Assessment Tracker</title>
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Catch-up tracker</title>
 <style>
 :root{
   --bg:#f7f7f4;--card:#fff;--ink:#14171a;--muted:#3d4650;--line:#c9ced3;
@@ -35,7 +37,7 @@ main{max-width:1180px;margin:0 auto;padding:16px}
 button,select,textarea,input,.btnlink{font:inherit;color:inherit}
 button,select,.btnlink{min-height:44px;padding:6px 14px;border:2px solid var(--line);border-radius:10px;background:var(--card);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
 button:hover,.btnlink:hover{border-color:var(--ink)}
-.smbtn{min-height:40px;padding:4px 10px;font-size:17px;border-radius:8px}
+.smbtn{min-height:48px;padding:4px 10px;font-size:17px;border-radius:8px}
 .xsbtn{min-height:32px;padding:2px 8px;font-size:15px;border-radius:6px;border-width:1px}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 .tabs button[aria-pressed="true"],.pillbar button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
@@ -124,6 +126,20 @@ footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);f
   tr{display:table-row!important;border:1px solid #000!important;page-break-inside:avoid}
   th,td{display:table-cell!important;border:1px solid #000!important;padding:6px 8px!important;color:#000!important;background:#fff!important}
 }
+
+/* Round-two touch and reading layout. */
+:root{--build:#21465f;--grow:#174d3d;--launch:#50336f;--accent:#163e70;--ok:#174d2b;--warn:#703600;--focus:#073d83}
+@media(prefers-color-scheme:dark){:root{--build:#b9dcf5;--grow:#a8e4ce;--launch:#e0cafa;--accent:#bedaff;--ok:#a9e9bf;--warn:#ffdaaa;--focus:#bedaff}}
+html,body{overflow-wrap:anywhere}main,section,div,header,nav,.row>*{min-width:0}button,select,input,.btnlink,a.btn,label.btn,summary{min-height:48px;min-width:48px;max-width:100%;font-size:17px}button,.btnlink,a.btn{white-space:normal;overflow-wrap:anywhere}.xsbtn,.badge,.acct-pill,.meta,.field label,.tile span,.adapt-row label,table,.note{font-size:17px}.xsbtn,.toast button,.noteinput,.textin{min-height:48px}.textin{min-width:0;width:100%}label:has(input[type=checkbox]){min-height:48px;display:inline-flex;align-items:center}input[type=checkbox]{flex:none;width:26px;height:26px;min-width:26px;min-height:26px}input[type=file]{width:100%}a{color:var(--accent,#163e70)}a:not(.btnlink):not(.btn){display:inline-flex;align-items:center;min-height:48px}button:hover{filter:none}:focus-visible{outline:3px solid var(--focus);outline-offset:3px}details>summary{cursor:pointer;font-weight:700;padding:10px 12px;border:2px solid var(--line);border-radius:10px;width:fit-content}details>.row{padding-top:12px}.today-strip{border:2px solid var(--ink);border-radius:12px;padding:14px;margin-bottom:16px;background:var(--card,var(--soft))}.today-strip h2{margin:0 0 4px;font-size:23px}.today-item{border-top:1px solid var(--line);padding:10px 0}.today-item p{margin:4px 0}.adapt-chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.adapt-chip{font-size:17px;border:1px solid currentColor;border-radius:8px;padding:4px 8px;background:var(--card,var(--bg));color:var(--ink)}.pupil-label{font-size:18px}.pupil-label strong{font-size:21px}.profilebar{margin:0 0 12px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}.private-note{font-size:17px;color:var(--muted,var(--ink))}.chipwrap:has(.adapt-chips){align-items:flex-start;max-width:100%}.adapt-chips{width:100%}button:disabled{cursor:default}.tick{min-height:48px}a.btn{color:white;background:#163e70}.card.done{opacity:1}.card.done::before{content:"✓ Class caught up";display:block;font-weight:700}.ok{color:var(--ok)}.warn{color:var(--warn)}
+.just-done{opacity:1!important}.missed-page button:not(.ghost){background:#163e70;color:#fff}.missed-page .ghost{color:var(--accent)}
+@media(max-width:650px){.textin{width:100%}.lesson,.panel{padding:12px}header{padding:12px}.modal{padding:12px}.row label{max-width:100%}select{width:100%}.qr-stage svg{width:100%;height:auto}.toast{width:calc(100% - 24px);flex-wrap:wrap}.noteinput{min-width:0}#table,#atable{overflow:visible}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@media print{.private-tag,.adapt-chips,.noprint,#setup{display:none!important}a{color:#000}.pupil-label{font-size:13pt}}
+
+#catchupPreview[hidden]{display:none!important}#catchupPreview{padding:16px;max-width:1180px;margin:auto}#catchupPages{display:grid;gap:16px}.catch-sheet{display:flow-root;background:white;color:#101820;padding:12px;border:2px solid #4b5661;overflow-wrap:anywhere}.catch-sheet h1{font:700 28px/1.2 system-ui,sans-serif;margin:6px 0}.catch-sheet h2{font-size:19px;margin:10px 0 4px}.catch-sheet p{margin:4px 0}.sheet-adapt{padding-left:22px;margin:4px 0}.sheet-lessons{display:grid;grid-template-columns:repeat(var(--sheet-cols,2),minmax(0,1fr));gap:10px}.sheet-lesson{border:1px solid #34404c;padding:8px;break-inside:avoid}.sheet-lesson h3{font-size:18px;margin:0 0 4px}.sheet-lesson code{font:700 17px/1.3 system-ui,sans-serif}.sheet-link{display:flex;gap:8px;align-items:flex-start}.sheet-link svg{width:64px;height:64px;flex:none;background:white}.sheet-link a{font-size:17px;color:#101820;min-height:48px;word-break:normal}.sheet-check{font-size:17px}.private-stamp{font-weight:700;border:2px solid #101820;padding:4px 8px;display:inline-block}.sheet-inner{display:flow-root;font:17px/1.3 system-ui,sans-serif}.sheet-meta{font-size:17px}.sheet-tools{padding-bottom:12px}.sheet-tools h2{margin:0}.sheet-dense{font-weight:700}
+@media(max-width:650px){.sheet-lessons{grid-template-columns:1fr}.sheet-link{flex-wrap:wrap}}
+@page{size:A4;margin:10mm}
+@media print{body.printing-catchup>*:not(#catchupPreview){display:none!important}body.printing-catchup #catchupPreview{display:block!important;margin:0;padding:0;max-width:none}#catchupPreview .sheet-tools{display:none!important}#catchupPages{display:block}.catch-sheet{width:190mm;height:276mm;border:0;padding:0;margin:0;break-after:page;page-break-after:always;overflow:visible}.catch-sheet:last-child{break-after:auto;page-break-after:auto}.sheet-inner{transform-origin:top left;transform:none;zoom:var(--sheet-scale,1);width:190mm}.sheet-lessons{grid-template-columns:repeat(var(--sheet-cols,2),minmax(0,1fr))}.sheet-link a{display:block;min-width:0;min-height:0}.sheet-link svg{width:64px;height:64px}.catch-sheet h1{font-size:28px}.catch-sheet h2{font-size:19px}.sheet-lesson{break-inside:avoid}.sheet-private-adapt{display:block!important}body:not(.printing-catchup) #catchupPreview{display:none!important}body{color:#000}body:not(.printing-catchup) .pupil-label{color:#000}}
 </style>
 </head>
 <body>
@@ -140,8 +156,11 @@ footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);f
   </nav>
 </header>
 <main>
+  <div class="profilebar noprint"><a class="btnlink" href="My_tools.html">My tools</a><label>Show: <select id="showTags"><option value="initials">Initials</option><option value="first">First name</option><option value="number">Number</option></select></label><span class="private-note">Labels and help notes stay on this device.</span></div>
+  <section id="todayStrip" class="today-strip noprint" aria-labelledby="todayTitle"></section>
+  <div class="row noprint"><button id="printAllOwed" type="button">Print all owed</button></div>
   <section id="today">
-    <div class="row noprint">
+    <details class="noprint"><summary>Filter</summary><div class="row">
       <label>Week <select id="week"></select></label>
       <label>Day <select id="day"></select></label>
       <button type="button" class="smbtn" id="jumpToday">📅 Today</button>
@@ -152,6 +171,7 @@ footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);f
         <button type="button" class="smbtn" data-path="LAUNCH" aria-pressed="false">LAUNCH</button>
       </div>
     </div>
+    </details>
     <div class="panel noprint" id="dayAbsentBox" style="padding:10px 14px">
       <div class="row" style="margin:0;justify-content:space-between">
         <strong>Absent all day (1-tap mark across every lesson today):</strong>
@@ -164,7 +184,7 @@ footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);f
   </section>
 
   <section id="list" hidden>
-    <div class="row noprint">
+    <details class="noprint"><summary>Filter</summary><div class="row">
       <label>Show <select id="filter">
         <option value="open">Still open (needs, partly, more)</option>
         <option value="missed">Needs catch-up (not started)</option>
@@ -177,8 +197,9 @@ footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);f
         <option value="">All groups</option><option value="BUILD">BUILD</option><option value="GROW">GROW</option><option value="LAUNCH">LAUNCH</option>
       </select></label>
       <label>Pupil <select id="pfilter"><option value="">Everyone</option></select></label>
+    </div></details><div class="row noprint">
       <button type="button" id="print">🖨️ Print list / QR sheet</button>
-      <button type="button" id="printLabels">🏷️ Print a label for each sheet</button>
+      <button type="button" id="printLabels">Print labels (number only)</button>
       <button type="button" id="csv">💾 Save CSV</button>
       <button type="button" id="copyListTsv">📋 Copy for Sheets</button>
     </div>
@@ -188,7 +209,7 @@ footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);f
   </section>
 
   <section id="assess" hidden>
-    <div class="row noprint">
+    <details class="noprint"><summary>Filter</summary><div class="row">
       <label>Pathway <select id="apath">
         <option value="">All pathways</option><option value="BUILD">BUILD</option><option value="GROW">GROW</option><option value="LAUNCH">LAUNCH</option>
       </select></label>
@@ -196,6 +217,7 @@ footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);f
       <label>Show <select id="aready">
         <option value="all">Everyone</option><option value="ready">Ready</option><option value="hold">On hold (catch-up open)</option><option value="passed">Assessment done</option>
       </select></label>
+    </div></details><div class="row noprint">
       <button type="button" id="assessMatrixBtn" aria-pressed="false">📊 Matrix grid</button>
       <button type="button" id="printAssess">🖨️ Print</button>
       <button type="button" id="csvAssess">💾 Save CSV</button>
@@ -209,7 +231,7 @@ footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);f
   <section id="setup" hidden>
     <div class="panel">
       <h2 style="margin-top:0">Pupils in each group</h2>
-      <p class="note">One pupil per line. Use initials or codes if you prefer. If you fix a spelling or move a pupil between groups, their marks move with them automatically.</p>
+      <p class="note">One pupil per line: Pupil 1, Pupil 2 and so on. Set private labels and help notes in Class names. Group moves keep the saved marks.</p>
       <label for="pBUILD"><span class="tag BUILD">BUILD</span> group</label><textarea id="pBUILD"></textarea>
       <label for="pGROW"><span class="tag GROW">GROW</span> group</label><textarea id="pGROW"></textarea>
       <label for="pLAUNCH"><span class="tag LAUNCH">LAUNCH</span> group</label><textarea id="pLAUNCH"></textarea>
@@ -217,7 +239,7 @@ footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);f
     </div>
     <div class="panel">
       <h2 style="margin-top:0">Adaptations for each pupil (private)</h2>
-      <p class="note">Tick what helps each pupil. It is printed on their catch-up label with a short "how to" for each one. Saved on this device only, like everything else here.</p>
+      <p class="note">Help from the shared pupil profile is shown first. These older choices still work on this device. Private sheets include help; number-only copies leave it out.</p>
       <div id="adaptList"></div>
     </div>
     <div class="panel">
@@ -238,7 +260,7 @@ footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);f
     </div>
     <div class="panel">
       <h2 style="margin-top:0">Back up or move to another computer</h2>
-      <p class="note">Backups are automatically dated and hold pupils, marks, notes, pinned links and assessment ticks.</p>
+      <p class="note">Backups use Pupil N and keep marks, cleaned notes, links and assessment ticks. Private labels and help notes stay on this device.</p>
       <div class="row">
         <button type="button" id="backup">💾 Save dated backup (.json)</button>
         <label class="row" style="margin:0">Load backup <input type="file" id="restore" accept=".json"></label>
@@ -276,10 +298,53 @@ footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);f
   <button type="button" id="toastCloseBtn" aria-label="Dismiss">✕</button>
 </div>
 
-<footer>Made by Matt · Works offline in any browser · Everything is saved in this browser on this computer.</footer>
+<footer>Works offline. Saved on this device. Shared files and prints use Pupil N.</footer>
+<section id="catchupPreview" hidden aria-labelledby="sheetPreviewTitle"><div class="sheet-tools noprint"><h2 id="sheetPreviewTitle" tabindex="-1">Catch-up sheets</h2><p id="sheetHelp">Private: keep this copy. Initials and help notes are on the private sheet. Use number only for copies that leave the room.</p><label>Copy type <select id="sheetMode"><option value="private">Private: initials and help notes</option><option value="number">Number only (Pupil N, no adaptations)</option></select></label><div class="row"><button id="printAndGo" type="button">Print and go</button><button id="closeSheets" type="button">Back to tracker</button></div><p id="sheetFit" role="status"></p></div><div id="catchupPages"></div></section>
 <script>
 (function(){
 "use strict";
+// Shared on-device pupil profile. Keep this block identical on both pages.
+function pupilKey(){try{var v=JSON.parse(localStorage.getItem("mbm_pupil_key_v1")||"{}");return v&&typeof v==="object"?v:{};}catch(e){return {};}}
+function pupilProfile(){try{var v=JSON.parse(localStorage.getItem("mbm_pupil_profile_v1")||"{}");return v&&v.version===1?v:{version:1,show:"initials",pupils:{}};}catch(e){return {version:1,show:"initials",pupils:{}};}}
+function pupilTag(n,form){
+ var key=pupilKey(),mode=form||pupilProfile().show||"initials",label=String(key[n]||"").trim();
+ if(!label||mode==="number")return "P"+n;
+ var words=function(s){return String(s).trim().split(/\s+/).filter(Boolean);};
+ if(mode==="first")return words(label)[0];
+ var base=function(s){return words(s).map(function(w){return Array.from(w)[0];}).join("").toLocaleUpperCase("en-GB").slice(0,3);};
+ var b=base(label),peers=Object.keys(key).filter(function(k){return String(key[k]||"").trim()&&base(key[k])===b;}),extra=0;
+ var tag=function(k,x){var w=words(key[k]),last=Array.from(w[w.length-1].toLocaleUpperCase("en-GB"));return b+last.slice(1,1+x).join("");};
+ var max=Math.max.apply(null,peers.map(function(k){var w=words(key[k]);return Array.from(w[w.length-1]).length;}));
+ while(extra<max&&peers.some(function(k){return k!==String(n)&&tag(k,extra)===tag(String(n),extra);}))extra++;
+ var t=tag(String(n),extra);
+ if(peers.some(function(k){return k!==String(n)&&tag(k,extra)===t;}))t+="·"+n;
+ return t;
+}
+function pupilAdapt(n){var p=pupilProfile(),r=p.pupils&&p.pupils[n];return r&&Array.isArray(r.adapt)?r.adapt.filter(function(s){return typeof s==="string"&&s.trim();}).slice(0,4):[];}
+function pupilNumber(value){var m=String(value).match(/^(?:Pupil\s*|P)?(\d+)$/i);if(m)return +m[1];var key=pupilKey(),hit=Object.keys(key).find(function(k){return key[k]===value;});if(hit)return +hit;var all=typeof S!=="undefined"&&S&&S.pupils?[].concat(S.pupils.BUILD||[],S.pupils.GROW||[],S.pupils.LAUNCH||[]):[];return Math.max(1,all.indexOf(value)+1);}
+function publicPupil(value){return "Pupil "+pupilNumber(value);}
+function pupilCaption(value){var n=pupilNumber(value);return "Pupil "+n+" · "+pupilTag(n);}
+function pupilNode(value){var n=pupilNumber(value),s=document.createElement("span");s.className="pupil-label";s.title=s.getAttribute("aria-label")||pupilCaption(value);s.setAttribute("aria-label",pupilCaption(value));var a=document.createElement("span");a.textContent="Pupil "+n;s.appendChild(a);var b=document.createElement("strong");b.className="private-tag noprint";b.textContent=" · "+pupilTag(n);s.appendChild(b);return s;}
+function tagControl(node,value){node.title=pupilCaption(value);node.setAttribute("aria-label",pupilCaption(value));return node;}
+function setShow(mode){var p=pupilProfile();p.show=mode;try{localStorage.setItem("mbm_pupil_profile_v1",JSON.stringify(p));return true;}catch(e){return false;}}
+function lastSchoolDay(){var d=new Date();d.setHours(12,0,0,0);do{d.setDate(d.getDate()-1);}while(d.getDay()===0||d.getDay()===6);return d;}
+function markDate(r){return new Date(2026,10,2+(+r.w-1)*7+["Monday","Tuesday","Wednesday","Thursday","Friday"].indexOf(r.d),12);}
+function redacted(text){
+ var key=pupilKey(),pairs=[];
+ Object.keys(key).forEach(function(n){var s=String(key[n]||"").trim();if(s){pairs.push([s,"Pupil "+n]);s.split(/\s+/).forEach(function(w){if(w.length>1)pairs.push([w,"Pupil "+n]);});[pupilTag(n,"initials"),pupilTag(n,"first")].forEach(function(t){if(t.length>1)pairs.push([t,"Pupil "+n]);});}});
+ if(typeof S!=="undefined"&&S&&S.pupils)Object.keys(S.pupils).forEach(function(g){S.pupils[g].forEach(function(s){if(!/^(?:Pupil\s*|P)?\d+$/i.test(s))pairs.push([s,publicPupil(s)]);});});
+ pairs.sort(function(a,b){return b[0].length-a[0].length;});
+ var result=String(text==null?"":text),slots=[];
+ pairs.forEach(function(p){[p[0],encodeURIComponent(p[0])].forEach(function(label){
+  var lower=result.toLocaleLowerCase("en-GB"),needle=label.toLocaleLowerCase("en-GB"),from=0,at,parts=[];
+  while((at=lower.indexOf(needle,from))>=0){var end=at+needle.length,word=/[\p{L}\p{N}_]/u;
+   if((at>0&&word.test(result[at-1]))||(end<result.length&&word.test(result[end]))){parts.push(result.slice(from,end));from=end;continue;}
+   parts.push(result.slice(from,at),"\u0001"+slots.length+"\u0002");slots.push(p[1]);from=end;
+  }parts.push(result.slice(from));result=parts.join("");
+ });});
+ return result.replace(/\u0001(\d+)\u0002/g,function(_,n){return slots[+n];});
+}
+
 var KEY="mbm_catchup_tracker_v1";
 var WEEKS=[["1","02 Nov"],["2","09 Nov"],["3","16 Nov"],["4","23 Nov"],["5","30 Nov"],["6","07 Dec"],["7","14 Dec"]];
 var DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday"];
@@ -357,7 +422,7 @@ function load(){
 function save(cleanBackup){
  if(!cleanBackup)S.dirtySinceBackup=true;
  try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){alert("This browser would not save. Use Save backup file in Set up.");}
- syncBadge();
+ syncBadge();if(typeof renderTodayStrip==="function")renderTodayStrip();
 }
 function $(id){return document.getElementById(id);}
 function el(t,a,txt){var e=document.createElement(t);if(a)for(var k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
@@ -417,7 +482,7 @@ $("qrCustomInput").oninput=function(){lastQrRawUrl=$("qrCustomInput").value.trim
 $("qrPinSelect").onchange=function(){if($("qrPinSelect").value){lastQrRawUrl=$("qrPinSelect").value;$("qrCustomInput").value=lastQrRawUrl;renderQrStage();}};
 $("qrCopyUrlBtn").onclick=function(){
  var u=withAccount(lastQrRawUrl,!$("qrIncludeAcct").checked);
- if(u&&navigator.clipboard){navigator.clipboard.writeText(u);showToast("Link copied to clipboard");}
+ if(u&&navigator.clipboard){navigator.clipboard.writeText(redacted(u));showToast("Link copied to clipboard");}
 };
 $("openCustomQr").onclick=function(){
  syncPinDropdown();
@@ -511,7 +576,7 @@ function renderToday(){
   if(!relLessons.length)return;
   var markedAll=relLessons.every(function(l){return !!S.marks[mkey(w,d,l[0],name)];});
   if(markedAll)dayMissCount++;
-  var ab=el("button",{"class":"chip smbtn"+(markedAll?" st-missed":""),"aria-pressed":markedAll?"true":"false"},name+" ("+pgrp[0]+")");
+  var ab=el("button",{"class":"chip smbtn"+(markedAll?" st-missed":""),"aria-pressed":markedAll?"true":"false"},"");ab.appendChild(pupilNode(name));ab.appendChild(document.createTextNode(" ("+pgrp[0]+")"));tagControl(ab,name);
   ab.onclick=function(){
    var snap={};
    relLessons.forEach(function(l){
@@ -543,7 +608,7 @@ function renderToday(){
   pList.forEach(function(pp){
    var k=mkey(w,d,per,pp[0]),m=S.marks[k],st=m?m.state:"";if(m){c[st]++;n++;}
    var wrap=el("span",{"class":"chipwrap"});
-   var b=el("button",{"class":"chip"+(m?" st-"+st:""),"aria-pressed":m?"true":"false","aria-label":pp[0]+(m?", missed: "+LABEL[st]+". Press to remove the mark":", in. Press if missed")},pp[0]);
+   var b=el("button",{"class":"chip"+(m?" st-"+st:""),"aria-pressed":m?"true":"false","aria-label":pp[0]+(m?", missed: "+LABEL[st]+". Press to remove the mark":", in. Press if missed")},"");b.appendChild(pupilNode(pp[0]));tagControl(b,pp[0]);
    b.onclick=function(){
     if(S.marks[k]){
      var old=JSON.parse(JSON.stringify(S.marks[k]));
@@ -557,6 +622,7 @@ function renderToday(){
    if(m){var sb=el("button",{"class":"statebtn st-"+st,"aria-label":"Status for "+pp[0]+": "+LABEL[st]+". Press to move on"},LABEL[st]);
     sb.onclick=function(){var nx=next(st);S.marks[k].state=nx;S.marks[k].done=nx==="done";save();renderToday();};wrap.appendChild(sb);
     wrap.appendChild(labelBtn({pupil:pp[0],path:pp[1],subj:subj,w:w,d:d,per:per,lesson:les,url:linkFor(lkey(w,pp[1],subj,les))}));}
+   if(m&&st!=="done")addAdaptChips(wrap,pp[0]);
    chips.appendChild(wrap);
   });
   card.appendChild(el("p",{"class":"hint"},n?n+" missed: "+c.missed+" need catch-up · "+c.partial+" partly · "+c.more+" more needed · "+c.done+" done":"Everyone in (tap anyone who was not)"));
@@ -566,7 +632,7 @@ function renderToday(){
 
 function rows(){
  var out=[];for(var k in S.marks){var p=k.split("|"),m=S.marks[k];out.push({w:p[0],d:p[1],per:+p[2],pupil:p[3],path:m.path,subj:m.subj,lesson:m.lesson,state:m.state,note:m.note||"",k:k});}
- out.sort(function(a,b){return a.pupil.localeCompare(b.pupil)||a.w-b.w||DAYS.indexOf(a.d)-DAYS.indexOf(b.d)||a.per-b.per;});return out;
+ out.sort(function(a,b){return pupilNumber(a.pupil)-pupilNumber(b.pupil)||a.w-b.w||DAYS.indexOf(a.d)-DAYS.indexOf(b.d)||a.per-b.per;});return out;
 }
 function lessonPath(r){return r.path;}
 function todayIso(){return new Date().toISOString().slice(0,10);}
@@ -575,7 +641,7 @@ function getFilteredList(){
  var f=$("filter").value,lp=$("lpath").value,all=rows(),names={};
  all.forEach(function(r){if(!lp||r.path===lp)names[r.pupil]=1;});
  var sel=$("pfilter"),cur=sel.value;sel.textContent="";sel.appendChild(el("option",{value:""},"Everyone"));
- Object.keys(names).sort().forEach(function(n){sel.appendChild(el("option",{value:n},n));});
+ Object.keys(names).sort(function(a,b){return pupilNumber(a)-pupilNumber(b);}).forEach(function(n){sel.appendChild(tagControl(el("option",{value:n},pupilCaption(n)),n));});
  sel.value=names[cur]?cur:"";var pf=sel.value;
  return all.filter(function(r){
   if(lp&&r.path!==lp)return false;
@@ -590,24 +656,24 @@ var NOTE_PRESETS=["1:1 done","Printed","Sent home","Verbal check"];
 function renderList(){
  var box=$("table");box.textContent="";
  var list=getFilteredList(),f=$("filter").value,pf=$("pfilter").value,lp=$("lpath").value;
- $("printHeaderList").textContent=(pf?"Catch-up Passport: "+pf:"Catch-up Tracker List")+" · Printed "+todayIso()+(lp?" · Group: "+lp:"")+" · "+list.length+" item(s)";
- if(!list.length){box.appendChild(el("p",{"class":"panel"},f==="open"?"Nobody has open catch-up work right now.":"Nothing to show."));return;}
+ $("printHeaderList").textContent=(pf?"Catch-up Passport: "+publicPupil(pf):"Catch-up Tracker List")+" · Printed "+todayIso()+(lp?" · Group: "+lp:"")+" · "+list.length+" item(s)";
+ if(!list.length){box.appendChild(el("p",{"class":"panel"},f==="open"?"No catch-up work is owed. You are up to date.":"No lessons match. Try a different filter."));return;}
  var t=el("table"),hd=el("tr");
  ["Pupil","Missed","Catch-up sheet & QR","Note","Status"].forEach(function(x){hd.appendChild(el("th",{scope:"col"},x));});
  hd.appendChild(el("th",{scope:"col","class":"print-only"},"Sign / Date"));
  var th=el("thead");th.appendChild(hd);t.appendChild(th);var tb=el("tbody");
  list.forEach(function(r){
   var tr=el("tr",{"class":"st-"+r.state+(justDoneKeys[r.k]?" just-done":"")});
-  var tdp=el("td",{},r.pupil+" ("+r.path+")");tdp.appendChild(el("br"));tdp.appendChild(labelBtn(labelItem(r)));tr.appendChild(tdp);
+  var tdp=el("td");tdp.appendChild(pupilNode(r.pupil));tdp.appendChild(document.createTextNode(" ("+r.path+")"));if(r.state!=="done")addAdaptChips(tdp,r.pupil);tdp.appendChild(el("br"));tdp.appendChild(labelBtn(labelItem(r)));tr.appendChild(tdp);
   tr.appendChild(el("td",{},r.subj+", Wk "+r.w+" "+r.d+" P"+r.per));
   var td=el("td"),folder=r.path+" › w/b "+wb(r.w)+" › "+r.subj+" › Catch-up (Lesson "+r.lesson+")",lk=lkey(r.w,lessonPath(r),r.subj,r.lesson),u=linkFor(lk);
   td.appendChild(el("div",{},folder));
   td.appendChild(driveButtons(folder,lk,"Catch up "+r.subj+" "+r.path,renderList));
-  if(u){var qwrap=el("div",{"class":"print-only print-qr"}),qsvg=QR(u);if(qsvg){qwrap.appendChild(qsvg);td.appendChild(qwrap);}}
+  if(u){var qwrap=el("div",{"class":"print-only print-qr"}),qsvg=QR(redacted(u));if(qsvg){qwrap.appendChild(qsvg);td.appendChild(qwrap);}}
   tr.appendChild(td);
-  var tn=el("td"),inp=el("input",{"class":"noteinput noprint",type:"text","aria-label":"Note for "+r.pupil+", "+r.subj,placeholder:"e.g. Q1–3 done"}),pnote=el("div",{"class":"print-only"},r.note);
+  var tn=el("td"),inp=el("input",{"class":"noteinput noprint",type:"text","aria-label":"Note for "+r.pupil+", "+r.subj,placeholder:"e.g. Q1–3 done"}),pnote=el("div",{"class":"print-only"},redacted(r.note));
   inp.value=r.note;
-  inp.oninput=function(){S.marks[r.k].note=inp.value;pnote.textContent=inp.value;save();};
+  inp.oninput=function(){S.marks[r.k].note=inp.value;pnote.textContent=redacted(inp.value);save();};
   tn.appendChild(inp);tn.appendChild(pnote);
   var pchip=el("div",{"class":"chipwrap noprint",style:"margin-top:4px"});
   NOTE_PRESETS.forEach(function(pr){
@@ -662,7 +728,7 @@ function renderAssess(){
   var mth=el("thead");mth.appendChild(mhd);mt.appendChild(mth);var mtb=el("tbody");
   pOrder.forEach(function(pk){
    var row=pMap[pk],tr=el("tr");
-   var tp=el("td");tp.appendChild(el("span",{"class":"tag "+row.path},row.path));tp.appendChild(document.createTextNode(row.pupil));tr.appendChild(tp);
+   var tp=el("td");tp.appendChild(el("span",{"class":"tag "+row.path},row.path));tp.appendChild(pupilNode(row.pupil));tr.appendChild(tp);
    sCols.forEach(function(s){
     var r=row.cells[s];if(!r){tr.appendChild(el("td",{},"—"));return;}
     var statusTxt=r.am.passed?"✓ Passed":(r.ready?(r.open?"★ Ready ("+r.open+")":"✓ Ready"):"⏳ Hold ("+r.open+")");
@@ -679,7 +745,7 @@ function renderAssess(){
  var th=el("thead");th.appendChild(hd);t.appendChild(th);var tb=el("tbody");
  recs.forEach(function(r){
   var tr=el("tr",{"class":r.am.passed?"st-done":(r.ready?"":"st-more")});
-  tr.appendChild(el("td",{},r.pupil));
+  var pc=el("td");pc.appendChild(pupilNode(r.pupil));tr.appendChild(pc);
   var ts=el("td");ts.appendChild(el("span",{"class":"tag "+r.path},r.path));ts.appendChild(document.createTextNode(r.subj));tr.appendChild(ts);
   var tot=r.open+r.c.done;
   tr.appendChild(el("td",{},tot===0?"Missed nothing":(r.open===0?"All "+r.c.done+" caught up":r.open+" still open ("+r.c.missed+" not started · "+r.c.partial+" partly · "+r.c.more+" more needed)")));
@@ -723,7 +789,7 @@ function renderAdapt(){
  if(!all.length){box.appendChild(el("p",{"class":"note"},"Add pupils above first."));return;}
  all.forEach(function(pp){
   var name=pp[0],a=S.adapt[name]||{t:[],note:""},row=el("div",{"class":"adapt-row"});
-  row.appendChild(el("b",{},name+" ("+SHOWN[pp[1]]+")"));
+  var ph=el("b");ph.appendChild(pupilNode(name));ph.appendChild(document.createTextNode(" ("+SHOWN[pp[1]]+")"));row.appendChild(ph);addAdaptChips(row,name);
   ADAPT.forEach(function(x){
    var lab=el("label"),cb=el("input",{type:"checkbox"});cb.checked=a.t.indexOf(x[0])>=0;
    cb.onchange=function(){var c=S.adapt[name]||{t:[],note:""};c.t=c.t.filter(function(v){return v!==x[0];});if(cb.checked)c.t.push(x[0]);S.adapt[name]=c;save();};
@@ -740,17 +806,15 @@ function printLabels(items){
  var box=$("labelSheet");box.textContent="";
  items.forEach(function(it){
   var a=S.adapt[it.pupil]||{t:[],note:""},card=el("section",{"class":"plabel"}),t=el("div",{"class":"lt"});
-  t.appendChild(el("div",{"class":"brand"},"MADE BY MATT · CATCH-UP"));
-  t.appendChild(el("h2",{},it.pupil));
+  t.appendChild(el("div",{"class":"brand"},"CATCH-UP"));
+  t.appendChild(el("h2",{},publicPupil(it.pupil)));
   t.appendChild(el("div",{},SHOWN[it.path]+" · "+it.subj+" · missed "+it.d+" P"+it.per+" (week of "+wb(it.w)+")"));
   var ul=el("ul"),n=0;
-  ADAPT.forEach(function(x){if(a.t.indexOf(x[0])>=0){var li=el("li");li.appendChild(el("b",{},x[1]+": "));li.appendChild(document.createTextNode(x[2]));ul.appendChild(li);n++;}});
-  if(a.note){ul.appendChild(el("li",{},a.note));n++;}
-  if(!n)ul.appendChild(el("li",{},"No adaptations set."));
+  ul.appendChild(el("li",{},"Number-only copy. Ask for help if you need it."));
   t.appendChild(ul);
   t.appendChild(el("div",{"class":"sign"},"Done: ⬜   Checked by: __________   Date: ________"));
   card.appendChild(t);
-  if(it.url){var q=QR(it.url);if(q){var qd=el("div",{"class":"lq"});qd.appendChild(q);card.appendChild(qd);}}
+  if(it.url){var q=QR(redacted(it.url));if(q){var qd=el("div",{"class":"lq"});qd.appendChild(q);card.appendChild(qd);}}
   box.appendChild(card);
  });
  document.body.classList.add("printing-labels");
@@ -758,9 +822,9 @@ function printLabels(items){
  window.addEventListener("afterprint",done);
  window.print();
 }
-function labelBtn(it){var b=el("button",{"class":"xsbtn noprint",type:"button","aria-label":"Print catch-up label for "+it.pupil+", "+it.subj},"🏷️ Label");b.onclick=function(){printLabels([it]);};return b;}
+function labelBtn(it){var b=el("button",{"class":"xsbtn noprint",type:"button","aria-label":"Print catch-up label for "+it.pupil+", "+it.subj},"Catch-up sheet");b.onclick=function(){openSheets(it.pupil,false);};tagControl(b,it.pupil);return b;}
 $("printLabels").onclick=function(){printLabels(getFilteredList().filter(function(r){return r.state!=="done";}).map(labelItem));};
-function plainPrint(){document.body.classList.remove("printing-labels");window.print();}
+function plainPrint(){document.body.classList.remove("printing-labels","printing-catchup");window.print();}
 $("print").onclick=plainPrint;$("printAssess").onclick=plainPrint;
 
 function syncPinDropdown(){
@@ -822,17 +886,17 @@ $("savep").onclick=function(){
 };
 $("saveDrive").onclick=function(){S.driveEmail=$("driveEmail").value.trim();save();showToast(S.driveEmail?"Drive account saved":"Drive account cleared");};
 
-function download(name,text,type){var a=el("a",{download:name});a.href=URL.createObjectURL(new Blob([text],{type:type}));document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);}
+function download(name,text,type){text=redacted(text);var a=el("a",{download:name});a.href=URL.createObjectURL(new Blob([text],{type:type}));document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);}
 function buildListMatrixRows(){
  var hdr=["Pupil","Pathway","Subject","Week","Week beginning","Day","Period","Lesson","Catch-up folder","Status","Note","Link"],out=[hdr];
- getFilteredList().forEach(function(r){out.push([r.pupil,r.path,r.subj,r.w,wb(r.w),r.d,r.per,r.lesson,r.path+" / w/b "+wb(r.w)+" / "+r.subj+" / Catch-up",LABEL[r.state],r.note,linkFor(lkey(r.w,lessonPath(r),r.subj,r.lesson))]);});
+ getFilteredList().forEach(function(r){out.push([publicPupil(r.pupil),r.path,r.subj,r.w,wb(r.w),r.d,r.per,r.lesson,r.path+" / w/b "+wb(r.w)+" / "+r.subj+" / Catch-up",LABEL[r.state],r.note,linkFor(lkey(r.w,lessonPath(r),r.subj,r.lesson))]);});
  return out;
 }
 function buildAssessMatrixRows(){
  var hdr=["Pupil","Pathway","Subject","Open catch-ups","Missed","Partly done","More needed","Completed catch-ups","Status"],out=[hdr];
  getAssessRecs().forEach(function(r){
   var st=r.am.passed?"Assessment done":(r.ready?(r.am.override&&r.open?"Ready (override)":"Ready"):"On hold");
-  out.push([r.pupil,r.path,r.subj,r.open,r.c.missed,r.c.partial,r.c.more,r.c.done,st]);
+  out.push([publicPupil(r.pupil),r.path,r.subj,r.open,r.c.missed,r.c.partial,r.c.more,r.c.done,st]);
  });
  return out;
 }
@@ -840,18 +904,123 @@ function toCsv(aoa){var q=function(s){return '"'+String(s==null?"":s).replace(/"
 function toTsv(aoa){return aoa.map(function(r){return r.map(function(c){return String(c==null?"":c).replace(/[\t\r\n]+/g," ");}).join("\t");}).join("\r\n");}
 
 $("csv").onclick=function(){download("catch_up_list_"+todayIso()+".csv",toCsv(buildListMatrixRows()),"text/csv");};
-$("copyListTsv").onclick=function(){if(navigator.clipboard){navigator.clipboard.writeText(toTsv(buildListMatrixRows()));showToast("Copied table for Google Sheets / Excel");}};
+$("copyListTsv").onclick=function(){if(navigator.clipboard){navigator.clipboard.writeText(redacted(toTsv(buildListMatrixRows())));showToast("Copied table for a table");}};
 $("csvAssess").onclick=function(){download("assessment_readiness_"+todayIso()+".csv",toCsv(buildAssessMatrixRows()),"text/csv");};
-$("copyAssessTsv").onclick=function(){if(navigator.clipboard){navigator.clipboard.writeText(toTsv(buildAssessMatrixRows()));showToast("Copied assessment table for Sheets / Excel");}};
+$("copyAssessTsv").onclick=function(){if(navigator.clipboard){navigator.clipboard.writeText(redacted(toTsv(buildAssessMatrixRows())));showToast("Copied assessment table for a table");}};
 
 $("backup").onclick=function(){
  S.lastBackup=todayIso();S.dirtySinceBackup=false;save(true);
- download("catch_up_tracker_"+todayIso()+".json",JSON.stringify(S,null,2),"application/json");
+ download("catch_up_tracker_"+todayIso()+".json",JSON.stringify(publicBackup(),null,2),"application/json");
 };
 $("restore").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var s=JSON.parse(r.result);if(!s.pupils||!s.marks)throw 0;if(confirm("Replace what is on this computer with the backup?")){localStorage.setItem(KEY,JSON.stringify(s));S=load();syncBadge();show("today");showToast("Backup restored");}}catch(x){alert("That file is not a tracker backup.");}};r.readAsText(f);};
 $("wipe").onclick=function(){if(confirm("Clear every missed mark and assessment tick? Pupils and links stay.")){S.marks={};S.assessMarks={};save();showToast("All marks cleared");}};
 
-renderToday();
+function effectiveAdapt(pupil){
+ var shared=pupilAdapt(pupilNumber(pupil));if(shared.length)return shared;
+ var a=S.adapt[pupil]||{t:[],note:""},lines=[];
+ ADAPT.forEach(function(x){if((a.t||[]).indexOf(x[0])>=0)lines.push(x[1]+": "+x[2]);});
+ if(a.note)lines.push(a.note);return lines;
+}
+function addAdaptChips(parent,pupil){
+ var lines=effectiveAdapt(pupil);if(!lines.length)return;
+ var wrap=el("div",{"class":"adapt-chips noprint","aria-label":"Help for "+pupilCaption(pupil)});
+ lines.forEach(function(s){wrap.appendChild(el("span",{"class":"adapt-chip"},"Help: "+s));});parent.appendChild(wrap);
+}
+function owedRows(pupil){return rows().filter(function(r){return r.state!=="done"&&(pupil==null||r.pupil===pupil);});}
+function renderTodayStrip(){
+ var box=$("todayStrip");if(!box)return;box.textContent="";
+ var last=lastSchoolDay(),owed=owedRows().filter(function(r){return +markDate(r)===+last;}),grouped={};
+ box.appendChild(el("h2",{id:"todayTitle"},"Today"));
+ box.appendChild(el("p",{"class":"note"},"Catch-up from "+last.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"short"})));
+ if(!owed.length){box.appendChild(el("p",{},"No catch-up is owed from the last school day."));return;}
+ owed.forEach(function(r){(grouped[r.pupil]||(grouped[r.pupil]=[])).push(r);});
+ Object.keys(grouped).sort(function(a,b){return pupilNumber(a)-pupilNumber(b);}).forEach(function(p){
+  var item=el("div",{"class":"today-item"});item.appendChild(pupilNode(p));
+  item.appendChild(el("p",{},grouped[p].map(function(r){return r.subj+" (lesson "+r.lesson+", period "+r.per+")";}).join(" · ")));
+  addAdaptChips(item,p);var b=tagControl(el("button",{type:"button","class":"smbtn"},"Catch-up sheet"),p);b.onclick=function(){openSheets(p,false);};item.appendChild(b);box.appendChild(item);
+ });
+}
+function publicBackup(){
+ var b=JSON.parse(JSON.stringify(S)),marks={},assess={};
+ Object.keys(b.pupils).forEach(function(g){b.pupils[g]=S.pupils[g].map(publicPupil);});
+ Object.keys(b.marks).forEach(function(k){var p=k.split("|");p[3]=publicPupil(p[3]);marks[p.join("|")]=b.marks[k];});
+ Object.keys(b.assessMarks).forEach(function(k){var p=k.split("|");p[2]=publicPupil(p[2]);assess[p.join("|")]=b.assessMarks[k];});
+ b.marks=marks;b.assessMarks=assess;b.adapt={};return JSON.parse(redacted(JSON.stringify(b)));
+}
+function lessonCodeFor(r,part){
+ var w="A2_W"+String(r.w).padStart(2,"0"),p=r.path,n=r.lesson;
+ if(r.subj==="Community Projects"){var cw=+r.w===4?(part===2?4:3):(+r.w<4?+r.w-1:+r.w);return "COMMUNITY_A2_W"+String(cw).padStart(2,"0");}
+ if(r.subj==="Science")return p==="GROW"?"GROW_SCI_"+w+"_P"+n:"SCI_"+p+"_"+w+"_L"+n;
+ if(r.subj==="Creative Arts")return "ART_"+p+"_"+w+"_P"+n;
+ if(r.subj==="RE")return p+"_RE_"+w;
+ var prefix={Vocational:"VOC",Humanities:"HUM",Careers:"CAREERS",ICT:"ICT",RSHE:"RSHE",PSHE:"PSHE",DT:"DT",RSE:"RSE"};
+ var base=(prefix[r.subj]||r.subj.toUpperCase().replace(/\s+/g,"_"))+"_"+p+"_"+w;
+ return r.subj==="Vocational"&&p==="LAUNCH"&&+r.w===7?base+" L"+n:base;
+}
+var sheetPupils=[],sheetReturnFocus=null;
+function sheetLesson(r,part){
+ var card=el("article",{"class":"sheet-lesson"}),num=part===2?2:r.lesson;
+ card.appendChild(el("h3",{},r.subj+" · Lesson "+num));card.appendChild(el("code",{},lessonCodeFor(r,part)));
+ card.appendChild(el("p",{"class":"sheet-meta"},r.path+" · "+r.d+" · period "+r.per+" · week of "+wb(r.w)));
+ var url=redacted(linkFor(lkey(r.w,r.path,r.subj,num))),line=el("div",{"class":"sheet-link"});
+ if(url){var qr=QR(url);if(qr){qr.setAttribute("role","img");qr.setAttribute("aria-label","Scan to open this lesson");line.appendChild(qr);}line.appendChild(el("a",{href:url,target:"_blank",rel:"noopener",title:url},"Open lesson"));}
+ else line.appendChild(el("p",{},"No lesson link saved. Ask for the sheet."));
+ card.appendChild(line);card.appendChild(el("p",{"class":"sheet-check"},"□ Done   □ Checked"));return card;
+}
+function buildSheets(){
+ var box=$("catchupPages"),privateCopy=$("sheetMode").value==="private";box.textContent="";
+ sheetPupils.forEach(function(p){
+  var rs=owedRows(p),page=el("section",{"class":"catch-sheet","data-pupil-number":pupilNumber(p)}),inner=el("div",{"class":"sheet-inner"});
+  if(privateCopy)inner.appendChild(el("p",{"class":"private-stamp"},"Private: keep this copy"));
+  inner.appendChild(el("h1",{},"Catch-up for "+(privateCopy?pupilTag(pupilNumber(p),"initials"):publicPupil(p))));
+  inner.appendChild(el("p",{},"Tick each lesson when it is done. Ask for help when you need it."));
+  if(privateCopy){
+   inner.appendChild(el("h2",{},"How this work is set up for you"));var help=effectiveAdapt(p),ul=el("ul",{"class":"sheet-adapt sheet-private-adapt"});
+   (help.length?help:["Ask for the help you need."]).forEach(function(s){ul.appendChild(el("li",{},redacted(s)));});inner.appendChild(ul);
+  }
+  inner.appendChild(el("h2",{},rs.length+" lesson"+(rs.length===1?"":"s")+" to catch up"));
+  var grid=el("div",{"class":"sheet-lessons"});if(rs.length>8)grid.style.setProperty("--sheet-cols","3");
+  rs.forEach(function(r){grid.appendChild(sheetLesson(r,1));if(r.subj==="Community Projects"&&+r.w===4&&+r.lesson===1&&linkFor(lkey(r.w,r.path,r.subj,2)))grid.appendChild(sheetLesson(r,2));});
+  inner.appendChild(grid);inner.appendChild(el("p",{"class":"sheet-meta"},"Printed "+todayIso()+" · Check with your teacher when you finish."));page.appendChild(inner);box.appendChild(page);
+ });
+ $("printAndGo").disabled=!sheetPupils.length;
+ if(!sheetPupils.length)box.appendChild(el("p",{"class":"panel"},"No catch-up work is owed. You are up to date."));
+ $("sheetHelp").textContent=privateCopy?"Private: keep this copy. Initials and help notes are on this sheet. Use number only for copies that leave the room.":"Number only: Pupil N, with no labels or help notes. Use this copy outside the room.";
+ fitSheets();
+}
+function fitSheets(){
+ var min=1;
+ document.querySelectorAll(".catch-sheet").forEach(function(page){
+  var inner=page.firstElementChild,old=inner.getAttribute("style");
+  inner.style.cssText="width:190mm;transform:none;zoom:1";var grid=inner.querySelector(".sheet-lessons");grid.style.gridTemplateColumns="repeat("+(grid.style.getPropertyValue("--sheet-cols")||"2")+",minmax(0,1fr))";
+  var available=276*96/25.4,scale=Math.min(1,(available-6)/inner.scrollHeight);min=Math.min(min,scale);
+  inner.setAttribute("style",old||"");grid.style.gridTemplateColumns="";page.style.setProperty("--sheet-scale",String(scale));
+ });
+ $("sheetFit").textContent=sheetPupils.length?sheetPupils.length+" A4 side"+(sheetPupils.length===1?"":"s")+". Each pupil starts a new page. Use A4 and turn print headers and footers off."+(min<0.8?" This is a long list, so the print will be small. Zoom the on-screen copy to read it.":""):"";
+}
+function openSheets(pupil,printNow){
+ sheetReturnFocus=document.activeElement;var seen={};
+ owedRows(pupil).forEach(function(r){seen[r.pupil]=1;});sheetPupils=Object.keys(seen).sort(function(a,b){return pupilNumber(a)-pupilNumber(b);});
+ $("catchupPreview").hidden=false;document.body.classList.add("viewing-sheets");
+ document.querySelector("main").hidden=true;document.querySelector("header").hidden=true;document.querySelector("footer").hidden=true;
+ buildSheets();$("sheetPreviewTitle").focus();if(printNow&&sheetPupils.length)printSheets();
+}
+function closeSheets(){
+ $("catchupPreview").hidden=true;document.body.classList.remove("viewing-sheets","printing-catchup");
+ document.querySelector("main").hidden=false;document.querySelector("header").hidden=false;document.querySelector("footer").hidden=false;
+ if(sheetReturnFocus&&sheetReturnFocus.isConnected)sheetReturnFocus.focus();
+}
+function printSheets(){fitSheets();document.body.classList.remove("printing-labels");document.body.classList.add("printing-catchup");window.print();}
+$("sheetMode").onchange=buildSheets;$("closeSheets").onclick=closeSheets;$("printAndGo").onclick=printSheets;
+$("printAllOwed").onclick=function(){openSheets(null,false);};
+window.addEventListener("beforeprint",function(){if(!$("catchupPreview").hidden&&!document.body.classList.contains("printing-labels")){fitSheets();document.body.classList.add("printing-catchup");}});
+window.addEventListener("afterprint",function(){document.body.classList.remove("printing-catchup","printing-labels");});
+$("showTags").value=pupilProfile().show||"initials";
+$("showTags").onchange=function(){if(!setShow(this.value))showToast("This browser could not save the Show choice.");renderToday();renderList();renderAssess();renderAdapt();renderTodayStrip();};
+window.addEventListener("storage",function(e){if(e.key==="mbm_pupil_key_v1"||e.key==="mbm_pupil_profile_v1"){ $("showTags").value=pupilProfile().show||"initials";renderToday();renderList();renderAssess();renderTodayStrip();if(!$("catchupPreview").hidden)buildSheets();}});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(!$("catchupPreview").hidden)closeSheets();if(!$("qrModal").hidden){$("qrModal").hidden=true;$("openCustomQr").focus();}}});
+
+renderToday();renderTodayStrip();
 })();
 </script>
 <div id="labelSheet" aria-hidden="true"></div>

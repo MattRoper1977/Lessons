@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Missed last week</title>
 <style>
 :root{--ink:#1d2433;--accent:#1f5fa8;--soft:#eef3fa;--line:#c9d3e3;--ok:#178841;--warn:#b36205;--bg:#ffffff}
@@ -43,14 +44,24 @@ a.btn{display:inline-block;font-size:17px;padding:10px 14px;border-radius:10px;b
 .daytitle{margin:18px 0 4px;font-size:19px}
 #summary{font-weight:600}
 @media print{.noprint{display:none}.card{break-inside:avoid;background:none}a.btn{border:none;padding:0;color:var(--ink)}}
+
+/* Round-two touch and reading layout. */
+:root{--build:#21465f;--grow:#174d3d;--launch:#50336f;--accent:#163e70;--ok:#174d2b;--warn:#703600;--focus:#073d83}
+@media(prefers-color-scheme:dark){:root{--build:#b9dcf5;--grow:#a8e4ce;--launch:#e0cafa;--accent:#bedaff;--ok:#a9e9bf;--warn:#ffdaaa;--focus:#bedaff}}
+html,body{overflow-wrap:anywhere}main,section,div,header,nav,.row>*{min-width:0}button,select,input,.btnlink,a.btn,label.btn,summary{min-height:48px;min-width:48px;max-width:100%;font-size:17px}button,.btnlink,a.btn{white-space:normal;overflow-wrap:anywhere}.xsbtn,.badge,.acct-pill,.meta,.field label,.tile span,.adapt-row label,table,.note{font-size:17px}.xsbtn,.toast button,.noteinput,.textin{min-height:48px}.textin{min-width:0;width:100%}label:has(input[type=checkbox]){min-height:48px;display:inline-flex;align-items:center}input[type=checkbox]{flex:none;width:26px;height:26px;min-width:26px;min-height:26px}input[type=file]{width:100%}a{color:var(--accent,#163e70)}a:not(.btnlink):not(.btn){display:inline-flex;align-items:center;min-height:48px}button:hover{filter:none}:focus-visible{outline:3px solid var(--focus);outline-offset:3px}details>summary{cursor:pointer;font-weight:700;padding:10px 12px;border:2px solid var(--line);border-radius:10px;width:fit-content}details>.row{padding-top:12px}.today-strip{border:2px solid var(--ink);border-radius:12px;padding:14px;margin-bottom:16px;background:var(--card,var(--soft))}.today-strip h2{margin:0 0 4px;font-size:23px}.today-item{border-top:1px solid var(--line);padding:10px 0}.today-item p{margin:4px 0}.adapt-chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.adapt-chip{font-size:17px;border:1px solid currentColor;border-radius:8px;padding:4px 8px;background:var(--card,var(--bg));color:var(--ink)}.pupil-label{font-size:18px}.pupil-label strong{font-size:21px}.profilebar{margin:0 0 12px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}.private-note{font-size:17px;color:var(--muted,var(--ink))}.chipwrap:has(.adapt-chips){align-items:flex-start;max-width:100%}.adapt-chips{width:100%}button:disabled{cursor:default}.tick{min-height:48px}a.btn{color:white;background:#163e70}.card.done{opacity:1}.card.done::before{content:"✓ Class caught up";display:block;font-weight:700}.ok{color:var(--ok)}.warn{color:var(--warn)}
+.just-done{opacity:1!important}.missed-page button:not(.ghost){background:#163e70;color:#fff}.missed-page .ghost{color:var(--accent)}
+@media(max-width:650px){.textin{width:100%}.lesson,.panel{padding:12px}header{padding:12px}.modal{padding:12px}.row label{max-width:100%}select{width:100%}.qr-stage svg{width:100%;height:auto}.toast{width:calc(100% - 24px);flex-wrap:wrap}.noteinput{min-width:0}#table,#atable{overflow:visible}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@media print{.private-tag,.adapt-chips,.noprint,#setup{display:none!important}a{color:#000}.pupil-label{font-size:13pt}}
+
 </style>
 </head>
-<body>
+<body class="missed-page">
 <main>
 <p class="noprint"><a href="My_tools.html">&larr; My tools</a></p>
 <h1>Missed last week</h1>
-<p class="note">The lessons that did not run while you were off, each with its ready-made catch-up sheet (print and go, answers on page 2) and the best slot to use it this week. Ticks are saved on this device only. No pupil names here.</p>
-<p class="tick noprint"><label class="tick"><input type="checkbox" id="wed"> Include Wednesday 4 Nov too</label></p>
+<p class="note">The lessons that did not run while you were off, each with its ready-made catch-up sheet (print and go, answers on page 2) and the best slot to use it this week. Ticks and private pupil help stay on this device. Printed lists use Pupil N.</p>
+<div class="profilebar noprint"><label>Show: <select id="showTags"><option value="initials">Initials</option><option value="first">First name</option><option value="number">Number</option></select></label></div><section class="today-strip noprint" id="todayStrip"></section><details class="noprint"><summary>Filter</summary><p class="tick"><label class="tick"><input type="checkbox" id="wed"> Include Wednesday 4 Nov too</label></p><label>Show lessons <select id="classFilter"><option value="all">All lessons</option><option value="open">Still to do</option><option value="done">Class caught up</option></select></label></details>
 <p id="summary" aria-live="polite"></p>
 <div id="list"></div>
 <h2>How to use a sheet</h2>
@@ -64,6 +75,48 @@ a.btn{display:inline-block;font-size:17px;padding:10px 14px;border-radius:10px;b
 <script>
 (function(){
 "use strict";
+// Shared on-device pupil profile. Keep this block identical on both pages.
+function pupilKey(){try{var v=JSON.parse(localStorage.getItem("mbm_pupil_key_v1")||"{}");return v&&typeof v==="object"?v:{};}catch(e){return {};}}
+function pupilProfile(){try{var v=JSON.parse(localStorage.getItem("mbm_pupil_profile_v1")||"{}");return v&&v.version===1?v:{version:1,show:"initials",pupils:{}};}catch(e){return {version:1,show:"initials",pupils:{}};}}
+function pupilTag(n,form){
+ var key=pupilKey(),mode=form||pupilProfile().show||"initials",label=String(key[n]||"").trim();
+ if(!label||mode==="number")return "P"+n;
+ var words=function(s){return String(s).trim().split(/\s+/).filter(Boolean);};
+ if(mode==="first")return words(label)[0];
+ var base=function(s){return words(s).map(function(w){return Array.from(w)[0];}).join("").toLocaleUpperCase("en-GB").slice(0,3);};
+ var b=base(label),peers=Object.keys(key).filter(function(k){return String(key[k]||"").trim()&&base(key[k])===b;}),extra=0;
+ var tag=function(k,x){var w=words(key[k]),last=Array.from(w[w.length-1].toLocaleUpperCase("en-GB"));return b+last.slice(1,1+x).join("");};
+ var max=Math.max.apply(null,peers.map(function(k){var w=words(key[k]);return Array.from(w[w.length-1]).length;}));
+ while(extra<max&&peers.some(function(k){return k!==String(n)&&tag(k,extra)===tag(String(n),extra);}))extra++;
+ var t=tag(String(n),extra);
+ if(peers.some(function(k){return k!==String(n)&&tag(k,extra)===t;}))t+="·"+n;
+ return t;
+}
+function pupilAdapt(n){var p=pupilProfile(),r=p.pupils&&p.pupils[n];return r&&Array.isArray(r.adapt)?r.adapt.filter(function(s){return typeof s==="string"&&s.trim();}).slice(0,4):[];}
+function pupilNumber(value){var m=String(value).match(/^(?:Pupil\s*|P)?(\d+)$/i);if(m)return +m[1];var key=pupilKey(),hit=Object.keys(key).find(function(k){return key[k]===value;});if(hit)return +hit;var all=typeof S!=="undefined"&&S&&S.pupils?[].concat(S.pupils.BUILD||[],S.pupils.GROW||[],S.pupils.LAUNCH||[]):[];return Math.max(1,all.indexOf(value)+1);}
+function publicPupil(value){return "Pupil "+pupilNumber(value);}
+function pupilCaption(value){var n=pupilNumber(value);return "Pupil "+n+" · "+pupilTag(n);}
+function pupilNode(value){var n=pupilNumber(value),s=document.createElement("span");s.className="pupil-label";s.title=s.getAttribute("aria-label")||pupilCaption(value);s.setAttribute("aria-label",pupilCaption(value));var a=document.createElement("span");a.textContent="Pupil "+n;s.appendChild(a);var b=document.createElement("strong");b.className="private-tag noprint";b.textContent=" · "+pupilTag(n);s.appendChild(b);return s;}
+function tagControl(node,value){node.title=pupilCaption(value);node.setAttribute("aria-label",pupilCaption(value));return node;}
+function setShow(mode){var p=pupilProfile();p.show=mode;try{localStorage.setItem("mbm_pupil_profile_v1",JSON.stringify(p));return true;}catch(e){return false;}}
+function lastSchoolDay(){var d=new Date();d.setHours(12,0,0,0);do{d.setDate(d.getDate()-1);}while(d.getDay()===0||d.getDay()===6);return d;}
+function markDate(r){return new Date(2026,10,2+(+r.w-1)*7+["Monday","Tuesday","Wednesday","Thursday","Friday"].indexOf(r.d),12);}
+function redacted(text){
+ var key=pupilKey(),pairs=[];
+ Object.keys(key).forEach(function(n){var s=String(key[n]||"").trim();if(s){pairs.push([s,"Pupil "+n]);s.split(/\s+/).forEach(function(w){if(w.length>1)pairs.push([w,"Pupil "+n]);});[pupilTag(n,"initials"),pupilTag(n,"first")].forEach(function(t){if(t.length>1)pairs.push([t,"Pupil "+n]);});}});
+ if(typeof S!=="undefined"&&S&&S.pupils)Object.keys(S.pupils).forEach(function(g){S.pupils[g].forEach(function(s){if(!/^(?:Pupil\s*|P)?\d+$/i.test(s))pairs.push([s,publicPupil(s)]);});});
+ pairs.sort(function(a,b){return b[0].length-a[0].length;});
+ var result=String(text==null?"":text),slots=[];
+ pairs.forEach(function(p){[p[0],encodeURIComponent(p[0])].forEach(function(label){
+  var lower=result.toLocaleLowerCase("en-GB"),needle=label.toLocaleLowerCase("en-GB"),from=0,at,parts=[];
+  while((at=lower.indexOf(needle,from))>=0){var end=at+needle.length,word=/[\p{L}\p{N}_]/u;
+   if((at>0&&word.test(result[at-1]))||(end<result.length&&word.test(result[end]))){parts.push(result.slice(from,end));from=end;continue;}
+   parts.push(result.slice(from,at),"\u0001"+slots.length+"\u0002");slots.push(p[1]);from=end;
+  }parts.push(result.slice(from));result=parts.join("");
+ });});
+ return result.replace(/\u0001(\d+)\u0002/g,function(_,n){return slots[+n];});
+}
+
 var ROWS=[{"day":"Wednesday","date":4,"p":1,"pw":"BASE","sub":"RSHE","link":"https://drive.google.com/file/d/15Rpe_xUsZyglfHzNYvJ9YrgPWE9CP8Hb/view","next":[["2026-11-11","Wednesday",1]],"group":"wed"},{"day":"Wednesday","date":4,"p":2,"pw":"SUMMIT","sub":"Science","link":"https://drive.google.com/file/d/1Jw6Jv_4szTJjhSgfz39g5i3PUDNqaew1/view","next":[["2026-11-09","Monday",4],["2026-11-11","Wednesday",2],["2026-11-13","Friday",4]],"group":"wed"},{"day":"Wednesday","date":4,"p":3,"pw":"TRACK","sub":"PSHE","link":"https://drive.google.com/file/d/11EqNfTC3hPiqG7I3NtncdjxLst9J5Rra/view","next":[["2026-11-11","Wednesday",3]],"group":"wed"},{"day":"Wednesday","date":4,"p":4,"pw":"BASE","sub":"Science","link":"https://drive.google.com/file/d/1IrfEAe0DokvhMc2oZCf-hKtTbLVy_kBU/view","next":[["2026-11-09","Monday",3],["2026-11-11","Wednesday",4]],"group":"wed"},{"day":"Wednesday","date":4,"p":5,"pw":"TRACK","sub":"Creative Arts","link":"https://drive.google.com/file/d/1Aj-9poE1MjGBVQ-aQAt9OkG0qzZC8pAs/view","next":[["2026-11-09","Monday",6],["2026-11-11","Wednesday",5]],"group":"wed"},{"day":"Wednesday","date":4,"p":6,"pw":"SUMMIT","sub":"Vocational","link":"https://drive.google.com/file/d/1vrOSGvIGwkKVy0vFHEAmf6jC_s4QLyhu/view","next":[["2026-11-09","Monday",1],["2026-11-11","Wednesday",6]],"group":"wed"},{"day":"Thursday","date":5,"p":1,"pw":"SUMMIT","sub":"DT","link":"https://drive.google.com/file/d/1n2_3ZkWSgZc0Xl4gNG0xuoazPjzWDsWp/view","next":[["2026-11-12","Thursday",1]],"group":"thufri"},{"day":"Thursday","date":5,"p":2,"pw":"TRACK","sub":"RE","link":"https://drive.google.com/file/d/1fSGUrPIda1kK1A-rVU9p7o7cScDyBzRN/view","next":[["2026-11-12","Thursday",2]],"group":"thufri"},{"day":"Thursday","date":5,"p":3,"pw":"BASE","sub":"Humanities","link":"https://drive.google.com/file/d/15bvXThlsAkCuGr4c6Z8J6c7Ihn5gyqsp/view","next":[["2026-11-12","Thursday",3]],"group":"thufri"},{"day":"Thursday","date":5,"p":4,"pw":"SUMMIT","sub":"RSE","link":"https://drive.google.com/file/d/1Gv1FOjKQIqzCJ0t2zyRWlKndesqmBrdi/view","next":[["2026-11-12","Thursday",4]],"group":"thufri"},{"day":"Friday","date":6,"p":1,"pw":"SUMMIT","sub":"Careers","link":"https://drive.google.com/file/d/1-ZqmACOU53jw5aNfX1Uv2XOuoi5oSVJS/view","next":[["2026-11-13","Friday",1]],"group":"thufri"},{"day":"Friday","date":6,"p":2,"pw":"TRACK","sub":"Humanities","link":"https://drive.google.com/file/d/1FPRP8b5HM1Z5C8uCC_ldiYO-yDhWzBkr/view","next":[["2026-11-13","Friday",2]],"group":"thufri"},{"day":"Friday","date":6,"p":3,"pw":"BASE","sub":"Vocational","link":"https://drive.google.com/file/d/1MJwu6OO7Kxa-yxqOHOKoIMBpBqb8Td6M/view","next":[["2026-11-13","Friday",3]],"group":"thufri"},{"day":"Friday","date":6,"p":4,"pw":"SUMMIT","sub":"Science","link":"https://drive.google.com/file/d/1uhbYMLdeaXqJ0_E9U55e7I5Ab6VmL_eu/view","next":[["2026-11-09","Monday",4],["2026-11-11","Wednesday",2],["2026-11-13","Friday",4]],"group":"thufri"}];
 var KEY="mbm_missed_last_week_v1", st={};
 try{st=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){st={};}
@@ -83,7 +136,7 @@ function draw(){
   var shown=0,done=0,lastDay="";
   ROWS.forEach(function(r){
     if(r.group==="wed"&&!wed.checked)return;
-    var id=r.day+"|"+r.p; shown++; if(st[id])done++;
+    var id=r.day+"|"+r.p,filter=document.getElementById("classFilter").value;if(filter==="open"&&st[id]||filter==="done"&&!st[id])return;shown++; if(st[id])done++;
     if(r.day!==lastDay){list.appendChild(el("h2","daytitle",r.day+" "+r.date+" Nov"));lastDay=r.day;}
     var c=el("div","card"+(st[id]?" done":""));
     c.appendChild(el("h3",null,"P"+r.p+" · "+r.pw+" "+r.sub));
@@ -93,13 +146,36 @@ function draw(){
     var lab=el("label","tick");var cb=document.createElement("input");cb.type="checkbox";cb.checked=!!st[id];
     cb.addEventListener("change",function(){if(cb.checked)st[id]=1;else delete st[id];save();draw();});
     lab.appendChild(cb);lab.appendChild(document.createTextNode("Done with the class"));row.appendChild(lab);
-    c.appendChild(row);list.appendChild(c);
+    c.appendChild(row);addPupilRows(c,r);list.appendChild(c);
   });
-  sum.textContent=done+" of "+shown+" caught up";
+  sum.textContent=shown?done+" of "+shown+" class lessons caught up":"No lessons match. Try a different filter.";drawToday();
 }
 wed.addEventListener("change",function(){st._wed=wed.checked?1:0;save();draw();});
 document.getElementById("print").onclick=function(){window.print();};
 document.getElementById("reset").onclick=function(){if(!confirm("Clear all ticks on this page?"))return;var w=st._wed;st={_wed:w};save();draw();};
+function trackerRows(){
+ try{var s=JSON.parse(localStorage.getItem("mbm_catchup_tracker_v1")||"{}");return Object.keys(s.marks||{}).map(function(k){var p=k.split("|"),m=s.marks[k];return {w:p[0],d:p[1],per:+p[2],pupil:p[3],path:m.path,subj:m.subj,lesson:m.lesson,state:m.state||(m.done?"done":"missed")};}).filter(function(r){return r.state!=="done";}).sort(function(a,b){return pupilNumber(a.pupil)-pupilNumber(b.pupil);});}catch(e){return [];}
+}
+function helpChips(parent,pupil){var lines=pupilAdapt(pupilNumber(pupil));if(!lines.length)return;var wrap=el("div","adapt-chips noprint");lines.forEach(function(s){wrap.appendChild(el("span","adapt-chip","Help: "+s));});parent.appendChild(wrap);}
+function addPupilRows(card,lesson){
+ var rows=trackerRows().filter(function(r){return +r.w===1&&r.d===lesson.day&&r.per===lesson.p;});
+ if(!rows.length)return;
+ card.appendChild(el("h3",null,"Pupils who still need this"));
+ rows.forEach(function(r){var item=el("div","today-item");item.appendChild(pupilNode(r.pupil));var words={missed:"Needs catch-up",partial:"Partly done",more:"More needed"};item.appendChild(el("p",null,words[r.state]||"Needs catch-up"));helpChips(item,r.pupil);card.appendChild(item);});
+}
+function drawToday(){
+ var box=document.getElementById("todayStrip"),last=lastSchoolDay(),rows=trackerRows().filter(function(r){return +markDate(r)===+last;}),grouped={};box.textContent="";
+ box.appendChild(el("h2",null,"Today"));box.appendChild(el("p","meta","Catch-up from "+last.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"short"})));
+ if(!rows.length){box.appendChild(el("p",null,"No catch-up is owed from the last school day."));return;}
+ rows.forEach(function(r){(grouped[r.pupil]||(grouped[r.pupil]=[])).push(r);});
+ Object.keys(grouped).sort(function(a,b){return pupilNumber(a)-pupilNumber(b);}).forEach(function(p){var item=el("div","today-item");item.appendChild(pupilNode(p));item.appendChild(el("p",null,grouped[p].map(function(r){return r.subj+" (lesson "+r.lesson+")";}).join(" · ")));helpChips(item,p);box.appendChild(item);});
+ var a=el("a","btn","Open catch-up tracker");a.href="Catch_up_Tracker.html";box.appendChild(a);
+}
+document.getElementById("showTags").value=pupilProfile().show||"initials";
+document.getElementById("showTags").onchange=function(){var ok=setShow(this.value);document.getElementById("msg")?.remove();if(!ok){var p=el("p","warn","This browser could not save the Show choice.");p.id="msg";list.before(p);}draw();};
+document.getElementById("classFilter").onchange=draw;
+window.addEventListener("storage",function(e){if(["mbm_pupil_key_v1","mbm_pupil_profile_v1","mbm_catchup_tracker_v1"].indexOf(e.key)>=0){document.getElementById("showTags").value=pupilProfile().show||"initials";draw();}});
+
 draw();
 })();
 </script>

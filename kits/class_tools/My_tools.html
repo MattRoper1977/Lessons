@@ -5,49 +5,165 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>My tools</title>
+<meta name="theme-color" content="#153e64">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="My tools">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link id="manifest" rel="manifest">
+<link id="appIcon" rel="icon" type="image/svg+xml">
+<link id="touchIcon" rel="apple-touch-icon">
 <style>
-:root{--ink:#1d2433;--accent:#1f5fa8;--soft:#eef3fa;--line:#c9d3e3;--ok:#178841;--warn:#b36205;--bg:#ffffff}
-@media (prefers-color-scheme: dark){:root{--ink:#e8edf5;--accent:#8db8f0;--soft:#1c2433;--line:#3a4658;--ok:#5fd08a;--warn:#f0b060;--bg:#11161f}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.5 "Segoe UI",Arial,sans-serif}
-main{max-width:640px;margin:0 auto;padding:20px 16px 40px}
-h1{font-size:24px;margin:0 0 4px;color:var(--accent)}
-p{margin:8px 0}
-.note{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:16px}
-textarea{width:100%;min-height:300px;font:18px/1.6 inherit;padding:10px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
-.row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
-button,label.btn{font:inherit;font-size:17px;padding:12px 16px;border-radius:10px;border:2px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
-button.ghost,label.btn{background:transparent;color:var(--accent)}
-input[type=file]{display:none}
-#msg{min-height:1.5em;font-weight:600}
-.ok{color:var(--ok)}.warn{color:var(--warn)}
-ol{padding-left:22px}li{margin:4px 0}
-
-select,input[type=text],input[type=date]{font:inherit;font-size:17px;padding:8px;border:2px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);max-width:100%}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media (max-width:520px){.grid{grid-template-columns:1fr}}
-.field label{display:block;font-size:15px;font-weight:600;margin-bottom:2px}
-table{border-collapse:collapse;width:100%;font-size:16px}td,th{border:1px solid var(--line);padding:6px;text-align:left}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:12px 0}
-.tile{display:block;padding:14px;border:2px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink);background:var(--soft)}
-.tile b{display:block;color:var(--accent);font-size:19px}.tile span{font-size:15px}
-h2{font-size:20px;margin-top:22px}
-button,input,.tile,summary{min-height:48px}:focus-visible{outline:3px solid var(--accent);outline-offset:3px}input[type=url]{width:100%;font:inherit;font-size:17px;padding:8px;border:2px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}summary{display:flex;align-items:center;cursor:pointer;font-weight:600}body{overflow-wrap:anywhere}
-</style>
+:root{color-scheme:light dark;--ink:#18283b;--accent:#153e64;--soft:#edf3f7;--line:#52677c;--bg:#fff;--focus:#713600}
+@media(prefers-color-scheme:dark){:root{--ink:#f4f7fb;--accent:#c6e2ff;--soft:#1b2a3d;--line:#a9bdd2;--bg:#101b29;--focus:#ffd4a8}}
+*{box-sizing:border-box}html{scroll-padding:20px}body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.5 system-ui,sans-serif;overflow-wrap:anywhere}main{max-width:1000px;margin:auto;padding:22px 16px 48px}h1{font-size:30px;margin:0 0 6px}h2{font-size:24px;margin:24px 0 10px}h3{font-size:20px;margin:0 0 8px}p{margin:8px 0 14px}a{color:var(--accent)}button,input,textarea,select{font:inherit;color:inherit}button,.btn,select,input:not([type=checkbox]),summary{min-height:48px}button,.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border:2px solid var(--accent);border-radius:10px;background:var(--bg);color:var(--accent);font-size:18px;text-decoration:none;cursor:pointer}button.primary,.btn.primary{background:var(--accent);color:var(--bg)}button[aria-pressed=true]{background:var(--accent);color:var(--bg)}button:disabled{cursor:default}input:not([type=checkbox]),textarea,select{width:100%;max-width:100%;padding:10px;border:2px solid var(--line);border-radius:8px;background:var(--bg)}input[type=checkbox]{width:24px;height:24px;flex:none;margin:0}textarea{min-height:200px}label{display:block}summary{display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:650}summary::before{content:'+';font-size:24px}details[open]>summary::before{content:'−'}:focus-visible{outline:3px solid var(--focus);outline-offset:4px}button:focus-visible,.btn:focus-visible{position:relative;z-index:1}.note,.panel{padding:16px;border:2px solid var(--line);border-radius:14px;background:var(--soft);margin:14px 0}.row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}.row>*{max-width:100%;min-width:0}.small,.hint{font-size:17px}.status{min-height:1.5em;font-weight:650}.check{display:flex;gap:12px;align-items:center;min-height:48px}.file{position:absolute;width:1px!important;height:1px!important;min-height:0!important;opacity:0;overflow:hidden;padding:0!important;border:0!important}.file:focus-visible+.btn{outline:3px solid var(--focus);outline-offset:4px}[hidden]{display:none!important}.badge{display:inline-block;border:2px solid currentColor;border-radius:8px;padding:1px 8px;font-size:17px;font-weight:650}.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.section-head h2{margin-bottom:0}.empty{padding:12px 0;font-size:17px}ol{padding-left:24px}li{margin:8px 0}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}@media print{body>main{display:none!important}body::before{content:'Private: keep this copy. Print is turned off here to keep pupil labels private.';font:18px/1.5 sans-serif;color:#000}}
+input::placeholder,textarea::placeholder{color:var(--ink);opacity:1}.tile{-webkit-touch-callout:none;touch-action:manipulation}.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:12px;margin:12px 0}.tool{position:relative;min-width:0;display:flex;gap:6px;border:2px solid var(--line);border-radius:12px;background:var(--soft)}.tile{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0;padding:14px;text-decoration:none;color:var(--ink);border-radius:10px}.tile b{color:var(--accent);font-size:20px}.tile span{font-size:17px}.tile .badge{align-self:flex-start}.pin{flex:none;width:48px;min-width:48px;height:48px;padding:0;margin:6px 6px 0 0;font-size:26px}.now{margin-top:18px}.now h2{margin-top:0}.now-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.now-actions .btn{min-height:60px}.code{font-size:20px;font-weight:700;overflow-wrap:anywhere}.time-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.search{margin-top:24px}@media(max-width:580px){.now-actions{grid-template-columns:1fr}.time-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}</style>
 </head>
 <body>
 <main>
 <h1>My tools</h1>
-<p class="note">Private page. Nothing here is stored online. Drive links only open when you are signed in to your own Google account.</p>
-<h2>Today</h2><div class="tiles"><a class="tile" href="Quick_capture.html"><b>Quick capture</b><span>Exit tally, evidence photos and the IEDP helper.</span></a><a class="tile" id="tomorrowTile" href="https://drive.google.com/drive/u/0/search?q=type%3Afolder%20Tomorrow" target="_blank" rel="noopener"><b>Tomorrow pack</b><span id="tomorrowHint">_OUTBOX / Tomorrow. Find the folder in Drive, or save its direct link below.</span></a><a class="tile" href="Lesson_extras.html"><b>Lesson extras</b><span>Visitor sheet and cover pack from a lesson file, made on this device.</span></a><a class="tile" href="Practical_log.html"><b>Practical log</b><span>Tick who did each experiment (pupil codes only).</span></a><a class="tile" href="Requests.html"><b>Request box</b><span>Ask for something; the agents pick it up.</span></a></div>
+
+<section class="now panel" aria-labelledby="nowTitle">
+<div class="section-head"><h2 id="nowTitle">Now</h2><span id="nowState" class="badge">Checking clock</span></div>
+<p id="nowWhen" class="hint"></p><h3 id="nowLesson"></h3><p id="nowCode" class="code"></p>
+<p id="nowHint" class="hint"></p>
+<div id="sharedPath" hidden><label for="nowPath">Choose a group for this shared lesson</label><select id="nowPath"><option>BUILD</option><option>GROW</option><option>LAUNCH</option></select></div>
+<div class="now-actions"><a class="btn primary" id="nowCapture" href="Quick_capture.html?now=1">Quick capture</a><a class="btn" id="nowExtras" href="Lesson_extras.html">Lesson extras</a><a class="btn" id="nowTracker" href="Catch_up_Tracker.html">Catch-up tracker</a></div>
+<p id="nextLesson" class="hint"></p>
+<details><summary>Check period times</summary><p class="hint">Use this device's clock. Each lesson ends at the next start time. The last one ends after 50 minutes.</p><form id="timesForm"><div id="timesInputs" class="time-grid"></div><div class="row"><button type="submit">Save period times</button></div></form><p id="timeStatus" role="status"></p></details>
+</section>
+<div class="search"><label for="toolSearch">Find a tool</label><input type="search" id="toolSearch" placeholder="Type a tool or a task" autocomplete="off"><p class="hint" id="searchStatus" role="status"></p></div>
+<section id="pinnedSection" aria-labelledby="pinnedTitle"><h2 id="pinnedTitle">Pinned</h2><p class="hint" id="pinHelp">Tap a star, or hold a tile, to keep it here.</p><div id="pinnedTiles" class="tiles"></div></section>
+<section id="recentSection" aria-labelledby="recentTitle"><h2 id="recentTitle">Last used</h2><p class="hint" id="recentHelp">Your last three tools will appear here.</p><div id="recentTiles" class="tiles"></div></section>
+
+<p id="homeStatus" class="status" role="status"></p>
+<p class="note">Private page. Nothing here is stored online. Your folder links open only when you tap them.</p>
+<section class="tool-group"><h2>Today</h2><div class="tiles"><a class="tile" href="Quick_capture.html"><b>Quick capture</b><span>Exit tally, evidence photos and the IEDP helper.</span></a><a class="tile" id="tomorrowTile" href="https://drive.google.com/drive/u/0/search?q=type%3Afolder%20Tomorrow" target="_blank" rel="noopener"><b>Tomorrow pack</b><span id="tomorrowHint">_OUTBOX / Tomorrow. Find the folder in Drive, or save its direct link below.</span></a><a class="tile" href="Lesson_extras.html"><b>Lesson extras</b><span>Visitor sheet and cover pack from a lesson file, made on this device.</span></a><a class="tile" href="Practical_log.html"><b>Practical log</b><span>Tick who did each experiment (pupil codes only).</span></a><a class="tile" href="Requests.html"><b>Request box</b><span>Ask for something; the agents pick it up.</span></a></div></section>
 <details class="note"><summary>Set Tomorrow folder link</summary><p>The direct Tomorrow folder link was not available in the reference. Until set, the tile searches Drive for folders called Tomorrow. Choose the one inside _OUTBOX.</p><form id="tomorrowForm"><label for="tomorrowUrl">Paste the Drive _OUTBOX / Tomorrow folder link</label><input id="tomorrowUrl" type="url" placeholder="https://drive.google.com/drive/folders/…" autocomplete="off"><div class="row"><button type="submit">Save folder link</button></div></form><p id="folderStatus" role="status"></p></details>
-<h2>This week</h2><div class="tiles"><a class="tile" href="Catch_up_Tracker.html"><b>Catch-up tracker</b><span>Who missed what, and the right catch-up sheet.</span></a><a class="tile" href="Quick_capture.html#absence-panel"><b>Absent catch-up</b><span>Preview missed lessons and save a catch-up request.</span></a><a class="tile" href="Missed_last_week.html"><b>Missed last week</b><span>Catch-up sheets for the lessons that did not run, and when to use them.</span></a></div>
-<h2>Private</h2><div class="tiles"><a class="tile" href="Class_names.html"><b>Class names</b><span>Your private names list for the laptop.</span></a><a class="tile" href="https://drive.google.com/drive/search?q=MBM%20private%20tracker" target="_blank" rel="noopener"><b>Private folder</b><span>Tracker, targets text, practical record. Never share.</span></a></div>
-<h2>Checks</h2><div class="tiles"><a class="tile" href="https://drive.google.com/file/d/1kTMwsY6UbhZ9VVeHnc0igVMLYgqKI4Iw/view" target="_blank" rel="noopener"><b>STATUS note</b><span>Is the home laptop on? What ran?</span></a><a class="tile" href="https://drive.google.com/drive/folders/1pgldy4cT0lPRb_SAU_bniaXwfudyamg5" target="_blank" rel="noopener"><b>Stale files</b><span>Open STALE.txt in _AUTOMATION: all clear, or things to tidy.</span></a></div>
-<h2>Google Drive</h2><div class="tiles"><a class="tile" href="https://drive.google.com/drive/folders/1fJ6_MWEbk_d-8jhmquDG5IGoUU1YjIRd" target="_blank" rel="noopener"><b>_INBOX</b><span>Drop PowerPoints, plans, exports here.</span></a><a class="tile" href="https://drive.google.com/drive/folders/1fFDSTdnqlVkJD6EupgrjTq6YBkuIRMro" target="_blank" rel="noopener"><b>_OUTBOX</b><span>Made by Matt copies come back here.</span></a><a class="tile" href="https://drive.google.com/drive/folders/1pgldy4cT0lPRb_SAU_bniaXwfudyamg5" target="_blank" rel="noopener"><b>_AUTOMATION</b><span>STATUS, Sunday checks, what changed, requests.</span></a><a class="tile" href="https://drive.google.com/drive/folders/1qdF0cYMipiMnMon_63NYTalz-WhlDaVE" target="_blank" rel="noopener"><b>All lessons</b><span>Your Made by Matt lessons folder.</span></a></div>
+<section class="tool-group"><h2>This week</h2><div class="tiles"><a class="tile" href="Catch_up_Tracker.html"><b>Catch-up tracker</b><span>Who missed what, and the right catch-up sheet.</span></a><a class="tile" href="Quick_capture.html#absence-panel"><b>Absent catch-up</b><span>Preview missed lessons and save a catch-up request.</span></a><a class="tile" href="Missed_last_week.html"><b>Missed last week</b><span>Catch-up sheets for the lessons that did not run, and when to use them.</span></a></div></section>
+<section class="tool-group"><h2>Private</h2><div class="tiles"><a class="tile" href="Class_names.html"><b>Class names</b><span>Your private names list for the laptop.</span></a><a class="tile" href="https://drive.google.com/drive/search?q=MBM%20private%20tracker" target="_blank" rel="noopener"><b>Private folder</b><span>Tracker, targets text, practical record. Never share.</span></a></div></section>
+<section class="tool-group"><h2>Checks</h2><div class="tiles"><a class="tile" href="https://drive.google.com/file/d/1kTMwsY6UbhZ9VVeHnc0igVMLYgqKI4Iw/view" target="_blank" rel="noopener"><b>STATUS note</b><span>Is the home laptop on? What ran?</span></a><a class="tile" href="https://drive.google.com/drive/folders/1pgldy4cT0lPRb_SAU_bniaXwfudyamg5" target="_blank" rel="noopener"><b>Stale files</b><span>Open STALE.txt in _AUTOMATION: all clear, or things to tidy.</span></a></div></section>
+<section class="tool-group"><h2>Drive</h2><div class="tiles"><a class="tile" href="https://drive.google.com/drive/folders/1fJ6_MWEbk_d-8jhmquDG5IGoUU1YjIRd" target="_blank" rel="noopener"><b>_INBOX</b><span>Drop Slides, plans, exports here.</span></a><a class="tile" href="https://drive.google.com/drive/folders/1fFDSTdnqlVkJD6EupgrjTq6YBkuIRMro" target="_blank" rel="noopener"><b>_OUTBOX</b><span>copies come back here.</span></a><a class="tile" href="https://drive.google.com/drive/folders/1pgldy4cT0lPRb_SAU_bniaXwfudyamg5" target="_blank" rel="noopener"><b>_AUTOMATION</b><span>STATUS, Sunday checks, what changed, requests.</span></a><a class="tile" href="https://drive.google.com/drive/folders/1qdF0cYMipiMnMon_63NYTalz-WhlDaVE" target="_blank" rel="noopener"><b>All lessons</b><span>Your lessons folder.</span></a></div></section>
 <p class="note">How it works: a tool saves a small file, you put it in the right Drive folder, and the home laptop does the rest within 15 minutes. Results appear in Drive.</p>
+<section class="tool-group"><h2>New tools</h2><p class="hint">Home sheets, report drafts and the look ahead are made on your laptop and wait in your Drive outbox.</p><div class="tiles"><a class="tile" href="Retrieval_builder.html"><b>Retrieval builder</b><span>Make quick questions to help pupils remember.</span><span class="badge">New</span></a><a class="tile" href="Coverage_map.html"><b>Coverage map</b><span>See what has been taught.</span><span class="badge">New</span></a></div></section>
 </main>
 <script>
-(function(){'use strict';const KEY='mbm_tomorrow_folder_v1',tile=document.getElementById('tomorrowTile'),input=document.getElementById('tomorrowUrl'),hint=document.getElementById('tomorrowHint'),message=document.getElementById('folderStatus');function valid(value){try{const u=new URL(value);return u.protocol==='https:'&&u.hostname==='drive.google.com'&&/^\/drive\/(?:u\/\d+\/)?folders\/[A-Za-z0-9_-]+\/?$/.test(u.pathname);}catch(e){return false;}}function apply(value){if(!valid(value))return;tile.href=value;input.value=value;hint.textContent='_OUTBOX / Tomorrow · Open the print pack folder.';}try{apply(localStorage.getItem(KEY)||'');}catch(e){message.textContent='Browser storage is unavailable. The Drive search link still works.';}document.getElementById('tomorrowForm').onsubmit=function(e){e.preventDefault();const value=input.value.trim();if(!valid(value)){message.textContent='Paste a full HTTPS Google Drive folder link.';return;}apply(value);try{localStorage.setItem(KEY,value);message.textContent='Folder link saved on this device.';}catch(err){message.textContent='Folder link works for this visit. Browser storage could not save it.';}};})();
+
+function pupilTag(n) {
+  let key = {}, profile = {};
+  try { key = JSON.parse(localStorage.getItem('mbm_pupil_key_v1') || '{}') || {}; } catch (e) {}
+  try { profile = JSON.parse(localStorage.getItem('mbm_pupil_profile_v1') || '{}') || {}; } catch (e) {}
+  const words = value => String(value || '').trim().split(/\s+/).map(w => Array.from(w.replace(/[^\p{L}\p{M}]/gu, '').toLocaleUpperCase('en-GB'))).filter(w => w.length);
+  const own = words(key[n]);
+  if (!own.length || profile.show === 'number') return 'P' + n;
+  if (profile.show === 'first') return String(key[n]).trim().split(/\s+/)[0];
+  const rows = Object.keys(key).filter(k => /^\d+$/.test(k)).map(k => {
+    const w = words(key[k]);
+    return { n: k, tag: w.slice(0, 3).map(x => x[0]).join(''), last: w.length ? w[w.length - 1] : [], at: 1 };
+  }).filter(r => r.tag);
+  for (let step = 0; step < 102; step++) {
+    const counts = new Map();
+    rows.forEach(r => counts.set(r.tag, (counts.get(r.tag) || 0) + 1));
+    const collisions = rows.filter(r => counts.get(r.tag) > 1);
+    if (!collisions.length) break;
+    collisions.forEach(r => { r.tag += r.at < r.last.length ? r.last[r.at++] : r.n; });
+  }
+  return (rows.find(r => r.n === String(n)) || {}).tag || 'P' + n;
+}
+function pupilAdapt(n) {
+  try {
+    const p = JSON.parse(localStorage.getItem('mbm_pupil_profile_v1') || '{}');
+    const lines = p && p.pupils && p.pupils[n] && p.pupils[n].adapt;
+    return Array.isArray(lines) ? lines.filter(x => typeof x === 'string' && x.trim()).slice(0, 4).map(x => x.trim().slice(0, 80)) : [];
+  } catch (e) { return []; }
+}
+
+// Timetable, lesson counts and lessonCode copied from round-two source Quick_capture.html.
+const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday'];
+// Copied from Catch_up_Tracker.html. Lesson numbers count occurrences per pathway/subject in week order.
+var TT={
+ Monday:[[1,"LAUNCH","Vocational"],[2,"GROW","Science"],[3,"BUILD","Science"],[4,"LAUNCH","Science"],[5,"BUILD","Creative Arts"],[6,"GROW","Creative Arts"]],
+ Tuesday:[[1,"BUILD","Creative Arts"],[2,"LAUNCH","Humanities"],[3,"BUILD","Careers"],[4,"GROW","Science"],[5,"BUILD","RE"],[6,"LAUNCH","ICT"]],
+ Wednesday:[[1,"BUILD","RSHE"],[2,"LAUNCH","Science"],[3,"GROW","PSHE"],[4,"BUILD","Science"],[5,"GROW","Creative Arts"],[6,"LAUNCH","Vocational"]],
+ Thursday:[[1,"LAUNCH","DT"],[2,"GROW","RE"],[3,"BUILD","Humanities"],[4,"LAUNCH","RSE"],[5,"ALL","Community Projects"]],
+ Friday:[[1,"LAUNCH","Careers"],[2,"GROW","Humanities"],[3,"BUILD","Vocational"],[4,"LAUNCH","Science"]]
+};
+const PREFIX={Science:'SCI',Vocational:'VOC','Creative Arts':'ART',Humanities:'HUM',Careers:'CAREERS',RE:'RE',ICT:'ICT',RSHE:'RSHE',PSHE:'PSHE',DT:'DT',RSE:'RSE','Community Projects':'COMM'};
+const LN={};{const c={};DAYS.forEach(d=>TT[d].forEach(l=>{const k=l[1]+'|'+l[2];LN[d+'|'+l[0]]=c[k]=(c[k]||0)+1;}));}
+
+function lessonCode(w,path,subj,n,part=1){
+ /* Sticker table (school week w is two digits):
+    Science GROW: GROW_SCI_A2_Wnn_Pn; BUILD/LAUNCH: SCI_PATH_A2_Wnn_Ln.
+    Creative Arts: ART_PATH_A2_Wnn_Pn. RE: PATH_RE_A2_Wnn.
+    Humanities/Careers/Vocational/ICT/DT/RSHE/PSHE/RSE: PREFIX_PATH_A2_Wnn.
+    Exception: LAUNCH Vocational W07 uses a literal space, then L1 or L2.
+    Community, every pathway: school W2->W01, W3->W02, W4->W03/W04,
+    W5->W05, W6->W06, W7->W07. File names alone replace the space with _.
+ */
+ const week='A2_W'+pad(w);
+ if(subj==='Community Projects'){const cw=+w===4?(+part===2?4:3):(+w<4?+w-1:+w);return 'COMMUNITY_A2_W'+pad(cw);}
+ if(subj==='Science')return path==='GROW'?'GROW_SCI_'+week+'_P'+n:'SCI_'+path+'_'+week+'_L'+n;
+ if(subj==='Creative Arts')return 'ART_'+path+'_'+week+'_P'+n;
+ if(subj==='RE')return path+'_RE_'+week;
+ const base=PREFIX[subj]+'_'+path+'_'+week;
+ return subj==='Vocational'&&path==='LAUNCH'&&+w===7?base+' L'+n:base;
+}
+
+
+'use strict';
+const $=id=>document.getElementById(id), PINS='mbm_tools_pins_v1',RECENT='mbm_tools_recent_v1',TIMES='mbm_period_times_v1';
+function notice(text){$('homeStatus').textContent=text;}
+function read(key,fallback){try{const raw=localStorage.getItem(key);return raw===null?fallback:JSON.parse(raw);}catch(e){notice('This device could not read saved settings. They have been kept.');return fallback;}}
+function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(e){notice('Your change works for this visit. This device could not save it.');return false;}}
+function pad(n){return String(n).padStart(2,'0');}
+const DEFAULT_TIMES=['09:00','09:50','11:00','11:50','13:30','14:20'];
+let times=read(TIMES,{}),timesValid=false;
+function validTimes(v){return v&&Array.isArray(v.starts)&&v.starts.length===6&&v.starts.every((t,i)=>typeof t==='string'&&/^([01]\d|2[0-3]):[0-5]\d$/.test(t)&&(!i||t>v.starts[i-1]));}
+timesValid=validTimes(times);if(!timesValid)times={starts:DEFAULT_TIMES,confirmed:false};
+const minute=t=>{const a=t.split(':').map(Number);return a[0]*60+a[1];};
+function weekOf(date){return 1+Math.round((Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()-(date.getDay()+6)%7)-Date.UTC(2026,10,2))/604800000);}
+function slotsFor(date){const w=weekOf(date),day=DAYS[date.getDay()-1];if(w<2||w>7||!day)return [];return TT[day].map(row=>{const start=new Date(date.getFullYear(),date.getMonth(),date.getDate(),0,minute(times.starts[row[0]-1])),end=new Date(start);end.setMinutes(end.getMinutes()+(row[0]<6?minute(times.starts[row[0]])-minute(times.starts[row[0]-1]):50));if(row===TT[day].at(-1))end.setTime(start.getTime()+50*60000);return {w,day,p:row[0],path:row[1],subject:row[2],lesson:LN[day+'|'+row[0]],start,end};});}
+function nowContext(now=new Date()){
+  const candidates=[];for(let offset=0;offset<11;offset++){const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+offset);candidates.push(...slotsFor(d));}
+  const current=candidates.find(s=>now>=s.start&&now<s.end),upcoming=candidates.filter(s=>s.start>now),slot=current||upcoming[0]||null;
+  return {slot,current:!!current,next:current?upcoming[0]:upcoming[1]};
+}
+function extrasLink(s,path){return 'Lesson_extras.html#'+new URLSearchParams({week:String(s.w),path:path||s.path,subject:s.subject,lesson:String(s.lesson),view:'visitor'}).toString();}
+function shortSlot(s){return s.start.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})+' · '+times.starts[s.p-1]+' · Period '+s.p+' · '+(s.path==='ALL'?'All groups':s.path)+' · '+s.subject;}
+let sharedPath=read('mbm_tools_path_v1','BUILD');if(!['BUILD','GROW','LAUNCH'].includes(sharedPath))sharedPath='BUILD';$('nowPath').value=sharedPath;
+function renderNow(){const c=nowContext(),s=c.slot;$('nowCapture').href='Quick_capture.html?now=1';$('nowCapture').dataset.toolId='Quick_capture.html';$('nowExtras').dataset.toolId='Lesson_extras.html';$('nowTracker').dataset.toolId='Catch_up_Tracker.html';if(!s){$('nowState').textContent='No lesson';$('nowWhen').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});$('nowLesson').textContent='No lesson in the saved timetable';$('nowCode').textContent='';$('nowHint').textContent='This timetable covers Weeks 2 to 7, starting 9 November 2026. Choose a lesson inside Quick capture.';$('nowExtras').href='Lesson_extras.html';$('nextLesson').textContent='';$('sharedPath').hidden=true;return;}$('nowState').textContent=c.current?'In lesson':'Next lesson';$('nowWhen').textContent=shortSlot(s)+' · Week '+s.w;$('nowLesson').textContent=s.subject+' · '+(s.path==='ALL'?'All groups':s.path);$('nowCode').textContent=lessonCode(s.w,s.path==='ALL'?sharedPath:s.path,s.subject,s.lesson);$('nowExtras').href=extrasLink(s,s.path==='ALL'?sharedPath:s.path);$('sharedPath').hidden=s.path!=='ALL';$('nowHint').textContent=(!times.confirmed?'Suggested times: check your period times below. ':'')+(c.current?'Ready for this lesson.':'Ready for the next lesson.');$('nextLesson').textContent=c.next?'Next: '+shortSlot(c.next):'No later lesson in this timetable.';}
+for(let i=0;i<6;i++){const label=document.createElement('label');label.textContent='Period '+(i+1);const input=document.createElement('input');input.type='time';input.id='time-'+i;input.required=true;input.value=times.starts[i];label.append(input);$('timesInputs').append(label);}
+$('timesForm').onsubmit=e=>{e.preventDefault();const next={...times,starts:Array.from({length:6},(_,i)=>$('time-'+i).value),confirmed:true};if(!validTimes(next)){$('timeStatus').textContent='Use six start times in order, from early to late.';return;}times=next;const ok=write(TIMES,times);$('timeStatus').textContent=ok?'✓ Times saved on this device.':'Times used for this visit. Could not save on this device.';renderNow();};
+$('nowPath').onchange=()=>{sharedPath=$('nowPath').value;write('mbm_tools_path_v1',sharedPath);renderNow();};
+const originals=[...document.querySelectorAll('.tool-group a.tile')], tools=new Map();
+originals.forEach((a,i)=>{const href=a.getAttribute('href'),id=tools.has(href)?href+'::'+i:href;a.dataset.toolId=id;const wrap=document.createElement('div');wrap.className='tool';a.parentNode.insertBefore(wrap,a);wrap.append(a);const title=a.querySelector('b').textContent;tools.set(id,{id,a,wrap,title,search:(a.textContent+' '+a.closest('.tool-group').querySelector('h2').textContent).toLocaleLowerCase('en-GB')});});
+let pins=read(PINS,[]),recent=read(RECENT,[]);pins=Array.isArray(pins)?[...new Set(pins.filter(id=>typeof id==='string'&&tools.has(id)))]:[];recent=Array.isArray(recent)?[...new Set(recent.filter(id=>typeof id==='string'&&tools.has(id)))].slice(0,3):[];
+function pinButton(id){const b=document.createElement('button');b.className='pin';b.type='button';b.dataset.pinId=id;b.onclick=()=>togglePin(id);return b;}
+originals.forEach(a=>a.parentNode.append(pinButton(a.dataset.toolId)));
+function togglePin(id){pins=pins.includes(id)?pins.filter(v=>v!==id):[...pins,id];write(PINS,pins);refreshRows();notice((pins.includes(id)?'Pinned ':'Unpinned ')+tools.get(id).title+'.');}
+function row(box,ids){box.replaceChildren();ids.forEach(id=>{const t=tools.get(id),wrap=document.createElement('div');wrap.className='tool';const a=t.a.cloneNode(true);a.removeAttribute('id');a.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));wrap.append(a,pinButton(id));box.append(wrap);});}
+function refreshRows(){const active=document.activeElement,focusId=active&&active.dataset.pinId,focusRow=active&&active.closest('section')&&active.closest('section').id;row($('pinnedTiles'),pins);row($('recentTiles'),recent);$('pinHelp').hidden=!!pins.length;$('recentHelp').hidden=!!recent.length;document.querySelectorAll('[data-pin-id]').forEach(b=>{const is=pins.includes(b.dataset.pinId);b.textContent=is?'★':'☆';b.setAttribute('aria-pressed',String(is));b.setAttribute('aria-label',(is?'Unpin ':'Pin ')+tools.get(b.dataset.pinId).title);b.title=b.getAttribute('aria-label');});filter();if(focusId&&focusRow){const target=[...$(focusRow).querySelectorAll('[data-pin-id]')].find(b=>b.dataset.pinId===focusId)||[...document.querySelectorAll('.tool-group [data-pin-id]')].find(b=>b.dataset.pinId===focusId);if(target)target.focus();}}
+function filter(){const q=$('toolSearch').value.trim().toLocaleLowerCase('en-GB');let matches=0;tools.forEach(t=>{const match=t.search.includes(q);t.wrap.hidden=!match;if(match)matches++;});document.querySelectorAll('.tool-group').forEach(g=>g.hidden=![...g.querySelectorAll('.tool')].some(t=>!t.hidden));['pinnedTiles','recentTiles'].forEach(id=>{for(const t of $(id).children)t.hidden=!tools.get(t.querySelector('a').dataset.toolId).search.includes(q);});$('searchStatus').textContent=q?(matches?matches+' tools found.':'No tools found. Try a shorter word.'):'Tap a star to pin a tool. Hold a tile to pin it too.';$('pinnedSection').hidden=!!q&&![...$('pinnedTiles').children].some(t=>!t.hidden);$('recentSection').hidden=!!q&&![...$('recentTiles').children].some(t=>!t.hidden);}
+$('toolSearch').oninput=filter;
+let hold=null,heldLink=null,suppress=null;
+document.addEventListener('pointerdown',e=>{const a=e.target.closest('a[data-tool-id]');if(!a||!tools.has(a.dataset.toolId)||e.button!==0)return;clearTimeout(hold);heldLink={a,x:e.clientX,y:e.clientY};hold=setTimeout(()=>{togglePin(a.dataset.toolId);suppress={a,until:Date.now()+1500};heldLink=null;},650);});
+document.addEventListener('pointermove',e=>{if(heldLink&&Math.hypot(e.clientX-heldLink.x,e.clientY-heldLink.y)>12){clearTimeout(hold);heldLink=null;}});
+['pointerup','pointercancel','scroll'].forEach(name=>document.addEventListener(name,()=>{clearTimeout(hold);heldLink=null;},true));
+document.addEventListener('contextmenu',e=>{if(e.target.closest('a[data-tool-id]')&&(heldLink||suppress&&Date.now()<suppress.until))e.preventDefault();});
+document.addEventListener('click',e=>{if(suppress&&Date.now()<suppress.until){e.preventDefault();suppress=null;return;}suppress=null;const a=e.target.closest('a[data-tool-id]');if(!a)return;const id=a.dataset.toolId;if(tools.has(id)){recent=[id,...recent.filter(v=>v!==id)].slice(0,3);write(RECENT,recent);refreshRows();}});
+window.addEventListener('pageshow',()=>{const saved=read(RECENT,[]);if(Array.isArray(saved))recent=[...new Set(saved.filter(id=>tools.has(id)))].slice(0,3);refreshRows();renderNow();});
+window.addEventListener('storage',e=>{if(e.key===TIMES){const v=read(TIMES,{});if(validTimes(v)){times=v;for(let i=0;i<6;i++)$('time-'+i).value=times.starts[i];renderNow();}}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)renderNow();});
+refreshRows();renderNow();setInterval(renderNow,30000);
+const icon='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="38" fill="#153e64"/><g fill="#fff"><rect x="40" y="40" width="48" height="48" rx="10"/><rect x="104" y="40" width="48" height="48" rx="10"/><rect x="40" y="104" width="48" height="48" rx="10"/><rect x="104" y="104" width="48" height="48" rx="10"/></g></svg>');
+const start=new URL('My_tools.html',location.href).href;
+$('manifest').href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify({name:'My tools',short_name:'My tools',id:start,start_url:start,scope:new URL('.',start).href,display:'fullscreen',background_color:'#ffffff',theme_color:'#153e64',icons:[{src:icon,sizes:'any',type:'image/svg+xml',purpose:'any maskable'}]}));$('appIcon').href=icon;$('touchIcon').href=icon;
+
+</script>
+<script>
+
+(function(){'use strict';const KEY='mbm_tomorrow_folder_v1',tile=document.getElementById('tomorrowTile'),input=document.getElementById('tomorrowUrl'),hint=document.getElementById('tomorrowHint'),message=document.getElementById('folderStatus');function valid(value){try{const u=new URL(value);return u.protocol==='https:'&&u.hostname==='drive.google.com'&&/^\/drive\/(?:u\/\d+\/)?folders\/[A-Za-z0-9_-]+\/?$/.test(u.pathname);}catch(e){return false;}}function apply(value){if(!valid(value))return;tile.href=value;input.value=value;hint.textContent='_OUTBOX / Tomorrow · Open the print pack folder.';refreshRows();}try{apply(localStorage.getItem(KEY)||'');}catch(e){message.textContent='Browser storage is unavailable. The Drive search link still works.';}document.getElementById('tomorrowForm').onsubmit=function(e){e.preventDefault();const value=input.value.trim();if(!valid(value)){message.textContent='Paste a full HTTPS Drive folder link.';return;}apply(value);try{localStorage.setItem(KEY,value);message.textContent='Folder link saved on this device.';}catch(err){message.textContent='Folder link works for this visit. Browser storage could not save it.';}};})();
+
 </script>
 </body>
 </html>
