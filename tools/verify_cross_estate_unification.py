@@ -4099,9 +4099,19 @@ WA3_EXACT_SHA256 = {
     "build_dt_upcycling.html": "3091a2e84328bef46aa9ecb532dbb5f64e46bd037037ed8f7daee5a41037d876"
 }
 
+# Ruling thread, 11 Nov 2026 (owner asked for the sitemap fix on 10 Nov): the sitemap derivation follows links from
+# catalogued pages so lesson pages are listed (796 -> 1,671 URLs), and the sitemap it writes. Each admitted by its exact
+# reviewed digest -- no folder, no pattern; any other byte in either reds as before, and build_sitemap.py --check
+# ties the committed sitemap to the derivation.
+SITEMAP_LINKS_EXACT_SHA256 = {
+    "sitemap.xml": "d95d053d0e7e2ce26dd7ab5fe378be77e28ee783daddc2b0ff5c3d9ebeb7b832",
+    "tools/catalogue/build_sitemap.py": "9ec82b2dac4cef9b1e2ad46cb3c2ead04258865d1671c44be018ee78b0b2e198"
+}
+
 
 def exact_byte_admitted(root: Path, changed: set[str]) -> set[str]:
-    exact = {**SCHEME_SOURCE_EXACT_SHA256, **M1_RENAME_EXACT_SHA256, **WB1_MOVED_EXACT_SHA256, **WA3_EXACT_SHA256}
+    exact = {**SCHEME_SOURCE_EXACT_SHA256, **M1_RENAME_EXACT_SHA256, **WB1_MOVED_EXACT_SHA256, **WA3_EXACT_SHA256,
+             **SITEMAP_LINKS_EXACT_SHA256}
     return {rel for rel in changed if rel in exact and (root / rel).is_file()
             and digest(root / rel) == exact[rel]}
 
