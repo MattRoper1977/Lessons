@@ -5613,6 +5613,8 @@ REVIEWED_PATHS += ('kits/class_tools/Missed_last_week.html',)
 REVIEWED_PATHS += ('kits/class_tools/Quick_capture.html', 'kits/class_tools/Lesson_extras.html')
 # 10 Nov 2026 round two: retrieval builder and coverage map join the private class tools.
 REVIEWED_PATHS += ('kits/class_tools/Retrieval_builder.html', 'kits/class_tools/Coverage_map.html')
+# 2026-11-11: a choose-your-path reading story for class reading time joins the unlisted pages (noindex, no names, no network; device storage only).
+REVIEWED_PATHS += ('kits/class_tools/Spooky_Story.html',)
 
 
 # Pathway labels phase 2 (Lessons #824, owner approval 8 Nov 2026 14:34Z): the relabelled lesson pages and the
