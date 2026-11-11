@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<title>The Fridge Wants a Laugh</title>
+<style>
+:root {
+  color-scheme: dark;
+  font-family: system-ui, "Segoe UI", sans-serif;
+  color: #fff1d4;
+  background: #171323;
+  --cream: #fff1d4;
+  --muted: #d9c9e4;
+  --mint: #c8f1bc;
+  --gold: #ffcf79;
+  --panel: #241b33;
+  --edge: #69547e;
+  --reading-size: 22px;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button[aria-disabled="true"] { cursor: default; }
+button:focus-visible, h2:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
+[hidden] { display: none !important; }
+.shell { max-width: 1280px; margin: 0 auto; padding: 22px clamp(14px, 3vw, 36px) 20px; }
+.masthead {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  column-gap: 24px; row-gap: 13px; padding-bottom: 16px;
+}
+h1 { font-size: clamp(1.22rem, 3.2vw, 1.65rem); margin: 0; line-height: 1.2; letter-spacing: -.035em; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand svg { flex: none; width: 32px; height: 32px; color: var(--gold); }
+.status { display: flex; flex-wrap: wrap; gap: 8px; font-size: .875rem; font-weight: 650; }
+.status span { padding: 5px 9px; border: 1px solid var(--edge); border-radius: 6px; color: var(--muted); }
+.status #endings { color: var(--mint); }
+.story-layout { display: grid; gap: 22px; }
+.picture {
+  margin: 0; align-self: start; min-width: 0; border: 1px solid var(--edge);
+  border-radius: 14px; overflow: hidden; background: #2d2441;
+}
+.picture svg { display: block; width: 100%; height: auto; }
+.reading { min-width: 0; padding: 0 3px; }
+h2 { font-size: clamp(1.65rem, 3.8vw, 2.75rem); margin: 0 0 .36em; line-height: 1.08; letter-spacing: -.042em; }
+#story-text { font-size: calc(var(--reading-size) + var(--text-boost, 0px)); line-height: 1.6; }
+#story-text p { margin: 0 0 .55em; }
+#story-text p:last-child { margin-bottom: 0; }
+#ending-reason {
+  margin: .85rem 0 0; padding: .7rem .9rem; border-left: 3px solid var(--gold);
+  background: var(--panel); font-size: calc(var(--reading-size) + var(--text-boost, 0px)); line-height: 1.6;
+}
+#ending-reason strong { color: var(--gold); }
+#choices { display: grid; gap: 9px; margin: 1.1rem 0 0; }
+.choice {
+  display: flex; align-items: center; text-align: left; gap: 11px;
+  min-height: 56px; padding: 8px 11px; width: 100%;
+  border: 1px solid #799579; border-radius: 9px; background: #24392f;
+  color: #f4ffe7; font-size: calc(clamp(18px, 1.62vw, 22px) + var(--text-boost, 0px)); font-weight: 680;
+  line-height: 1.3;
+}
+.choice:hover { background: #304539; }
+.choice-icon { display: grid; place-items: center; flex: 0 0 34px; min-height: 32px; border-radius: 5px; background: #182b23; }
+.choice-icon svg { width: 20px; height: 20px; color: var(--mint); }
+.choice kbd { margin-left: auto; padding: 2px 7px; border: 1px solid #799579; border-radius: 4px; font: 650 .8rem system-ui, sans-serif; color: var(--mint); }
+.utility-area { margin-top: 23px; padding-top: 13px; border-top: 1px solid var(--edge); }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.control {
+  display: inline-flex; gap: 7px; align-items: center; min-height: 44px;
+  padding: 6px 10px; text-align: left; line-height: 1.3;
+  background: var(--panel); border: 1px solid var(--edge); border-radius: 7px; font-weight: 620;
+}
+.control svg { width: 17px; height: 17px; color: var(--gold); flex: none; }
+.control:hover:not(:disabled):not([aria-disabled="true"]) { background: #382b4b; }
+.control:disabled { color: var(--muted); cursor: default; }
+.control-state { color: var(--mint); font-size: .81em; }
+.reading-controls { margin: 0 0 13px; }
+.reading-controls .control { min-height: 40px; font-size: .875rem; }
+.teacher-toggle { margin-left: auto; }
+#teacher-panel {
+  margin-top: 12px; padding: 15px; border: 1px solid var(--edge);
+  border-radius: 8px; background: var(--panel); font-size: 1rem; line-height: 1.55;
+}
+#teacher-panel p { margin: 0 0 .5rem; }
+#teacher-panel p:last-child { margin: 0; }
+#teacher-panel ol { padding-left: 1.5rem; margin: 0 0 .6rem; }
+footer { margin-top: 14px; color: var(--muted); font-size: .875rem; }
+.float { animation: float 7s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-7px); } }
+.calm .float { animation: none; }
+@media (prefers-reduced-motion: reduce) { .float { animation: none; } }
+@media (min-width: 650px) { :root { --reading-size: 26px; } }
+@media (min-width: 1000px) {
+  :root { --reading-size: 30px; }
+  .story-layout { grid-template-columns: minmax(0, .93fr) minmax(0, 1.07fr); gap: clamp(26px, 3vw, 42px); }
+  .reading { padding: 2px 4px 0 0; }
+}
+@media (max-width: 600px) { .teacher-toggle { margin-left: 0; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden">
+<defs>
+  <symbol id="icon-toast" viewBox="0 0 24 24"><path d="M5 19V10C1 8 4 3 8 3h8c4 0 7 5 3 7v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 13h.1m5.9 0h.1M10 16q2 2 4 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="icon-look" viewBox="0 0 24 24"><path d="M2 12q10-13 20 0Q12 25 2 12Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="currentColor"/></symbol>
+  <symbol id="icon-act" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-back" viewBox="0 0 24 24"><path d="M20 12H5m6-6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-again" viewBox="0 0 24 24"><path d="M20 10a8 8 0 1 1-4-5l4 3m0-5v6h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-voice" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3Zm13 0q3 3 0 6m3-9q5 6 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-calm" viewBox="0 0 24 24"><path d="M19 15A8 8 0 0 1 9 4a8.5 8.5 0 1 0 10 11Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+</defs>
+</svg>
+<div class="shell">
+  <header class="masthead">
+    <div class="brand">
+      <svg aria-hidden="true"><use href="#icon-toast"></use></svg>
+      <h1>The Fridge Wants a Laugh</h1>
+    </div>
+    <div class="status" aria-live="polite" aria-atomic="true">
+      <span id="progress"></span>
+      <span id="endings"></span>
+    </div>
+  </header>
+  <main class="story-layout">
+    <figure class="picture" id="picture"></figure>
+    <article class="reading" aria-labelledby="scene-title">
+      <h2 id="scene-title" tabindex="-1"></h2>
+      <div class="controls reading-controls" role="group" aria-label="Reading settings">
+      <button class="control" type="button" id="read-aloud" aria-pressed="false" hidden><svg aria-hidden="true"><use href="#icon-voice"></use></svg><span>Read to me</span></button>
+      <button class="control" type="button" id="bigger">Bigger text</button>
+      <button class="control" type="button" id="smaller">Smaller text</button>
+      <button class="control" type="button" id="calm" aria-pressed="false"><svg aria-hidden="true"><use href="#icon-calm"></use></svg>Calm mode <span class="control-state" aria-hidden="true">Off</span></button>
+      </div>
+      <div id="story-text"></div>
+      <p id="ending-reason" hidden><strong>Why did that happen?</strong> <span id="reason-text"></span></p>
+      <div id="choices" aria-label="Story choices" role="group"></div>
+      <noscript>Turn on JavaScript in your browser to read and choose a path.</noscript>
+    </article>
+  </main>
+  <div class="utility-area">
+    <div class="controls" role="group" aria-label="Reading controls">
+      <button class="control" type="button" id="back"><svg aria-hidden="true"><use href="#icon-back"></use></svg>Go back one step</button>
+      <button class="control" type="button" id="restart"><svg aria-hidden="true"><use href="#icon-again"></use></svg>Start again</button>
+      <button class="control teacher-toggle" type="button" id="teacher" aria-expanded="false" aria-controls="teacher-panel">For the teacher</button>
+    </div>
+    <section id="teacher-panel" aria-label="For the teacher" hidden>
+      <p id="teacher-summary"></p>
+      <p><strong>Talk questions</strong></p>
+      <ol>
+        <li>When does the fridge start to seem more funny than scary?</li>
+        <li>Which choice makes the biggest difference to your ending?</li>
+        <li>What would you do to make the fridge laugh?</li>
+      </ol>
+      <p id="teacher-words"></p>
+    </section>
+  </div>
+  <footer>Made by Matt</footer>
+</div>
+<script type="application/json" id="story-data">
+{
+  "start": "s01",
+  "scenes": [
+    {"id":"s01","title":"The tap in the dark","alt":"A fridge with two bright eyes, a slice of toast behind its door, and a bag on a chair.","body":["You slip into the dark kitchen for some toast. Tap. Tap. Tap. The fridge door cracks open. Two eyes glow in the gap. You spot your toast on a tiny plate.","“Make me laugh and you get it back,” says the fridge. A bag on a chair starts to shake. Then you hear a sniff under the table."],"choices":[{"label":"Look in the shaking bag","to":"s02a","icon":"look"},{"label":"Look under the table","to":"s02b","icon":"look"}]},
+    {"id":"s02a","title":"A bag with a face","alt":"A pale ghost floats out of a striped bag on a chair.","body":["You peek into the bag. A ghost pops up like a bit of toast. “Boo,” it says. Then it says “Sorry” to the bag. Its name is Puff. Puff likes a good joke.","“Put on a very smart hat,” says Puff. “That always helps.” A knock comes from the cupboard. At the sink, a green bubble grows."],"choices":[{"label":"Open the cupboard","to":"s03a","icon":"look"},{"label":"Check the green bubble","to":"s03b","icon":"look"}]},
+    {"id":"s02b","title":"Feet at the table","alt":"A green zombie sits under the table, holding a plate with one crumb.","body":["You bend down and see a pair of green feet. Crumb the zombie sits under the table. He holds up a plate with one sad crumb on it. “Just toast,” he says.","You tell him what the fridge wants. He puts the plate on his head and waits. A knock comes from the cupboard. A green bubble grows by the sink."],"word":"zombie","choices":[{"label":"Open the cupboard","to":"s03a","icon":"look"},{"label":"Check the green bubble","to":"s03b","icon":"look"}]},
+    {"id":"s03a","title":"The little achoo","alt":"A small vampire in a cape holds a tissue inside an open cupboard.","body":["You pull the door wide. Sniff the vampire sits by the mugs. He lifts his cape to say boo. “Ah … ah … choo!” He blows his nose and tries to look cross.","You ask him what makes the fridge laugh. Sniff points to a bowl and a clean sock. “A hat for a head that has no head,” he says."],"word":"vampire","choices":[{"label":"Take the bowl","to":"s04a","icon":"act"},{"label":"Take the clean sock","to":"s04b","icon":"act"}]},
+    {"id":"s03b","title":"The sink has lips","alt":"Green slime with round eyes blows a bubble in a sink.","body":["You lean over the sink. A blob of slime blinks up at you. It blows a huge green bubble. Pop! The bubble leaves a ring on its head. The slime makes a proud little bow.","You need a hat like that. You spot a bowl on the side. Next to it lies a clean sock with one long toe."],"word":"slime","choices":[{"label":"Take the bowl","to":"s04a","icon":"act"},{"label":"Take the clean sock","to":"s04b","icon":"act"}]},
+    {"id":"s04a","title":"The bowl hat","alt":"An upside-down golden bowl gleams in a pool of light beside the fridge.","body":["You lift the bowl and turn it over. It looks like a hat fit for a king. There is one pea stuck to the side. You leave it there. All smart hats need a little green dot.","The fridge leans in for a look. “Who gets to wear it?” asks the fridge. Its door makes a slow creak."],"choices":[{"label":"Wear the bowl yourself","to":"s05a","icon":"act"},{"label":"Put the bowl on the fridge","to":"s05b","icon":"act"}]},
+    {"id":"s04b","title":"The sock hat","alt":"A long striped sock curls like a drooping hat beside the fridge.","body":["You pick up the sock by the toe. It is so long that it swings like a tail. You fold the top up to make a hat. Now the toe sticks out like a duck's bill.","The fridge leans in for a look. “Who gets to wear it?” asks the fridge. Its door makes a slow creak."],"choices":[{"label":"Wear the sock yourself","to":"s05a","icon":"act"},{"label":"Put the sock on the fridge","to":"s05b","icon":"act"}]},
+    {"id":"s05a","title":"A very smart hat","alt":"The fridge studies a bowl or a sock worn as a hat by the reader.","body":["You put on the hat and look down your nose. Puff the ghost drifts over. “Very smart hat,” says Puff. The fridge looks you up and down. “Why yes,” you say. “It has a very good job. It keeps my hair in.”","The fridge makes a small snort. You still need a real laugh. You think of a toast joke. You can also do your best silly walk."],"choices":[{"label":"Tell the toast joke","to":"s06a","icon":"toast"},{"label":"Do the silly walk","to":"s06b","icon":"act"}]},
+    {"id":"s05b","title":"The fridge gets dressed","alt":"The fridge wears the bowl or sock and admires its shape in a shiny tray.","body":["You set the hat on top of the fridge. The fridge turns to see itself in a tray. Puff the ghost drifts over. “Very smart hat,” says Puff. The fridge tilts a bit. It wants to see its best side.","You can see its door shake. You still need a real laugh. You think of a toast joke. You can also do your best silly walk."],"choices":[{"label":"Tell the toast joke","to":"s06a","icon":"toast"},{"label":"Do the silly walk","to":"s06b","icon":"act"}]},
+    {"id":"s06a","title":"A joke on toast","alt":"The fridge tries to keep a straight face while a ghost grins and a zombie holds a plate.","body":["You clear your throat. “What does toast wear in the rain?” The fridge goes very still. “A coat of jam!” you say. Puff lets out a squeak. Crumb shuffles up with a plate. “Just toast,” he says.","The fridge gives a tiny shake. It makes a wet sniff. “I'm close,” it says. “Give me a hand.” You see a box of soft white tissues."],"choices":[{"label":"Clap to help it laugh","to":"s07a","icon":"act"},{"label":"Offer the fridge a tissue","to":"s07b","icon":"act"}]},
+    {"id":"s06b","title":"The bent knee walk","alt":"The fridge watches a pair of shoes take a big sideways step.","body":["You bend your knees and take one big step. Then you take one very small step. You act as if your shoes are full of peas. The fridge tries to do it too. It has no knees. It just rocks.","The fridge makes a wet sniff. “I'm close,” it says. “Give me a hand.” You see a box of soft white tissues."],"choices":[{"label":"Clap to help it laugh","to":"s07a","icon":"act"},{"label":"Offer the fridge a tissue","to":"s07b","icon":"act"}]},
+    {"id":"s07a","title":"Hands for the fridge","alt":"Two hands clap beside a fridge with a paper note stuck to its door.","body":["You clap three times. The fridge nods. “Yes! More of that!” You clap one more time. The fridge tries to clap too. It has one door and no hands. It gives up and stamps one little foot.","A note slips down its door. A tray rolls out from under it. “One big laugh,” says the fridge. “This might help.”"],"choices":[{"label":"Read the note","to":"s08a","icon":"look"},{"label":"Look at the tray","to":"s08b","icon":"look"}]},
+    {"id":"s07b","title":"One big sniff","alt":"The fridge holds a tissue in its door with a note and tray close by.","body":["You hold out a tissue. The fridge takes it with the edge of its door. It blows so hard that Puff spins round. “My nose is a door,” says the fridge. “How odd is that?”","A note slips down its door. A tray rolls out from under it. “One big laugh,” says the fridge. “This might help.”"],"choices":[{"label":"Read the note","to":"s08a","icon":"look"},{"label":"Look at the tray","to":"s08b","icon":"look"}]},
+    {"id":"s08a","title":"Do it wrong","alt":"A large note that reads DO IT WRONG sits above a spoon, a box and a mat.","body":["You lift the note. It says “DO IT WRONG” in big red pen. You read it out. The fridge sighs. “My best jokes make no sense at all,” it says. “Like socks with no feet.”","You look down at the tray. It holds a spoon, a small box and a mat. You can do a lot wrong with those."],"choices":[{"label":"Grab the spoon","to":"s09a","icon":"act"},{"label":"Open the box","to":"s09b","icon":"look"},{"label":"Pick up the mat","to":"s09c","icon":"act"}]},
+    {"id":"s08b","title":"Three odd things","alt":"A tray holds a large spoon, a small green box and a blue mat shaped like toast.","body":["You pull the tray into the light. It holds a spoon as big as your hand. Next to it sits a box with a loose lid. Last of all there is a mat shaped like toast.","“All good jokes start with a bit of junk,” says the fridge. It looks at the tray. “That is my best junk. Do something daft with it.”"],"choices":[{"label":"Grab the spoon","to":"s09a","icon":"act"},{"label":"Open the box","to":"s09b","icon":"look"},{"label":"Pick up the mat","to":"s09c","icon":"act"}]},
+    {"id":"s09a","title":"The bendy spoon","alt":"A big spoon curls sideways over a tray as the fridge peeks on.","body":["You pick up the spoon. It bends to the left. Then it bends to the right. You hold it up like a singer. The fridge leans close to hear it sing. You hear a small squeak from its door.","You can tap the spoon on the tray to make a beat. Or you can give the spoon a big voice."],"choices":[{"label":"Tap a beat with the spoon","to":"s10a","icon":"act"},{"label":"Give the spoon a voice","to":"s10b","icon":"act"}]},
+    {"id":"s09b","title":"The box with a crown","alt":"A green box has two paper eyes and a gold crown.","body":["You lift the lid. The box has two paper eyes stuck to one side. A little gold crown sits in it. You put the crown on the box. Now it looks like a king who has lost his legs.","The fridge lets out a squeak. You can make the box talk. Or you can make it march like a king."],"choices":[{"label":"Give the box a voice","to":"s10b","icon":"act"},{"label":"Make the box march","to":"s10c","icon":"act"}]},
+    {"id":"s09c","title":"A stage for toast","alt":"A blue mat shaped like a slice of toast sits like a stage under a pool of light.","body":["You spread the mat on the floor. It looks like a slice of blue toast. You put one foot on it. Puff calls out, “You are on!” The fridge leans in like it has a seat at a show.","You can tap out a beat with your feet. Or you can lead a march. Puff can be your band."],"choices":[{"label":"Tap a beat with your feet","to":"s10a","icon":"act"},{"label":"Lead a march","to":"s10c","icon":"act"}]},
+    {"id":"s10a","title":"The beat goes plop","alt":"Music notes surround the laughing fridge as toast slides out onto a tray.","body":["You tap out a beat. Tap, tap, plop! You pause as if the plop is part of the tune. The fridge tries to hold its laugh in. Then its whole door shakes. “HA!” it says.","Your toast slides out with a stack of spare slices. Crumb brings his plate. Sniff pops out with jam. The fridge asks what you do first."],"choices":[{"label":"Make a plate for all","to":"s11a","icon":"toast"},{"label":"Give Crumb the first slice","to":"s11b","icon":"toast"},{"label":"Let the fridge pick a prize","to":"s11c","icon":"act"}]},
+    {"id":"s10b","title":"A voice fit for a king","alt":"A speech bubble floats by the laughing fridge as toast slides out onto a tray.","body":["You give a tiny thing a big voice. “Who put my socks in the soup?” you roar. The fridge tries to keep a straight face. Then its whole door shakes. “HA!” it says.","Your toast slides out with a stack of spare slices. Crumb brings his plate. Sniff pops out with jam. The fridge asks what you do first."],"choices":[{"label":"Make a plate for all","to":"s11a","icon":"toast"},{"label":"Give Crumb the first slice","to":"s11b","icon":"toast"},{"label":"Let the fridge pick a prize","to":"s11c","icon":"act"}]},
+    {"id":"s10c","title":"The march of the feet","alt":"Footprints and music notes loop past the laughing fridge and a tray of toast.","body":["You start a grand march. Left, right, left. Puff hums a tune and Crumb taps his plate. You end with a bow to one loose pea. The fridge lets out a great big “HA!”","Your toast slides out with a stack of spare slices. Crumb brings his plate. Sniff pops out with jam. The fridge asks what you do first."],"choices":[{"label":"Make a plate for all","to":"s11a","icon":"toast"},{"label":"Give Crumb the first slice","to":"s11b","icon":"toast"},{"label":"Let the fridge pick a prize","to":"s11c","icon":"act"}]},
+    {"id":"s11a","title":"A plate for all","alt":"A round plate of toast is set on a table with a chair beside it.","body":["You put the toast in the middle of the table. Puff adds a crumb to each plate. “Just toast,” says Crumb. Sniff sets down his pot of jam. He has a dab of it on his nose.","You pull up a spare chair. The fridge looks at the seat. Then it looks at the tallest slice of toast. Both look keen to join in."],"choices":[{"label":"Save the fridge a seat","to":"end-a","icon":"act"},{"label":"Give the toast a smart hat","to":"end-b","icon":"toast"}]},
+    {"id":"s11b","title":"Crumb gets first pick","alt":"Crumb holds a plate piled with warm toast, with more slices on the tray.","body":["You give Crumb the first slice. He holds it up to the light. “Just toast,” he says. A huge grin spreads across his face. You give him the tray so he can share it out.","Crumb points to a sign with a blank bit at the top. He can run a toast shop. He can also make a tall toast stack."],"choices":[{"label":"Let Crumb run the shop","to":"end-c","icon":"toast"},{"label":"Help Crumb stack the toast","to":"end-d","icon":"toast"}]},
+    {"id":"s11c","title":"A prize for the fridge","alt":"The fridge grins at a prize tray with a gold paper badge.","body":["You tell the fridge it gets a prize for the best laugh. The fridge stands up as tall as it can. “A small prize for a big fridge,” it says. “I want to be part of the show.”","You can give it a clap. Or you can write a name on a badge. There is a gold one on the tray."],"word":"badge","choices":[{"label":"Give the fridge a tiny clap","to":"end-e","icon":"act"},{"label":"Give the fridge a name badge","to":"end-f","icon":"act"}]},
+    {"id":"end-a","title":"Best ending — Toast for the whole crew","alt":"The fridge joins Crumb, Puff and Sniff at a table full of toast and jam.","body":["You move the chair so the fridge can fit at the table. The fridge brings out more toast. It even has jam for Sniff. Crumb takes one bite. “Just toast,” he says. “With friends.”","Puff puts a pea on the fridge. “Very smart hat.” You all laugh. The fridge makes a tiny burp. Then it asks if you can come back for lunch."],"ending":true,"reason":"You save the fridge a seat, so it shares its toast with the whole crew.","choices":[]},
+    {"id":"end-b","title":"The king of toast","alt":"A tall slice of toast wears a gold bowl like a crown in front of the fridge.","body":["You give the tallest slice a hat. Puff makes a low bow. “Very smart hat,” says Puff. Sniff bows so low that the jam drops off his nose. Crumb catches it on his plate.","The fridge calls for a toast to the toast. You hold up your slice. Then you eat it. The tall slice gets its own seat and a dot of jam."],"ending":true,"reason":"You give the toast a hat, so the whole crew treats it like a king.","choices":[]},
+    {"id":"end-c","title":"Crumb's toast shop","alt":"Crumb serves a slice at a counter with a hand-drawn TOAST SHOP sign.","body":["You write TOAST SHOP on the sign. Crumb puts it on the table and takes his first order. You ask for toast. Puff asks for a bit of toast. Sniff asks if he can get jam.","“Just toast,” says Crumb. He gives Sniff two slices and a pot of jam. You pay with a clap. The fridge wants a job on the till."],"ending":true,"reason":"You let Crumb run the shop, so he gets to say “Just toast” to each guest.","choices":[]},
+    {"id":"end-d","title":"The great toast stack","alt":"A tall stack of toast leans towards Crumb, who holds out a plate.","body":["You and Crumb stack the toast on a plate. It goes up past his chin. It tips to the left. Puff gasps. It tips to the right. Sniff grabs the jam to keep it safe.","The stack slides down in a neat row. One slice lands on each plate. Crumb nods. “Just toast,” he says. You both take a bow."],"ending":true,"reason":"You help Crumb stack the toast, so the falling stack serves a slice to each guest.","choices":[]},
+    {"id":"end-e","title":"A clap for a snack","alt":"Two clapping hands are beside a grinning fridge that hands out toast.","body":["You give the fridge one tiny clap. The fridge gives you one tiny slice. You clap twice. Out come two more. Puff starts to clap very fast. The fridge has to ask for a rest.","Crumb holds up his plate. “Just toast?” The fridge gives him the big slice it saves for guests. Then it gives itself a clap with the door."],"ending":true,"reason":"You give the fridge a tiny clap, so it hands out toast for each clap.","choices":[]},
+    {"id":"end-f","title":"Chef Cold Feet","alt":"The fridge has a chef hat and a gold name badge, with toast on its tray.","body":["You write CHEF COLD FEET in big letters. The fridge wears the badge on its door. It says, “I make the best cold toast in the room.” You take a bite. The toast is still warm.","“Shh,” says the fridge. “You'll give my secret away.” Puff puts a clean sock on top. “Very smart hat, Chef.” The chef takes a bow."],"ending":true,"reason":"You give the fridge a name badge, so it turns into Chef Cold Feet.","choices":[]}
+  ]
+}
+</script>
+<svg width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden">
+<defs>
+  <linearGradient id="wall-colour" x2="0" y2="1">
+    <stop stop-color="#3f2c56"/><stop offset="1" stop-color="#242038"/>
+  </linearGradient>
+  <linearGradient id="floor-colour" x2="0" y2="1">
+    <stop stop-color="#40304a"/><stop offset="1" stop-color="#211b34"/>
+  </linearGradient>
+  <linearGradient id="window-colour" x2="0" y2="1">
+    <stop stop-color="#111a36"/><stop offset="1" stop-color="#304567"/>
+  </linearGradient>
+  <linearGradient id="fridge-colour" x2="1" y2=".6">
+    <stop stop-color="#bde7c0"/><stop offset="1" stop-color="#6caf99"/>
+  </linearGradient>
+  <pattern id="tile-lines" width="55" height="48" patternUnits="userSpaceOnUse">
+    <path d="M0 48V0H55" fill="none" stroke="#8e719a" opacity=".25" stroke-width="2"/>
+  </pattern>
+  <g id="draw-room">
+    <path fill="url(#wall-colour)" d="M0 0h640v361H0z"/>
+    <path fill="url(#floor-colour)" d="M0 361h640v119H0z"/>
+    <path fill="url(#tile-lines)" d="M0 226h640v132H0z"/>
+    <path d="M0 352h640v12H0z" fill="#90697f"/><path d="M0 364h640" stroke="#1c172b" stroke-width="5"/>
+    <path d="M0 424h640M86 480l70-116m385 116-66-116M313 480V364" stroke="#806189" stroke-width="2.5" opacity=".34"/>
+    <path d="M17 0v230m605-230v230" stroke="#946a98" stroke-width="2" opacity=".24"/>
+    <rect x="50" y="57" width="162" height="172" rx="75" fill="#2a213b" stroke="#1a172a" stroke-width="7"/>
+    <path d="M63 215v-76a68 68 0 0 1 136 0v76Z" fill="url(#window-colour)" stroke="#9c748d" stroke-width="4"/>
+    <path d="M158 90a29 29 0 1 0 23 43 26 26 0 0 1-23-43Z" fill="#ffdc91"/>
+    <path d="M96 110v12m-6-6h12m17 59v11m-5-5h10m51-24v10m-5-5h10" stroke="#c5e7e1" stroke-width="2" stroke-linecap="round"/>
+    <path d="M63 151h136m-68-79v143" stroke="#9c748d" stroke-width="5"/>
+    <path d="M43 217h177v13H43z" fill="#825b79" stroke="#211a32" stroke-width="4"/>
+    <path d="M518 80h77v91h-77z" fill="#31243d" stroke="#1e1931" stroke-width="5"/>
+    <path d="M534 94h45v63h-45z" fill="#654266"/>
+    <path d="M542 128h28m-14-14v28" stroke="#da9c82" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g id="draw-spot">
+    <path d="M289 11h62l181 395H108Z" fill="#f3b674" opacity=".105"/>
+    <ellipse cx="320" cy="406" rx="212" ry="35" fill="#f3b674" opacity=".15"/>
+    <path d="M320 0v33" stroke="#151422" stroke-width="5"/>
+    <path d="M279 63q7-31 41-31t41 31Z" fill="#dd906d" stroke="#20182b" stroke-width="5"/>
+    <ellipse cx="320" cy="64" rx="40" ry="6" fill="#ffd697"/>
+  </g>
+  <g id="draw-fridge">
+    <ellipse cx="101" cy="262" rx="105" ry="19" fill="#171629" opacity=".6"/>
+    <path d="M32 241h26v20H32zm113 0h26v20h-26z" fill="#42665f" stroke="#1f2933" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M39 5h129q25 0 26 28v190q0 27-25 27H40q-27 0-27-27V34Q13 8 39 5Z" fill="#4d8a81" stroke="#182832" stroke-width="6"/>
+    <path d="M33 5h120q23 0 23 26v198q0 21-21 21H37q-24 0-24-26V34Q13 8 33 5Z" fill="url(#fridge-colour)" stroke="#182832" stroke-width="6"/>
+    <path d="M15 112h160" stroke="#315e5c" stroke-width="5"/>
+    <path d="M31 37V25q0-7 11-7h67" fill="none" stroke="#e3f2ca" stroke-width="5" stroke-linecap="round"/>
+    <path d="M151 77v20m0 27v47" stroke="#284951" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="42" cy="130" r="7" fill="#f9bb75"/><circle cx="61" cy="130" r="5" fill="#f5e5a8"/>
+    <path d="M43 217h88" stroke="#83c2a6" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <g id="draw-toast">
+    <path d="M15 71V37C-5 30 1 3 23 4h46c24-1 28 25 9 33v34q0 9-10 9H25q-10 0-10-9Z" fill="#d98b4c" stroke="#40263b" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M23 70V32C7 26 13 12 27 13h39c14 0 19 14 4 19v37Z" fill="#ffcb7d"/>
+    <path d="M33 29h1m22 6h1m-19 15h1m16 9h1m-25 0h1" stroke="#bd784d" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g id="draw-plate">
+    <ellipse cx="64" cy="20" rx="62" ry="17" fill="#89b7d4" stroke="#29263d" stroke-width="5"/>
+    <ellipse cx="64" cy="17" rx="48" ry="9" fill="#c4dee7" stroke="#759dc3" stroke-width="2"/>
+  </g>
+  <g id="draw-ghost">
+    <ellipse cx="76" cy="133" rx="56" ry="10" fill="#211a33" opacity=".55"/>
+    <path d="M14 113q16-27 17-56C32 24 49 8 76 8c28 0 44 19 46 45q2 31 17 53 5 8-5 10-13 3-24-6-8 22-24 9-13-12-22 1-16 10-24-8-9 8-20 7-9-1-6-6Z" fill="#ebf1dc" stroke="#28253b" stroke-width="5"/>
+    <path d="M109 41q12 45 24 67-15 2-24-9-10 22-23 9-12-10-22 2-11 7-18-6 21-6 34-23 14-17 29-40Z" fill="#bdc8de"/>
+    <ellipse cx="63" cy="61" rx="5" ry="8" fill="#28253b"/><ellipse cx="89" cy="61" rx="5" ry="8" fill="#28253b"/>
+    <path d="M69 75q8 10 15 0" fill="none" stroke="#28253b" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M49 72h8m38 0h8" stroke="#dca5ba" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <g id="draw-crumb">
+    <ellipse cx="77" cy="161" rx="69" ry="14" fill="#211a33" opacity=".58"/>
+    <path d="M33 116l-4 32q-22 3-21 17h53l4-24m49-25 9 32q22 3 21 17H92l-4-25" fill="#acb182" stroke="#29293d" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M31 86q-20 11-25 29l17 8 12-15v34h80v-35l13 15 17-9q-10-22-31-27Z" fill="#a486c3" stroke="#29293d" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M30 39Q33 6 70 5q48 0 54 32l4 31q2 27-26 30l-47-1q-30 0-30-25Z" fill="#a9cd8a" stroke="#29293d" stroke-width="5"/>
+    <path d="M27 42 32 21l22-13 8 14 13-16 19 8 21 7 7 20-25-11-11 9-14-9-18 9-13-6Z" fill="#4a465f"/>
+    <ellipse cx="58" cy="54" rx="10" ry="12" fill="#f6e7b9"/><ellipse cx="97" cy="54" rx="10" ry="12" fill="#f6e7b9"/>
+    <circle cx="60" cy="56" r="4" fill="#29293d"/><circle cx="96" cy="56" r="4" fill="#29293d"/>
+    <path d="M62 78q19 12 33-4" fill="none" stroke="#29293d" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <g id="draw-sniff">
+    <ellipse cx="73" cy="151" rx="66" ry="13" fill="#211a33" opacity=".55"/>
+    <path d="M39 73 11 146q26 9 56-1 34 14 68 1l-25-74-38 25Z" fill="#9c537f" stroke="#272138" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M28 43Q28 7 71 7q40 0 42 36v21q0 28-39 30-45 0-45-31Z" fill="#d7bee4" stroke="#272138" stroke-width="5"/>
+    <path d="M26 47Q20 5 71 5q47-2 47 40-19-1-24-19L71 48 51 25Q48 43 26 47Z" fill="#312739"/>
+    <path d="m45 51 14 5m28 0 12-5" stroke="#302637" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="54" cy="61" r="3.5" fill="#302637"/><circle cx="93" cy="61" r="3.5" fill="#302637"/>
+    <ellipse cx="74" cy="68" rx="9" ry="5" fill="#db8caa"/>
+    <path d="M62 77h23l-5 9-4-7-7 6Z" fill="#fff1d4" stroke="#36283e" stroke-width="2"/>
+    <path d="m65 101-13-6v16l14-4 13 4V95Z" fill="#f4ad72" stroke="#3b263d" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+  <g id="draw-sock">
+    <path d="m18 9 52 2-1 47 42 13q23 9 15 30-6 18-32 12l-71-15q-10-2-10-15Z" fill="#ab8cce" stroke="#34253d" stroke-width="5" stroke-linejoin="round"/>
+    <path d="m17 26 53 1m-53 13 52 2m-53 14 53 2" stroke="#efab8b" stroke-width="6"/>
+    <path d="M111 72q-21 9-17 41 26 5 32-12 7-20-15-29Z" fill="#edaa87"/>
+    <path d="m18 9 52 2-1 47 42 13q23 9 15 30-6 18-32 12l-71-15q-10-2-10-15Z" fill="none" stroke="#34253d" stroke-width="5"/>
+  </g>
+  <g id="draw-bowl">
+    <path d="M6 77q3-63 72-65 68-2 78 65Z" fill="#efaa61" stroke="#432d3e" stroke-width="5"/>
+    <path d="M21 63q11-37 49-42" stroke="#ffdb8f" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <ellipse cx="82" cy="78" rx="76" ry="12" fill="#be754d" stroke="#432d3e" stroke-width="5"/>
+    <circle cx="118" cy="44" r="10" fill="#b9d880" stroke="#53614f" stroke-width="3"/>
+  </g>
+  <g id="draw-box">
+    <path d="M10 36h107l26-30H38Z" fill="#a8cbb5" stroke="#2a3944" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M10 36h107v80H10Z" fill="#6caa90" stroke="#2a3944" stroke-width="5"/>
+    <path d="m117 36 26-30v79l-26 31Z" fill="#4a8175" stroke="#2a3944" stroke-width="5" stroke-linejoin="round"/>
+    <circle cx="43" cy="62" r="13" fill="#f5ebd7"/><circle cx="82" cy="62" r="13" fill="#f5ebd7"/>
+    <circle cx="45" cy="64" r="5" fill="#293241"/><circle cx="82" cy="64" r="5" fill="#293241"/>
+    <path d="M52 87q11 12 22 0" stroke="#293241" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>
+  <g id="draw-crown">
+    <path d="m8 23 28 15L58 9l21 30 25-16-11 50H19Z" fill="#ffc86f" stroke="#47333f" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M23 61h65" stroke="#e38c64" stroke-width="5"/><circle cx="57" cy="45" r="8" fill="#b169a0"/>
+  </g>
+  <g id="draw-spoon">
+    <path d="M54 81q9 21 3 47l-16 66q-2 9-11 8-10-1-7-14l10-68q4-27-5-40Z" fill="#a8c5de" stroke="#303446" stroke-width="5"/>
+    <ellipse cx="40" cy="50" rx="33" ry="42" fill="#c2d8e8" stroke="#303446" stroke-width="5"/>
+    <path d="M23 58q-8-30 17-36" fill="none" stroke="#ecf1ec" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <g id="draw-mat">
+    <path d="m21 87 17-45Q2 24 31 10 45 3 83 3h116q53 1 67 17 11 12-19 23l20 44q4 12-14 14H36q-21 0-15-14Z" fill="#79aaca" stroke="#293048" stroke-width="6" stroke-linejoin="round"/>
+    <path d="m34 84 18-47Q23 27 47 18h152q46 0 52 9-2 6-18 9l17 48Z" fill="none" stroke="#b5d2df" stroke-width="4" stroke-dasharray="5 6"/>
+  </g>
+  <g id="draw-tissue">
+    <path d="M5 29 25 3l29 13 26-9 18 34-18 17-28-7-30 14Z" fill="#f8eee2" stroke="#504561" stroke-width="4" stroke-linejoin="round"/>
+    <path d="m25 9 22 24 7-11m1 24 26-11" fill="none" stroke="#c2b1cd" stroke-width="3"/>
+  </g>
+  <g id="draw-note">
+    <path d="m4 4 122 5-7 83-119-6Z" fill="#f8d08b" stroke="#533d4a" stroke-width="5" stroke-linejoin="round"/>
+    <path d="m16 77 47 2" stroke="#d59e69" stroke-width="3"/>
+  </g>
+  <g id="draw-hand">
+    <path d="m5 71 29-13-9-29q-4-12 4-15 5-1 9 6l8 13 9-29q3-8 9-5 6 2 4 9l-5 25 17-23q5-6 10-2t1 10L77 40l21-17q7-4 10 2t-3 11L87 55q-7 21-33 23L20 97Z" fill="#efaf88" stroke="#553245" stroke-width="4" stroke-linejoin="round"/>
+    <path d="m7 67 16 34-16 8-16-31Z" fill="#a68cc4" stroke="#473351" stroke-width="4" stroke-linejoin="round"/>
+  </g>
+  <g id="draw-shoe">
+    <path d="m17 2 46 5 3 26 37 14q19 7 18 25H8q-9-17 5-32Z" fill="#ce986e" stroke="#382a43" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M6 66h114v13H8Z" fill="#f5c997" stroke="#382a43" stroke-width="5" stroke-linejoin="round"/>
+    <path d="m32 37 24 3m-27 9 25 3" stroke="#ffdb9d" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</defs>
+</svg>
+<script>
+"use strict";
+
+const draw = (name, x, y, scale = 1, angle = 0, floats = false) =>
+  '<g transform="translate(' + x + ' ' + y + ') rotate(' + angle + ') scale(' + scale + ')"><g' +
+  (floats ? ' class="float"' : '') + '><use href="#draw-' + name + '"/></g></g>';
+
+function fridge(x, y, scale, mood, hat = "") {
+  const eyes = mood === "laugh"
+    ? '<path d="M48 58q8-15 16 0m27 0q8-15 16 0" fill="none" stroke="#22303d" stroke-width="5" stroke-linecap="round"/>'
+    : '<ellipse cx="57" cy="52" rx="11" ry="14" fill="#f2edcf"/><ellipse cx="101" cy="52" rx="11" ry="14" fill="#f2edcf"/><circle cx="59" cy="55" r="5" fill="#23303d"/><circle cx="103" cy="55" r="5" fill="#23303d"/>';
+  const mouths = {
+    sly: '<path d="M59 84q22 12 43-7" fill="none" stroke="#253544" stroke-width="5" stroke-linecap="round"/>',
+    sniff: '<ellipse cx="79" cy="85" rx="9" ry="6" fill="#283848"/><path d="m42 77 9 2m54 0 9-2" stroke="#e09a98" stroke-width="4" stroke-linecap="round"/>',
+    laugh: '<path d="M57 73h47q-4 30-24 30T57 73Z" fill="#263044"/><path d="M61 75h39l-3 6H64Z" fill="#fff1d4"/><path d="M68 97q11-12 24 0" fill="#e38b98"/>'
+  };
+  return '<g transform="translate(' + x + ' ' + y + ') scale(' + scale + ')">' +
+    draw("fridge", 0, 0) + eyes + mouths[mood] + hat + '</g>';
+}
+
+function glow(x, y, radius, colour) {
+  return '<circle cx="' + x + '" cy="' + y + '" r="' + radius + '" fill="' + colour + '" opacity=".13"/>';
+}
+
+function table(x, y, width) {
+  return '<g transform="translate(' + x + ' ' + y + ')"><path d="M15 17v104h19V17M' + (width - 34) + ' 17v104h19V17" fill="#795269" stroke="#251b32" stroke-width="5"/><rect width="' + width + '" height="23" rx="5" fill="#b27474" stroke="#251b32" stroke-width="5"/></g>';
+}
+
+function tray(x, y, scale = 1) {
+  return '<g transform="translate(' + x + ' ' + y + ') scale(' + scale + ')"><path d="m22 1 236 0 21 55H0Z" fill="#8679a2" stroke="#2d2540" stroke-width="5" stroke-linejoin="round"/><path d="M0 56h279v15H0Z" fill="#5e547b" stroke="#2d2540" stroke-width="5"/><path d="m29 9 222 0 12 36H14Z" fill="#a99bc2"/></g>';
+}
+
+function bag(x, y, scale = 1) {
+  return '<g transform="translate(' + x + ' ' + y + ') scale(' + scale + ')"><path d="M0 37h141v84H0Z" fill="#8d5679" stroke="#332338" stroke-width="6"/><path d="M-13 121h167v20H-13Z" fill="#ba7d79" stroke="#332338" stroke-width="6"/><path d="M0 142v44m141-44v44" stroke="#332338" stroke-width="8"/><path d="M27 121 19 50l94 2 11 69Z" fill="#e9a374" stroke="#432c42" stroke-width="5"/><path d="m41 57 8 60m18-59 7 60m16-60 8 60" stroke="#9b6184" stroke-width="8"/><path d="M20 49q44-27 93 3-39 18-93-3Z" fill="#49304b" stroke="#432c42" stroke-width="5"/><path d="M47 51V38q0-20 24-19t23 25v8" fill="none" stroke="#e9a374" stroke-width="6"/></g>';
+}
+
+function paintedText(x, y, text, size = 22, colour = "#572c48") {
+  return '<text x="' + x + '" y="' + y + '" fill="' + colour +
+    '" font-family="system-ui,sans-serif" font-weight="850" font-size="' + size +
+    '" text-anchor="middle">' + text + '</text>';
+}
+
+const actionLines = (x, y, colour = "#ffce83") =>
+  '<path d="M0 0-9-14m21 12V-23m12 25L39-12" transform="translate(' + x + ' ' + y + ')" fill="none" stroke="' + colour + '" stroke-width="4" stroke-linecap="round"/>';
+const toastPlate = (x, y, scale = 1) => draw("plate", x, y, scale) + draw("toast", x + 34 * scale, y - 40 * scale, .68 * scale, -7);
+const hatMark = (sock) => sock ? draw("sock", 66, -60, .66, -8) : draw("bowl", 37, -51, .74);
+const littlePea = (x, y) => '<circle cx="' + x + '" cy="' + y + '" r="7" fill="#b8d984" stroke="#39483e" stroke-width="3"/>';
+const musicalNote = (x, y, angle) =>
+  '<g transform="translate(' + x + ' ' + y + ') rotate(' + angle + ')" fill="#ffce83"><ellipse cx="0" cy="0" rx="8" ry="6"/><path d="M5 0v-29l17 4v6L9-22V0Z"/></g>';
+const badge = (x, y, scale = 1) =>
+  '<g transform="translate(' + x + ' ' + y + ') scale(' + scale + ')"><path d="m12 33-7 28 17-8 15 8-4-26" fill="#b277a1" stroke="#523850" stroke-width="3"/><circle cx="21" cy="22" r="19" fill="#ffc67a" stroke="#523850" stroke-width="3"/><path d="m21 11 3 7 8 1-6 5 2 8-7-4-7 4 1-8-6-5 8-1Z" fill="#9d527b"/></g>';
+
+function sceneArt(id, path) {
+  const ghost = (x, y, scale = 1, tilt = 0) => draw("ghost", x, y, scale, tilt, true);
+  const sock = path.includes("s04b");
+  const hat = sock ? "sock" : "bowl";
+  let centre;
+  switch (id) {
+    case "s01":
+      centre = table(23, 325, 240) + bag(108, 257, .77) + glow(438, 246, 178, "#9cdbab") +
+        draw("fridge", 339, 106, 1.23) +
+        '<rect x="414" y="122" width="144" height="272" rx="19" fill="#273d49" stroke="#19313c" stroke-width="6"/><path d="M541 251v118" stroke="#d3b280" stroke-width="5" opacity=".75"/>' +
+        '<path d="M362 143q0-22 19-27l101-20v307l-98-14q-22-3-22-23Z" fill="url(#fridge-colour)" stroke="#182832" stroke-width="6"/><path d="m374 247 106-8" stroke="#426e64" stroke-width="5"/><path d="M459 267v48" stroke="#284951" stroke-width="10" stroke-linecap="round"/><path d="M376 156v-12l57-13" fill="none" stroke="#e3f2ca" stroke-width="5" stroke-linecap="round"/>' +
+        '<ellipse cx="505" cy="199" rx="10" ry="13" fill="#ffdd91"/><ellipse cx="532" cy="196" rx="10" ry="13" fill="#ffdd91"/><circle cx="508" cy="201" r="4" fill="#25313e"/><circle cx="535" cy="198" r="4" fill="#25313e"/>' +
+        toastPlate(488, 337, .65) + actionLines(565, 133);
+      break;
+    case "s02a":
+      centre = fridge(420, 166, .89, "sly") + bag(171, 249, 1.12) + ghost(174, 126, 1.3, -7) +
+        actionLines(323, 180);
+      break;
+    case "s02b":
+      centre = fridge(431, 159, .88, "sly") + draw("crumb", 160, 257, .99) + table(76, 240, 303) +
+        draw("plate", 188, 364, .72) + '<circle cx="236" cy="374" r="5" fill="#d98b4c"/>';
+      break;
+    case "s03a":
+      centre = '<path d="M106 109h332v276H106Z" fill="#5e3a59" stroke="#251c35" stroke-width="7"/><path d="M128 129h283v226H128Z" fill="#251f38"/><path d="M129 337h280v24H129Z" fill="#a26b72"/><path d="m410 118 113-23v275l-113 16Z" fill="#9a5d6c" stroke="#31263d" stroke-width="6"/><path d="M492 227v36" stroke="#f6ba8b" stroke-width="6" stroke-linecap="round"/>' +
+        draw("sniff", 214, 170, 1.22) + draw("tissue", 302, 238, .74, -6) +
+        '<path d="M145 286h51v45h-51Zm50 7q29-3 22 15-6 10-22 10" fill="#7ba5c5" stroke="#30283e" stroke-width="5"/>' +
+        actionLines(358, 208);
+      break;
+    case "s03b":
+      centre = table(54, 318, 532) +
+        '<path d="M81 303h475l-45 77H126Z" fill="#8cabca" stroke="#302740" stroke-width="6"/><ellipse cx="318" cy="321" rx="194" ry="32" fill="#46607a" stroke="#302740" stroke-width="6"/><path d="M420 300v-87q0-34 36-34t35 34v14" fill="none" stroke="#b8c8df" stroke-width="17" stroke-linecap="round"/>' +
+        '<path d="M158 332q14-24 44-18 7-61 84-58 66-4 78 50 35-12 58 24-59 31-264 2Z" fill="#9fd285" stroke="#293745" stroke-width="5"/><ellipse cx="258" cy="289" rx="10" ry="14" fill="#303546"/><ellipse cx="311" cy="289" rx="10" ry="14" fill="#303546"/><path d="M267 314q16 12 32 0" fill="none" stroke="#303546" stroke-width="4"/><g class="float"><circle cx="289" cy="197" r="46" fill="#a9df9c" fill-opacity=".34" stroke="#bcf0b1" stroke-width="4"/><path d="M257 194q4-20 24-25" fill="none" stroke="#e3facb" stroke-width="4" stroke-linecap="round"/></g>';
+      break;
+    case "s04a":
+      centre = fridge(404, 152, .96, "sly") + table(65, 348, 331) +
+        draw("bowl", 125, 204, 1.8) + actionLines(229, 191);
+      break;
+    case "s04b":
+      centre = fridge(408, 154, .95, "sly") + table(60, 361, 325) +
+        draw("sock", 143, 150, 1.72, 12) + actionLines(180, 156);
+      break;
+    case "s05a":
+      centre = fridge(385, 136, 1.04, "sly") + ghost(288, 79, .7, -12) +
+        '<path d="M63 412q4-88 112-88t111 88Z" fill="#a188bd" stroke="#2b243d" stroke-width="6"/><path d="M120 300q-3-69 51-74 59-3 61 66l-13 48h-82Z" fill="#563c62" stroke="#2b243d" stroke-width="5"/>' +
+        draw(hat, sock ? 130 : 100, sock ? 152 : 168, .97, sock ? -5 : 0) + actionLines(242, 198);
+      break;
+    case "s05b":
+      centre = ghost(108, 112, 1.05, -10) +
+        fridge(306, 135, 1.06, "sly", hatMark(sock)) + tray(125, 341, .74) +
+        '<path d="M159 350h138m-123 9h100" stroke="#e2c9dd" stroke-width="3"/>';
+      break;
+    case "s06a":
+      centre = draw("crumb", 70, 262, .85) + draw("plate", 101, 358, .62) + ghost(234, 181, .82) +
+        fridge(363, 118, 1.12, "sniff") +
+        '<path d="M54 112q0-34 74-34t83 33q0 31-57 32l-14 22-19-20q-67-3-67-33Z" fill="#f4cf9a" stroke="#492e48" stroke-width="4"/>' +
+        draw("toast", 110, 88, .53) + '<path d="M133 99q12 8 10 23" fill="none" stroke="#aa5885" stroke-width="5" stroke-linecap="round"/>';
+      break;
+    case "s06b":
+      centre = fridge(367, 127, 1.08, "sniff") +
+        '<path d="m88 203 63 16-18 55 68 60-34 42-105-83Zm125-8 69 2-2 64-10 73-54 5 9-81Z" fill="#8373a7" stroke="#312741" stroke-width="6" stroke-linejoin="round"/>' +
+        draw("shoe", 124, 333, 1.07, -12) + draw("shoe", 215, 317, 1.03, 5) + littlePea(133, 410) + littlePea(321, 392);
+      break;
+    case "s07a":
+      centre = fridge(310, 123, 1.09, "sly") + draw("note", 373, 277, .46, 5) +
+        tray(238, 379, .72) + draw("hand", 57, 294, 1.01, -31) +
+        '<g transform="translate(296 276) scale(-1 1)">' + draw("hand", 32, 7, 1.01, -28) + '</g>' +
+        actionLines(150, 264);
+      break;
+    case "s07b":
+      centre = ghost(100, 132, .96, -20) + fridge(300, 124, 1.07, "sniff") +
+        draw("tissue", 436, 216, 1.28, 12) + draw("note", 367, 274, .45, 4) + tray(207, 375, 1.01) +
+        '<path d="M240 211q22 6 37-4m-54 24q16 5 32 0" fill="none" stroke="#dbb6d7" stroke-width="3" stroke-linecap="round"/>';
+      break;
+    case "s08a":
+      centre = tray(123, 308, 1.39) + draw("spoon", 161, 299, .49, -40) +
+        draw("box", 280, 312, .59) + draw("mat", 376, 329, .46, 4) +
+        draw("note", 201, 116, 2.04, -4) + paintedText(322, 191, "DO IT", 39) +
+        paintedText(326, 244, "WRONG", 48);
+      break;
+    case "s08b":
+      centre = tray(71, 240, 1.77) + draw("spoon", 117, 222, .74, -27) +
+        draw("box", 281, 235, .81) + draw("mat", 385, 279, .54, -5) +
+        '<path d="M285 220h111l-28-34H266Z" fill="#9bcbb2" stroke="#2a3944" stroke-width="5" stroke-linejoin="round"/>';
+      break;
+    case "s09a":
+      centre = fridge(394, 172, .85, "sniff") + tray(109, 353, 1.17) +
+        draw("spoon", 229, 103, 1.43, 16) + actionLines(330, 176);
+      break;
+    case "s09b":
+      centre = tray(118, 328, 1.45) + draw("box", 213, 207, 1.56, -4) +
+        draw("crown", 243, 136, 1.35, -8) + actionLines(406, 177);
+      break;
+    case "s09c":
+      centre = draw("mat", 121, 293, 1.48) + draw("shoe", 213, 255, .88, -9) +
+        ghost(95, 137, .83, -5) + fridge(445, 157, .79, "sly");
+      break;
+    case "s10a":
+      centre = fridge(217, 113, 1.16, "laugh") + tray(310, 348, .89) +
+        toastPlate(358, 339, 1.03) + musicalNote(176, 201, -12) +
+        musicalNote(460, 182, 18) + musicalNote(506, 250, -8);
+      break;
+    case "s10b":
+      centre = fridge(271, 129, 1.09, "laugh") + tray(319, 347, .97) +
+        toastPlate(375, 334, 1.04) + '<path d="M85 152q0-42 88-42 81 0 81 40 0 37-59 42l-28 24-1-24q-81-1-81-40Z" fill="#e1a0a6" stroke="#412c49" stroke-width="5"/>' +
+        paintedText(170, 166, "HA!", 38);
+      break;
+    case "s10c":
+      centre = fridge(225, 105, 1.16, "laugh") + tray(279, 348, 1.08) +
+        toastPlate(369, 336, 1.1) + musicalNote(502, 201, 12) +
+        '<path d="M74 416q56 40 145 12m254-2q56-1 97-46" fill="none" stroke="#e1ab88" stroke-dasharray="5 12" stroke-width="4"/>' +
+        draw("shoe", 109, 326, .77, -19) + littlePea(200, 390);
+      break;
+    case "s11a":
+      centre = fridge(402, 139, .94, "sly") + bag(104, 227, .89) +
+        table(167, 321, 345) + toastPlate(219, 300, 1.25) + draw("plate", 370, 305, .74) +
+        '<path d="M410 282h37v29h-37z" fill="#b4698c" stroke="#4e324e" stroke-width="4"/><path d="M408 280h41" stroke="#f2c886" stroke-width="5" stroke-linecap="round"/>';
+      break;
+    case "s11b":
+      centre = draw("crumb", 151, 159, 1.38) + tray(280, 354, 1.04) +
+        draw("note", 393, 198, .95, 7) + toastPlate(222, 315, 1.38) +
+        draw("toast", 307, 251, .61, 21) + draw("toast", 380, 331, .65, 8);
+      break;
+    case "s11c":
+      centre = fridge(293, 113, 1.12, "sly") + tray(100, 346, 1.05) + badge(222, 262, 1.55) +
+        actionLines(242, 242);
+      break;
+    case "end-a":
+      centre = ghost(117, 134, .8, -4) + draw("sniff", 224, 161, 1.02) +
+        fridge(385, 107, .94, "laugh", littlePea(94, -4)) + draw("crumb", 24, 239, 1.03) +
+        table(92, 347, 438) + toastPlate(145, 320, 1.02) + toastPlate(267, 327, 1.11) +
+        toastPlate(402, 319, .85) + actionLines(493, 87);
+      break;
+    case "end-b":
+      centre = ghost(71, 150, .88, -13) + fridge(426, 154, .86, "sly") +
+        table(158, 351, 277) + draw("plate", 202, 329, 1.48) + draw("toast", 228, 205, 1.45) +
+        draw("bowl", 229, 149, .86, -7) + actionLines(350, 168);
+      break;
+    case "end-c":
+      centre = fridge(411, 172, .81, "sly") + draw("crumb", 213, 177, 1.12) +
+        table(92, 329, 402) + toastPlate(320, 302, 1) + draw("note", 183, 338, 1.18) +
+        paintedText(257, 395, "TOAST SHOP", 20) + draw("plate", 118, 303, .78);
+      break;
+    case "end-d":
+      centre = draw("crumb", 397, 232, 1.04) + ghost(82, 184, .81, -12) + draw("plate", 265, 371, 1.22) +
+        draw("toast", 305, 324, .83, 5) + draw("toast", 309, 285, .83, -7) +
+        draw("toast", 329, 245, .82, 13) + draw("toast", 302, 205, .78, -6) +
+        draw("toast", 311, 164, .73, -15) + draw("toast", 273, 124, .72, -19) +
+        draw("toast", 233, 102, .69, -29) + draw("plate", 411, 355, .88);
+      break;
+    case "end-e":
+      centre = fridge(280, 114, 1.16, "laugh") + draw("hand", 75, 242, 1, -20) +
+        '<g transform="translate(281 279) scale(-1 1)">' + draw("hand", 24, 14, .93, -29) + '</g>' +
+        actionLines(161, 236) + tray(225, 373, 1.18) + toastPlate(253, 363, .7) +
+        toastPlate(353, 361, .83) + toastPlate(454, 369, .67);
+      break;
+    case "end-f":
+      centre = fridge(246, 130, 1.03, "sly",
+        '<path d="M60 4v-29q-22-12-14-29 8-14 26-6 11-25 31-8 26-8 36 9 8 22-17 32V4Z" fill="#f3e7d5" stroke="#3e3c53" stroke-width="5"/><path d="M62-18h59" stroke="#b2afc3" stroke-width="4"/>' + badge(93, 130, .93)) +
+        ghost(95, 182, .89, -7) + tray(315, 367, .96) + toastPlate(385, 353, 1.02);
+      break;
+  }
+  return '<svg viewBox="0 0 640 480" role="img">' + draw("room", 0, 0) +
+    draw("spot", 0, 0) + centre + '</svg>';
+}
+
+const story = JSON.parse(document.getElementById("story-data").textContent);
+const scenes = new Map(story.scenes.map(scene => [scene.id, scene]));
+const endings = story.scenes.filter(scene => scene.ending);
+const byId = id => document.getElementById(id);
+const keyPrefix = "mbm_story_";
+const readButton = byId("read-aloud");
+const calmButton = byId("calm");
+const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+const synth = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window
+  ? window.speechSynthesis
+  : null;
+
+function readLocal(name, fallback) {
+  try {
+    return JSON.parse(localStorage.getItem(keyPrefix + name)) ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function saveLocal(name, value) {
+  try {
+    localStorage.setItem(keyPrefix + name, JSON.stringify(value));
+  } catch {
+    // Some browsers block storage for local files. Keep the current session usable.
+  }
+}
+
+function restorePath() {
+  const saved = readLocal("path", []);
+  const restored = [story.start];
+  if (!Array.isArray(saved) || saved[0] !== story.start) return restored;
+  for (const id of saved.slice(1)) {
+    if (!scenes.get(restored.at(-1)).choices.some(choice => choice.to === id)) break;
+    restored.push(id);
+  }
+  return restored;
+}
+
+const savedEndings = readLocal("endings", []);
+const found = new Set(Array.isArray(savedEndings)
+  ? savedEndings.filter(id => scenes.get(id)?.ending)
+  : []);
+let path = restorePath();
+let textBoost = 0;
+let calmRequested = false;
+let offlineVoice = null;
+let speaking = false;
+let speechRun = 0;
+let currentUtterance = null;
+
+function voiceState(active) {
+  speaking = active;
+  readButton.setAttribute("aria-pressed", String(active));
+  readButton.querySelector("span").textContent = active ? "Stop reading" : "Read to me";
+}
+
+function stopSpeech() {
+  speechRun += 1;
+  if (speaking) synth.cancel();
+  currentUtterance = null;
+  voiceState(false);
+}
+
+function updateOfflineVoice() {
+  const voices = synth.getVoices().filter(voice => voice.localService && /^en(?:[-_]|$)/i.test(voice.lang));
+  offlineVoice = voices.find(voice => /^en[-_]gb$/i.test(voice.lang)) ?? voices[0] ?? null;
+  readButton.hidden = !offlineVoice;
+}
+
+function readScene() {
+  if (speaking) {
+    stopSpeech();
+    return;
+  }
+  if (!offlineVoice) return;
+
+  const scene = scenes.get(path.at(-1));
+  const lines = [scene.title + ".", ...scene.body];
+  if (scene.ending) {
+    lines.push("Why did that happen? " + scene.reason);
+  } else {
+    lines.push(...scene.choices.map((choice, index) => "Choice " + (index + 1) + ". " + choice.label + "."));
+  }
+
+  const run = ++speechRun;
+  const voice = offlineVoice;
+  voiceState(true);
+  const speakLine = index => {
+    if (run !== speechRun) return;
+    if (index === lines.length) {
+      currentUtterance = null;
+      voiceState(false);
+      return;
+    }
+    currentUtterance = new SpeechSynthesisUtterance(lines[index]);
+    currentUtterance.voice = voice;
+    currentUtterance.lang = voice.lang;
+    currentUtterance.rate = .88;
+    currentUtterance.onend = () => speakLine(index + 1);
+    currentUtterance.onerror = () => {
+      if (run === speechRun) stopSpeech();
+    };
+    synth.speak(currentUtterance);
+  };
+  speakLine(0);
+}
+
+function setCalm() {
+  const calm = motionPreference.matches || calmRequested;
+  document.documentElement.classList.toggle("calm", calm);
+  calmButton.setAttribute("aria-pressed", String(calm));
+  calmButton.setAttribute("aria-disabled", String(motionPreference.matches));
+  calmButton.title = motionPreference.matches ? "On because your device uses reduced motion" : "";
+  calmButton.querySelector("span").textContent = calm ? "On" : "Off";
+}
+
+function setTextSize(change) {
+  textBoost = Math.min(12, Math.max(0, textBoost + change));
+  document.documentElement.style.setProperty("--text-boost", textBoost + "px");
+  byId("smaller").setAttribute("aria-disabled", String(textBoost === 0));
+  byId("bigger").setAttribute("aria-disabled", String(textBoost === 12));
+}
+
+function choose(id) {
+  path.push(id);
+  render(true);
+}
+
+function back() {
+  if (path.length <= 1) return;
+  path.pop();
+  render(true);
+}
+
+function restart() {
+  path = [story.start];
+  render(true);
+}
+
+function makeChoice(label, icon, action, number) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "choice";
+  const graphic = document.createElement("span");
+  graphic.className = "choice-icon";
+  graphic.setAttribute("aria-hidden", "true");
+  graphic.innerHTML = '<svg><use href="#icon-' + icon + '"></use></svg>';
+  const words = document.createElement("span");
+  words.textContent = label;
+  button.append(graphic, words);
+  if (number) {
+    const key = document.createElement("kbd");
+    key.textContent = number;
+    key.setAttribute("aria-hidden", "true");
+    button.setAttribute("aria-keyshortcuts", String(number));
+    button.append(key);
+  }
+  button.addEventListener("click", action);
+  return button;
+}
+
+function render(moveFocus = false) {
+  stopSpeech();
+  const scene = scenes.get(path.at(-1));
+  if (scene.ending && !found.has(scene.id)) {
+    found.add(scene.id);
+    saveLocal("endings", [...found]);
+  }
+  saveLocal("path", path);
+  byId("progress").textContent = "Scene " + path.length + " of about 12";
+  byId("endings").textContent = "Endings found: " + found.size + " of " + endings.length;
+
+  const title = byId("scene-title");
+  title.textContent = scene.title;
+  const picture = byId("picture");
+  picture.innerHTML = sceneArt(scene.id, path);
+  const alt = scene.alt.replace("bowl or sock", path.includes("s04b") ? "sock" : "bowl");
+  picture.firstElementChild.setAttribute("aria-label", alt);
+  byId("story-text").replaceChildren(...scene.body.map(line => {
+    const paragraph = document.createElement("p");
+    paragraph.textContent = line;
+    return paragraph;
+  }));
+  byId("ending-reason").hidden = !scene.ending;
+  byId("reason-text").textContent = scene.reason ?? "";
+  byId("back").hidden = Boolean(scene.ending);
+  byId("back").setAttribute("aria-disabled", String(path.length <= 1));
+  byId("restart").hidden = Boolean(scene.ending);
+  const buttons = scene.ending
+    ? [makeChoice("Try a different path", "back", back, 1), makeChoice("Start again", "again", restart, 2)]
+    : scene.choices.map((choice, index) =>
+        makeChoice(choice.label, choice.icon, () => choose(choice.to), index + 1));
+  byId("choices").replaceChildren(...buttons);
+
+  if (moveFocus) {
+    title.focus({ preventScroll: true });
+    window.scrollTo(0, 0);
+  }
+}
+
+byId("back").addEventListener("click", back);
+byId("restart").addEventListener("click", restart);
+byId("bigger").addEventListener("click", () => setTextSize(2));
+byId("smaller").addEventListener("click", () => setTextSize(-2));
+calmButton.addEventListener("click", () => {
+  if (motionPreference.matches) return;
+  calmRequested = !calmRequested;
+  setCalm();
+});
+motionPreference.addEventListener("change", setCalm);
+readButton.addEventListener("click", readScene);
+if (synth) {
+  synth.addEventListener("voiceschanged", updateOfflineVoice);
+  updateOfflineVoice();
+}
+window.addEventListener("pagehide", stopSpeech);
+
+const teacherButton = byId("teacher");
+teacherButton.addEventListener("click", () => {
+  const panel = byId("teacher-panel");
+  panel.hidden = !panel.hidden;
+  teacherButton.setAttribute("aria-expanded", String(!panel.hidden));
+});
+byId("teacher-summary").textContent = "About 10 minutes per path. " + story.scenes.length +
+  " scenes in all, 12 per path, and " + endings.length + " endings.";
+const trickyWords = new Set(story.scenes.flatMap(scene => scene.word ? [scene.word] : []));
+byId("teacher-words").textContent = "Tricky words — " + [...trickyWords].join(", ") + ".";
+
+document.addEventListener("keydown", event => {
+  if (event.defaultPrevented || event.repeat || event.altKey || event.ctrlKey || event.metaKey ||
+      !/^[123]$/.test(event.key) || event.target.closest("input, textarea, select, [contenteditable]")) return;
+  const button = byId("choices").children[Number(event.key) - 1];
+  if (button) {
+    event.preventDefault();
+    button.click();
+  }
+});
+
+setCalm();
+setTextSize(0);
+render();
+</script>
+</body>
+</html>
+
