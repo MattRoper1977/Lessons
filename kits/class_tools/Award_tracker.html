@@ -1,0 +1,3902 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Lesson resource">
+<meta name="creator" content="Lesson resource">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; manifest-src data:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Awards tracker</title>
+<meta name="theme-color" content="#153e64">
+<style>
+:root {
+  color-scheme: light dark;
+  --ink: #18283b;
+  --muted: #33475b;
+  --accent: #153e64;
+  --soft: #edf3f7;
+  --line: #52677c;
+  --bg: #ffffff;
+  --focus: #713600;
+  --ok: #14532d;
+  --ok-bg: #e3f4e8;
+  --warn: #6b3a00;
+  --warn-bg: #fff2dc;
+  --miss: #7a1c1c;
+  --miss-bg: #fdeaea;
+  --build: #1d4259;
+  --grow: #14493a;
+  --launch: #4a2d68;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #f4f7fb;
+    --muted: #cbd8e6;
+    --accent: #c6e2ff;
+    --soft: #1b2a3d;
+    --line: #a9bdd2;
+    --bg: #101b29;
+    --focus: #ffd4a8;
+    --ok: #a8edb9;
+    --ok-bg: #163522;
+    --warn: #ffd79e;
+    --warn-bg: #3b2608;
+    --miss: #ffb8b8;
+    --miss-bg: #3c1818;
+    --build: #b9dcf5;
+    --grow: #a8e4ce;
+    --launch: #e0cafa;
+  }
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-padding: 20px; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 18px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  overflow-wrap: anywhere;
+}
+main, section, div, header, nav, article, td, th, .row > * {
+  min-width: 0;
+  max-width: 100%;
+}
+main {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 14px 14px 48px;
+}
+h1 { font-size: 26px; margin: 0; line-height: 1.25; }
+h2 { font-size: 22px; margin: 18px 0 8px; line-height: 1.3; }
+h3 { font-size: 19px; margin: 0 0 6px; line-height: 1.3; }
+p { margin: 6px 0 10px; }
+a { color: var(--accent); }
+button, input, textarea, select { font: inherit; color: inherit; }
+button, .btn, label.btn, select, input:not([type="checkbox"]):not([type="file"]), summary {
+  min-height: 48px;
+  min-width: 48px;
+}
+button, .btn, label.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 2px solid var(--accent);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--accent);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  text-align: center;
+  touch-action: manipulation;
+  white-space: normal;
+}
+button.primary, .btn.primary, button[aria-pressed="true"], .tabs button[aria-selected="true"] {
+  background: var(--accent);
+  color: var(--bg);
+}
+button.danger {
+  border-color: var(--miss);
+  color: var(--miss);
+  background: var(--miss-bg);
+}
+button:disabled {
+  border-color: var(--line);
+  color: var(--muted);
+  background: var(--soft);
+  cursor: not-allowed;
+}
+input:not([type="checkbox"]):not([type="file"]), textarea, select {
+  width: 100%;
+  max-width: 100%;
+  padding: 8px 10px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 16px;
+}
+input::placeholder, textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  flex: none;
+  margin: 0;
+}
+textarea { min-height: 110px; }
+label { display: block; font-weight: 600; font-size: 16px; }
+.check {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 48px;
+  min-width: 48px;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+}
+summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 8px 4px;
+  font-size: 18px;
+}
+summary::before { content: "+"; font-size: 22px; line-height: 1; flex: none; }
+details[open] > summary::before { content: "−"; }
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+button:focus-visible, .btn:focus-visible, label.btn:focus-visible {
+  position: relative;
+  z-index: 1;
+}
+.file {
+  position: absolute;
+  width: 1px !important;
+  height: 1px !important;
+  min-height: 0 !important;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0 !important;
+  border: 0 !important;
+}
+.file:focus-visible + label.btn {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--line);
+}
+.top-left, .top-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.ctrl-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ctrl-inline label { margin: 0; white-space: nowrap; }
+.ctrl-inline select { width: auto; min-width: 120px; }
+.note, .panel {
+  padding: 12px 14px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--soft);
+  margin: 10px 0;
+}
+.panel-card {
+  padding: 12px 14px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  margin: 10px 0;
+}
+.intro-box {
+  border-left: 6px solid var(--accent);
+}
+.intro-box p {
+  margin: 4px 0;
+  font-size: 17px;
+}
+.status-banner {
+  padding: 10px 12px;
+  border: 2px solid var(--accent);
+  border-radius: 10px;
+  background: var(--soft);
+  font-weight: 600;
+  font-size: 16px;
+  margin: 8px 0;
+}
+.status-banner.warn {
+  border-color: var(--warn);
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+.status-banner.ok {
+  border-color: var(--ok);
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+  align-items: center;
+}
+.hint, .small {
+  font-size: 16px;
+  color: var(--muted);
+}
+.badge, .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 2px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+}
+.chip.ok, .badge.ok {
+  background: var(--ok-bg);
+  color: var(--ok);
+  border-color: var(--ok);
+}
+.chip.warn, .badge.warn {
+  background: var(--warn-bg);
+  color: var(--warn);
+  border-color: var(--warn);
+}
+.chip.miss, .badge.miss {
+  background: var(--miss-bg);
+  color: var(--miss);
+  border-color: var(--miss);
+}
+.badge.BUILD { border-color: var(--build); color: var(--build); }
+.badge.GROW { border-color: var(--grow); color: var(--grow); }
+.badge.LAUNCH { border-color: var(--launch); color: var(--launch); }
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin: 12px 0;
+}
+.tabs button {
+  width: 100%;
+  padding: 8px 6px;
+  font-size: 16px;
+}
+.req-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 10px;
+  margin: 10px 0;
+}
+.req-card {
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--bg);
+}
+.req-card h3 { font-size: 17px; margin: 0 0 4px; }
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.dates-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 8px;
+  margin: 10px 0;
+}
+.date-item {
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: var(--bg);
+  font-size: 16px;
+}
+table.resp-grid {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  background: var(--bg);
+  margin: 10px 0;
+}
+table.resp-grid th, table.resp-grid td {
+  border: 1px solid var(--line);
+  padding: 6px;
+  text-align: left;
+  vertical-align: top;
+  font-size: 16px;
+}
+table.resp-grid th {
+  background: var(--soft);
+  font-weight: 700;
+}
+.cell-btn {
+  width: 100%;
+  min-height: 52px;
+  padding: 6px;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 16px;
+}
+.cell-btn.has-val {
+  border-color: var(--ok);
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+.cell-btn.has-warn {
+  border-color: var(--warn);
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+.cell-btn.has-miss {
+  border-color: var(--miss);
+  background: var(--miss-bg);
+  color: var(--miss);
+}
+.pupil-cell-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.editor-box {
+  border: 3px solid var(--accent);
+  border-radius: 12px;
+  padding: 14px;
+  background: var(--soft);
+  margin: 12px 0;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: 10px;
+  margin: 8px 0;
+}
+.sow-row {
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--bg);
+  margin: 8px 0;
+}
+.sow-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.gaps-box {
+  border: 2px solid var(--warn);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: var(--warn-bg);
+  color: var(--warn);
+  margin: 10px 0;
+}
+.gaps-box.all-ok {
+  border-color: var(--ok);
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+.gaps-box h3 { color: inherit; margin-top: 6px; }
+.gaps-box ul { margin: 6px 0; padding-left: 22px; }
+.gaps-box li { margin: 4px 0; font-size: 16px; }
+
+.print-preview-wrap {
+  border: 3px solid var(--accent);
+  border-radius: 12px;
+  padding: 14px;
+  background: var(--soft);
+  margin: 14px 0;
+}
+.sheet-doc {
+  background: #ffffff;
+  color: #14243a;
+  border: 2px solid #52677c;
+  border-radius: 8px;
+  padding: 16px;
+  font: 16px/1.4 system-ui, sans-serif;
+}
+.sheet-doc h2 { color: #14243a; margin: 0 0 6px; border-bottom: 2px solid #14243a; padding-bottom: 6px; }
+.sheet-doc h3 { color: #14243a; margin: 12px 0 6px; }
+.sheet-doc table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+.sheet-doc th, .sheet-doc td { border: 1px solid #33475b; padding: 6px 8px; text-align: left; color: #14243a; background: #ffffff; font-size: 16px; }
+.sheet-doc th { background: #edf3f7; font-weight: 700; }
+.sig-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 18px;
+}
+.sig-line {
+  border-top: 2px solid #14243a;
+  padding-top: 6px;
+  margin-top: 28px;
+  font-weight: 600;
+}
+
+#printRecordSection { display: none; }
+
+@media (max-width: 960px) {
+  .tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .tabs button:last-child {
+    grid-column: 1 / -1;
+  }
+  table.resp-grid thead { display: none; }
+  table.resp-grid, table.resp-grid tbody, table.resp-grid tr, table.resp-grid td {
+    display: block;
+    width: 100%;
+  }
+  table.resp-grid tr {
+    border: 2px solid var(--line);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    padding: 6px;
+    background: var(--bg);
+  }
+  table.resp-grid td {
+    border: 0;
+    border-top: 1px solid var(--line);
+    padding: 8px 4px;
+  }
+  table.resp-grid td:first-child {
+    border-top: 0;
+  }
+  table.resp-grid td[data-col]::before {
+    content: attr(data-col);
+    display: block;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--accent);
+  }
+}
+@media (max-width: 580px) {
+  main { padding: 10px 10px 40px; }
+  h1 { font-size: 23px; }
+  .top-left, .top-controls { width: 100%; justify-content: space-between; }
+  .ctrl-inline { flex: 1 1 auto; }
+  .ctrl-inline select { width: 100%; min-width: 0; }
+  .sig-grid { grid-template-columns: 1fr; }
+  .sheet-doc thead { display: none; }
+  .sheet-doc table, .sheet-doc tbody, .sheet-doc tr, .sheet-doc td { display: block; width: 100%; }
+  .sheet-doc tr { border: 1px solid #33475b; margin-bottom: 8px; padding: 4px; }
+  .sheet-doc td { border: 0; padding: 4px 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
+@page { size: A4; margin: 12mm; }
+@media print {
+  body { background: #ffffff !important; color: #000000 !important; margin: 0; padding: 0; }
+  .private-tag, .noprint { display: none !important; }
+  body > main { display: none !important; }
+  body.printing-record #printRecordSection { display: block !important; }
+  body:not(.printing-record)::before {
+    content: "Private: use a Print record button on the page so only Pupil N or initials are printed.";
+    display: block;
+    font: 16pt/1.5 sans-serif;
+    color: #000000;
+  }
+  .sheet-doc { border: 0 !important; padding: 0 !important; color: #000000 !important; font-size: 11pt; }
+  .sheet-doc h2 { font-size: 16pt; color: #000000 !important; border-bottom: 2px solid #000000; }
+  .sheet-doc h3 { font-size: 13pt; color: #000000 !important; }
+  .sheet-doc thead { display: table-header-group !important; }
+  .sheet-doc table { display: table !important; width: 100% !important; border-collapse: collapse !important; }
+  .sheet-doc tbody { display: table-row-group !important; }
+  .sheet-doc tr { display: table-row !important; border: 1px solid #000000 !important; break-inside: avoid; }
+  .sheet-doc th, .sheet-doc td { display: table-cell !important; border: 1px solid #000000 !important; padding: 5px 7px !important; color: #000000 !important; background: #ffffff !important; font-size: 10.5pt !important; }
+  .sig-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 16px !important; }
+}
+</style>
+</head>
+<body>
+<main>
+  <header class="top-bar noprint">
+    <div class="top-left">
+      <a class="btn" href="My_tools.html">&larr; My tools</a>
+      <h1>Awards tracker</h1>
+    </div>
+    <div class="top-controls">
+      <div class="ctrl-inline">
+        <label for="showTags">Show:</label>
+        <select id="showTags" aria-label="Show pupils on screen as">
+          <option value="initials">Initials</option>
+          <option value="first">First name</option>
+          <option value="number">Number</option>
+        </select>
+      </div>
+      <div class="ctrl-inline">
+        <label for="classSizeSelect">Class size:</label>
+        <select id="classSizeSelect" aria-label="Number of pupils in class"></select>
+      </div>
+    </div>
+  </header>
+
+  <section id="firstRunBanner" class="note intro-box" aria-label="About this tool">
+    <p><strong>Private on-device tracker:</strong> Record Entry Level Science tests, GCSE Biology core practicals, Hospitality course hours and Unit awards for Pupil 1 to Pupil 20 (exports use Pupil N only).</p>
+    <p id="firstRunLine2">Nothing is saved yet on this device — tap any cell in a tab below to add a mark, practical tick or module hours, or open Scheme of work to check taught weeks and gaps.</p>
+  </section>
+
+  <p id="globalStatus" class="status-banner" role="status" aria-live="polite" hidden></p>
+
+  <section id="printPreviewWrap" class="print-preview-wrap noprint" hidden aria-labelledby="printPreviewTitle">
+    <div class="sow-head">
+      <h2 id="printPreviewTitle" style="margin:0">Printable record preview</h2>
+      <div class="row" style="margin:0">
+        <div class="ctrl-inline">
+          <label for="printCopyMode">Print pupil as:</label>
+          <select id="printCopyMode">
+            <option value="number">Pupil N (number only)</option>
+            <option value="initials">Initials only (private copy)</option>
+          </select>
+        </div>
+        <button type="button" class="primary" id="btnTriggerPrint">Print record</button>
+        <button type="button" id="btnClosePrintPreview">Close preview</button>
+      </div>
+    </div>
+    <div id="printPreviewBody" style="margin-top:10px"></div>
+  </section>
+
+  <nav class="tabs noprint" role="tablist" aria-label="Awards tracker views">
+    <button type="button" role="tab" id="tabBtn-elc" aria-selected="true" aria-controls="panel-elc" data-tab="elc">Entry Level Science</button>
+    <button type="button" role="tab" id="tabBtn-bio" aria-selected="false" aria-controls="panel-bio" data-tab="bio">Biology practicals</button>
+    <button type="button" role="tab" id="tabBtn-hosp" aria-selected="false" aria-controls="panel-hosp" data-tab="hosp">Hospitality</button>
+    <button type="button" role="tab" id="tabBtn-unit" aria-selected="false" aria-controls="panel-unit" data-tab="unit">Unit awards</button>
+    <button type="button" role="tab" id="tabBtn-sow" aria-selected="false" aria-controls="panel-sow" data-tab="sow">Scheme of work</button>
+  </nav>
+
+  <!-- TAB 1: ENTRY LEVEL SCIENCE -->
+  <section id="panel-elc" role="tabpanel" aria-labelledby="tabBtn-elc">
+    <div class="panel">
+      <div class="sow-head">
+        <h2 id="elcHeading" style="margin:0">Entry Level Certificate in Science (BUILD &amp; GROW)</h2>
+        <div class="row" style="margin:0">
+          <button type="button" id="btnElcShowAll" aria-pressed="false">Show all pupils</button>
+          <button type="button" id="btnExportElcCsv">Export ELC CSV</button>
+        </div>
+      </div>
+      <p id="elcHow" class="hint"></p>
+      <div id="elcKeyDates" class="dates-strip" aria-label="Entry Level Science key dates"></div>
+      <details>
+        <summary>Six tests &amp; taught-in scheme of work links</summary>
+        <div id="elcTestCards" class="req-cards"></div>
+      </details>
+    </div>
+
+    <div id="elcEditorBox" class="editor-box" hidden role="region" aria-labelledby="elcEditorTitle">
+      <div class="sow-head">
+        <h3 id="elcEditorTitle">Add or review test attempts</h3>
+        <button type="button" id="btnCloseElcEditor">Close</button>
+      </div>
+      <p id="elcEditorTaughtNote" class="hint"></p>
+      <div class="form-grid">
+        <div>
+          <label for="elcMarkInput">Mark (out of 25)</label>
+          <input type="number" id="elcMarkInput" min="0" max="25" step="1" value="15">
+        </div>
+        <div>
+          <label for="elcDateInput">Attempt date</label>
+          <input type="date" id="elcDateInput">
+        </div>
+        <div>
+          <label for="elcNoteInput">Paper / note (no names)</label>
+          <input type="text" id="elcNoteInput" maxlength="120" placeholder="Optional note">
+        </div>
+      </div>
+      <p id="elcRetakeWarn" class="status-banner warn" hidden></p>
+      <div class="row">
+        <button type="button" class="primary" id="btnSaveElcAttempt">Save attempt</button>
+      </div>
+      <div id="elcAttemptHistory"></div>
+    </div>
+
+    <div id="elcGridWrap"></div>
+  </section>
+
+  <!-- TAB 2: BIOLOGY PRACTICALS -->
+  <section id="panel-bio" role="tabpanel" aria-labelledby="tabBtn-bio" hidden>
+    <div class="panel">
+      <div class="sow-head">
+        <h2 id="bioHeading" style="margin:0">GCSE Biology Core Practicals (LAUNCH)</h2>
+        <div class="row" style="margin:0">
+          <button type="button" id="btnBioShowAll" aria-pressed="false">Show all pupils</button>
+          <button type="button" id="btnPrintBioClass">Print class summary (Head's statement)</button>
+          <button type="button" id="btnExportBioCsv">Export Biology CSV</button>
+        </div>
+      </div>
+      <p id="bioClassSummaryLine" class="status-banner" role="status"></p>
+      <p id="bioHow" class="hint"></p>
+      <div id="bioPapersAndDates" class="dates-strip"></div>
+      <div id="bioPullWrap" hidden class="panel-card">
+        <div class="sow-head">
+          <span><strong>Practical log data found on this device.</strong> Preview matching Biology core practical entries before applying.</span>
+          <button type="button" id="btnPreviewPracLog">Pull from practical log</button>
+        </div>
+        <div id="bioPullPreview" hidden style="margin-top:8px"></div>
+      </div>
+      <details>
+        <summary>Eight core practicals: skills &amp; planned scheme of work week</summary>
+        <div id="bioPracCards" class="req-cards"></div>
+      </details>
+    </div>
+
+    <div id="bioEditorBox" class="editor-box" hidden role="region" aria-labelledby="bioEditorTitle">
+      <div class="sow-head">
+        <h3 id="bioEditorTitle">Edit practical details</h3>
+        <button type="button" id="btnCloseBioEditor">Close</button>
+      </div>
+      <p id="bioEditorSkills" class="hint"></p>
+      <div class="form-grid">
+        <div>
+          <label for="bioStatusSelect">Status</label>
+          <select id="bioStatusSelect">
+            <option value="not done">not done</option>
+            <option value="done in class">done in class</option>
+            <option value="absent">absent</option>
+            <option value="caught up">caught up</option>
+            <option value="watched demo + own write-up">watched demo + own write-up</option>
+          </select>
+        </div>
+        <div>
+          <label for="bioDateInput">Date</label>
+          <input type="date" id="bioDateInput">
+        </div>
+        <div>
+          <label class="check" for="bioBookCheck" style="margin-top:20px">
+            <input type="checkbox" id="bioBookCheck">
+            <span>Record in book</span>
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <button type="button" class="primary" id="btnSaveBioCell">Save practical record</button>
+      </div>
+    </div>
+
+    <p class="hint">Tap a status button to cycle: <strong>not done &rarr; done in class &rarr; absent &rarr; caught up &rarr; watched demo + own write-up</strong>. Tick <strong>In book</strong> when evidenced, or tap <strong>Date / edit</strong> to set a specific date.</p>
+    <div id="bioGridWrap"></div>
+
+    <div class="panel">
+      <h3>Topic checks (LAUNCH Biology)</h3>
+      <p class="hint">Tap a cell to record a pupil's mark and date for each topic check.</p>
+      <div id="bioTopicEditorBox" class="editor-box" hidden role="region" aria-labelledby="bioTopicEditorTitle">
+        <div class="sow-head">
+          <h3 id="bioTopicEditorTitle">Record topic check</h3>
+          <button type="button" id="btnCloseBioTopicEditor">Close</button>
+        </div>
+        <div class="form-grid">
+          <div>
+            <label for="bioTopicMarkInput">Mark (e.g. 18/25 or 72%)</label>
+            <input type="text" id="bioTopicMarkInput" maxlength="40" placeholder="e.g. 18/25">
+          </div>
+          <div>
+            <label for="bioTopicDateInput">Date</label>
+            <input type="date" id="bioTopicDateInput">
+          </div>
+        </div>
+        <div class="row">
+          <button type="button" class="primary" id="btnSaveBioTopic">Save topic check</button>
+          <button type="button" id="btnClearBioTopic">Clear entry</button>
+        </div>
+      </div>
+      <div id="bioTopicGridWrap"></div>
+    </div>
+  </section>
+
+  <!-- TAB 3: HOSPITALITY -->
+  <section id="panel-hosp" role="tabpanel" aria-labelledby="tabBtn-hosp" hidden>
+    <div class="panel">
+      <div class="sow-head">
+        <h2 id="hospHeading" style="margin:0">Hospitality Short Course (LAUNCH, others optional)</h2>
+        <div class="row" style="margin:0">
+          <button type="button" id="btnHospIncludeOthers" aria-pressed="false">Include BUILD &amp; GROW pupils</button>
+          <button type="button" id="btnExportHospCsv">Export Hospitality CSV</button>
+        </div>
+      </div>
+      <p id="hospHow" class="hint"></p>
+      <p id="hospCreditRuleNote" class="status-banner"></p>
+      <div id="hospKeyDates" class="dates-strip"></div>
+      <details>
+        <summary>Six modules (H1 to H6) &amp; taught-in scheme of work links</summary>
+        <div id="hospModuleCards" class="req-cards"></div>
+      </details>
+    </div>
+
+    <div id="hospEditorBox" class="editor-box" hidden role="region" aria-labelledby="hospEditorTitle">
+      <div class="sow-head">
+        <h3 id="hospEditorTitle">Log hospitality challenge / module hours</h3>
+        <button type="button" id="btnCloseHospEditor">Close</button>
+      </div>
+      <p id="hospEditorModuleInfo" class="hint"></p>
+      <div class="form-grid">
+        <div>
+          <label for="hospChallengeInput">Challenge number / task</label>
+          <input type="text" id="hospChallengeInput" maxlength="60" placeholder="e.g. Challenge 1">
+        </div>
+        <div>
+          <label for="hospSectionSelect">Section</label>
+          <select id="hospSectionSelect">
+            <option value="A">Section A (short, 2–3 h)</option>
+            <option value="B">Section B (longer, 5–10 h)</option>
+          </select>
+        </div>
+        <div>
+          <label for="hospHoursInput">Hours completed</label>
+          <input type="number" id="hospHoursInput" min="0.5" max="60" step="0.5" value="2">
+        </div>
+        <div>
+          <label for="hospEvidenceSelect">Evidence type</label>
+          <select id="hospEvidenceSelect"></select>
+        </div>
+        <div>
+          <label for="hospDateInput">Date</label>
+          <input type="date" id="hospDateInput">
+        </div>
+        <div>
+          <label for="hospStatusSelect">Status</label>
+          <select id="hospStatusSelect">
+            <option value="evidenced">evidenced</option>
+            <option value="signed off">signed off</option>
+            <option value="in progress">in progress</option>
+            <option value="planned">planned</option>
+          </select>
+        </div>
+        <div>
+          <label for="hospWhereInput">Where evidence is kept (no names)</label>
+          <input type="text" id="hospWhereInput" maxlength="80" placeholder="e.g. Portfolio wallet">
+        </div>
+        <div>
+          <label class="check" for="hospPortfolioCheck">
+            <input type="checkbox" id="hospPortfolioCheck" checked>
+            <span>Record in portfolio</span>
+          </label>
+          <label class="check" for="hospAdultSignCheck">
+            <input type="checkbox" id="hospAdultSignCheck">
+            <span>Adult signature (observation)</span>
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <button type="button" class="primary" id="btnSaveHospEntry">Add challenge / hours</button>
+      </div>
+      <div id="hospEntryHistory"></div>
+    </div>
+
+    <div id="hospGridWrap"></div>
+  </section>
+
+  <!-- TAB 4: UNIT AWARDS -->
+  <section id="panel-unit" role="tabpanel" aria-labelledby="tabBtn-unit" hidden>
+    <div class="panel">
+      <div class="sow-head">
+        <h2 style="margin:0">Unit awards (any pupil)</h2>
+        <div class="row" style="margin:0">
+          <div class="ctrl-inline">
+            <label for="unitPathFilter">Group:</label>
+            <select id="unitPathFilter">
+              <option value="ALL">All pupils</option>
+              <option value="BUILD">BUILD</option>
+              <option value="GROW">GROW</option>
+              <option value="LAUNCH">LAUNCH</option>
+            </select>
+          </div>
+          <button type="button" id="btnExportUnitCsv">Export Unit awards CSV</button>
+        </div>
+      </div>
+      <p id="unitHow" class="hint"></p>
+
+      <div class="panel-card">
+        <h3>One-tap unit suggestions (Hospitality &amp; Vocational)</h3>
+        <p class="hint">Tap to add a suggested unit with starter outcomes from its linked weeks.</p>
+        <div id="unitSuggestionsRow" class="row"></div>
+      </div>
+
+      <details id="addUnitDetails" open>
+        <summary>Add a new unit (title + outcomes, one per line)</summary>
+        <div class="form-grid" style="margin-top:8px">
+          <div>
+            <label for="newUnitTitle">Unit title (no names)</label>
+            <input type="text" id="newUnitTitle" maxlength="120" placeholder="e.g. Investigating rocks and soils">
+          </div>
+        </div>
+        <div style="margin-top:8px">
+          <label for="newUnitOutcomes">Outcomes (one per line — type or paste)</label>
+          <textarea id="newUnitOutcomes" placeholder="Sort three rock samples by appearance&#10;Test whether water passes through each sample&#10;Record findings in a simple table"></textarea>
+        </div>
+        <div class="row">
+          <button type="button" class="primary" id="btnAddUnit">Add unit</button>
+        </div>
+      </details>
+    </div>
+
+    <div id="unitEditorBox" class="editor-box" hidden role="region" aria-labelledby="unitEditorTitle">
+      <div class="sow-head">
+        <h3 id="unitEditorTitle">Record outcome evidence</h3>
+        <button type="button" id="btnCloseUnitEditor">Close</button>
+      </div>
+      <p id="unitEditorOutcomeText" class="hint"></p>
+      <div class="form-grid">
+        <div>
+          <label class="check" for="unitDoneCheck">
+            <input type="checkbox" id="unitDoneCheck">
+            <span>Outcome achieved</span>
+          </label>
+        </div>
+        <div>
+          <label for="unitEvidenceSelect">Evidence type</label>
+          <select id="unitEvidenceSelect"></select>
+        </div>
+        <div>
+          <label for="unitDateInput">Date</label>
+          <input type="date" id="unitDateInput">
+        </div>
+      </div>
+      <div class="row">
+        <button type="button" class="primary" id="btnSaveUnitCell">Save outcome record</button>
+      </div>
+    </div>
+
+    <div id="unitsContainer"></div>
+  </section>
+
+  <!-- TAB 5: SCHEME OF WORK -->
+  <section id="panel-sow" role="tabpanel" aria-labelledby="tabBtn-sow" hidden>
+    <div id="sowGapsBox" class="gaps-box" role="region" aria-label="Scheme of work gaps"></div>
+
+    <div class="panel">
+      <div class="sow-head">
+        <h2 style="margin:0">Scheme of work &amp; award links</h2>
+        <div class="row" style="margin:0">
+          <div class="ctrl-inline">
+            <label for="sowPathSelect">Pathway:</label>
+            <select id="sowPathSelect">
+              <option value="ALL">All pathways</option>
+              <option value="BUILD">BUILD (Science)</option>
+              <option value="GROW">GROW (Science)</option>
+              <option value="LAUNCH_BIO">LAUNCH (Biology)</option>
+              <option value="LAUNCH_VOC">LAUNCH (Vocational / Hospitality)</option>
+              <option value="LAUNCH_CP">LAUNCH (Chemistry &amp; Physics)</option>
+            </select>
+          </div>
+          <button type="button" id="btnExportSowCsv">Export Scheme CSV</button>
+        </div>
+      </div>
+      <p class="hint">Tick weeks as taught (pre-ticked read-only when tallied or logged in other device tools) and add or remove links between weeks and award requirements.</p>
+    </div>
+
+    <div id="sowListWrap"></div>
+  </section>
+
+  <!-- CHECK THESE WITH THE EXAMS OFFICER -->
+  <section class="panel" id="examsOfficerSection" aria-labelledby="examsOfficerTitle">
+    <h2 id="examsOfficerTitle" style="margin-top:0">Check these with the exams officer</h2>
+    <p class="hint">Items flagged in the specification and scheme of work review. Tick locally once confirmed.</p>
+    <div id="factsToCheckList"></div>
+  </section>
+
+  <!-- BACKUP, EXPORT, IMPORT & CLEAR ALL -->
+  <section class="panel noprint" aria-labelledby="backupSectionTitle">
+    <h2 id="backupSectionTitle" style="margin-top:0">Backup, restore &amp; clear</h2>
+    <p class="hint">Backup JSON and tab CSVs use <strong>Pupil N</strong> codes only and never export pupil labels or private notes.</p>
+    <div class="row">
+      <button type="button" class="primary" id="btnExportJson">Export backup (.json)</button>
+      <span>
+        <input class="file" type="file" id="importJsonInput" accept=".json,application/json">
+        <label class="btn" for="importJsonInput">Import backup (.json)</label>
+      </span>
+      <button type="button" class="danger" id="btnOpenClearBox">Clear all</button>
+    </div>
+    <div id="clearConfirmBox" class="editor-box" hidden>
+      <label for="clearConfirmInput">Type <strong>CLEAR</strong> to delete all saved awards data on this device (keeps Class names &amp; pupil profile):</label>
+      <div class="row" style="margin-top:8px">
+        <input type="text" id="clearConfirmInput" maxlength="20" autocomplete="off" placeholder="Type CLEAR" style="max-width:220px">
+        <button type="button" class="danger" id="btnConfirmClearAll">Confirm clear all</button>
+        <button type="button" id="btnCancelClearAll">Cancel</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<section id="printRecordSection" aria-hidden="true"></section>
+
+<script id="awardsRequirementsData" type="application/json">{"version":1,"note":"Requirements researched 11 Nov 2026 from the awarding organisation's published specification and guides. No awarding-body names by rule. Teacher must confirm entries with the exams officer.","sow":{"BUILD":[{"week":"Aut1·W1","slot":"A1_W01","lessonCodePrefix":"SCI_BUILD_A1_W01","outcome":"Baseline assessment — no new science content; unit starts W3","strand":"Science"},{"week":"Aut1·W2","slot":"A1_W02","lessonCodePrefix":"SCI_BUILD_A1_W02","outcome":"Baseline assessment — no new science content; unit starts W3","strand":"Science"},{"week":"Aut1·W3","slot":"A1_W03","lessonCodePrefix":"SCI_BUILD_A1_W03","outcome":"Compare animals with and without a backbone (vertebrates and invertebrates).","strand":"Science"},{"week":"Aut1·W4","slot":"A1_W04","lessonCodePrefix":"SCI_BUILD_A1_W04","outcome":"Explain how muscles work in pairs with bones to make the body move.","strand":"Science"},{"week":"Aut1·W5","slot":"A1_W05","lessonCodePrefix":"SCI_BUILD_A1_W05","outcome":"Identify that humans and animals need the right types and amount of nutrition.","strand":"Science"},{"week":"Aut1·W6","slot":"A1_W06","lessonCodePrefix":"SCI_BUILD_A1_W06","outcome":"Sort foods into groups and describe a balanced diet (links PSHE / Foodwise).","strand":"Science"},{"week":"Aut1·W7","slot":"A1_W07","lessonCodePrefix":"SCI_BUILD_A1_W07","outcome":"Explain that animals cannot make their own food; they get it from what they eat.","strand":"Science"},{"week":"Aut2·W1","slot":"A2_W01","lessonCodePrefix":"SCI_BUILD_A2_W01","outcome":"Describe how we can care for our environment: reduce, reuse and recycle (sustainability).","strand":"Science"},{"week":"Aut2·W2","slot":"A2_W02","lessonCodePrefix":"SCI_BUILD_A2_W02","outcome":"Compare and group rocks by their appearance and simple properties.","strand":"Science"},{"week":"Aut2·W3","slot":"A2_W03","lessonCodePrefix":"SCI_BUILD_A2_W03","outcome":"Test rocks for hardness and whether they let water through.","strand":"Science"},{"week":"Aut2·W4","slot":"A2_W04","lessonCodePrefix":"SCI_BUILD_A2_W04","outcome":"Identify everyday uses of different rocks (links D&T / Construction).","strand":"Science"},{"week":"Aut2·W5","slot":"A2_W05","lessonCodePrefix":"SCI_BUILD_A2_W05","outcome":"Group natural and human-made materials; record results in a table (ICT).","strand":"Science"},{"week":"Aut2·W6","slot":"A2_W06","lessonCodePrefix":"SCI_BUILD_A2_W06","outcome":"Plan and carry out a simple fair test on rocks.","strand":"Science"},{"week":"Aut2·W7","slot":"A2_W07","lessonCodePrefix":"SCI_BUILD_A2_W07","outcome":"Review and evidence learning on skeletons, nutrition & rocks.","strand":"Science"},{"week":"Spr1·W1","slot":"SP1_W01","lessonCodePrefix":"SCI_BUILD_SP1_W01","outcome":"Describe how fossils are formed over a very long time.","strand":"Science"},{"week":"Spr1·W2","slot":"SP1_W02","lessonCodePrefix":"SCI_BUILD_SP1_W02","outcome":"Explain what fossils tell us about living things from long ago.","strand":"Science"},{"week":"Spr1·W3","slot":"SP1_W03","lessonCodePrefix":"SCI_BUILD_SP1_W03","outcome":"Recognise that soils are made from rocks and organic matter.","strand":"Science"},{"week":"Spr1·W4","slot":"SP1_W04","lessonCodePrefix":"SCI_BUILD_SP1_W04","outcome":"Compare different soils and how easily water passes through them.","strand":"Science"},{"week":"Spr1·W5","slot":"SP1_W05","lessonCodePrefix":"SCI_BUILD_SP1_W05","outcome":"Investigate which soil holds the most water; record results (ICT).","strand":"Science"},{"week":"Spr1·W6","slot":"SP1_W06","lessonCodePrefix":"SCI_BUILD_SP1_W06","outcome":"Recognise that we need light to see and that dark is the absence of light.","strand":"Science"},{"week":"Spr2·W1","slot":"SP2_W01","lessonCodePrefix":"SCI_BUILD_SP2_W01","outcome":"Identify sources of light and surfaces that reflect light.","strand":"Science"},{"week":"Spr2·W2","slot":"SP2_W02","lessonCodePrefix":"SCI_BUILD_SP2_W02","outcome":"Explain that the Sun's light can be dangerous and how to protect our eyes (links PSHE).","strand":"Science"},{"week":"Spr2·W3","slot":"SP2_W03","lessonCodePrefix":"SCI_BUILD_SP2_W03","outcome":"Investigate how shadows are formed when light is blocked.","strand":"Science"},{"week":"Spr2·W4","slot":"SP2_W04","lessonCodePrefix":"SCI_BUILD_SP2_W04","outcome":"Explore how the size of a shadow changes; record findings.","strand":"Science"},{"week":"Spr2·W5","slot":"SP2_W05","lessonCodePrefix":"SCI_BUILD_SP2_W05","outcome":"Plan and carry out a fair test about shadows or reflection.","strand":"Science"},{"week":"Spr2·W6","slot":"SP2_W06","lessonCodePrefix":"SCI_BUILD_SP2_W06","outcome":"Review and evidence learning on fossils, soils & light.","strand":"Science"},{"week":"Sum1·W1","slot":"SU1_W01","lessonCodePrefix":"SCI_BUILD_SU1_W01","outcome":"Identify the parts of a flowering plant (roots, stem, leaves, flower).","strand":"Science"},{"week":"Sum1·W2","slot":"SU1_W02","lessonCodePrefix":"SCI_BUILD_SU1_W02","outcome":"Describe the job of each part of a plant.","strand":"Science"},{"week":"Sum1·W3","slot":"SU1_W03","lessonCodePrefix":"SCI_BUILD_SU1_W03","outcome":"Identify what plants need to grow well (light, water, warmth, nutrients).","strand":"Science"},{"week":"Sum1·W4","slot":"SU1_W04","lessonCodePrefix":"SCI_BUILD_SU1_W04","outcome":"Plan an investigation into what plants need (links vocational allotment).","strand":"Science"},{"week":"Sum1·W5","slot":"SU1_W05","lessonCodePrefix":"SCI_BUILD_SU1_W05","outcome":"Set up and observe a plant-growth investigation over time (ICT to record).","strand":"Science"},{"week":"Sum1·W6","slot":"SU1_W06","lessonCodePrefix":"SCI_BUILD_SU1_W06","outcome":"Explain how water travels through a plant.","strand":"Science"},{"week":"Sum2·W1","slot":"SU2_W01","lessonCodePrefix":"SCI_BUILD_SU2_W01","outcome":"Compare how things move on different surfaces; explore friction (push and pull).","strand":"Science"},{"week":"Sum2·W2","slot":"SU2_W02","lessonCodePrefix":"SCI_BUILD_SU2_W02","outcome":"Identify contact and non-contact forces in everyday life.","strand":"Science"},{"week":"Sum2·W3","slot":"SU2_W03","lessonCodePrefix":"SCI_BUILD_SU2_W03","outcome":"Investigate which materials are magnetic and which are not.","strand":"Science"},{"week":"Sum2·W4","slot":"SU2_W04","lessonCodePrefix":"SCI_BUILD_SU2_W04","outcome":"Explore how magnets attract and repel, and find their poles.","strand":"Science"},{"week":"Sum2·W5","slot":"SU2_W05","lessonCodePrefix":"SCI_BUILD_SU2_W05","outcome":"Describe pollination and how flowers are pollinated (Plants B).","strand":"Science"},{"week":"Sum2·W6","slot":"SU2_W06","lessonCodePrefix":"SCI_BUILD_SU2_W06","outcome":"Explain how seeds form and are spread (seed dispersal).","strand":"Science"},{"week":"Sum2·W7","slot":"SU2_W07","lessonCodePrefix":"SCI_BUILD_SU2_W07","outcome":"Review the plant life cycle; evidence the year's science.","strand":"Science"}],"GROW":[{"week":"Aut1·W1","slot":"A1_W01","lessonCodePrefix":"SCI_GROW_A1_W01","outcome":"Baseline assessment — no new science content; unit starts W3","strand":"Science"},{"week":"Aut1·W2","slot":"A1_W02","lessonCodePrefix":"SCI_GROW_A1_W02","outcome":"Baseline assessment — no new science content; unit starts W3","strand":"Science"},{"week":"Aut1·W3","slot":"A1_W03","lessonCodePrefix":"SCI_GROW_A1_W03","outcome":"Explore friction and how it can be helpful or unhelpful.","strand":"Science"},{"week":"Aut1·W4","slot":"A1_W04","lessonCodePrefix":"SCI_GROW_A1_W04","outcome":"Investigate mechanisms: levers, pulleys and gears.","strand":"Science"},{"week":"Aut1·W5","slot":"A1_W05","lessonCodePrefix":"SCI_GROW_A1_W05","outcome":"Plan and carry out a fair test about forces; record results.","strand":"Science"},{"week":"Aut1·W6","slot":"A1_W06","lessonCodePrefix":"SCI_GROW_A1_W06","outcome":"Describe the movement of the Earth and other planets around the Sun.","strand":"Science"},{"week":"Aut1·W7","slot":"A1_W07","lessonCodePrefix":"SCI_GROW_A1_W07","outcome":"Describe the movement of the Moon around the Earth.","strand":"Science"},{"week":"Aut2·W1","slot":"A2_W01","lessonCodePrefix":"SCI_GROW_A2_W01","outcome":"Explain day and night and the apparent movement of the Sun.","strand":"Science"},{"week":"Aut2·W2","slot":"A2_W02","lessonCodePrefix":"SCI_GROW_A2_W02","outcome":"Describe the Sun, Earth and Moon as approximately spherical bodies.","strand":"Science"},{"week":"Aut2·W3","slot":"A2_W03","lessonCodePrefix":"SCI_GROW_A2_W03","outcome":"Research and present findings about the Solar System (ICT).","strand":"Science"},{"week":"Aut2·W4","slot":"A2_W04","lessonCodePrefix":"SCI_GROW_A2_W04","outcome":"Describe causes and effects of global warming and how to reduce our impact.","strand":"Science"},{"week":"Aut2·W5","slot":"A2_W05","lessonCodePrefix":"SCI_GROW_A2_W05","outcome":"Consolidate forces, space and climate; answer scientific questions.","strand":"Science"},{"week":"Aut2·W6","slot":"A2_W06","lessonCodePrefix":"SCI_GROW_A2_W06","outcome":"Consolidate and revisit key ideas through investigation.","strand":"Science"},{"week":"Aut2·W7","slot":"A2_W07","lessonCodePrefix":"SCI_GROW_A2_W07","outcome":"Review and evidence autumn science.","strand":"Science"},{"week":"Spr1·W1","slot":"SP1_W01","lessonCodePrefix":"SCI_GROW_SP1_W01","outcome":"Compare and group materials by properties (hardness, conductivity, solubility).","strand":"Science"},{"week":"Spr1·W2","slot":"SP1_W02","lessonCodePrefix":"SCI_GROW_SP1_W02","outcome":"Investigate solubility and how to recover a substance from solution.","strand":"Science"},{"week":"Spr1·W3","slot":"SP1_W03","lessonCodePrefix":"SCI_GROW_SP1_W03","outcome":"Investigate thermal and electrical conductors and insulators.","strand":"Science"},{"week":"Spr1·W4","slot":"SP1_W04","lessonCodePrefix":"SCI_GROW_SP1_W04","outcome":"Plan a fair test to compare material properties; record results.","strand":"Science"},{"week":"Spr1·W5","slot":"SP1_W05","lessonCodePrefix":"SCI_GROW_SP1_W05","outcome":"Describe the main human body systems (circulation, digestion).","strand":"Science"},{"week":"Spr1·W6","slot":"SP1_W06","lessonCodePrefix":"SCI_GROW_SP1_W06","outcome":"Describe the human circulatory system and the job of the heart.","strand":"Science"},{"week":"Spr2·W1","slot":"SP2_W01","lessonCodePrefix":"SCI_GROW_SP2_W01","outcome":"Explain the impact of diet, exercise, drugs and lifestyle on the body (links PSHE).","strand":"Science"},{"week":"Spr2·W2","slot":"SP2_W02","lessonCodePrefix":"SCI_GROW_SP2_W02","outcome":"Describe how nutrients and water are transported in the body.","strand":"Science"},{"week":"Spr2·W3","slot":"SP2_W03","lessonCodePrefix":"SCI_GROW_SP2_W03","outcome":"Research and present a healthy-body investigation.","strand":"Science"},{"week":"Spr2·W4","slot":"SP2_W04","lessonCodePrefix":"SCI_GROW_SP2_W04","outcome":"Describe the life cycles of mammals, amphibians, insects and birds.","strand":"Science"},{"week":"Spr2·W5","slot":"SP2_W05","lessonCodePrefix":"SCI_GROW_SP2_W05","outcome":"Compare the life cycles of different living things.","strand":"Science"},{"week":"Spr2·W6","slot":"SP2_W06","lessonCodePrefix":"SCI_GROW_SP2_W06","outcome":"Consolidate life cycles; evidence spring science.","strand":"Science"},{"week":"Sum1·W1","slot":"SU1_W01","lessonCodePrefix":"SCI_GROW_SU1_W01","outcome":"Describe reproduction in plants (pollination, seed formation).","strand":"Science"},{"week":"Sum1·W2","slot":"SU1_W02","lessonCodePrefix":"SCI_GROW_SU1_W02","outcome":"Describe sexual and asexual reproduction in plants.","strand":"Science"},{"week":"Sum1·W3","slot":"SU1_W03","lessonCodePrefix":"SCI_GROW_SU1_W03","outcome":"Investigate how seeds are dispersed.","strand":"Science"},{"week":"Sum1·W4","slot":"SU1_W04","lessonCodePrefix":"SCI_GROW_SU1_W04","outcome":"Describe reversible changes (dissolving, melting, freezing).","strand":"Science"},{"week":"Sum1·W5","slot":"SU1_W05","lessonCodePrefix":"SCI_GROW_SU1_W05","outcome":"Investigate recovering substances from reversible changes.","strand":"Science"},{"week":"Sum1·W6","slot":"SU1_W06","lessonCodePrefix":"SCI_GROW_SU1_W06","outcome":"Describe irreversible changes (burning, rusting, new materials formed).","strand":"Science"},{"week":"Sum2·W1","slot":"SU2_W01","lessonCodePrefix":"SCI_GROW_SU2_W01","outcome":"Plan and carry out an investigation into a change of state.","strand":"Science"},{"week":"Sum2·W2","slot":"SU2_W02","lessonCodePrefix":"SCI_GROW_SU2_W02","outcome":"Describe the impact of plastic pollution and how to reduce it.","strand":"Science"},{"week":"Sum2·W3","slot":"SU2_W03","lessonCodePrefix":"SCI_GROW_SU2_W03","outcome":"Describe reproduction and growth in animals and humans.","strand":"Science"},{"week":"Sum2·W4","slot":"SU2_W04","lessonCodePrefix":"SCI_GROW_SU2_W04","outcome":"Describe how humans develop and change into old age.","strand":"Science"},{"week":"Sum2·W5","slot":"SU2_W05","lessonCodePrefix":"SCI_GROW_SU2_W05","outcome":"Consolidate reproduction, materials and changes.","strand":"Science"},{"week":"Sum2·W6","slot":"SU2_W06","lessonCodePrefix":"SCI_GROW_SU2_W06","outcome":"Consolidate through investigation and review.","strand":"Science"},{"week":"Sum2·W7","slot":"SU2_W07","lessonCodePrefix":"SCI_GROW_SU2_W07","outcome":"Review and evidence summer/year science.","strand":"Science"}],"LAUNCH":[{"week":"Aut1·W1","slot":"A1_W01","lessonCodePrefix":"SCI_LAUNCH_A1_W01","outcome":"Baseline assessment — no new science content; unit starts W3","strand":"Biology"},{"week":"Aut1·W2","slot":"A1_W02","lessonCodePrefix":"SCI_LAUNCH_A1_W02","outcome":"Baseline assessment — no new science content; unit starts W3","strand":"Biology"},{"week":"Aut1·W3","slot":"A1_W03","lessonCodePrefix":"SCI_LAUNCH_A1_W03","outcome":"Calculate magnification (links Maths; record in spreadsheet).","strand":"Biology"},{"week":"Aut1·W4","slot":"A1_W04","lessonCodePrefix":"SCI_LAUNCH_A1_W04","outcome":"Explain diffusion.","strand":"Biology"},{"week":"Aut1·W5","slot":"A1_W05","lessonCodePrefix":"SCI_LAUNCH_A1_W05","outcome":"Explain osmosis (core practical; data-logging).","strand":"Biology"},{"week":"Aut1·W6","slot":"A1_W06","lessonCodePrefix":"SCI_LAUNCH_A1_W06","outcome":"Explain active transport.","strand":"Biology"},{"week":"Aut1·W7","slot":"A1_W07","lessonCodePrefix":"SCI_LAUNCH_A1_W07","outcome":"Topic 1 review & exam-style questions.","strand":"Biology"},{"week":"Aut2·W1","slot":"A2_W01","lessonCodePrefix":"SCI_LAUNCH_A2_W01","outcome":"Describe mitosis & the cell cycle (animation).","strand":"Biology"},{"week":"Aut2·W2","slot":"A2_W02","lessonCodePrefix":"SCI_LAUNCH_A2_W02","outcome":"Explain growth & stem cells.","strand":"Biology"},{"week":"Aut2·W3","slot":"A2_W03","lessonCodePrefix":"SCI_LAUNCH_A2_W03","outcome":"Stem-cell ethics discussion (links RE/PSHE).","strand":"Biology"},{"week":"Aut2·W4","slot":"A2_W04","lessonCodePrefix":"SCI_LAUNCH_A2_W04","outcome":"Describe DNA, genes & chromosomes.","strand":"Biology"},{"week":"Aut2·W5","slot":"A2_W05","lessonCodePrefix":"SCI_LAUNCH_A2_W05","outcome":"Complete a genetic cross (digital Punnett square).","strand":"Biology"},{"week":"Aut2·W6","slot":"A2_W06","lessonCodePrefix":"SCI_LAUNCH_A2_W06","outcome":"Research a genetic condition online; present.","strand":"Biology"},{"week":"Aut2·W7","slot":"A2_W07","lessonCodePrefix":"SCI_LAUNCH_A2_W07","outcome":"Topics 2 to 3 assessment (Dec).","strand":"Biology"},{"week":"Aut1·W3","slot":"A1_W03","lessonCodePrefix":null,"outcome":"Chemistry: elements, compounds, mixtures and separation.","strand":"Chemistry and Physics"},{"week":"Aut1·W4","slot":"A1_W04","lessonCodePrefix":null,"outcome":"Chemistry: ionic bonding and structure.","strand":"Chemistry and Physics"},{"week":"Aut1·W5","slot":"A1_W05","lessonCodePrefix":null,"outcome":"Chemistry: covalent bonding and structure.","strand":"Chemistry and Physics"},{"week":"Aut1·W6","slot":"A1_W06","lessonCodePrefix":null,"outcome":"Chemistry: formulae, equations and reacting masses.","strand":"Chemistry and Physics"},{"week":"Aut1·W7","slot":"A1_W07","lessonCodePrefix":null,"outcome":"Chemistry: the mole and simple calculations.","strand":"Chemistry and Physics"},{"week":"Aut2·W1","slot":"A2_W01","lessonCodePrefix":null,"outcome":"Physics: movement, speed and velocity.","strand":"Chemistry and Physics"},{"week":"Aut2·W2","slot":"A2_W02","lessonCodePrefix":null,"outcome":"Physics: acceleration and motion graphs.","strand":"Chemistry and Physics"},{"week":"Aut2·W3","slot":"A2_W03","lessonCodePrefix":null,"outcome":"Physics: forces, friction and Newton's laws.","strand":"Chemistry and Physics"},{"week":"Aut2·W4","slot":"A2_W04","lessonCodePrefix":null,"outcome":"Physics: momentum, safety and stopping.","strand":"Chemistry and Physics"},{"week":"Aut2·W5","slot":"A2_W05","lessonCodePrefix":null,"outcome":"Physics: energy stores, transfers and conservation.","strand":"Chemistry and Physics"},{"week":"Aut2·W6","slot":"A2_W06","lessonCodePrefix":null,"outcome":"Consolidate chemistry & physics core; apply maths skills.","strand":"Chemistry and Physics"},{"week":"Aut2·W7","slot":"A2_W07","lessonCodePrefix":null,"outcome":"End-of-term assessment; review and feedback.","strand":"Chemistry and Physics"},{"week":"Spr1·W1","slot":"SP1_W01","lessonCodePrefix":"SCI_LAUNCH_SP1_W01","outcome":"Explain variation & evolution by natural selection.","strand":"Biology"},{"week":"Spr1·W2","slot":"SP1_W02","lessonCodePrefix":"SCI_LAUNCH_SP1_W02","outcome":"Interpret evidence for evolution (data graphs).","strand":"Biology"},{"week":"Spr1·W3","slot":"SP1_W03","lessonCodePrefix":"SCI_LAUNCH_SP1_W03","outcome":"Describe selective breeding & genetic engineering.","strand":"Biology"},{"week":"Spr1·W4","slot":"SP1_W04","lessonCodePrefix":"SCI_LAUNCH_SP1_W04","outcome":"Evaluate GM (research & digital slideshow; links RE).","strand":"Biology"},{"week":"Spr1·W5","slot":"SP1_W05","lessonCodePrefix":"SCI_LAUNCH_SP1_W05","outcome":"Topic 4 assessment.","strand":"Biology"},{"week":"Spr1·W6","slot":"SP1_W06","lessonCodePrefix":"SCI_LAUNCH_SP1_W06","outcome":"Describe communicable & non-communicable disease.","strand":"Biology"},{"week":"Spr2·W1","slot":"SP2_W01","lessonCodePrefix":"SCI_LAUNCH_SP2_W01","outcome":"Explain the body's defences & immune response.","strand":"Biology"},{"week":"Spr2·W2","slot":"SP2_W02","lessonCodePrefix":"SCI_LAUNCH_SP2_W02","outcome":"Research disease statistics; create an infographic.","strand":"Biology"},{"week":"Spr2·W3","slot":"SP2_W03","lessonCodePrefix":"SCI_LAUNCH_SP2_W03","outcome":"Describe photosynthesis (core practical; data-logging).","strand":"Biology"},{"week":"Spr2·W4","slot":"SP2_W04","lessonCodePrefix":"SCI_LAUNCH_SP2_W04","outcome":"Describe plant transport & transpiration.","strand":"Biology"},{"week":"Spr2·W5","slot":"SP2_W05","lessonCodePrefix":"SCI_LAUNCH_SP2_W05","outcome":"Apply plant biology to unfamiliar data.","strand":"Biology"},{"week":"Spr2·W6","slot":"SP2_W06","lessonCodePrefix":"SCI_LAUNCH_SP2_W06","outcome":"Health & plants assessment (Mar).","strand":"Biology"},{"week":"Spr1·W1","slot":"SP1_W01","lessonCodePrefix":null,"outcome":"Chemistry: Groups 1, 7 and 0 and periodic trends.","strand":"Chemistry and Physics"},{"week":"Spr1·W2","slot":"SP1_W02","lessonCodePrefix":null,"outcome":"Chemistry: reactivity series and metal extraction.","strand":"Chemistry and Physics"},{"week":"Spr1·W3","slot":"SP1_W03","lessonCodePrefix":null,"outcome":"Chemistry: acids, bases and preparing salts.","strand":"Chemistry and Physics"},{"week":"Spr1·W4","slot":"SP1_W04","lessonCodePrefix":null,"outcome":"Chemistry: rates of reaction and factors affecting them.","strand":"Chemistry and Physics"},{"week":"Spr1·W5","slot":"SP1_W05","lessonCodePrefix":null,"outcome":"Chemistry: energetics – exothermic and endothermic reactions.","strand":"Chemistry and Physics"},{"week":"Spr1·W6","slot":"SP1_W06","lessonCodePrefix":null,"outcome":"Physics: electric circuits, current and voltage.","strand":"Chemistry and Physics"},{"week":"Spr2·W1","slot":"SP2_W01","lessonCodePrefix":null,"outcome":"Physics: resistance, series and parallel circuits.","strand":"Chemistry and Physics"},{"week":"Spr2·W2","slot":"SP2_W02","lessonCodePrefix":null,"outcome":"Physics: electrical energy, power and safety.","strand":"Chemistry and Physics"},{"week":"Spr2·W3","slot":"SP2_W03","lessonCodePrefix":null,"outcome":"Physics: waves – properties, reflection and refraction.","strand":"Chemistry and Physics"},{"week":"Spr2·W4","slot":"SP2_W04","lessonCodePrefix":null,"outcome":"Physics: the electromagnetic spectrum and sound.","strand":"Chemistry and Physics"},{"week":"Spr2·W5","slot":"SP2_W05","lessonCodePrefix":null,"outcome":"Consolidate; apply maths skills to data.","strand":"Chemistry and Physics"},{"week":"Spr2·W6","slot":"SP2_W06","lessonCodePrefix":null,"outcome":"Mock papers (Biology, Chemistry & Physics) and feedback.","strand":"Chemistry and Physics"},{"week":"Sum1·W1","slot":"SU1_W01","lessonCodePrefix":"SCI_LAUNCH_SU1_W01","outcome":"Describe hormonal coordination & homeostasis.","strand":"Biology"},{"week":"Sum1·W2","slot":"SU1_W02","lessonCodePrefix":"SCI_LAUNCH_SU1_W02","outcome":"Model blood-glucose control (interactive software).","strand":"Biology"},{"week":"Sum1·W3","slot":"SU1_W03","lessonCodePrefix":"SCI_LAUNCH_SU1_W03","outcome":"Describe the heart & circulation.","strand":"Biology"},{"week":"Sum1·W4","slot":"SU1_W04","lessonCodePrefix":"SCI_LAUNCH_SU1_W04","outcome":"Explain exchange surfaces & ventilation.","strand":"Biology"},{"week":"Sum1·W5","slot":"SU1_W05","lessonCodePrefix":"SCI_LAUNCH_SU1_W05","outcome":"Apply Topics 7 to 8 to unfamiliar contexts.","strand":"Biology"},{"week":"Sum1·W6","slot":"SU1_W06","lessonCodePrefix":"SCI_LAUNCH_SU1_W06","outcome":"Paper 2 topic assessment.","strand":"Biology"},{"week":"Sum2·W1","slot":"SU2_W01","lessonCodePrefix":"SCI_LAUNCH_SU2_W01","outcome":"Describe ecosystems & biodiversity.","strand":"Biology"},{"week":"Sum2·W2","slot":"SU2_W02","lessonCodePrefix":"SCI_LAUNCH_SU2_W02","outcome":"Ecology fieldwork & sampling (Earth Day; links Geography).","strand":"Biology"},{"week":"Sum2·W3","slot":"SU2_W03","lessonCodePrefix":"SCI_LAUNCH_SU2_W03","outcome":"Explain the carbon/water cycles & human impact.","strand":"Biology"},{"week":"Sum2·W4","slot":"SU2_W04","lessonCodePrefix":"SCI_LAUNCH_SU2_W04","outcome":"Record & analyse fieldwork data (spreadsheets).","strand":"Biology"},{"week":"Sum2·W5","slot":"SU2_W05","lessonCodePrefix":"SCI_LAUNCH_SU2_W05","outcome":"Timed practice Paper 1F.","strand":"Biology"},{"week":"Sum2·W6","slot":"SU2_W06","lessonCodePrefix":"SCI_LAUNCH_SU2_W06","outcome":"Timed practice Paper 2F; targeted revision.","strand":"Biology"},{"week":"Sum2·W7","slot":"SU2_W07","lessonCodePrefix":"SCI_LAUNCH_SU2_W07","outcome":"Sit external GCSE Biology papers; bank unit awards (Jul).","strand":"Biology"},{"week":"Sum1·W1","slot":"SU1_W01","lessonCodePrefix":null,"outcome":"Chemistry: crude oil, fractional distillation and fuels.","strand":"Chemistry and Physics"},{"week":"Sum1·W2","slot":"SU1_W02","lessonCodePrefix":null,"outcome":"Chemistry: alkanes, alkenes and addition reactions.","strand":"Chemistry and Physics"},{"week":"Sum1·W3","slot":"SU1_W03","lessonCodePrefix":null,"outcome":"Chemistry: alcohols and organic reactions.","strand":"Chemistry and Physics"},{"week":"Sum1·W4","slot":"SU1_W04","lessonCodePrefix":null,"outcome":"Chemistry: polymers, uses and issues.","strand":"Chemistry and Physics"},{"week":"Sum1·W5","slot":"SU1_W05","lessonCodePrefix":null,"outcome":"Physics: energy resources and electricity generation.","strand":"Chemistry and Physics"},{"week":"Sum1·W6","slot":"SU1_W06","lessonCodePrefix":null,"outcome":"Physics: solids, liquids, gases and pressure.","strand":"Chemistry and Physics"},{"week":"Sum2·W1","slot":"SU2_W01","lessonCodePrefix":null,"outcome":"Physics: magnetism and electromagnetism.","strand":"Chemistry and Physics"},{"week":"Sum2·W2","slot":"SU2_W02","lessonCodePrefix":null,"outcome":"Physics: radioactivity and particles.","strand":"Chemistry and Physics"},{"week":"Sum2·W3","slot":"SU2_W03","lessonCodePrefix":null,"outcome":"Physics: astrophysics – the Solar System and stars.","strand":"Chemistry and Physics"},{"week":"Sum2·W4","slot":"SU2_W04","lessonCodePrefix":"SCI_LAUNCH_SU2_W04","outcome":"Revision: chemistry papers and exam technique.","strand":"Biology"},{"week":"Sum2·W5","slot":"SU2_W05","lessonCodePrefix":"SCI_LAUNCH_SU2_W05","outcome":"Revision: physics papers and exam technique.","strand":"Biology"},{"week":"Sum2·W6","slot":"SU2_W06","lessonCodePrefix":"SCI_LAUNCH_SU2_W06","outcome":"Full mock IGCSE papers (Biology, Chemistry & Physics).","strand":"Biology"},{"week":"Sum2·W7","slot":"SU2_W07","lessonCodePrefix":"SCI_LAUNCH_SU2_W07","outcome":"Final review, feedback and exam readiness.","strand":"Biology"}]},"awards":[{"id":"ELC_SCI","name":"Entry Level Certificate in Science","pathways":["BUILD","GROW"],"how":"Six short tests set by the awarding organisation, 25 marks each, 150 in total. Marked by the teacher, checked by the awarding organisation. Untimed. A pupil need not sit all six. Retakes allowed, at least 14 days after the last attempt, with no feedback on the first answers. Best mark per test counts. No coursework and no practical evidence is sent in; about 5 marks on each test are practical questions.","thresholds":[{"level":"Entry 1","min":30},{"level":"Entry 2","min":65},{"level":"Entry 3","min":100}],"keyDates":[{"what":"Enter pupils (via exams officer)","when":"21 February in the year of the award","confirm":true},{"what":"Send best marks + signed record sheet","when":"15 May in the year of the award","confirm":true}],"paperwork":["Assessment record and authentication sheet per pupil (teacher and pupil sign)","Marked test papers kept for the moderation sample (10 pupils, or all if fewer)"],"tests":[{"id":"B1A","name":"Biology 1A: Cells, genetics, inheritance and modification","max":25,"sowLinks":{"BUILD":[],"GROW":["SU1_W01","SU1_W02","SU2_W03","SU2_W04"]}},{"id":"B1B","name":"Biology 1B: Health, disease and the development of medicines","max":25,"sowLinks":{"BUILD":["A1_W05","A1_W06","A1_W07"],"GROW":["SP1_W05","SP1_W06","SP2_W01","SP2_W02","SP2_W03"]}},{"id":"C1A","name":"Chemistry 1A: Atoms, compounds and states of matter","max":25,"sowLinks":{"BUILD":[],"GROW":["SU1_W04","SU2_W01"]}},{"id":"C1B","name":"Chemistry 1B: Separating mixtures, breaking down substances, acids and metals","max":25,"sowLinks":{"BUILD":["A2_W05"],"GROW":["SP1_W01","SP1_W02","SU1_W05","SU1_W06"]}},{"id":"P1A","name":"Physics 1A: Forces, movement and energy","max":25,"sowLinks":{"BUILD":["SU2_W01","SU2_W02","SU2_W03","SU2_W04"],"GROW":["A1_W03","A1_W04","A1_W05","SP1_W03"]}},{"id":"P1B","name":"Physics 1B: Waves and radiation","max":25,"sowLinks":{"BUILD":["SP1_W06","SP2_W01","SP2_W02","SP2_W03","SP2_W04"],"GROW":[]}}],"factsToCheck":["The scheme of work quotes a four-digit code for this certificate that is not in the current specification. Confirm the exact qualification with the exams officer.","The scheme of work content is a primary-style science spine; the six tests are pitched at the first topics of the 14 to 16 course. sowLinks are a first-pass best fit by the ruling thread and several tests have little or no matching teaching yet.","A second certificate (Further Science, six more tests) exists; not assumed here."]},{"id":"UNIT_AWARDS","name":"Unit awards (science units)","pathways":["BUILD","GROW","LAUNCH"],"how":"Each unit is a list of outcomes; the pupil shows each outcome and the teacher records the evidence type. The scheme of work does not say WHICH units. The teacher types in or pastes each unit title and its outcomes once; the tool then tracks them.","evidenceTypes":["Seen by teacher","Photo","Pupil work","Verbal answer","Practical demonstration"],"units":[]},{"id":"GCSE_BIO","name":"GCSE Biology (single science), Foundation tier","pathways":["LAUNCH"],"how":"Two written papers. No coursework, but eight core practicals must be done and each pupil needs a record made at the time (book work, results table or worksheet counts). The head signs a practical science statement for the awarding organisation each spring (date to confirm, mid April). A pupil absent for a practical does not block the statement, but note it and offer a catch-up or a watched demonstration with their own write-up. At least 15% of exam marks come from practical-based questions.","papers":[{"id":"P1","name":"Paper 1","topics":"Topics 1 to 5","confirm":true},{"id":"P2","name":"Paper 2","topics":"Topic 1 and Topics 6 to 9","confirm":true}],"corePracticals":[{"id":"CP1.6","ref":"1.6","topic":1,"name":"Microscopy: view specimens, magnification calculations, labelled drawings","sowSlot":"A1_W03","skills":["prepare a slide","stain","use a microscope","scientific drawing","magnification calculation"]},{"id":"CP1.10","ref":"1.10","topic":1,"name":"Effect of pH on enzyme activity","sowSlot":null,"skills":["measure volumes with syringes","sample at timed intervals","avoid cross-contamination","work safely"]},{"id":"CP1.13B","ref":"1.13B","topic":1,"biologyOnly":true,"name":"Food tests: starch, reducing sugars, proteins, fats","sowSlot":null,"skills":["choose equipment","write a method","recognise hazards","avoid cross-contamination","record data"]},{"id":"CP1.16","ref":"1.16","topic":1,"name":"Osmosis in potatoes (percentage change in mass)","sowSlot":"A1_W05","skills":["use a balance accurately","label accurately","record observations","work safely"]},{"id":"CP5.18B","ref":"5.18B","topic":5,"biologyOnly":true,"name":"Effect of antiseptics, antibiotics or plant extracts on microbial cultures","sowSlot":null,"skills":["aseptic technique","handle apparatus safely","identify risks with microorganisms","use a control","calculate area of a circle"]},{"id":"CP6.5","ref":"6.5","topic":6,"name":"Effect of light intensity on rate of photosynthesis","sowSlot":"SP2_W03","skills":["measure rate","control variables","record and graph data"]},{"id":"CP8.11","ref":"8.11","topic":8,"name":"Rate of respiration in living organisms","sowSlot":null,"skills":["handle living organisms safely","use a respirometer","use a water bath","record data"]},{"id":"CP9.5","ref":"9.5","topic":9,"name":"Fieldwork: quadrats and belt transects","sowSlot":"SU2_W02","skills":["use a quadrat","belt transect","measure an environmental factor","record data"]}],"topicChecks":[{"what":"Topic 1 review","slot":"A1_W07"},{"what":"Topics 2 to 3 assessment","slot":"A2_W07"},{"what":"Topic 4 assessment","slot":"SP1_W05"},{"what":"Health and plants assessment","slot":"SP2_W06"},{"what":"Paper 2 topic assessment","slot":"SU1_W06"}],"factsToCheck":["The scheme of work only schedules four of the eight core practicals by name (1.6, 1.16, 6.5, 9.5). Enzymes and pH, food tests, microbial cultures and respiration rate need a slot.","Paper topic split and statement deadline are from secondary reading; confirm against the specification."]}]}</script>
+<script id="hospitalityBlockData" type="application/json">{"version":1,"note":"Hospitality block for the awards tracker. No awarding-body names by rule.","sow":{"LAUNCH":[{"week":"Aut1·W1","slot":"A1_W01","lessonCodePrefix":"VOC_LAUNCH_A1_W01","outcome":"Introduction to vocational skills and workplaces.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Aut1·W2","slot":"A1_W02","lessonCodePrefix":"VOC_LAUNCH_A1_W02","outcome":"Health, safety and hygiene at work.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Aut1·W3","slot":"A1_W03","lessonCodePrefix":"VOC_LAUNCH_A1_W03","outcome":"Following instructions and routines.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Aut1·W4","slot":"A1_W04","lessonCodePrefix":"VOC_LAUNCH_A1_W04","outcome":"Teamwork in a vocational setting.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Aut1·W5","slot":"A1_W05","lessonCodePrefix":"VOC_LAUNCH_A1_W05","outcome":"Tools, equipment and safe use.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Aut1·W6","slot":"A1_W06","lessonCodePrefix":"VOC_LAUNCH_A1_W06","outcome":"Complete a supported vocational task.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Aut1·W7","slot":"A1_W07","lessonCodePrefix":"VOC_LAUNCH_A1_W07","outcome":"Vocational skills outcome.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Aut2·W1","slot":"A2_W01","lessonCodePrefix":"VOC_LAUNCH_A2_W01","outcome":"Hospitality and catering basics.","strand":"Vocational pathway (hospitality, gardening, enterprise)","lessons":[{"code":"VOC-LAUNCH-A2-W01-L1","title":"Hospitality businesses and job roles","plannerChallenge":"1"},{"code":"VOC-LAUNCH-A2-W01-L2","title":"A day in my job (blog)","plannerChallenge":"1"},{"code":"CAREERS-LAUNCH-A2-W01","title":"My CV for a hospitality job","plannerChallenge":"careers strand"}]},{"week":"Aut2·W2","slot":"A2_W02","lessonCodePrefix":"VOC_LAUNCH_A2_W02","outcome":"Food preparation and presentation (scheme of work). Built lessons teach products and services instead.","strand":"Vocational pathway (hospitality, gardening, enterprise)","lessons":[{"code":"VOC-LAUNCH-A2-W02-L1","title":"Products and services sort","plannerChallenge":"2"},{"code":"VOC-LAUNCH-A2-W02-L2","title":"Products and services display","plannerChallenge":"2"}]},{"week":"Aut2·W3","slot":"A2_W03","lessonCodePrefix":"VOC_LAUNCH_A2_W03","outcome":"Front-of-house and customer service.","strand":"Vocational pathway (hospitality, gardening, enterprise)","lessons":[{"code":"VOC-LAUNCH-A2-W03-L1","title":"Customer communication scripts","plannerChallenge":"7"},{"code":"VOC-LAUNCH-A2-W03-L2","title":"Four role plays and three top tips","plannerChallenge":"7"}]},{"week":"Aut2·W4","slot":"A2_W04","lessonCodePrefix":"VOC_LAUNCH_A2_W04","outcome":"Run a class café or service.","strand":"Vocational pathway (hospitality, gardening, enterprise)","lessons":[{"code":"VOC-LAUNCH-A2-W04-L1","title":"Prepare the café: cold item, stock, role card","plannerChallenge":"8 (tutor-agreed)"},{"code":"VOC-LAUNCH-A2-W04-L2","title":"Run the café for invited staff","plannerChallenge":"8 (tutor-agreed)"}]},{"week":"Aut2·W5","slot":"A2_W05","lessonCodePrefix":"VOC_LAUNCH_A2_W05","outcome":"Evaluate the service and my role.","strand":"Vocational pathway (hospitality, gardening, enterprise)","lessons":[{"code":"VOC-LAUNCH-A2-W05-L1","title":"Reviewing our café service"},{"code":"VOC-LAUNCH-A2-W05-L2","title":"My role and my next step"}]},{"week":"Aut2·W6","slot":"A2_W06","lessonCodePrefix":"VOC_LAUNCH_A2_W06","outcome":"Plan a festive catering event.","strand":"Vocational pathway (hospitality, gardening, enterprise)","lessons":[{"code":"VOC-LAUNCH-A2-W06-L1","title":"A festive café proposal"},{"code":"VOC-LAUNCH-A2-W06-L2","title":"Trying the service plan"}]},{"week":"Aut2·W7","slot":"A2_W07","lessonCodePrefix":"VOC_LAUNCH_A2_W07","outcome":"Hospitality portfolio (December data drop).","strand":"Vocational pathway (hospitality, gardening, enterprise)","lessons":[{"code":"VOC-LAUNCH-A2-W07-L1","title":"Checking my hospitality evidence"},{"code":"VOC-LAUNCH-A2-W07-L2","title":"Explaining progress and next steps"}]},{"week":"Spr1·W1","slot":"SP1_W01","lessonCodePrefix":"VOC_LAUNCH_SP1_W01","outcome":"Horticulture: soil, seeds and planting.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Spr1·W2","slot":"SP1_W02","lessonCodePrefix":"VOC_LAUNCH_SP1_W02","outcome":"Seasonal growing and plant care.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Spr1·W3","slot":"SP1_W03","lessonCodePrefix":"VOC_LAUNCH_SP1_W03","outcome":"Using gardening tools safely.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Spr1·W4","slot":"SP1_W04","lessonCodePrefix":"VOC_LAUNCH_SP1_W04","outcome":"Maintaining a growing area.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Spr1·W5","slot":"SP1_W05","lessonCodePrefix":"VOC_LAUNCH_SP1_W05","outcome":"Record growth (links science).","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Spr1·W6","slot":"SP1_W06","lessonCodePrefix":"VOC_LAUNCH_SP1_W06","outcome":"Horticulture outcome.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Spr2·W1","slot":"SP2_W01","lessonCodePrefix":"VOC_LAUNCH_SP2_W01","outcome":"Enterprise: from garden to table.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Spr2·W2","slot":"SP2_W02","lessonCodePrefix":"VOC_LAUNCH_SP2_W02","outcome":"Plan a product or service to sell.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Spr2·W3","slot":"SP2_W03","lessonCodePrefix":"VOC_LAUNCH_SP2_W03","outcome":"Cost, price and marketing (links maths).","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Spr2·W4","slot":"SP2_W04","lessonCodePrefix":"VOC_LAUNCH_SP2_W04","outcome":"Produce and prepare the product.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Spr2·W5","slot":"SP2_W05","lessonCodePrefix":"VOC_LAUNCH_SP2_W05","outcome":"Run a sale or market stall.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Spr2·W6","slot":"SP2_W06","lessonCodePrefix":"VOC_LAUNCH_SP2_W06","outcome":"Evaluate the enterprise; evidence.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Sum1·W1","slot":"SU1_W01","lessonCodePrefix":"VOC_LAUNCH_SU1_W01","outcome":"Prepare for vocational work experience.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Sum1·W2","slot":"SU1_W02","lessonCodePrefix":"VOC_LAUNCH_SU1_W02","outcome":"Workplace behaviours and expectations.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Sum1·W3","slot":"SU1_W03","lessonCodePrefix":"VOC_LAUNCH_SU1_W03","outcome":"Undertake a placement or extended task.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Sum1·W4","slot":"SU1_W04","lessonCodePrefix":"VOC_LAUNCH_SU1_W04","outcome":"Demonstrate vocational competence.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Sum1·W5","slot":"SU1_W05","lessonCodePrefix":"VOC_LAUNCH_SU1_W05","outcome":"Gather references and evidence.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Sum1·W6","slot":"SU1_W06","lessonCodePrefix":"VOC_LAUNCH_SU1_W06","outcome":"Work-experience outcome.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Sum2·W1","slot":"SU2_W01","lessonCodePrefix":"VOC_LAUNCH_SU2_W01","outcome":"Showcase vocational skills to visitors.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Sum2·W2","slot":"SU2_W02","lessonCodePrefix":"VOC_LAUNCH_SU2_W02","outcome":"Reflect on strengths and next steps.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Sum2·W3","slot":"SU2_W03","lessonCodePrefix":"VOC_LAUNCH_SU2_W03","outcome":"Research vocational training or college.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Sum2·W4","slot":"SU2_W04","lessonCodePrefix":"VOC_LAUNCH_SU2_W04","outcome":"Apply for a vocational destination.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Sum2·W5","slot":"SU2_W05","lessonCodePrefix":"VOC_LAUNCH_SU2_W05","outcome":"Finalise vocational portfolio.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Sum2·W6","slot":"SU2_W06","lessonCodePrefix":"VOC_LAUNCH_SU2_W06","outcome":"Celebrate achievement.","strand":"Vocational pathway (hospitality, gardening, enterprise)"},{"week":"Sum2·W7","slot":"SU2_W07","lessonCodePrefix":"VOC_LAUNCH_SU2_W07","outcome":"Certification; bank unit awards (July).","strand":"Vocational pathway (hospitality, gardening, enterprise)"}]},"awards":[{"id":"HOSP","name":"Hospitality short course (vocational taster)","pathways":["LAUNCH"],"alsoFor":"GROW and BUILD pupils may bank hospitality evidence from community project and independence weeks (see sowLinks).","how":"Six modules. In each module the pupil completes challenges from the student book (Section A: short challenges, roughly 2 to 3 hours each; Section B: longer tasks, roughly 5 to 10 hours). Every 10 hours of completed challenges earns 1 credit. The course accredits 10 to 60 hours. Pitched at Entry 3 to Level 1, ages 13 to 19. Evidence goes in a portfolio: a record of challenges done, evidence for each challenge, plus plan and review sheets. The teacher assesses and the school moderates internally. Credits can also count (up to 3) towards the personal effectiveness qualification; if used that way, the certificate and portfolio go to external moderation.","creditRule":{"hoursPerCredit":10,"minHours":10,"maxHours":60},"requirements":[{"id":"H1","name":"Hospitality services","feeds":"What hospitality businesses are, the jobs in them, the products and services they sell.","evidence":"Mind map or sort with the pupil's own contribution; job-role blog; products and services poster.","sowLinks":{"LAUNCH":["A2_W01","A2_W02"]},"status":"taught (Aut2 W1 to W2)"},{"id":"H2","name":"Food and beverage service","feeds":"Preparing and serving simple food and drink to customers; taking orders; working a service.","evidence":"Observed service (adult record of what the pupil actually did), order tickets, product photo, customer feedback. A short café challenge at the lower level asks for serving food and drink on at least three occasions, so log every service.","sowLinks":{"LAUNCH":["A2_W04","A2_W05","SP2_W04","SP2_W05","SU1_W03","SU1_W04"],"GROW":["SP1_W06","SP2_W01"],"BUILD":["SU2_W02","SU2_W03"]},"status":"one service so far (Aut2 W4); needs repeats"},{"id":"H3","name":"Housekeeping and front office services","feeds":"Greeting guests, bookings, complaints, front desk communication; keeping areas clean and ready.","evidence":"Script card; observed role plays (greeting, drink order, room booking, complaint); booking form.","sowLinks":{"LAUNCH":["A2_W03"]},"status":"front office taught (Aut2 W3); housekeeping not yet taught"},{"id":"H4","name":"Events","feeds":"Planning, costing and running a hospitality event.","evidence":"Event proposal with roles, quantities and costs; rehearsal record; event-day observation and review.","sowLinks":{"LAUNCH":["A2_W06","SP2_W02","SP2_W03","SP2_W05","SU2_W01"],"GROW":["SP1_W03","SP1_W06"],"BUILD":["SU1_W01","SU1_W05"]},"status":"planned (Aut2 W6); festive event itself not yet run"},{"id":"H5","name":"Food safety and health and safety","feeds":"Personal hygiene, safe food handling and storage, hazards, safe use of equipment.","evidence":"Hazard spot or safe/unsafe sort; hygiene checklist observed before practical; risk-assessment sheet.","sowLinks":{"LAUNCH":["A1_W02","A1_W05","A2_W04"],"GROW":["SP1_W05"],"BUILD":["A1_W01"]},"status":"taught (Aut1 W2 and W5; checked again in Aut2 W4)"},{"id":"H6","name":"Careers in hospitality","feeds":"Job roles, routes in, CV, work experience, next steps.","evidence":"CV aimed at a hospitality job; day-in-my-job blog; work-experience log; next-step statement.","sowLinks":{"LAUNCH":["A2_W01","A2_W05","A2_W07","SU1_W01","SU1_W02","SU1_W06","SU2_W03","SU2_W04"],"GROW":["SU1_W04","SU1_W05","SU2_W03"]},"status":"started (Aut2 W1 CV and blog)"}],"recordPerPupil":["challenge number (from the student book)","module (H1 to H6)","section (A or B)","date","hours","evidence type","where the evidence is kept","adult signature (observation)","status: planned / in progress / evidenced / signed off"],"evidenceTypes":["photo of product or set-up","observation record (adult signed)","written or typed sheet","witness statement","recorded voice or video (stored privately)","plan sheet","review sheet"],"unitAwardSuggestions":[{"title":"Customer service","sowLinks":{"LAUNCH":["A2_W03","A2_W04"]}},{"title":"Preparing food and drink","sowLinks":{"LAUNCH":["A2_W04","SP2_W04"]}},{"title":"Hospitality task","sowLinks":{"LAUNCH":["A2_W04","A2_W06"]}},{"title":"Vocational skills","sowLinks":{"LAUNCH":["A1_W03","A1_W06","A1_W07"]}},{"title":"Work experience","sowLinks":{"LAUNCH":["SU1_W03","SU1_W06"]}}],"keyDates":[{"what":"Hospitality portfolio check (December data drop)","when":"Aut2 W7","confirm":false},{"what":"Enterprise portfolio and sale evidence","when":"Spring data window","confirm":false},{"what":"Course completion and certification; bank unit awards","when":"July (Sum2 W7)","confirm":true}],"factsToCheck":["The scheme of work calls it a 'Hospitality and Catering' course at Entry 3 to Level 1. The current published course is the six-module hospitality vocational taster. Check which student book and edition the school holds.","The built lessons use challenge numbers 1, 2, 7 and 8 from a planner workbook. Check them against the student book, and get Challenge 8 (the café) signed as tutor-agreed on the plan sheet.","How many Section A challenges make 1 credit differs by module and course. Read the rule on each module page of the student book before counting credits.","The scheme of work says Aut2 W2 is 'food preparation and presentation'. The built lessons teach products and services that week. So far the only food practical is the café in W4, so food preparation evidence is thin until the festive event and spring enterprise.","Decide whether hospitality credits will count towards the personal effectiveness qualification. If yes, external moderation applies.","Housekeeping (module H3) has no week in the scheme of work. A short challenge could fit around the café or the festive event."],"source":"Requirements from the course's published pages (searched 11 Nov 2026). Weeks from the LAUNCH, GROW and BUILD schemes of work. Lessons from the built Autumn 2 vocational bundles."}]}</script>
+<script>
+(function () {
+  "use strict";
+
+  var STORE_KEY = "mbm_awards_tracker_v1";
+  var KEYS = {
+    pupilKey: "mbm_pupil_key_v1",
+    classNames: "mbm_class_names_v1",
+    pupilProfile: "mbm_pupil_profile_v1",
+    qcShowAs: "mbm_qc_show_as_v1",
+    namesList: "mbm_names_list_v1",
+    tracker: "mbm_catchup_tracker_v1",
+    pracLog: "mbm_practical_log_v1",
+    exitTally: "mbm_exit_tally_v1",
+    qcQueue: "mbm_qc_queue_v1",
+    covTaught: "mbm_coverage_taught_v1",
+    covMap: "mbm_coverage_map_v1"
+  };
+
+  var DEFAULT_GROUPS = {
+    LAUNCH: [2, 6, 10, 15, 18],
+    BUILD: [4, 7, 9, 12, 13, 16, 19],
+    GROW: [1, 3, 5, 8, 11, 14, 17, 20]
+  };
+
+  var BIO_STATUS_CYCLE = [
+    "not done",
+    "done in class",
+    "absent",
+    "caught up",
+    "watched demo + own write-up"
+  ];
+
+  var SAFE_CAP_WORDS = {};
+  [
+    "PUPIL", "BUILD", "GROW", "LAUNCH", "SCIENCE", "BIOLOGY", "CHEMISTRY", "PHYSICS",
+    "HOSPITALITY", "ENTRY", "LEVEL", "PAPER", "TOPIC", "CORE", "PRACTICAL", "SECTION",
+    "MODULE", "CHALLENGE", "UNIT", "AWARD", "AWARDS", "AUTUMN", "SPRING", "SUMMER",
+    "WEEK", "PORTFOLIO", "BOOK", "FOLDER", "WALLET", "OBSERVATION", "PHOTO", "SHEET",
+    "SEEN", "TEACHER", "ADULT", "WORK", "DEMO", "CAUGHT", "ABSENT", "DONE", "CLASS",
+    "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "JANUARY", "FEBRUARY",
+    "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER",
+    "NOVEMBER", "DECEMBER", "CAFE", "EVENT", "SERVICE", "FOOD", "SAFETY", "CAREERS",
+    "HOUSEKEEPING", "FRONT", "OFFICE", "VOCATIONAL", "SKILLS", "CUSTOMER", "EXPERIENCE"
+  ].forEach(function (w) { SAFE_CAP_WORDS[w] = 1; });
+
+  function $(id) { return document.getElementById(id); }
+
+  function todayISO() {
+    var d = new Date();
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, "0");
+    var day = String(d.getDate()).padStart(2, "0");
+    return y + "-" + m + "-" + day;
+  }
+
+  function safeJsonParse(raw, fallback) {
+    if (!raw || typeof raw !== "string") return fallback;
+    try {
+      var parsed = JSON.parse(raw);
+      return parsed == null ? fallback : parsed;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function readLS(key, fallback) {
+    try {
+      return safeJsonParse(localStorage.getItem(key), fallback);
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function escapeRegExp(s) {
+    return String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  // --- Load & Merge Embedded JSON Data ---
+  var RAW_SCI = safeJsonParse($("awardsRequirementsData").textContent, { sow: {}, awards: [] });
+  var RAW_HOSP = safeJsonParse($("hospitalityBlockData").textContent, { sow: {}, awards: [] });
+
+  var AWARD_MAP = {};
+  (RAW_SCI.awards || []).concat(RAW_HOSP.awards || []).forEach(function (aw) {
+    if (aw && aw.id) AWARD_MAP[aw.id] = aw;
+  });
+
+  var ELC_AWARD = AWARD_MAP.ELC_SCI || { thresholds: [], keyDates: [], tests: [], factsToCheck: [], paperwork: [] };
+  var BIO_AWARD = AWARD_MAP.GCSE_BIO || { papers: [], corePracticals: [], topicChecks: [], factsToCheck: [] };
+  var HOSP_AWARD = AWARD_MAP.HOSP || { creditRule: { hoursPerCredit: 10, minHours: 10, maxHours: 60 }, requirements: [], evidenceTypes: [], unitAwardSuggestions: [], keyDates: [], factsToCheck: [] };
+  var UNIT_AWARD = AWARD_MAP.UNIT_AWARDS || { evidenceTypes: [] };
+
+  // Build unified WEEKS list with collision-free weekKeys
+  var WEEKS = [];
+  var WEEK_BY_KEY = {};
+  var SLOT_TO_WEEKKEYS = {}; // groupKey + "|" + slot -> [weekKey, ...]
+
+  function registerWeek(entry, pathway, groupKey, strandShort) {
+    var baseKey = pathway + "|" + strandShort + "|" + entry.slot;
+    var wkKey = baseKey;
+    var suffix = 2;
+    while (WEEK_BY_KEY[wkKey]) {
+      wkKey = baseKey + "_" + suffix;
+      suffix++;
+    }
+    var wObj = {
+      weekKey: wkKey,
+      pathway: pathway,
+      groupKey: groupKey,
+      strandShort: strandShort,
+      strand: entry.strand || strandShort,
+      week: entry.week || entry.slot,
+      slot: entry.slot,
+      lessonCodePrefix: entry.lessonCodePrefix || null,
+      outcome: entry.outcome || "",
+      lessons: Array.isArray(entry.lessons) ? entry.lessons : []
+    };
+    WEEKS.push(wObj);
+    WEEK_BY_KEY[wkKey] = wObj;
+    var idxKey = groupKey + "|" + entry.slot;
+    if (!SLOT_TO_WEEKKEYS[idxKey]) SLOT_TO_WEEKKEYS[idxKey] = [];
+    SLOT_TO_WEEKKEYS[idxKey].push(wkKey);
+  }
+
+  ((RAW_SCI.sow && RAW_SCI.sow.BUILD) || []).forEach(function (w) {
+    registerWeek(w, "BUILD", "BUILD", "SCI");
+  });
+  ((RAW_SCI.sow && RAW_SCI.sow.GROW) || []).forEach(function (w) {
+    registerWeek(w, "GROW", "GROW", "SCI");
+  });
+  ((RAW_SCI.sow && RAW_SCI.sow.LAUNCH) || []).forEach(function (w) {
+    var isBio = String(w.strand || "").toLowerCase().indexOf("biology") !== -1;
+    registerWeek(w, "LAUNCH", isBio ? "LAUNCH_BIO" : "LAUNCH_CP", isBio ? "BIO" : "CP");
+  });
+  ((RAW_HOSP.sow && RAW_HOSP.sow.LAUNCH) || []).forEach(function (w) {
+    registerWeek(w, "LAUNCH", "LAUNCH_VOC", "VOC");
+  });
+
+  function resolveSlotWeekKey(groupKey, slot) {
+    var arr = SLOT_TO_WEEKKEYS[groupKey + "|" + slot];
+    return arr && arr.length ? arr[0] : null;
+  }
+
+  // Build unified REQUIREMENTS catalog and default links (reqKey@@weekKey)
+  var REQUIREMENTS = [];
+  var REQ_BY_KEY = {};
+  var DEFAULT_LINKS = []; // array of "reqKey@@weekKey"
+  var DEFAULT_LINK_SET = {};
+
+  function addRequirement(reqObj) {
+    REQUIREMENTS.push(reqObj);
+    REQ_BY_KEY[reqObj.reqKey] = reqObj;
+  }
+
+  function addDefaultLink(reqKey, weekKey) {
+    if (!reqKey || !weekKey || !WEEK_BY_KEY[weekKey]) return;
+    var pair = reqKey + "@@" + weekKey;
+    if (!DEFAULT_LINK_SET[pair]) {
+      DEFAULT_LINK_SET[pair] = true;
+      DEFAULT_LINKS.push(pair);
+    }
+  }
+
+  // 1. ELC Science tests (separate BUILD & GROW requirement keys so pathway gaps show clearly)
+  (ELC_AWARD.tests || []).forEach(function (t) {
+    ["BUILD", "GROW"].forEach(function (pw) {
+      var rk = "ELC:" + t.id + ":" + pw;
+      addRequirement({
+        reqKey: rk,
+        awardId: "ELC_SCI",
+        itemId: t.id,
+        pathway: pw,
+        shortLabel: "ELC " + t.id + " (" + pw + ")",
+        fullLabel: "ELC Science " + t.id + " (" + pw + "): " + t.name,
+        checkGap: true
+      });
+      var slots = (t.sowLinks && t.sowLinks[pw]) || [];
+      slots.forEach(function (sl) {
+        var wk = resolveSlotWeekKey(pw, sl);
+        if (wk) addDefaultLink(rk, wk);
+      });
+    });
+  });
+
+  // 2. GCSE Biology Core Practicals (8) + Topic Checks (5)
+  (BIO_AWARD.corePracticals || []).forEach(function (cp) {
+    var rk = "BIO:" + cp.id;
+    addRequirement({
+      reqKey: rk,
+      awardId: "GCSE_BIO",
+      itemId: cp.id,
+      pathway: "LAUNCH",
+      shortLabel: "Bio " + cp.id,
+      fullLabel: "GCSE Biology " + cp.id + ": " + cp.name,
+      checkGap: true
+    });
+    if (cp.sowSlot) {
+      var wk = resolveSlotWeekKey("LAUNCH_BIO", cp.sowSlot);
+      if (wk) addDefaultLink(rk, wk);
+    }
+  });
+
+  (BIO_AWARD.topicChecks || []).forEach(function (tc, idx) {
+    var tcId = "TC" + (idx + 1);
+    var rk = "BIO_TC:" + tcId;
+    addRequirement({
+      reqKey: rk,
+      awardId: "GCSE_BIO",
+      itemId: tcId,
+      pathway: "LAUNCH",
+      shortLabel: "Bio check: " + tc.what,
+      fullLabel: "GCSE Biology Topic Check (" + tc.what + ")",
+      checkGap: false
+    });
+    if (tc.slot) {
+      var wk = resolveSlotWeekKey("LAUNCH_BIO", tc.slot);
+      if (wk) addDefaultLink(rk, wk);
+    }
+  });
+
+  // 3. Hospitality modules (H1 to H6)
+  (HOSP_AWARD.requirements || []).forEach(function (m) {
+    var rk = "HOSP:" + m.id;
+    addRequirement({
+      reqKey: rk,
+      awardId: "HOSP",
+      itemId: m.id,
+      pathway: "LAUNCH",
+      shortLabel: "Hosp " + m.id + " (" + m.name + ")",
+      fullLabel: "Hospitality " + m.id + ": " + m.name,
+      checkGap: true
+    });
+    var links = m.sowLinks || {};
+    (links.LAUNCH || []).forEach(function (sl) {
+      var wk = resolveSlotWeekKey("LAUNCH_VOC", sl);
+      if (wk) addDefaultLink(rk, wk);
+    });
+    (links.GROW || []).forEach(function (sl) {
+      var wk = resolveSlotWeekKey("GROW", sl);
+      if (wk) addDefaultLink(rk, wk);
+    });
+    (links.BUILD || []).forEach(function (sl) {
+      var wk = resolveSlotWeekKey("BUILD", sl);
+      if (wk) addDefaultLink(rk, wk);
+    });
+  });
+
+  // Combined factsToCheck list across all awards
+  var ALL_FACTS = [];
+  (ELC_AWARD.factsToCheck || []).forEach(function (txt, i) {
+    ALL_FACTS.push({ id: "ELC_F" + (i + 1), awardLabel: "Entry Level Science", text: txt });
+  });
+  (BIO_AWARD.factsToCheck || []).forEach(function (txt, i) {
+    ALL_FACTS.push({ id: "BIO_F" + (i + 1), awardLabel: "GCSE Biology", text: txt });
+  });
+  (HOSP_AWARD.factsToCheck || []).forEach(function (txt, i) {
+    ALL_FACTS.push({ id: "HOSP_F" + (i + 1), awardLabel: "Hospitality", text: txt });
+  });
+
+  // Combined Unit Award evidence types
+  var ALL_UNIT_EVIDENCE_TYPES = [];
+  (UNIT_AWARD.evidenceTypes || []).concat(HOSP_AWARD.evidenceTypes || []).forEach(function (et) {
+    if (et && ALL_UNIT_EVIDENCE_TYPES.indexOf(et) === -1) ALL_UNIT_EVIDENCE_TYPES.push(et);
+  });
+
+  // --- Privacy & Pupil Roster Helpers ---
+  function getPupilKeyMap() {
+    var raw = readLS(KEYS.pupilKey, null);
+    if (raw && typeof raw === "object" && !Array.isArray(raw)) {
+      if (raw.pupils && typeof raw.pupils === "object") return raw.pupils;
+      return raw;
+    }
+    var cn = readLS(KEYS.classNames, null);
+    if (cn && typeof cn === "object") {
+      if (Array.isArray(cn.names)) {
+        var out = {};
+        cn.names.forEach(function (nm, idx) {
+          if (idx < 20 && nm) out[String(idx + 1)] = String(nm);
+        });
+        return out;
+      }
+      if (cn.pupils && typeof cn.pupils === "object") return cn.pupils;
+      return cn;
+    }
+    return {};
+  }
+
+  function getPupilProfile() {
+    // Read-only for pupil groups and display mode; NEVER reads private .note fields
+    var raw = readLS(KEYS.pupilProfile, null);
+    if (raw && typeof raw === "object" && !Array.isArray(raw)) return raw;
+    return { show: "initials", pupils: {} };
+  }
+
+  function getShowMode() {
+    var prof = getPupilProfile();
+    if (prof.show === "first" || prof.show === "number" || prof.show === "initials") return prof.show;
+    try {
+      var qc = localStorage.getItem(KEYS.qcShowAs);
+      if (qc === "first" || qc === "number" || qc === "initials") return qc;
+    } catch (e) {}
+    return "initials";
+  }
+
+  function setShowMode(mode) {
+    if (mode !== "initials" && mode !== "first" && mode !== "number") mode = "initials";
+    try {
+      var rawStr = localStorage.getItem(KEYS.pupilProfile);
+      var prof = {};
+      if (rawStr) {
+        var parsed = safeJsonParse(rawStr, null);
+        if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+          prof = parsed;
+        } else {
+          localStorage.setItem(KEYS.qcShowAs, mode);
+          return;
+        }
+      }
+      prof.show = mode;
+      if (!prof.pupils || typeof prof.pupils !== "object") prof.pupils = {};
+      localStorage.setItem(KEYS.pupilProfile, JSON.stringify(prof));
+      localStorage.setItem(KEYS.qcShowAs, mode);
+    } catch (e) {}
+  }
+
+  function wordsOf(s) {
+    return String(s || "").trim().split(/\s+/).filter(Boolean);
+  }
+
+  function pupilTag(n, forcedMode) {
+    var mode = forcedMode || getShowMode();
+    if (mode === "number") return "";
+    var keyMap = getPupilKeyMap();
+    var rawVal = keyMap[String(n)];
+    var label = "";
+    if (typeof rawVal === "string") label = rawVal.trim();
+    else if (rawVal && typeof rawVal === "object") label = String(rawVal.name || rawVal.label || rawVal.first || "").trim();
+    if (!label) return "";
+    if (mode === "first") return wordsOf(label)[0] || "";
+    // Disambiguated initials (same pattern as My_tools / Practical_log)
+    var baseFn = function (str) {
+      return wordsOf(str).map(function (w) { return Array.from(w)[0] || ""; }).join("").toLocaleUpperCase("en-GB").slice(0, 3);
+    };
+    var getLabelStr = function (k) {
+      var v = keyMap[k];
+      if (typeof v === "string") return v.trim();
+      if (v && typeof v === "object") return String(v.name || v.label || v.first || "").trim();
+      return "";
+    };
+    var b = baseFn(label);
+    var peers = Object.keys(keyMap).filter(function (k) {
+      var lv = getLabelStr(k);
+      return lv && baseFn(lv) === b;
+    });
+    var extra = 0;
+    var makeTag = function (k, x) {
+      var ws = wordsOf(getLabelStr(k));
+      var last = ws.length ? Array.from(ws[ws.length - 1].toLocaleUpperCase("en-GB")) : [];
+      return b + last.slice(1, 1 + x).join("");
+    };
+    var maxLen = 0;
+    peers.forEach(function (k) {
+      var ws = wordsOf(getLabelStr(k));
+      if (ws.length) {
+        var ln = Array.from(ws[ws.length - 1]).length;
+        if (ln > maxLen) maxLen = ln;
+      }
+    });
+    while (extra < maxLen && peers.some(function (k) { return k !== String(n) && makeTag(k, extra) === makeTag(String(n), extra); })) {
+      extra++;
+    }
+    var res = makeTag(String(n), extra);
+    if (peers.some(function (k) { return k !== String(n) && makeTag(k, extra) === res; })) {
+      res += "·" + n;
+    }
+    return res;
+  }
+
+  function normalizeGroup(g) {
+    var u = String(g || "").trim().toUpperCase();
+    if (u === "BASE" || u === "BUILD") return "BUILD";
+    if (u === "TRACK" || u === "GROW") return "GROW";
+    if (u === "SUMMIT" || u === "LAUNCH") return "LAUNCH";
+    return "";
+  }
+
+  function getPupilGroup(n) {
+    var num = Number(n);
+    var prof = getPupilProfile();
+    if (prof.pupils && prof.pupils[String(num)]) {
+      var pg = normalizeGroup(prof.pupils[String(num)].group || prof.pupils[String(num)].pathway);
+      if (pg) return pg;
+    }
+    var tr = readLS(KEYS.tracker, null);
+    if (tr && tr.pupils && typeof tr.pupils === "object") {
+      var gNames = ["BUILD", "GROW", "LAUNCH"];
+      for (var i = 0; i < gNames.length; i++) {
+        var arr = tr.pupils[gNames[i]];
+        if (Array.isArray(arr) && arr.some(function (x) { return Number(String(x).replace(/\D+/g, "")) === num; })) {
+          return gNames[i];
+        }
+      }
+    }
+    if (DEFAULT_GROUPS.LAUNCH.indexOf(num) !== -1) return "LAUNCH";
+    if (DEFAULT_GROUPS.BUILD.indexOf(num) !== -1) return "BUILD";
+    return "GROW";
+  }
+
+  function detectDefaultClassSize(savedSize) {
+    if (savedSize && savedSize >= 1 && savedSize <= 20) return savedSize;
+    var max = 13;
+    var keyMap = getPupilKeyMap();
+    Object.keys(keyMap).forEach(function (k) {
+      var n = Number(k);
+      if (n > max && n <= 20 && String(keyMap[k] || "").trim()) max = n;
+    });
+    var prof = getPupilProfile();
+    if (prof.pupils && typeof prof.pupils === "object") {
+      Object.keys(prof.pupils).forEach(function (k) {
+        var n = Number(k);
+        if (n > max && n <= 20) max = n;
+      });
+    }
+    return Math.min(20, Math.max(1, max));
+  }
+
+  var FORBIDDEN_ORG_PATTERNS = [
+    /\bASDAN\b/gi,
+    /\bEdexcel\b/gi,
+    /\bPearson\b/gi,
+    /\bAQA\b/gi,
+    /\bOCR\b/gi,
+    /\bWJEC\b/gi,
+    /\bEduqas\b/gi,
+    /\bCCEA\b/gi,
+    /\bBTEC\b/gi,
+    /\bNCFE\b/gi,
+    /\bUAS\b/g,
+    /\bMary\s+Anning\b/gi
+  ];
+
+  function redactPublic(text) {
+    var s = String(text == null ? "" : text);
+    if (!s) return "";
+    FORBIDDEN_ORG_PATTERNS.forEach(function (re) {
+      s = s.replace(re, "[redacted]");
+    });
+    var keyMap = getPupilKeyMap();
+    var pairs = [];
+    Object.keys(keyMap).forEach(function (n) {
+      var v = keyMap[n];
+      var full = typeof v === "string" ? v.trim() : (v && typeof v === "object" ? String(v.name || v.label || v.first || "").trim() : "");
+      if (!full) return;
+      var rep = "Pupil " + n;
+      pairs.push([full, rep, false]);
+      full.split(/[\s\-]+/).forEach(function (w) {
+        var cleanW = w.replace(/^[^A-Za-zÀ-ɏ]+|[^A-Za-zÀ-ɏ]+$/g, "");
+        if (cleanW.length >= 2 && !SAFE_CAP_WORDS[cleanW.toUpperCase()]) {
+          pairs.push([cleanW, rep, false]);
+        }
+      });
+      var ini = pupilTag(n, "initials");
+      if (ini && ini.length >= 2 && !SAFE_CAP_WORDS[ini.toUpperCase()]) {
+        pairs.push([ini, rep, true]);
+      }
+    });
+    var nl = readLS(KEYS.namesList, []);
+    if (Array.isArray(nl)) {
+      nl.forEach(function (w) {
+        var cw = String(w || "").trim();
+        if (cw.length >= 2 && !SAFE_CAP_WORDS[cw.toUpperCase()]) {
+          pairs.push([cw, "[redacted]", false]);
+        }
+      });
+    }
+    pairs.sort(function (a, b) { return b[0].length - a[0].length; });
+    var slots = [];
+    pairs.forEach(function (p) {
+      var label = p[0], rep = p[1], caseSens = p[2];
+      var re = new RegExp("(^|[^A-Za-zÀ-ɏ0-9_])(" + escapeRegExp(label) + ")(?:['’]s)?(?=$|[^A-Za-zÀ-ɏ0-9_])", caseSens ? "g" : "gi");
+      s = s.replace(re, function (_, pre) {
+        var idx = slots.push(rep) - 1;
+        return pre + "\u0001" + idx + "\u0002";
+      });
+    });
+    return s.replace(/\u0001(\d+)\u0002/g, function (_, i) { return slots[+i]; });
+  }
+
+  // --- Application State ---
+  function emptyState() {
+    return {
+      version: 1,
+      classSize: null,
+      elcAttempts: {},     // { "1": { "B1A": [ { mark: 18, date: "2026-11-11", note: "" } ] } }
+      bioPracticals: {},   // { "2": { "CP1.6": { status: "done in class", date: "2026-11-11", inBook: true } } }
+      bioTopicChecks: {},  // { "2": { "A1_W07": { mark: "18/25", date: "2026-11-11" } } }
+      hospEntries: {},     // { "2": { "H1": [ { id, challenge, section, hours, evidenceType, date, status, whereKept, inPortfolio, adultSigned } ] } }
+      units: [],           // [ { id, title, outcomes: [str], sowSlotLinks: [slot], records: { "1": { "0": { done, evidenceType, date } } } } ]
+      taughtWeeks: {},     // { weekKey: { taught: true/false, date: "2026-11-11" } }
+      addedLinks: [],      // [ "reqKey@@weekKey" ]
+      removedLinks: [],    // [ "reqKey@@weekKey" ]
+      checkedFacts: {}     // { "ELC_F1": true }
+    };
+  }
+
+  function parsePupilNumberKey(k) {
+    var m = String(k || "").trim().match(/^(?:Pupil\s+)?(\d{1,2})$/i);
+    if (!m) return null;
+    var n = Number(m[1]);
+    return (n >= 1 && n <= 20) ? String(n) : null;
+  }
+
+  function sanitizeLoadedState(raw) {
+    var st = emptyState();
+    if (!raw || typeof raw !== "object") return st;
+    var src = (raw.data && typeof raw.data === "object") ? raw.data : raw;
+
+    if (src.classSize && Number(src.classSize) >= 1 && Number(src.classSize) <= 20) {
+      st.classSize = Math.round(Number(src.classSize));
+    }
+
+    // ELC attempts
+    if (src.elcAttempts && typeof src.elcAttempts === "object") {
+      Object.keys(src.elcAttempts).forEach(function (pk) {
+        var pNum = parsePupilNumberKey(pk);
+        if (!pNum || !src.elcAttempts[pk] || typeof src.elcAttempts[pk] !== "object") return;
+        st.elcAttempts[pNum] = {};
+        Object.keys(src.elcAttempts[pk]).forEach(function (tId) {
+          var arr = src.elcAttempts[pk][tId];
+          if (!Array.isArray(arr)) return;
+          st.elcAttempts[pNum][tId] = arr.map(function (a) {
+            var mk = Math.max(0, Math.min(25, Number(a && a.mark) || 0));
+            return {
+              mark: mk,
+              date: String((a && a.date) || "").slice(0, 10),
+              note: redactPublic((a && a.note) || "").slice(0, 120)
+            };
+          });
+        });
+      });
+    }
+
+    // Biology practicals
+    if (src.bioPracticals && typeof src.bioPracticals === "object") {
+      Object.keys(src.bioPracticals).forEach(function (pk) {
+        var pNum = parsePupilNumberKey(pk);
+        if (!pNum || !src.bioPracticals[pk] || typeof src.bioPracticals[pk] !== "object") return;
+        st.bioPracticals[pNum] = {};
+        Object.keys(src.bioPracticals[pk]).forEach(function (cpId) {
+          var c = src.bioPracticals[pk][cpId];
+          if (!c || typeof c !== "object") return;
+          var status = BIO_STATUS_CYCLE.indexOf(c.status) !== -1 ? c.status : "not done";
+          st.bioPracticals[pNum][cpId] = {
+            status: status,
+            date: String(c.date || "").slice(0, 10),
+            inBook: Boolean(c.inBook)
+          };
+        });
+      });
+    }
+
+    // Biology topic checks
+    if (src.bioTopicChecks && typeof src.bioTopicChecks === "object") {
+      Object.keys(src.bioTopicChecks).forEach(function (pk) {
+        var pNum = parsePupilNumberKey(pk);
+        if (!pNum || !src.bioTopicChecks[pk] || typeof src.bioTopicChecks[pk] !== "object") return;
+        st.bioTopicChecks[pNum] = {};
+        Object.keys(src.bioTopicChecks[pk]).forEach(function (slot) {
+          var tc = src.bioTopicChecks[pk][slot];
+          if (!tc || typeof tc !== "object") return;
+          var mk = redactPublic(tc.mark || "").trim().slice(0, 40);
+          if (mk) {
+            st.bioTopicChecks[pNum][slot] = {
+              mark: mk,
+              date: String(tc.date || "").slice(0, 10)
+            };
+          }
+        });
+      });
+    }
+
+    // Hospitality entries
+    if (src.hospEntries && typeof src.hospEntries === "object") {
+      Object.keys(src.hospEntries).forEach(function (pk) {
+        var pNum = parsePupilNumberKey(pk);
+        if (!pNum || !src.hospEntries[pk] || typeof src.hospEntries[pk] !== "object") return;
+        st.hospEntries[pNum] = {};
+        Object.keys(src.hospEntries[pk]).forEach(function (modId) {
+          var arr = src.hospEntries[pk][modId];
+          if (!Array.isArray(arr)) return;
+          st.hospEntries[pNum][modId] = arr.map(function (e, idx) {
+            var hrs = Number(e && e.hours);
+            if (!(hrs > 0)) hrs = 0;
+            hrs = Math.min(60, Math.round(hrs * 100) / 100);
+            var sec = (e && e.section === "B") ? "B" : "A";
+            var validStatuses = ["planned", "in progress", "evidenced", "signed off"];
+            var stVal = validStatuses.indexOf(e && e.status) !== -1 ? e.status : "evidenced";
+            return {
+              id: String((e && e.id) || ("he_" + Date.now() + "_" + idx)),
+              challenge: redactPublic((e && e.challenge) || "").slice(0, 60),
+              section: sec,
+              hours: hrs,
+              evidenceType: redactPublic((e && e.evidenceType) || (HOSP_AWARD.evidenceTypes[0] || "photo of product or set-up")).slice(0, 80),
+              date: String((e && e.date) || "").slice(0, 10),
+              status: stVal,
+              whereKept: redactPublic((e && e.whereKept) || "").slice(0, 80),
+              inPortfolio: Boolean(e && e.inPortfolio),
+              adultSigned: Boolean(e && e.adultSigned)
+            };
+          });
+        });
+      });
+    }
+
+    // Unit awards
+    if (Array.isArray(src.units)) {
+      st.units = src.units.map(function (u, uIdx) {
+        var title = redactPublic((u && u.title) || "").trim().slice(0, 120);
+        var outcomes = Array.isArray(u && u.outcomes)
+          ? u.outcomes.map(function (o) { return redactPublic(o).trim(); }).filter(Boolean)
+          : [];
+        var recs = {};
+        if (u && u.records && typeof u.records === "object") {
+          Object.keys(u.records).forEach(function (pk) {
+            var pNum = parsePupilNumberKey(pk);
+            if (!pNum || !u.records[pk] || typeof u.records[pk] !== "object") return;
+            recs[pNum] = {};
+            Object.keys(u.records[pk]).forEach(function (oIdx) {
+              var r = u.records[pk][oIdx];
+              if (!r || typeof r !== "object") return;
+              recs[pNum][String(oIdx)] = {
+                done: Boolean(r.done),
+                evidenceType: redactPublic(r.evidenceType || "Seen by teacher").slice(0, 80),
+                date: String(r.date || "").slice(0, 10)
+              };
+            });
+          });
+        }
+        return {
+          id: String((u && u.id) || ("unit_" + (uIdx + 1))),
+          title: title || ("Unit " + (uIdx + 1)),
+          outcomes: outcomes.length ? outcomes : ["Complete unit task"],
+          sowWeekKeys: Array.isArray(u && u.sowWeekKeys) ? u.sowWeekKeys.filter(function (wk) { return Boolean(WEEK_BY_KEY[wk]); }) : [],
+          records: recs
+        };
+      });
+    }
+
+    // Taught weeks
+    if (src.taughtWeeks && typeof src.taughtWeeks === "object") {
+      Object.keys(src.taughtWeeks).forEach(function (wk) {
+        if (!WEEK_BY_KEY[wk]) return;
+        var v = src.taughtWeeks[wk];
+        if (v && typeof v === "object") {
+          st.taughtWeeks[wk] = {
+            taught: Boolean(v.taught),
+            date: String(v.date || "").slice(0, 10)
+          };
+        }
+      });
+    }
+
+    if (Array.isArray(src.addedLinks)) {
+      st.addedLinks = src.addedLinks.filter(function (x) { return typeof x === "string" && x.indexOf("@@") !== -1; });
+    }
+    if (Array.isArray(src.removedLinks)) {
+      st.removedLinks = src.removedLinks.filter(function (x) { return typeof x === "string" && x.indexOf("@@") !== -1; });
+    }
+    if (src.checkedFacts && typeof src.checkedFacts === "object") {
+      Object.keys(src.checkedFacts).forEach(function (fk) {
+        if (src.checkedFacts[fk]) st.checkedFacts[fk] = true;
+      });
+    }
+    return st;
+  }
+
+  var state = sanitizeLoadedState(readLS(STORE_KEY, null));
+
+  function hasAnySavedRecord() {
+    try {
+      return Boolean(localStorage.getItem(STORE_KEY));
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    } catch (e) {}
+    syncUnitRequirements();
+    updateFirstRunBanner();
+  }
+
+  function syncUnitRequirements() {
+    // Remove previous dynamic UNIT:* requirements and re-add from state.units
+    for (var i = REQUIREMENTS.length - 1; i >= 0; i--) {
+      if (REQUIREMENTS[i].awardId === "UNIT_AWARDS") {
+        delete REQ_BY_KEY[REQUIREMENTS[i].reqKey];
+        REQUIREMENTS.splice(i, 1);
+      }
+    }
+    state.units.forEach(function (u) {
+      var rk = "UNIT:" + u.id;
+      var obj = {
+        reqKey: rk,
+        awardId: "UNIT_AWARDS",
+        itemId: u.id,
+        pathway: "ALL",
+        shortLabel: "Unit: " + u.title,
+        fullLabel: "Unit award: " + u.title,
+        checkGap: false
+      };
+      REQUIREMENTS.push(obj);
+      REQ_BY_KEY[rk] = obj;
+    });
+  }
+  syncUnitRequirements();
+
+  function activeClassSize() {
+    return detectDefaultClassSize(state.classSize);
+  }
+
+  function activePupilNumbers(filterFn) {
+    var count = activeClassSize();
+    var out = [];
+    for (var n = 1; n <= count; n++) {
+      var grp = getPupilGroup(n);
+      if (!filterFn || filterFn(n, grp)) out.push(n);
+    }
+    return out;
+  }
+
+  // --- Read-Only Device Taught Merge (Quick Capture / Practical Log / Tracker / Coverage) ---
+  function getDevicePreTickedWeeks() {
+    var pre = {}; // weekKey -> { source, date }
+    function markCodePrefix(codeStr, sourceName, dateStr) {
+      var s = String(codeStr || "").toUpperCase();
+      if (!s) return;
+      WEEKS.forEach(function (w) {
+        if (w.lessonCodePrefix && s.indexOf(w.lessonCodePrefix.toUpperCase()) !== -1) {
+          if (!pre[w.weekKey]) pre[w.weekKey] = { source: sourceName, date: dateStr || "" };
+        }
+      });
+    }
+
+    // 1. Practical_log.html (mbm_practical_log_v1)
+    var pLog = readLS(KEYS.pracLog, []);
+    if (Array.isArray(pLog)) {
+      pLog.forEach(function (r) {
+        if (!r || typeof r !== "object") return;
+        markCodePrefix(r.lesson, "Practical log", r.date || "");
+        var pw = normalizeGroup(r.pathway);
+        var slotMatch = String(r.lesson || "").toUpperCase().match(/\b(A1|A2|SP1|SP2|SU1|SU2)_W0?([1-7])\b/);
+        if (pw && slotMatch) {
+          var normSlot = slotMatch[1] + "_W0" + slotMatch[2];
+          var gk = pw === "LAUNCH" ? "LAUNCH_BIO" : pw;
+          var wk = resolveSlotWeekKey(gk, normSlot);
+          if (wk && !pre[wk]) pre[wk] = { source: "Practical log", date: r.date || "" };
+        }
+      });
+    }
+
+    // 2. Quick capture exit tally (mbm_exit_tally_v1): keys "weekNum|Day|Period|Pupil"
+    var tallies = readLS(KEYS.exitTally, null);
+    if (tallies && typeof tallies === "object") {
+      Object.keys(tallies).forEach(function (k) {
+        var parts = k.split("|");
+        if (parts.length === 4) {
+          var wNum = Number(parts[0]);
+          if (wNum >= 1 && wNum <= 7) {
+            var slot = "A2_W0" + wNum;
+            var rec = tallies[k] || {};
+            var dt = String(rec.date || rec.ts || "").slice(0, 10);
+            ["BUILD", "GROW", "LAUNCH_BIO"].forEach(function (gk) {
+              var wk = resolveSlotWeekKey(gk, slot);
+              if (wk && !pre[wk]) pre[wk] = { source: "Exit tally", date: /^\d{4}-\d{2}-\d{2}$/.test(dt) ? dt : "" };
+            });
+          }
+        }
+      });
+    }
+
+    // 3. Quick capture queue (mbm_qc_queue_v1)
+    var qcq = readLS(KEYS.qcQueue, []);
+    if (Array.isArray(qcq)) {
+      qcq.forEach(function (item) {
+        if (item && typeof item === "object") {
+          markCodePrefix(item.lesson || item.code || "", "Quick capture", String(item.date || "").slice(0, 10));
+        }
+      });
+    }
+
+    // 4. Optional coverage taught keys if present
+    [KEYS.covTaught, KEYS.covMap].forEach(function (ck) {
+      var cm = readLS(ck, null);
+      if (cm && typeof cm === "object") {
+        Object.keys(cm).forEach(function (k) {
+          if (cm[k]) markCodePrefix(k, "Coverage map", typeof cm[k] === "string" ? cm[k].slice(0, 10) : "");
+        });
+      }
+    });
+
+    return pre;
+  }
+
+  function getWeekTaughtInfo(weekKey) {
+    var local = state.taughtWeeks[weekKey];
+    var preMap = getDevicePreTickedWeeks();
+    var pre = preMap[weekKey];
+    if (local && typeof local.taught === "boolean") {
+      return {
+        taught: local.taught,
+        date: local.date || (pre ? pre.date : ""),
+        fromDevice: Boolean(pre && local.taught),
+        source: pre ? pre.source : ""
+      };
+    }
+    if (pre) {
+      return {
+        taught: true,
+        date: pre.date || "",
+        fromDevice: true,
+        source: pre.source
+      };
+    }
+    return { taught: false, date: "", fromDevice: false, source: "" };
+  }
+
+  // --- Active Scheme-of-Work Links Resolution ---
+  function getActiveLinkSet() {
+    var set = {};
+    DEFAULT_LINKS.forEach(function (pair) { set[pair] = true; });
+    state.units.forEach(function (u) {
+      (u.sowWeekKeys || []).forEach(function (wk) {
+        if (WEEK_BY_KEY[wk]) set["UNIT:" + u.id + "@@" + wk] = true;
+      });
+    });
+    state.removedLinks.forEach(function (pair) { delete set[pair]; });
+    state.addedLinks.forEach(function (pair) {
+      var parts = pair.split("@@");
+      if (REQ_BY_KEY[parts[0]] && WEEK_BY_KEY[parts[1]]) set[pair] = true;
+    });
+    return set;
+  }
+
+  function getWeekKeysForReq(reqKey) {
+    var set = getActiveLinkSet();
+    var out = [];
+    Object.keys(set).forEach(function (pair) {
+      var parts = pair.split("@@");
+      if (parts[0] === reqKey && WEEK_BY_KEY[parts[1]]) out.push(parts[1]);
+    });
+    return out;
+  }
+
+  function getReqKeysForWeek(weekKey) {
+    var set = getActiveLinkSet();
+    var out = [];
+    Object.keys(set).forEach(function (pair) {
+      var parts = pair.split("@@");
+      if (parts[1] === weekKey && REQ_BY_KEY[parts[0]]) out.push(parts[0]);
+    });
+    return out;
+  }
+
+  function addSowLink(reqKey, weekKey) {
+    var pair = reqKey + "@@" + weekKey;
+    state.removedLinks = state.removedLinks.filter(function (p) { return p !== pair; });
+    if (state.addedLinks.indexOf(pair) === -1 && !DEFAULT_LINK_SET[pair]) {
+      state.addedLinks.push(pair);
+    }
+    saveState();
+    renderAll();
+    announce("Linked " + (WEEK_BY_KEY[weekKey] ? WEEK_BY_KEY[weekKey].week : weekKey) + " to " + (REQ_BY_KEY[reqKey] ? REQ_BY_KEY[reqKey].shortLabel : reqKey) + ".", "ok");
+  }
+
+  function removeSowLink(reqKey, weekKey) {
+    var pair = reqKey + "@@" + weekKey;
+    state.addedLinks = state.addedLinks.filter(function (p) { return p !== pair; });
+    if (state.removedLinks.indexOf(pair) === -1) {
+      state.removedLinks.push(pair);
+    }
+    saveState();
+    renderAll();
+    announce("Removed link between " + (WEEK_BY_KEY[weekKey] ? WEEK_BY_KEY[weekKey].week : weekKey) + " and " + (REQ_BY_KEY[reqKey] ? REQ_BY_KEY[reqKey].shortLabel : reqKey) + ".", "warn");
+  }
+
+  // --- Calculation Helpers (ELC, Biology, Hospitality) ---
+  function calcElcForPupil(n) {
+    var pMap = state.elcAttempts[String(n)] || {};
+    var bestByTest = {};
+    var total = 0;
+    var testsAttempted = 0;
+    (ELC_AWARD.tests || []).forEach(function (t) {
+      var arr = pMap[t.id] || [];
+      if (arr.length > 0) {
+        var best = 0;
+        arr.forEach(function (a) { if (a.mark > best) best = a.mark; });
+        bestByTest[t.id] = { best: best, attempts: arr };
+        total += best;
+        testsAttempted++;
+      } else {
+        bestByTest[t.id] = { best: null, attempts: [] };
+      }
+    });
+    var thresholds = (ELC_AWARD.thresholds || []).slice().sort(function (a, b) { return a.min - b.min; });
+    var level = "Below Entry 1";
+    var nextThreshold = null;
+    for (var i = 0; i < thresholds.length; i++) {
+      if (total >= thresholds[i].min) {
+        level = thresholds[i].level;
+      } else if (!nextThreshold) {
+        nextThreshold = thresholds[i];
+      }
+    }
+    var moreText = "";
+    if (nextThreshold) {
+      var diff = nextThreshold.min - total;
+      moreText = diff + (diff === 1 ? " more mark to " : " more marks to ") + nextThreshold.level;
+    } else {
+      moreText = "Top level reached (" + level + ")";
+    }
+    return {
+      bestByTest: bestByTest,
+      total: total,
+      testsAttempted: testsAttempted,
+      level: level,
+      nextThreshold: nextThreshold,
+      moreText: moreText
+    };
+  }
+
+  function checkElcRetakeUnder14Days(n, testId, newDateISO) {
+    if (!newDateISO) return null;
+    var pMap = state.elcAttempts[String(n)] || {};
+    var arr = pMap[testId] || [];
+    if (!arr.length) return null;
+    var newMs = Date.parse(newDateISO + "T12:00:00Z");
+    if (isNaN(newMs)) return null;
+    var closestDays = null;
+    var closestDate = "";
+    arr.forEach(function (a) {
+      if (!a.date) return;
+      var oldMs = Date.parse(a.date + "T12:00:00Z");
+      if (isNaN(oldMs)) return;
+      var diffDays = Math.round(Math.abs(newMs - oldMs) / 86400000);
+      if (diffDays < 14 && (closestDays === null || diffDays < closestDays)) {
+        closestDays = diffDays;
+        closestDate = a.date;
+      }
+    });
+    if (closestDays !== null) {
+      return "⚠ Retake warning: this attempt is " + closestDays + " day(s) from the attempt on " + closestDate + " (guidance says at least 14 days between attempts, with no feedback on the first answers). You can still save it.";
+    }
+    return null;
+  }
+
+  function getBioCell(n, cpId) {
+    var pMap = state.bioPracticals[String(n)] || {};
+    var c = pMap[cpId];
+    return c ? { status: c.status, date: c.date || "", inBook: Boolean(c.inBook) } : { status: "not done", date: "", inBook: false };
+  }
+
+  function calcBioClassStats() {
+    var launchPupils = activePupilNumbers(function (_, grp) { return grp === "LAUNCH"; });
+    var pracs = BIO_AWARD.corePracticals || [];
+    var doneCount = 0;
+    var allAccountedAndRecorded = launchPupils.length > 0 && pracs.length > 0;
+
+    pracs.forEach(function (cp) {
+      var anyDone = false;
+      launchPupils.forEach(function (n) {
+        var c = getBioCell(n, cp.id);
+        var completed = (c.status === "done in class" || c.status === "caught up" || c.status === "watched demo + own write-up");
+        if (completed) anyDone = true;
+        if (c.status === "not done") {
+          allAccountedAndRecorded = false;
+        } else if (completed && !c.inBook) {
+          allAccountedAndRecorded = false;
+        }
+      });
+      if (anyDone) doneCount++;
+      else allAccountedAndRecorded = false;
+    });
+
+    return {
+      doneCount: doneCount,
+      totalPracticals: pracs.length,
+      statementReady: (doneCount === pracs.length && allAccountedAndRecorded),
+      launchPupils: launchPupils
+    };
+  }
+
+  function calcHospForPupil(n) {
+    var rule = HOSP_AWARD.creditRule || { hoursPerCredit: 10, minHours: 10, maxHours: 60 };
+    var hpc = rule.hoursPerCredit || 10;
+    var minH = rule.minHours || 10;
+    var maxH = rule.maxHours || 60;
+    var maxCredits = Math.floor(maxH / hpc);
+
+    var pMap = state.hospEntries[String(n)] || {};
+    var byModule = {};
+    var totalHours = 0;
+    var portfolioCount = 0;
+    var totalEntries = 0;
+
+    (HOSP_AWARD.requirements || []).forEach(function (m) {
+      var arr = pMap[m.id] || [];
+      var modHours = 0;
+      var modPortfolio = 0;
+      arr.forEach(function (e) {
+        totalEntries++;
+        if (e.status !== "planned") {
+          modHours += Number(e.hours) || 0;
+        }
+        if (e.inPortfolio) {
+          modPortfolio++;
+          portfolioCount++;
+        }
+      });
+      modHours = Math.round(modHours * 100) / 100;
+      var modCredits = Math.min(maxCredits, Math.floor(modHours / hpc));
+      byModule[m.id] = {
+        entries: arr,
+        hours: modHours,
+        credits: modCredits,
+        portfolioCount: modPortfolio
+      };
+      totalHours += modHours;
+    });
+
+    totalHours = Math.round(totalHours * 100) / 100;
+    var accreditedHours = Math.min(maxH, totalHours);
+    var totalCredits = totalHours < minH ? 0 : Math.min(maxCredits, Math.floor(accreditedHours / hpc));
+    var nextCreditHours = totalCredits >= maxCredits ? 0 : Math.max(0, Math.round(((totalCredits + 1) * hpc - totalHours) * 100) / 100);
+
+    return {
+      byModule: byModule,
+      totalHours: totalHours,
+      accreditedHours: accreditedHours,
+      totalCredits: totalCredits,
+      maxCredits: maxCredits,
+      nextCreditHours: nextCreditHours,
+      portfolioCount: portfolioCount,
+      totalEntries: totalEntries
+    };
+  }
+
+  // --- UI Helpers ---
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    if (attrs) {
+      Object.keys(attrs).forEach(function (k) {
+        if (k === "class") node.className = attrs[k];
+        else if (k === "text") node.textContent = attrs[k];
+        else if (attrs[k] !== null && attrs[k] !== undefined) node.setAttribute(k, String(attrs[k]));
+      });
+    }
+    if (Array.isArray(children)) {
+      children.forEach(function (ch) {
+        if (ch == null) return;
+        if (typeof ch === "string") node.appendChild(document.createTextNode(ch));
+        else node.appendChild(ch);
+      });
+    } else if (typeof children === "string") {
+      node.textContent = children;
+    }
+    return node;
+  }
+
+  function announce(msg, kind) {
+    var box = $("globalStatus");
+    box.hidden = false;
+    box.className = "status-banner" + (kind ? " " + kind : "");
+    box.textContent = msg;
+  }
+
+  function updateFirstRunBanner() {
+    var line2 = $("firstRunLine2");
+    if (!hasAnySavedRecord()) {
+      line2.textContent = "Nothing is saved yet on this device — tap any cell in a tab below to add a mark, practical tick or module hours, or open Scheme of work to check taught weeks and gaps.";
+    } else {
+      line2.textContent = "Saved locally on this device (key: mbm_awards_tracker_v1). Use Backup, restore & clear at the bottom to export a Pupil-N backup or tab CSV.";
+    }
+  }
+
+  function buildPupilCellNode(n, printBtnCallback, printBtnLabel) {
+    var grp = getPupilGroup(n);
+    var wrap = el("div", { class: "pupil-cell-head" });
+    var topLine = el("div", {});
+    topLine.appendChild(el("strong", { text: "Pupil " + n }));
+    var tag = pupilTag(n);
+    if (tag) {
+      topLine.appendChild(el("span", { class: "private-tag noprint", text: " · " + tag }));
+    }
+    wrap.appendChild(topLine);
+    wrap.appendChild(el("span", { class: "badge " + grp, text: grp }));
+    if (printBtnCallback) {
+      var pBtn = el("button", { type: "button", class: "noprint", text: printBtnLabel || "Print record" });
+      pBtn.setAttribute("aria-label", (printBtnLabel || "Print record") + " for Pupil " + n);
+      pBtn.onclick = function () { printBtnCallback(n); };
+      wrap.appendChild(pBtn);
+    }
+    return wrap;
+  }
+
+  function renderTaughtChipNode(wkKey) {
+    var w = WEEK_BY_KEY[wkKey];
+    if (!w) return null;
+    var tInfo = getWeekTaughtInfo(wkKey);
+    var prefix = w.pathway !== "LAUNCH" ? w.pathway + " " : (w.strandShort === "VOC" ? "LAUNCH Voc " : "LAUNCH Bio ");
+    var symbol = tInfo.taught ? "✓ " : "○ ";
+    var stateWord = tInfo.taught ? " [taught]" : " [not yet taught]";
+    var chip = el("span", {
+      class: "chip " + (tInfo.taught ? "ok" : "warn"),
+      text: symbol + prefix + w.week + ": " + w.outcome + stateWord
+    });
+    return chip;
+  }
+
+  // --- UI State (Editors & Filters) ---
+  var ui = {
+    activeTab: "elc",
+    elcShowAll: false,
+    elcEdit: null,      // { pupil: n, testId: "B1A" }
+    bioShowAll: false,
+    bioEdit: null,      // { pupil: n, cpId: "CP1.6" }
+    bioTopicEdit: null, // { pupil: n, slot: "A1_W07", what: "..." }
+    hospShowAll: false,
+    hospEdit: null,     // { pupil: n, modId: "H1" }
+    unitEdit: null,     // { unitId: "...", pupil: n, outcomeIdx: 0 }
+    printSpec: null     // { kind: "elc"|"bio"|"bioClass"|"hosp"|"unit", pupil: n, unitId?: "..." }
+  };
+
+  // --- TAB 1: ENTRY LEVEL SCIENCE ---
+  function renderElcTab() {
+    $("elcHow").textContent = ELC_AWARD.how || "";
+
+    // Key dates + paperwork
+    var kdBox = $("elcKeyDates");
+    kdBox.textContent = "";
+    (ELC_AWARD.keyDates || []).forEach(function (kd) {
+      var card = el("div", { class: "date-item" });
+      card.appendChild(el("strong", { text: kd.what + ": " }));
+      card.appendChild(document.createTextNode(kd.when + " "));
+      if (kd.confirm) {
+        card.appendChild(el("span", { class: "chip warn", text: "⚠ Confirm with exams officer" }));
+      }
+      kdBox.appendChild(card);
+    });
+    (ELC_AWARD.paperwork || []).forEach(function (pw) {
+      var card = el("div", { class: "date-item" });
+      card.appendChild(el("strong", { text: "Paperwork: " }));
+      card.appendChild(document.createTextNode(pw));
+      kdBox.appendChild(card);
+    });
+
+    // Six test cards with taught-in chips
+    var tcBox = $("elcTestCards");
+    tcBox.textContent = "";
+    (ELC_AWARD.tests || []).forEach(function (t) {
+      var card = el("article", { class: "req-card" });
+      card.appendChild(el("h3", { text: t.id + " — " + t.name + " (max " + t.max + ")" }));
+      ["BUILD", "GROW"].forEach(function (pw) {
+        var row = el("div", { style: "margin-top:6px" });
+        row.appendChild(el("strong", { text: pw + " taught in: " }));
+        var wKeys = getWeekKeysForReq("ELC:" + t.id + ":" + pw);
+        if (!wKeys.length) {
+          row.appendChild(el("span", { class: "chip warn", text: "⚠ not yet taught - no scheme of work week" }));
+        } else {
+          var list = el("div", { class: "chip-list" });
+          wKeys.forEach(function (wk) {
+            var ch = renderTaughtChipNode(wk);
+            if (ch) list.appendChild(ch);
+          });
+          row.appendChild(list);
+        }
+        card.appendChild(row);
+      });
+      tcBox.appendChild(card);
+    });
+
+    // Pupil x 6 tests grid
+    var pupils = activePupilNumbers(function (n, grp) {
+      if (ui.elcShowAll) return true;
+      if (grp === "BUILD" || grp === "GROW") return true;
+      return Boolean(state.elcAttempts[String(n)] && Object.keys(state.elcAttempts[String(n)]).length);
+    });
+
+    var wrap = $("elcGridWrap");
+    wrap.textContent = "";
+    var tbl = el("table", { class: "resp-grid", "aria-label": "Entry Level Science pupil marks" });
+    var thead = el("thead");
+    var hr = el("tr");
+    hr.appendChild(el("th", { text: "Pupil" }));
+    (ELC_AWARD.tests || []).forEach(function (t) {
+      hr.appendChild(el("th", { text: t.id + " (/25)" }));
+    });
+    hr.appendChild(el("th", { text: "Total (/150) & Level" }));
+    thead.appendChild(hr);
+    tbl.appendChild(thead);
+
+    var tbody = el("tbody");
+    pupils.forEach(function (n) {
+      var calc = calcElcForPupil(n);
+      var tr = el("tr", { "data-pupil-row": String(n) });
+      var tdP = el("td");
+      tdP.appendChild(buildPupilCellNode(n, function (pNum) {
+        openPrintPreview({ kind: "elc", pupil: pNum });
+      }, "Assessment record"));
+      tr.appendChild(tdP);
+
+      (ELC_AWARD.tests || []).forEach(function (t) {
+        var td = el("td", { "data-col": t.id + " (/25)" });
+        var info = calc.bestByTest[t.id];
+        var btnText = info.best !== null
+          ? ("Best: " + info.best + "/25 (" + info.attempts.length + (info.attempts.length === 1 ? " try)" : " tries)"))
+          : "+ Add mark";
+        var btn = el("button", {
+          type: "button",
+          class: "cell-btn" + (info.best !== null ? " has-val" : ""),
+          "data-elc-cell": n + ":" + t.id,
+          "aria-label": "Pupil " + n + " " + t.id + " (" + (info.best !== null ? "Best " + info.best + " out of 25" : "no attempts yet") + ")"
+        }, btnText);
+        btn.onclick = function () { openElcEditor(n, t.id); };
+        td.appendChild(btn);
+        tr.appendChild(td);
+      });
+
+      var tdSum = el("td", { "data-col": "Total & Level" });
+      tdSum.appendChild(el("div", {}, [el("strong", { text: calc.total + " / 150" })]));
+      var lvlClass = calc.level === "Below Entry 1" ? "warn" : "ok";
+      tdSum.appendChild(el("div", { style: "margin:4px 0" }, [
+        el("span", { class: "badge " + lvlClass, text: (calc.level === "Below Entry 1" ? "○ " : "✓ ") + calc.level })
+      ]));
+      tdSum.appendChild(el("div", { class: "small", text: calc.moreText }));
+      tr.appendChild(tdSum);
+      tbody.appendChild(tr);
+    });
+    tbl.appendChild(tbody);
+    wrap.appendChild(tbl);
+
+    if (ui.elcEdit) renderElcEditorBody();
+  }
+
+  function openElcEditor(pupilNum, testId) {
+    ui.elcEdit = { pupil: pupilNum, testId: testId };
+    $("elcEditorBox").hidden = false;
+    if (!$("elcDateInput").value) $("elcDateInput").value = todayISO();
+    $("elcNoteInput").value = "";
+    renderElcEditorBody();
+    $("elcMarkInput").focus();
+  }
+
+  function renderElcEditorBody() {
+    if (!ui.elcEdit) return;
+    var n = ui.elcEdit.pupil;
+    var testId = ui.elcEdit.testId;
+    var grp = getPupilGroup(n);
+    var testObj = (ELC_AWARD.tests || []).filter(function (t) { return t.id === testId; })[0];
+    $("elcEditorTitle").textContent = "Pupil " + n + " (" + grp + ") — " + testId + ": " + (testObj ? testObj.name : "");
+
+    var rk = "ELC:" + testId + ":" + (grp === "BUILD" ? "BUILD" : "GROW");
+    var wKeys = getWeekKeysForReq(rk);
+    if (!wKeys.length) {
+      $("elcEditorTaughtNote").textContent = "⚠ Scheme of work check (" + grp + "): not yet taught - no scheme of work week linked.";
+    } else {
+      $("elcEditorTaughtNote").textContent = "Taught in (" + grp + "): " + wKeys.map(function (wk) {
+        var w = WEEK_BY_KEY[wk];
+        var ti = getWeekTaughtInfo(wk);
+        return w.week + " (" + (ti.taught ? "taught" : "not yet taught") + ")";
+      }).join("; ");
+    }
+
+    var warnMsg = checkElcRetakeUnder14Days(n, testId, $("elcDateInput").value);
+    var warnEl = $("elcRetakeWarn");
+    if (warnMsg) {
+      warnEl.hidden = false;
+      warnEl.textContent = warnMsg;
+    } else {
+      warnEl.hidden = true;
+      warnEl.textContent = "";
+    }
+
+    var hist = $("elcAttemptHistory");
+    hist.textContent = "";
+    var arr = (state.elcAttempts[String(n)] && state.elcAttempts[String(n)][testId]) || [];
+    if (!arr.length) {
+      hist.appendChild(el("p", { class: "hint", text: "No attempts recorded yet for this test." }));
+    } else {
+      hist.appendChild(el("h4", { style: "margin:8px 0 4px", text: "Recorded attempts (best mark counts):" }));
+      arr.forEach(function (att, idx) {
+        var r = el("div", { class: "row" });
+        r.appendChild(el("span", { class: "chip", text: "Attempt " + (idx + 1) + ": " + att.mark + "/25 on " + (att.date || "undated") + (att.note ? " · " + att.note : "") }));
+        var delBtn = el("button", { type: "button", class: "danger", text: "Delete attempt " + (idx + 1) });
+        delBtn.onclick = function () {
+          state.elcAttempts[String(n)][testId].splice(idx, 1);
+          if (!state.elcAttempts[String(n)][testId].length) delete state.elcAttempts[String(n)][testId];
+          saveState();
+          renderElcTab();
+        };
+        r.appendChild(delBtn);
+        hist.appendChild(r);
+      });
+    }
+  }
+
+  // --- TAB 2: BIOLOGY PRACTICALS ---
+  function computePracLogMatches() {
+    var pLog = readLS(KEYS.pracLog, []);
+    if (!Array.isArray(pLog) || !pLog.length) return { hasLog: false, matches: [] };
+    var kwMap = {
+      "CP1.6": ["1.6", "microscop", "magnification", "slide"],
+      "CP1.10": ["1.10", "enzyme", "amylase", "ph on enzyme"],
+      "CP1.13B": ["1.13", "food test", "starch", "benedict", "biuret"],
+      "CP1.16": ["1.16", "osmosis", "potato"],
+      "CP5.18B": ["5.18", "antiseptic", "antibiotic", "microbial", "agar"],
+      "CP6.5": ["6.5", "photosynthesis", "pondweed", "light intensity"],
+      "CP8.11": ["8.11", "respiration", "respirometer"],
+      "CP9.5": ["9.5", "quadrat", "transect", "fieldwork"]
+    };
+    var matches = [];
+    pLog.forEach(function (r) {
+      if (!r || typeof r !== "object") return;
+      var pNumStr = parsePupilNumberKey(r.pupil);
+      if (!pNumStr) return;
+      var hay = (String(r.practical || "") + " " + String(r.lesson || "") + " " + String(r.subject || "")).toLowerCase();
+      var matchedCp = null;
+      (BIO_AWARD.corePracticals || []).forEach(function (cp) {
+        if (matchedCp) return;
+        if (cp.sowSlot && hay.indexOf(cp.sowSlot.toLowerCase()) !== -1) {
+          matchedCp = cp;
+          return;
+        }
+        var kws = kwMap[cp.id] || [];
+        for (var i = 0; i < kws.length; i++) {
+          if (hay.indexOf(kws[i]) !== -1) {
+            matchedCp = cp;
+            break;
+          }
+        }
+      });
+      if (!matchedCp) return;
+      var mappedStatus = "done in class";
+      if (r.result === "Absent") mappedStatus = "absent";
+      else if (r.result === "Watched") mappedStatus = "watched demo + own write-up";
+      var cur = getBioCell(Number(pNumStr), matchedCp.id);
+      if (cur.status !== mappedStatus || (r.date && cur.date !== r.date)) {
+        matches.push({
+          pupil: Number(pNumStr),
+          cpId: matchedCp.id,
+          cpName: matchedCp.name,
+          oldStatus: cur.status,
+          newStatus: mappedStatus,
+          date: String(r.date || todayISO()).slice(0, 10)
+        });
+      }
+    });
+    return { hasLog: true, matches: matches };
+  }
+
+  function renderBioTab() {
+    var stats = calcBioClassStats();
+    var sumLine = $("bioClassSummaryLine");
+    sumLine.className = "status-banner " + (stats.statementReady ? "ok" : "warn");
+    sumLine.textContent = stats.doneCount + " of " + stats.totalPracticals + " practicals done by the class; statement ready: " + (stats.statementReady ? "yes" : "no");
+
+    $("bioHow").textContent = BIO_AWARD.how || "";
+
+    // Papers & Spring Statement Date
+    var pdBox = $("bioPapersAndDates");
+    pdBox.textContent = "";
+    (BIO_AWARD.papers || []).forEach(function (p) {
+      var d = el("div", { class: "date-item" });
+      d.appendChild(el("strong", { text: p.name + ": " }));
+      d.appendChild(document.createTextNode(p.topics + " "));
+      if (p.confirm) d.appendChild(el("span", { class: "chip warn", text: "⚠ Confirm with exams officer" }));
+      pdBox.appendChild(d);
+    });
+    var stItem = el("div", { class: "date-item" });
+    stItem.appendChild(el("strong", { text: "Head's practical science statement: " }));
+    stItem.appendChild(document.createTextNode("Spring (mid April) "));
+    stItem.appendChild(el("span", { class: "chip warn", text: "⚠ Confirm with exams officer" }));
+    pdBox.appendChild(stItem);
+
+    // Pull from practical log banner
+    var logInfo = computePracLogMatches();
+    $("bioPullWrap").hidden = !logInfo.hasLog;
+
+    // 8 Core Practical Cards
+    var pcBox = $("bioPracCards");
+    pcBox.textContent = "";
+    (BIO_AWARD.corePracticals || []).forEach(function (cp) {
+      var card = el("article", { class: "req-card" });
+      card.appendChild(el("h3", { text: cp.id + " — " + cp.name + (cp.biologyOnly ? " (Biology only)" : "") }));
+      card.appendChild(el("p", { class: "small", text: "Skills: " + (cp.skills || []).join(", ") }));
+      var wkRow = el("div", {});
+      wkRow.appendChild(el("strong", { text: "Planned week: " }));
+      var wKeys = getWeekKeysForReq("BIO:" + cp.id);
+      if (!wKeys.length) {
+        wkRow.appendChild(el("span", { class: "chip warn", text: "⚠ no slot yet" }));
+      } else {
+        var list = el("div", { class: "chip-list" });
+        wKeys.forEach(function (wk) {
+          var ch = renderTaughtChipNode(wk);
+          if (ch) list.appendChild(ch);
+        });
+        wkRow.appendChild(list);
+      }
+      card.appendChild(wkRow);
+      pcBox.appendChild(card);
+    });
+
+    // Pupil x 8 Core Practicals Grid
+    var pupils = activePupilNumbers(function (n, grp) {
+      if (ui.bioShowAll) return true;
+      if (grp === "LAUNCH") return true;
+      return Boolean(state.bioPracticals[String(n)] && Object.keys(state.bioPracticals[String(n)]).length);
+    });
+
+    var wrap = $("bioGridWrap");
+    wrap.textContent = "";
+    var tbl = el("table", { class: "resp-grid", "aria-label": "GCSE Biology core practicals grid" });
+    var thead = el("thead");
+    var hr = el("tr");
+    hr.appendChild(el("th", { text: "Pupil" }));
+    (BIO_AWARD.corePracticals || []).forEach(function (cp) {
+      var wKeys = getWeekKeysForReq("BIO:" + cp.id);
+      var slotNote = wKeys.length ? WEEK_BY_KEY[wKeys[0]].week : "no slot yet";
+      hr.appendChild(el("th", { text: cp.id + " (" + slotNote + ")" }));
+    });
+    thead.appendChild(hr);
+    tbl.appendChild(thead);
+
+    var tbody = el("tbody");
+    pupils.forEach(function (n) {
+      var tr = el("tr", { "data-bio-pupil-row": String(n) });
+      var tdP = el("td");
+      tdP.appendChild(buildPupilCellNode(n, function (pNum) {
+        openPrintPreview({ kind: "bio", pupil: pNum });
+      }, "Practical record"));
+      tr.appendChild(tdP);
+
+      (BIO_AWARD.corePracticals || []).forEach(function (cp) {
+        var td = el("td", { "data-col": cp.id + " — " + cp.name });
+        var c = getBioCell(n, cp.id);
+        var cls = "cell-btn";
+        var sym = "○ ";
+        if (c.status === "done in class" || c.status === "caught up") { cls += " has-val"; sym = "✓ "; }
+        else if (c.status === "watched demo + own write-up") { cls += " has-warn"; sym = "◐ "; }
+        else if (c.status === "absent") { cls += " has-miss"; sym = "△ "; }
+
+        var cycBtn = el("button", {
+          type: "button",
+          class: cls,
+          "data-bio-cycle": n + ":" + cp.id,
+          "aria-label": "Cycle status for Pupil " + n + " " + cp.id + " (currently " + c.status + ")"
+        }, sym + c.status + (c.date ? " (" + c.date + ")" : ""));
+        cycBtn.onclick = function () {
+          var idx = BIO_STATUS_CYCLE.indexOf(c.status);
+          var nextStatus = BIO_STATUS_CYCLE[(idx + 1) % BIO_STATUS_CYCLE.length];
+          if (!state.bioPracticals[String(n)]) state.bioPracticals[String(n)] = {};
+          state.bioPracticals[String(n)][cp.id] = {
+            status: nextStatus,
+            date: nextStatus === "not done" ? "" : (c.date || todayISO()),
+            inBook: nextStatus === "not done" ? false : c.inBook
+          };
+          saveState();
+          renderBioTab();
+        };
+        td.appendChild(cycBtn);
+
+        var bookId = "book_" + n + "_" + cp.id.replace(/\W/g, "_");
+        var lbl = el("label", { class: "check", for: bookId });
+        var chk = el("input", { type: "checkbox", id: bookId });
+        chk.checked = c.inBook;
+        chk.setAttribute("aria-label", "Record in book for Pupil " + n + " " + cp.id);
+        chk.onchange = function () {
+          if (!state.bioPracticals[String(n)]) state.bioPracticals[String(n)] = {};
+          var cur = getBioCell(n, cp.id);
+          state.bioPracticals[String(n)][cp.id] = {
+            status: (this.checked && cur.status === "not done") ? "done in class" : cur.status,
+            date: cur.date || (this.checked ? todayISO() : ""),
+            inBook: this.checked
+          };
+          saveState();
+          renderBioTab();
+        };
+        lbl.appendChild(chk);
+        lbl.appendChild(el("span", { text: "In book" }));
+        td.appendChild(lbl);
+
+        var editBtn = el("button", {
+          type: "button",
+          style: "width:100%",
+          "aria-label": "Set date or details for Pupil " + n + " " + cp.id
+        }, "Date / edit");
+        editBtn.onclick = function () {
+          ui.bioEdit = { pupil: n, cpId: cp.id };
+          var cur = getBioCell(n, cp.id);
+          $("bioEditorTitle").textContent = "Pupil " + n + " — " + cp.id + ": " + cp.name;
+          $("bioEditorSkills").textContent = "Skills: " + (cp.skills || []).join(", ");
+          $("bioStatusSelect").value = cur.status;
+          $("bioDateInput").value = cur.date || todayISO();
+          $("bioBookCheck").checked = cur.inBook;
+          $("bioEditorBox").hidden = false;
+          $("bioStatusSelect").focus();
+        };
+        td.appendChild(editBtn);
+
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    tbl.appendChild(tbody);
+    wrap.appendChild(tbl);
+
+    // Topic Checks Grid
+    var tcWrap = $("bioTopicGridWrap");
+    tcWrap.textContent = "";
+    var tChecks = BIO_AWARD.topicChecks || [];
+    var tcTbl = el("table", { class: "resp-grid", "aria-label": "Biology topic checks grid" });
+    var tcHead = el("thead");
+    var tcHr = el("tr");
+    tcHr.appendChild(el("th", { text: "Pupil" }));
+    tChecks.forEach(function (tc) {
+      tcHr.appendChild(el("th", { text: tc.what + " (" + tc.slot + ")" }));
+    });
+    tcHead.appendChild(tcHr);
+    tcTbl.appendChild(tcHead);
+
+    var tcBody = el("tbody");
+    pupils.forEach(function (n) {
+      var tr = el("tr");
+      var tdP = el("td");
+      tdP.appendChild(buildPupilCellNode(n, null));
+      tr.appendChild(tdP);
+      tChecks.forEach(function (tc) {
+        var td = el("td", { "data-col": tc.what + " (" + tc.slot + ")" });
+        var rec = (state.bioTopicChecks[String(n)] && state.bioTopicChecks[String(n)][tc.slot]) || null;
+        var b = el("button", {
+          type: "button",
+          class: "cell-btn" + (rec ? " has-val" : ""),
+          "data-bio-tc": n + ":" + tc.slot,
+          "aria-label": "Topic check " + tc.what + " for Pupil " + n
+        }, rec ? ("✓ " + rec.mark + (rec.date ? " (" + rec.date + ")" : "")) : "+ Record mark");
+        b.onclick = function () {
+          ui.bioTopicEdit = { pupil: n, slot: tc.slot, what: tc.what };
+          $("bioTopicEditorTitle").textContent = "Pupil " + n + " — " + tc.what + " (" + tc.slot + ")";
+          $("bioTopicMarkInput").value = rec ? rec.mark : "";
+          $("bioTopicDateInput").value = (rec && rec.date) ? rec.date : todayISO();
+          $("bioTopicEditorBox").hidden = false;
+          $("bioTopicMarkInput").focus();
+        };
+        td.appendChild(b);
+        tr.appendChild(td);
+      });
+      tcBody.appendChild(tr);
+    });
+    tcTbl.appendChild(tcBody);
+    tcWrap.appendChild(tcTbl);
+  }
+
+  // --- TAB 3: HOSPITALITY ---
+  function renderHospTab() {
+    $("hospHow").textContent = (HOSP_AWARD.how || "") + (HOSP_AWARD.alsoFor ? " " + HOSP_AWARD.alsoFor : "");
+    var rule = HOSP_AWARD.creditRule || { hoursPerCredit: 10, minHours: 10, maxHours: 60 };
+    $("hospCreditRuleNote").textContent = "Credit rule: every " + rule.hoursPerCredit + " hours of completed challenges = 1 credit. Course accredits " + rule.minHours + " to " + rule.maxHours + " hours (1 to " + Math.floor(rule.maxHours / rule.hoursPerCredit) + " credits).";
+
+    // Key dates
+    var kdBox = $("hospKeyDates");
+    kdBox.textContent = "";
+    (HOSP_AWARD.keyDates || []).forEach(function (kd) {
+      var d = el("div", { class: "date-item" });
+      d.appendChild(el("strong", { text: kd.what + ": " }));
+      d.appendChild(document.createTextNode(kd.when + " "));
+      if (kd.confirm) d.appendChild(el("span", { class: "chip warn", text: "⚠ Confirm with exams officer" }));
+      kdBox.appendChild(d);
+    });
+
+    // Evidence select options
+    var evSel = $("hospEvidenceSelect");
+    if (!evSel.options.length) {
+      (HOSP_AWARD.evidenceTypes || []).forEach(function (et) {
+        evSel.appendChild(el("option", { value: et, text: et }));
+      });
+    }
+
+    // 6 Module cards
+    var mcBox = $("hospModuleCards");
+    mcBox.textContent = "";
+    (HOSP_AWARD.requirements || []).forEach(function (m) {
+      var card = el("article", { class: "req-card" });
+      card.appendChild(el("h3", { text: m.id + " — " + m.name }));
+      card.appendChild(el("p", { class: "small", text: m.feeds }));
+      card.appendChild(el("p", { class: "small", text: "Evidence: " + m.evidence }));
+      if (m.status) {
+        var isGapStatus = m.status.toLowerCase().indexOf("not yet") !== -1;
+        card.appendChild(el("div", { style: "margin:4px 0" }, [
+          el("span", { class: "chip " + (isGapStatus ? "warn" : "ok"), text: (isGapStatus ? "⚠ " : "✓ ") + "Status: " + m.status })
+        ]));
+      }
+      var wkRow = el("div", { style: "margin-top:6px" });
+      wkRow.appendChild(el("strong", { text: "Taught in: " }));
+      var wKeys = getWeekKeysForReq("HOSP:" + m.id);
+      if (!wKeys.length) {
+        wkRow.appendChild(el("span", { class: "chip warn", text: "⚠ not yet taught - no scheme of work week" }));
+      } else {
+        var list = el("div", { class: "chip-list" });
+        wKeys.forEach(function (wk) {
+          var ch = renderTaughtChipNode(wk);
+          if (ch) list.appendChild(ch);
+        });
+        wkRow.appendChild(list);
+      }
+      card.appendChild(wkRow);
+      mcBox.appendChild(card);
+    });
+
+    // Pupil x 6 Modules Grid
+    var pupils = activePupilNumbers(function (n, grp) {
+      if (ui.hospShowAll) return true;
+      if (grp === "LAUNCH") return true;
+      return Boolean(state.hospEntries[String(n)] && Object.keys(state.hospEntries[String(n)]).length);
+    });
+
+    var wrap = $("hospGridWrap");
+    wrap.textContent = "";
+    var tbl = el("table", { class: "resp-grid", "aria-label": "Hospitality modules and credits grid" });
+    var thead = el("thead");
+    var hr = el("tr");
+    hr.appendChild(el("th", { text: "Pupil" }));
+    (HOSP_AWARD.requirements || []).forEach(function (m) {
+      hr.appendChild(el("th", { text: m.id + ": " + m.name }));
+    });
+    hr.appendChild(el("th", { text: "Total Hours & Credits" }));
+    thead.appendChild(hr);
+    tbl.appendChild(thead);
+
+    var tbody = el("tbody");
+    pupils.forEach(function (n) {
+      var calc = calcHospForPupil(n);
+      var tr = el("tr", { "data-hosp-pupil-row": String(n) });
+      var tdP = el("td");
+      tdP.appendChild(buildPupilCellNode(n, function (pNum) {
+        openPrintPreview({ kind: "hosp", pupil: pNum });
+      }, "Hospitality record"));
+      tr.appendChild(tdP);
+
+      (HOSP_AWARD.requirements || []).forEach(function (m) {
+        var td = el("td", { "data-col": m.id + " — " + m.name });
+        var mInfo = calc.byModule[m.id];
+        var labelStr = mInfo.entries.length
+          ? (mInfo.hours + " h · " + mInfo.credits + (mInfo.credits === 1 ? " credit" : " credits") + " (" + mInfo.portfolioCount + "/" + mInfo.entries.length + " in portfolio)")
+          : "+ Log hours";
+        var b = el("button", {
+          type: "button",
+          class: "cell-btn" + (mInfo.hours > 0 ? " has-val" : ""),
+          "data-hosp-cell": n + ":" + m.id,
+          "aria-label": "Pupil " + n + " Hospitality " + m.id + " (" + labelStr + ")"
+        }, labelStr);
+        b.onclick = function () { openHospEditor(n, m.id); };
+        td.appendChild(b);
+        tr.appendChild(td);
+      });
+
+      var tdSum = el("td", { "data-col": "Total Hours & Credits" });
+      tdSum.appendChild(el("div", {}, [
+        el("strong", { text: calc.totalHours + " h total" + (calc.totalHours > rule.maxHours ? " (" + calc.accreditedHours + " h accredited)" : "") })
+      ]));
+      tdSum.appendChild(el("div", { style: "margin:4px 0" }, [
+        el("span", {
+          class: "badge " + (calc.totalCredits > 0 ? "ok" : "warn"),
+          text: (calc.totalCredits > 0 ? "✓ " : "○ ") + calc.totalCredits + (calc.totalCredits === 1 ? " credit" : " credits")
+        })
+      ]));
+      var nextTxt = calc.totalCredits >= calc.maxCredits
+        ? "Maximum " + calc.maxCredits + " credits reached"
+        : (calc.nextCreditHours + " more h to " + (calc.totalCredits + 1) + (calc.totalCredits + 1 === 1 ? " credit" : " credits"));
+      tdSum.appendChild(el("div", { class: "small", text: nextTxt + " · " + calc.portfolioCount + " in portfolio" }));
+      tr.appendChild(tdSum);
+      tbody.appendChild(tr);
+    });
+    tbl.appendChild(tbody);
+    wrap.appendChild(tbl);
+
+    if (ui.hospEdit) renderHospEditorHistory();
+  }
+
+  function openHospEditor(pupilNum, modId) {
+    ui.hospEdit = { pupil: pupilNum, modId: modId };
+    var modObj = (HOSP_AWARD.requirements || []).filter(function (m) { return m.id === modId; })[0];
+    $("hospEditorTitle").textContent = "Pupil " + pupilNum + " (" + getPupilGroup(pupilNum) + ") — " + modId + ": " + (modObj ? modObj.name : "");
+    $("hospEditorModuleInfo").textContent = modObj ? ("Evidence examples: " + modObj.evidence) : "";
+    if (!$("hospDateInput").value) $("hospDateInput").value = todayISO();
+    $("hospEditorBox").hidden = false;
+    renderHospEditorHistory();
+    $("hospHoursInput").focus();
+  }
+
+  function renderHospEditorHistory() {
+    if (!ui.hospEdit) return;
+    var n = ui.hospEdit.pupil;
+    var modId = ui.hospEdit.modId;
+    var box = $("hospEntryHistory");
+    box.textContent = "";
+    var calc = calcHospForPupil(n);
+    var mInfo = calc.byModule[modId] || { entries: [], hours: 0, credits: 0 };
+    box.appendChild(el("p", {
+      class: "small",
+      text: "Module " + modId + " roll-up: " + mInfo.hours + " hours = " + mInfo.credits + (mInfo.credits === 1 ? " credit" : " credits") + " · Course total: " + calc.totalHours + " hours = " + calc.totalCredits + (calc.totalCredits === 1 ? " credit" : " credits") + "."
+    }));
+
+    if (!mInfo.entries.length) {
+      box.appendChild(el("p", { class: "hint", text: "No challenges logged yet in " + modId + " for Pupil " + n + "." }));
+      return;
+    }
+    mInfo.entries.forEach(function (entry, idx) {
+      var row = el("div", { class: "row" });
+      var desc = (entry.challenge || "Challenge") + " (Sec " + entry.section + ") · " + entry.hours + " h · " + entry.evidenceType + " · " + (entry.date || "undated") + " · " + entry.status + (entry.inPortfolio ? " · ✓ In portfolio" : " · ○ Not in portfolio") + (entry.adultSigned ? " · ✓ Adult signed" : "");
+      row.appendChild(el("span", { class: "chip", text: desc }));
+
+      var portToggle = el("button", {
+        type: "button",
+        text: entry.inPortfolio ? "Unmark portfolio" : "Tick portfolio"
+      });
+      portToggle.onclick = function () {
+        entry.inPortfolio = !entry.inPortfolio;
+        saveState();
+        renderHospTab();
+      };
+      row.appendChild(portToggle);
+
+      var delBtn = el("button", { type: "button", class: "danger", text: "Delete" });
+      delBtn.onclick = function () {
+        state.hospEntries[String(n)][modId].splice(idx, 1);
+        if (!state.hospEntries[String(n)][modId].length) delete state.hospEntries[String(n)][modId];
+        saveState();
+        renderHospTab();
+      };
+      row.appendChild(delBtn);
+      box.appendChild(row);
+    });
+  }
+
+  // --- TAB 4: UNIT AWARDS ---
+  function starterOutcomesForSuggestion(sug) {
+    var slots = (sug.sowLinks && sug.sowLinks.LAUNCH) || [];
+    var out = [];
+    var wkKeys = [];
+    slots.forEach(function (sl) {
+      var wk = resolveSlotWeekKey("LAUNCH_VOC", sl);
+      if (wk && WEEK_BY_KEY[wk]) {
+        wkKeys.push(wk);
+        var wObj = WEEK_BY_KEY[wk];
+        if (wObj.lessons && wObj.lessons.length) {
+          wObj.lessons.forEach(function (ls) {
+            if (ls.title) out.push("Complete task: " + ls.title);
+          });
+        } else if (wObj.outcome) {
+          out.push(wObj.outcome.replace(/\.$/, ""));
+        }
+      }
+    });
+    if (!out.length) {
+      out = [
+        "Take part in practical tasks for " + sug.title,
+        "Record evidence of what was completed",
+        "Review work with an adult"
+      ];
+    }
+    return { outcomes: out.slice(0, 5), sowWeekKeys: wkKeys };
+  }
+
+  function renderUnitTab() {
+    $("unitHow").textContent = UNIT_AWARD.how || "";
+
+    var uEvSel = $("unitEvidenceSelect");
+    if (!uEvSel.options.length) {
+      ALL_UNIT_EVIDENCE_TYPES.forEach(function (et) {
+        uEvSel.appendChild(el("option", { value: et, text: et }));
+      });
+    }
+
+    // One-tap suggestions from HOSP.unitAwardSuggestions
+    var sugRow = $("unitSuggestionsRow");
+    sugRow.textContent = "";
+    (HOSP_AWARD.unitAwardSuggestions || []).forEach(function (sug) {
+      var exists = state.units.some(function (u) { return u.title.toLowerCase() === sug.title.toLowerCase(); });
+      var b = el("button", {
+        type: "button",
+        "data-add-suggested-unit": sug.title,
+        text: exists ? ("✓ Added: " + sug.title) : ("+ Add this unit: " + sug.title)
+      });
+      b.disabled = exists;
+      b.onclick = function () {
+        var starter = starterOutcomesForSuggestion(sug);
+        var newId = "unit_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+        state.units.push({
+          id: newId,
+          title: redactPublic(sug.title),
+          outcomes: starter.outcomes,
+          sowWeekKeys: starter.sowWeekKeys,
+          records: {}
+        });
+        saveState();
+        renderAll();
+        announce("Added unit award: " + sug.title + ".", "ok");
+      };
+      sugRow.appendChild(b);
+    });
+
+    var pathFilter = $("unitPathFilter").value || "ALL";
+    var pupils = activePupilNumbers(function (_, grp) {
+      return pathFilter === "ALL" || grp === pathFilter;
+    });
+
+    var container = $("unitsContainer");
+    container.textContent = "";
+    if (!state.units.length) {
+      container.appendChild(el("p", {
+        class: "note",
+        text: "No units added yet. Tap one of the suggested units above or type a unit title and outcomes (one per line) to start tracking."
+      }));
+      return;
+    }
+
+    state.units.forEach(function (u, uIndex) {
+      var panel = el("section", { class: "panel-card", "data-unit-card": u.id });
+      var head = el("div", { class: "sow-head" });
+      head.appendChild(el("h3", { text: "Unit: " + u.title }));
+      var delBtn = el("button", { type: "button", class: "danger", text: "Delete unit" });
+      delBtn.onclick = function () {
+        state.units.splice(uIndex, 1);
+        if (ui.unitEdit && ui.unitEdit.unitId === u.id) {
+          ui.unitEdit = null;
+          $("unitEditorBox").hidden = true;
+        }
+        saveState();
+        renderAll();
+        announce("Deleted unit: " + u.title + ".", "warn");
+      };
+      head.appendChild(delBtn);
+      panel.appendChild(head);
+
+      var wKeys = getWeekKeysForReq("UNIT:" + u.id);
+      if (wKeys.length) {
+        var chipWrap = el("div", { class: "chip-list", style: "margin-bottom:8px" });
+        wKeys.forEach(function (wk) {
+          var ch = renderTaughtChipNode(wk);
+          if (ch) chipWrap.appendChild(ch);
+        });
+        panel.appendChild(chipWrap);
+      }
+
+      var tbl = el("table", { class: "resp-grid", "aria-label": "Unit outcomes for " + u.title });
+      var thead = el("thead");
+      var hr = el("tr");
+      hr.appendChild(el("th", { text: "Pupil" }));
+      u.outcomes.forEach(function (outText, oIdx) {
+        hr.appendChild(el("th", { text: "Outcome " + (oIdx + 1) + ": " + outText }));
+      });
+      thead.appendChild(hr);
+      tbl.appendChild(thead);
+
+      var tbody = el("tbody");
+      pupils.forEach(function (n) {
+        var tr = el("tr");
+        var tdP = el("td");
+        tdP.appendChild(buildPupilCellNode(n, function (pNum) {
+          openPrintPreview({ kind: "unit", pupil: pNum, unitId: u.id });
+        }, "Print unit record"));
+        tr.appendChild(tdP);
+
+        u.outcomes.forEach(function (outText, oIdx) {
+          var td = el("td", { "data-col": "Outcome " + (oIdx + 1) + ": " + outText });
+          var rec = (u.records[String(n)] && u.records[String(n)][String(oIdx)]) || { done: false, evidenceType: "Seen by teacher", date: "" };
+
+          var chkId = "uchk_" + u.id + "_" + n + "_" + oIdx;
+          var lbl = el("label", { class: "check", for: chkId });
+          var chk = el("input", { type: "checkbox", id: chkId, "data-unit-tick": u.id + ":" + n + ":" + oIdx });
+          chk.checked = Boolean(rec.done);
+          chk.setAttribute("aria-label", "Pupil " + n + " achieved outcome " + (oIdx + 1) + " in " + u.title);
+          chk.onchange = function () {
+            if (!u.records[String(n)]) u.records[String(n)] = {};
+            u.records[String(n)][String(oIdx)] = {
+              done: this.checked,
+              evidenceType: rec.evidenceType || "Seen by teacher",
+              date: this.checked ? (rec.date || todayISO()) : ""
+            };
+            saveState();
+            renderUnitTab();
+          };
+          lbl.appendChild(chk);
+          lbl.appendChild(el("span", { text: rec.done ? "✓ Achieved" : "Tick outcome" }));
+          td.appendChild(lbl);
+
+          var evBtn = el("button", {
+            type: "button",
+            class: "cell-btn" + (rec.done ? " has-val" : ""),
+            "data-unit-edit": u.id + ":" + n + ":" + oIdx,
+            "aria-label": "Set evidence and date for Pupil " + n + " outcome " + (oIdx + 1) + " in " + u.title
+          }, rec.done ? (rec.evidenceType + (rec.date ? " (" + rec.date + ")" : "")) : "Evidence / date");
+          evBtn.onclick = function () {
+            ui.unitEdit = { unitId: u.id, pupil: n, outcomeIdx: oIdx };
+            $("unitEditorTitle").textContent = "Pupil " + n + " — " + u.title + " (Outcome " + (oIdx + 1) + ")";
+            $("unitEditorOutcomeText").textContent = outText;
+            $("unitDoneCheck").checked = rec.done ? true : true; // default checked when opening to record evidence
+            $("unitEvidenceSelect").value = rec.evidenceType || ALL_UNIT_EVIDENCE_TYPES[0];
+            $("unitDateInput").value = rec.date || todayISO();
+            $("unitEditorBox").hidden = false;
+            $("unitEvidenceSelect").focus();
+          };
+          td.appendChild(evBtn);
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+      tbl.appendChild(tbody);
+      panel.appendChild(tbl);
+      container.appendChild(panel);
+    });
+  }
+
+  // --- TAB 5: SCHEME OF WORK & GAPS ---
+  function renderSowTab() {
+    var gapsBox = $("sowGapsBox");
+    gapsBox.textContent = "";
+
+    var unlinkedReqs = [];
+    var untaughtLinks = []; // { weekObj, reqLabels: [] }
+    var untaughtMap = {};
+
+    REQUIREMENTS.forEach(function (req) {
+      var wKeys = getWeekKeysForReq(req.reqKey);
+      if (req.checkGap && wKeys.length === 0) {
+        unlinkedReqs.push(req);
+      }
+      wKeys.forEach(function (wk) {
+        var tInfo = getWeekTaughtInfo(wk);
+        if (!tInfo.taught) {
+          if (!untaughtMap[wk]) {
+            untaughtMap[wk] = { weekObj: WEEK_BY_KEY[wk], reqLabels: [] };
+            untaughtLinks.push(untaughtMap[wk]);
+          }
+          untaughtMap[wk].reqLabels.push(req.shortLabel);
+        }
+      });
+    });
+
+    // Also include explicit H3 housekeeping note from Hospitality facts if no extra week added to H3 beyond A2_W03
+    var h3Weeks = getWeekKeysForReq("HOSP:H3");
+    var hasExtraH3 = h3Weeks.some(function (wk) { return WEEK_BY_KEY[wk] && WEEK_BY_KEY[wk].slot !== "A2_W03"; });
+
+    if (!unlinkedReqs.length && !untaughtLinks.length && hasExtraH3) {
+      gapsBox.className = "gaps-box all-ok";
+      gapsBox.appendChild(el("h2", { style: "margin:0", text: "✓ Scheme of work gaps check: all linked & taught" }));
+      gapsBox.appendChild(el("p", { text: "Every tracked award requirement has at least one linked week and every linked week is marked taught." }));
+    } else {
+      gapsBox.className = "gaps-box";
+      gapsBox.appendChild(el("h2", { style: "margin:0", text: "⚠ Gaps in scheme of work & taught coverage" }));
+
+      gapsBox.appendChild(el("h3", { text: "⚠ Award requirements with NO linked scheme of work week (" + (unlinkedReqs.length + (hasExtraH3 ? 0 : 1)) + ")" }));
+      var ul1 = el("ul");
+      if (!unlinkedReqs.length && hasExtraH3) {
+        ul1.appendChild(el("li", { text: "✓ None — every requirement has at least one linked week." }));
+      } else {
+        unlinkedReqs.forEach(function (r) {
+          ul1.appendChild(el("li", { text: "⚠ [No linked week] " + r.fullLabel }));
+        });
+        if (!hasExtraH3) {
+          ul1.appendChild(el("li", { text: "⚠ [Partial module gap] Hospitality H3 (Housekeeping part): Front office is linked to Aut2·W3, but Housekeeping has no dedicated week linked yet." }));
+        }
+      }
+      gapsBox.appendChild(ul1);
+
+      gapsBox.appendChild(el("h3", { text: "○ Linked scheme of work weeks NOT YET taught (" + untaughtLinks.length + ")" }));
+      if (!untaughtLinks.length) {
+        gapsBox.appendChild(el("p", { text: "✓ All linked scheme of work weeks are marked taught." }));
+      } else {
+        var det = el("details", { open: untaughtLinks.length <= 12 ? "open" : null });
+        det.appendChild(el("summary", { text: "Show " + untaughtLinks.length + " untaught linked week(s)" }));
+        var ul2 = el("ul");
+        untaughtLinks.forEach(function (item) {
+          var w = item.weekObj;
+          var pLabel = w.groupKey === "LAUNCH_VOC" ? "LAUNCH Vocational" : (w.groupKey === "LAUNCH_BIO" ? "LAUNCH Biology" : w.pathway);
+          ul2.appendChild(el("li", {
+            text: "○ [Not yet taught] " + pLabel + " " + w.week + " (" + w.outcome + ") — feeds: " + item.reqLabels.join(", ")
+          }));
+        });
+        det.appendChild(ul2);
+        gapsBox.appendChild(det);
+      }
+    }
+
+    // Filter weeks list
+    var selGroup = $("sowPathSelect").value || "ALL";
+    var listWrap = $("sowListWrap");
+    listWrap.textContent = "";
+
+    var visibleWeeks = WEEKS.filter(function (w) {
+      return selGroup === "ALL" || w.groupKey === selGroup;
+    });
+
+    visibleWeeks.forEach(function (w) {
+      var tInfo = getWeekTaughtInfo(w.weekKey);
+      var reqKeys = getReqKeysForWeek(w.weekKey);
+      var card = el("article", { class: "sow-row", "data-week-row": w.weekKey });
+
+      var head = el("div", { class: "sow-head" });
+      var leftTitle = el("div", {});
+      var grpBadgeText = w.groupKey === "LAUNCH_VOC" ? "LAUNCH · Vocational" : (w.groupKey === "LAUNCH_BIO" ? "LAUNCH · Biology" : (w.groupKey === "LAUNCH_CP" ? "LAUNCH · Chem & Phys" : w.pathway + " · Science"));
+      leftTitle.appendChild(el("span", { class: "badge " + w.pathway, text: grpBadgeText }));
+      leftTitle.appendChild(document.createTextNode(" "));
+      leftTitle.appendChild(el("strong", { text: w.week + " (" + w.slot + ")" }));
+      leftTitle.appendChild(document.createTextNode(" — " + (w.lessonCodePrefix ? w.lessonCodePrefix : "no lesson code prefix")));
+      head.appendChild(leftTitle);
+
+      // Taught tick + date
+      var rightCtrl = el("div", { class: "row", style: "margin:0" });
+      var chkId = "taught_" + w.weekKey.replace(/\W/g, "_");
+      var lbl = el("label", { class: "check", for: chkId });
+      var chk = el("input", { type: "checkbox", id: chkId, "data-taught-check": w.weekKey });
+      chk.checked = tInfo.taught;
+      chk.onchange = function () {
+        state.taughtWeeks[w.weekKey] = {
+          taught: this.checked,
+          date: this.checked ? (tInfo.date || todayISO()) : ""
+        };
+        saveState();
+        renderAll();
+      };
+      lbl.appendChild(chk);
+      lbl.appendChild(el("span", { text: tInfo.taught ? "✓ Taught" : "○ Mark taught" }));
+      rightCtrl.appendChild(lbl);
+
+      var dtId = "tdate_" + w.weekKey.replace(/\W/g, "_");
+      var dtLbl = el("label", { class: "sr-only", for: dtId, text: "Taught date for " + w.weekKey });
+      var dtInp = el("input", { type: "date", id: dtId, style: "width:auto;min-width:155px", value: tInfo.date || "" });
+      dtInp.setAttribute("aria-label", "Taught date for " + grpBadgeText + " " + w.week);
+      dtInp.onchange = function () {
+        state.taughtWeeks[w.weekKey] = {
+          taught: Boolean(this.value) || tInfo.taught,
+          date: this.value
+        };
+        saveState();
+        renderAll();
+      };
+      rightCtrl.appendChild(dtLbl);
+      rightCtrl.appendChild(dtInp);
+      head.appendChild(rightCtrl);
+      card.appendChild(head);
+
+      card.appendChild(el("p", { style: "margin:6px 0", text: "Outcome: " + w.outcome }));
+      if (w.lessons && w.lessons.length) {
+        card.appendChild(el("p", {
+          class: "small",
+          text: "Built lessons: " + w.lessons.map(function (ls) { return ls.code + " (" + ls.title + ")"; }).join("; ")
+        }));
+      }
+      if (tInfo.fromDevice && tInfo.source) {
+        card.appendChild(el("p", { class: "small", text: "✓ Pre-ticked read-only from device data (" + tInfo.source + ")." }));
+      }
+
+      // Reverse award requirement links + remove buttons
+      var feedsDiv = el("div", { class: "chip-list" });
+      if (!reqKeys.length) {
+        feedsDiv.appendChild(el("span", { class: "small", text: "Feeds: no award requirement linked to this week." }));
+      } else {
+        reqKeys.forEach(function (rk) {
+          var rObj = REQ_BY_KEY[rk];
+          if (!rObj) return;
+          var chip = el("span", { class: "chip ok" });
+          chip.appendChild(document.createTextNode("Feeds " + rObj.shortLabel + " "));
+          var remBtn = el("button", {
+            type: "button",
+            class: "danger",
+            style: "padding:6px 10px",
+            "data-remove-link": rk + "@@" + w.weekKey,
+            "aria-label": "Remove link from " + w.week + " to " + rObj.shortLabel,
+            text: "× Remove"
+          });
+          remBtn.onclick = function () { removeSowLink(rk, w.weekKey); };
+          chip.appendChild(remBtn);
+          feedsDiv.appendChild(chip);
+        });
+      }
+      card.appendChild(feedsDiv);
+
+      // Add link control
+      var addRow = el("div", { class: "row", style: "margin-top:8px" });
+      var selId = "addlink_" + w.weekKey.replace(/\W/g, "_");
+      var addLbl = el("label", { for: selId, text: "Link week to requirement:" });
+      var sel = el("select", { id: selId, "data-add-link-select": w.weekKey, style: "width:auto;flex:1 1 240px" });
+      sel.appendChild(el("option", { value: "", text: "Choose award requirement…" }));
+      REQUIREMENTS.forEach(function (rObj) {
+        if (reqKeys.indexOf(rObj.reqKey) !== -1) return;
+        sel.appendChild(el("option", { value: rObj.reqKey, text: rObj.fullLabel }));
+      });
+      var linkBtn = el("button", {
+        type: "button",
+        "data-add-link-btn": w.weekKey,
+        text: "+ Add link"
+      });
+      linkBtn.onclick = function () {
+        if (!sel.value) {
+          announce("Choose an award requirement first to link to " + w.week + ".", "warn");
+          return;
+        }
+        addSowLink(sel.value, w.weekKey);
+      };
+      addRow.appendChild(addLbl);
+      addRow.appendChild(sel);
+      addRow.appendChild(linkBtn);
+      card.appendChild(addRow);
+
+      listWrap.appendChild(card);
+    });
+  }
+
+  // --- EXAMS OFFICER CHECKLIST ---
+  function renderFactsChecklist() {
+    var box = $("factsToCheckList");
+    box.textContent = "";
+    ALL_FACTS.forEach(function (f) {
+      var row = el("div", { style: "margin:6px 0;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg)" });
+      var cid = "fact_" + f.id;
+      var lbl = el("label", { class: "check", for: cid, style: "align-items:flex-start" });
+      var chk = el("input", { type: "checkbox", id: cid, style: "margin-top:3px" });
+      chk.checked = Boolean(state.checkedFacts[f.id]);
+      chk.onchange = function () {
+        if (this.checked) state.checkedFacts[f.id] = true;
+        else delete state.checkedFacts[f.id];
+        saveState();
+        renderFactsChecklist();
+      };
+      lbl.appendChild(chk);
+      var txtSpan = el("span", {});
+      txtSpan.appendChild(el("span", { class: "badge", text: f.awardLabel }));
+      txtSpan.appendChild(document.createTextNode(" " + f.text));
+      lbl.appendChild(txtSpan);
+      row.appendChild(lbl);
+      box.appendChild(row);
+    });
+  }
+
+  // --- PRINTABLE SHEETS (Pupil N or Initials ONLY) ---
+  function printPupilHeading(n) {
+    var mode = $("printCopyMode").value || "number";
+    if (mode === "initials") {
+      var ini = pupilTag(n, "initials");
+      return ini ? ("Pupil " + n + " (" + ini + ")") : ("Pupil " + n);
+    }
+    return "Pupil " + n;
+  }
+
+  function buildPrintSheetDOM(spec) {
+    var doc = el("div", { class: "sheet-doc" });
+    var datePrinted = todayISO();
+
+    if (spec.kind === "elc") {
+      var n = spec.pupil;
+      var calc = calcElcForPupil(n);
+      doc.appendChild(el("h2", { text: "Entry Level Certificate in Science — Assessment Record" }));
+      doc.appendChild(el("p", { text: "Candidate: " + printPupilHeading(n) + " · Pathway: " + getPupilGroup(n) + " · Date printed: " + datePrinted }));
+      var tbl = el("table");
+      var thead = el("thead");
+      thead.appendChild(el("tr", {}, [
+        el("th", { text: "Test" }),
+        el("th", { text: "Component title" }),
+        el("th", { text: "Attempts" }),
+        el("th", { text: "Best mark (/25)" }),
+        el("th", { text: "Date of best attempt" })
+      ]));
+      tbl.appendChild(thead);
+      var tbody = el("tbody");
+      (ELC_AWARD.tests || []).forEach(function (t) {
+        var info = calc.bestByTest[t.id];
+        var bestDate = "—";
+        if (info.best !== null) {
+          var found = info.attempts.filter(function (a) { return a.mark === info.best; })[0];
+          bestDate = (found && found.date) || "—";
+        }
+        tbody.appendChild(el("tr", {}, [
+          el("td", { text: t.id }),
+          el("td", { text: t.name }),
+          el("td", { text: String(info.attempts.length) }),
+          el("td", { text: info.best !== null ? (info.best + " / 25") : "Not sat" }),
+          el("td", { text: bestDate })
+        ]));
+      });
+      tbl.appendChild(tbody);
+      doc.appendChild(tbl);
+      doc.appendChild(el("p", {}, [
+        el("strong", { text: "Total best marks: " + calc.total + " / 150 · Level reached: " + calc.level + " (" + calc.moreText + ")" })
+      ]));
+      doc.appendChild(el("p", { text: "Authentication declaration: I confirm that the candidate's work was completed under the required conditions and marked in line with the specification." }));
+      doc.appendChild(el("div", { class: "sig-grid" }, [
+        el("div", { class: "sig-line", text: "Teacher signature & date" }),
+        el("div", { class: "sig-line", text: "Pupil signature & date (" + printPupilHeading(n) + ")" })
+      ]));
+    } else if (spec.kind === "bio") {
+      var nb = spec.pupil;
+      doc.appendChild(el("h2", { text: "GCSE Biology (Foundation) — Pupil Practical Record" }));
+      doc.appendChild(el("p", { text: "Candidate: " + printPupilHeading(nb) + " · Pathway: " + getPupilGroup(nb) + " · Date printed: " + datePrinted }));
+      var bTbl = el("table");
+      bTbl.appendChild(el("thead", {}, [el("tr", {}, [
+        el("th", { text: "Ref" }),
+        el("th", { text: "Core practical" }),
+        el("th", { text: "Status" }),
+        el("th", { text: "Date" }),
+        el("th", { text: "Recorded in book" })
+      ])]));
+      var bBody = el("tbody");
+      (BIO_AWARD.corePracticals || []).forEach(function (cp) {
+        var c = getBioCell(nb, cp.id);
+        bBody.appendChild(el("tr", {}, [
+          el("td", { text: cp.id }),
+          el("td", { text: cp.name }),
+          el("td", { text: c.status }),
+          el("td", { text: c.date || "—" }),
+          el("td", { text: c.inBook ? "Yes" : "No" })
+        ]));
+      });
+      bTbl.appendChild(bBody);
+      doc.appendChild(bTbl);
+      doc.appendChild(el("div", { class: "sig-grid" }, [
+        el("div", { class: "sig-line", text: "Teacher signature & date" }),
+        el("div", { class: "sig-line", text: "Pupil signature & date (" + printPupilHeading(nb) + ")" })
+      ]));
+    } else if (spec.kind === "bioClass") {
+      var stats = calcBioClassStats();
+      doc.appendChild(el("h2", { text: "GCSE Biology — Class Practical Science Statement Summary" }));
+      doc.appendChild(el("p", { text: "Date printed: " + datePrinted + " · " + stats.doneCount + " of " + stats.totalPracticals + " practicals done by the class · Statement ready: " + (stats.statementReady ? "YES" : "NO") }));
+      var cTbl = el("table");
+      cTbl.appendChild(el("thead", {}, [el("tr", {}, [
+        el("th", { text: "Core practical" }),
+        el("th", { text: "Planned week" }),
+        el("th", { text: "Completed / caught up / demo" }),
+        el("th", { text: "Absent (pending)" }),
+        el("th", { text: "In book count" })
+      ])]));
+      var cBody = el("tbody");
+      (BIO_AWARD.corePracticals || []).forEach(function (cp) {
+        var doneN = 0, absN = 0, bookN = 0;
+        stats.launchPupils.forEach(function (pNum) {
+          var cell = getBioCell(pNum, cp.id);
+          if (cell.status === "done in class" || cell.status === "caught up" || cell.status === "watched demo + own write-up") doneN++;
+          if (cell.status === "absent") absN++;
+          if (cell.inBook) bookN++;
+        });
+        var wKeys = getWeekKeysForReq("BIO:" + cp.id);
+        cBody.appendChild(el("tr", {}, [
+          el("td", { text: cp.id + " — " + cp.name }),
+          el("td", { text: wKeys.length ? WEEK_BY_KEY[wKeys[0]].week : "no slot yet" }),
+          el("td", { text: doneN + " / " + stats.launchPupils.length }),
+          el("td", { text: String(absN) }),
+          el("td", { text: bookN + " / " + stats.launchPupils.length })
+        ]));
+      });
+      cTbl.appendChild(cBody);
+      doc.appendChild(cTbl);
+      doc.appendChild(el("div", { class: "sig-grid" }, [
+        el("div", { class: "sig-line", text: "Subject teacher signature & date" }),
+        el("div", { class: "sig-line", text: "Head of centre signature & date" })
+      ]));
+    } else if (spec.kind === "hosp") {
+      var nh = spec.pupil;
+      var hCalc = calcHospForPupil(nh);
+      doc.appendChild(el("h2", { text: "Hospitality Short Course — Pupil Portfolio & Credit Record" }));
+      doc.appendChild(el("p", { text: "Candidate: " + printPupilHeading(nh) + " · Pathway: " + getPupilGroup(nh) + " · Date printed: " + datePrinted }));
+      doc.appendChild(el("p", {}, [
+        el("strong", { text: "Total hours completed: " + hCalc.totalHours + " h (" + hCalc.accreditedHours + " h accredited) · Total credits: " + hCalc.totalCredits + " · Portfolio items ticked: " + hCalc.portfolioCount })
+      ]));
+      var hTbl = el("table");
+      hTbl.appendChild(el("thead", {}, [el("tr", {}, [
+        el("th", { text: "Module" }),
+        el("th", { text: "Challenge & section" }),
+        el("th", { text: "Hours" }),
+        el("th", { text: "Evidence & location" }),
+        el("th", { text: "Date & status" }),
+        el("th", { text: "Portfolio / Signed" })
+      ])]));
+      var hBody = el("tbody");
+      (HOSP_AWARD.requirements || []).forEach(function (m) {
+        var mInfo = hCalc.byModule[m.id];
+        if (!mInfo.entries.length) {
+          hBody.appendChild(el("tr", {}, [
+            el("td", { text: m.id + " (" + m.name + ")" }),
+            el("td", { text: "No challenges logged" }),
+            el("td", { text: "0 h (0 cr)" }),
+            el("td", { text: "—" }),
+            el("td", { text: "—" }),
+            el("td", { text: "—" })
+          ]));
+        } else {
+          mInfo.entries.forEach(function (e) {
+            hBody.appendChild(el("tr", {}, [
+              el("td", { text: m.id + " (" + mInfo.hours + " h / " + mInfo.credits + " cr)" }),
+              el("td", { text: (e.challenge || "Task") + " (Sec " + e.section + ")" }),
+              el("td", { text: e.hours + " h" }),
+              el("td", { text: e.evidenceType + (e.whereKept ? " [" + e.whereKept + "]" : "") }),
+              el("td", { text: (e.date || "—") + " · " + e.status }),
+              el("td", { text: (e.inPortfolio ? "In portfolio" : "Not in portfolio") + (e.adultSigned ? "; Adult signed" : "") })
+            ]));
+          });
+        }
+      });
+      hTbl.appendChild(hBody);
+      doc.appendChild(hTbl);
+      doc.appendChild(el("div", { class: "sig-grid" }, [
+        el("div", { class: "sig-line", text: "Assessor / internal moderator signature & date" }),
+        el("div", { class: "sig-line", text: "Pupil signature & date (" + printPupilHeading(nh) + ")" })
+      ]));
+    } else if (spec.kind === "unit") {
+      var nu = spec.pupil;
+      var unitObj = state.units.filter(function (x) { return x.id === spec.unitId; })[0];
+      doc.appendChild(el("h2", { text: "Unit Award — Candidate Outcome Record" }));
+      doc.appendChild(el("p", { text: "Candidate: " + printPupilHeading(nu) + " · Pathway: " + getPupilGroup(nu) + " · Unit: " + (unitObj ? unitObj.title : "") + " · Date printed: " + datePrinted }));
+      if (unitObj) {
+        var uTbl = el("table");
+        uTbl.appendChild(el("thead", {}, [el("tr", {}, [
+          el("th", { text: "#" }),
+          el("th", { text: "Outcome" }),
+          el("th", { text: "Achieved" }),
+          el("th", { text: "Evidence type" }),
+          el("th", { text: "Date" })
+        ])]));
+        var uBody = el("tbody");
+        unitObj.outcomes.forEach(function (outText, idx) {
+          var r = (unitObj.records[String(nu)] && unitObj.records[String(nu)][String(idx)]) || { done: false, evidenceType: "—", date: "—" };
+          uBody.appendChild(el("tr", {}, [
+            el("td", { text: String(idx + 1) }),
+            el("td", { text: outText }),
+            el("td", { text: r.done ? "Yes" : "No" }),
+            el("td", { text: r.done ? r.evidenceType : "—" }),
+            el("td", { text: r.done ? (r.date || "—") : "—" })
+          ]));
+        });
+        uTbl.appendChild(uBody);
+        doc.appendChild(uTbl);
+      }
+      doc.appendChild(el("div", { class: "sig-grid" }, [
+        el("div", { class: "sig-line", text: "Teacher signature & date" }),
+        el("div", { class: "sig-line", text: "Pupil signature & date (" + printPupilHeading(nu) + ")" })
+      ]));
+    }
+    return doc;
+  }
+
+  function openPrintPreview(spec) {
+    ui.printSpec = spec;
+    var wrap = $("printPreviewWrap");
+    wrap.hidden = false;
+    refreshPrintPreviewDOM();
+    wrap.scrollIntoView({ behavior: "auto", block: "nearest" });
+  }
+
+  function refreshPrintPreviewDOM() {
+    if (!ui.printSpec) return;
+    var previewBody = $("printPreviewBody");
+    var printSec = $("printRecordSection");
+    previewBody.textContent = "";
+    printSec.textContent = "";
+    previewBody.appendChild(buildPrintSheetDOM(ui.printSpec));
+    printSec.appendChild(buildPrintSheetDOM(ui.printSpec));
+  }
+
+  // --- EXPORTS (JSON & CSV, Strictly "Pupil N" ONLY) ---
+  function csvCell(val) {
+    var s = redactPublic(val == null ? "" : String(val));
+    if (/^[\s]*[=+@-]/.test(s)) s = "'" + s;
+    if (/[",\r\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+    return s;
+  }
+
+  function buildCsvString(rows) {
+    return "\uFEFF" + rows.map(function (r) { return r.map(csvCell).join(","); }).join("\r\n") + "\r\n";
+  }
+
+  function downloadFile(filename, content, mimeType) {
+    var blob = new Blob([content], { type: mimeType });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 30000);
+  }
+
+  function buildCleanBackupObject() {
+    // Re-run sanitizeLoadedState so every free-text field is scrubbed with redactPublic and keys are numeric "1".."20"
+    var clean = sanitizeLoadedState(state);
+    var pupilExport = {};
+    for (var n = 1; n <= activeClassSize(); n++) {
+      pupilExport["Pupil " + n] = { group: getPupilGroup(n) };
+    }
+    return {
+      tool: "Awards tracker",
+      schemaVersion: 1,
+      exportedDate: todayISO(),
+      privacy: "Pupil N only",
+      pupils: pupilExport,
+      data: clean
+    };
+  }
+
+  function buildElcCsv() {
+    var header = ["pupil", "pathway", "B1A_best", "B1B_best", "C1A_best", "C1B_best", "P1A_best", "P1B_best", "total_150", "level", "next_threshold", "attempts_detail"];
+    var rows = [header];
+    activePupilNumbers().forEach(function (n) {
+      var grp = getPupilGroup(n);
+      var c = calcElcForPupil(n);
+      var details = [];
+      (ELC_AWARD.tests || []).forEach(function (t) {
+        (c.bestByTest[t.id].attempts || []).forEach(function (a) {
+          details.push(t.id + ":" + a.mark + "/25@" + (a.date || "undated"));
+        });
+      });
+      rows.push([
+        "Pupil " + n,
+        grp,
+        c.bestByTest.B1A.best !== null ? c.bestByTest.B1A.best : "",
+        c.bestByTest.B1B.best !== null ? c.bestByTest.B1B.best : "",
+        c.bestByTest.C1A.best !== null ? c.bestByTest.C1A.best : "",
+        c.bestByTest.C1B.best !== null ? c.bestByTest.C1B.best : "",
+        c.bestByTest.P1A.best !== null ? c.bestByTest.P1A.best : "",
+        c.bestByTest.P1B.best !== null ? c.bestByTest.P1B.best : "",
+        c.total,
+        c.level,
+        c.moreText,
+        details.join("; ")
+      ]);
+    });
+    return buildCsvString(rows);
+  }
+
+  function buildBioCsv() {
+    var header = ["pupil", "pathway", "record_type", "item_id", "item_name", "status_or_mark", "date", "in_book"];
+    var rows = [header];
+    activePupilNumbers().forEach(function (n) {
+      var grp = getPupilGroup(n);
+      (BIO_AWARD.corePracticals || []).forEach(function (cp) {
+        var c = getBioCell(n, cp.id);
+        if (grp === "LAUNCH" || c.status !== "not done" || c.inBook) {
+          rows.push(["Pupil " + n, grp, "core_practical", cp.id, cp.name, c.status, c.date, c.inBook ? "yes" : "no"]);
+        }
+      });
+      (BIO_AWARD.topicChecks || []).forEach(function (tc) {
+        var rec = state.bioTopicChecks[String(n)] && state.bioTopicChecks[String(n)][tc.slot];
+        if (rec) {
+          rows.push(["Pupil " + n, grp, "topic_check", tc.slot, tc.what, rec.mark, rec.date, ""]);
+        }
+      });
+    });
+    return buildCsvString(rows);
+  }
+
+  function buildHospCsv() {
+    var header = ["pupil", "pathway", "module_id", "module_name", "challenge", "section", "hours", "evidence_type", "date", "status", "in_portfolio", "adult_signed", "module_hours", "module_credits", "pupil_total_hours", "pupil_total_credits"];
+    var rows = [header];
+    activePupilNumbers().forEach(function (n) {
+      var grp = getPupilGroup(n);
+      var calc = calcHospForPupil(n);
+      if (grp !== "LAUNCH" && calc.totalEntries === 0 && !ui.hospShowAll) return;
+      if (calc.totalEntries === 0) {
+        rows.push(["Pupil " + n, grp, "SUMMARY", "All modules", "", "", 0, "", "", "", "no", "no", 0, 0, calc.totalHours, calc.totalCredits]);
+      } else {
+        (HOSP_AWARD.requirements || []).forEach(function (m) {
+          var mInfo = calc.byModule[m.id];
+          mInfo.entries.forEach(function (e) {
+            rows.push([
+              "Pupil " + n,
+              grp,
+              m.id,
+              m.name,
+              e.challenge,
+              e.section,
+              e.hours,
+              e.evidenceType,
+              e.date,
+              e.status,
+              e.inPortfolio ? "yes" : "no",
+              e.adultSigned ? "yes" : "no",
+              mInfo.hours,
+              mInfo.credits,
+              calc.totalHours,
+              calc.totalCredits
+            ]);
+          });
+        });
+      }
+    });
+    return buildCsvString(rows);
+  }
+
+  function buildUnitCsv() {
+    var header = ["pupil", "pathway", "unit_title", "outcome_number", "outcome_text", "achieved", "evidence_type", "date"];
+    var rows = [header];
+    state.units.forEach(function (u) {
+      activePupilNumbers().forEach(function (n) {
+        var grp = getPupilGroup(n);
+        u.outcomes.forEach(function (outText, oIdx) {
+          var rec = (u.records[String(n)] && u.records[String(n)][String(oIdx)]) || null;
+          if (rec && rec.done) {
+            rows.push(["Pupil " + n, grp, u.title, oIdx + 1, outText, "yes", rec.evidenceType, rec.date]);
+          }
+        });
+      });
+    });
+    return buildCsvString(rows);
+  }
+
+  function buildSowCsv() {
+    var header = ["pathway", "strand", "week", "slot", "lesson_code_prefix", "outcome", "taught", "taught_date", "feeds_requirements"];
+    var rows = [header];
+    WEEKS.forEach(function (w) {
+      var ti = getWeekTaughtInfo(w.weekKey);
+      var rks = getReqKeysForWeek(w.weekKey).map(function (rk) { return REQ_BY_KEY[rk] ? REQ_BY_KEY[rk].shortLabel : rk; });
+      rows.push([
+        w.pathway,
+        w.strand,
+        w.week,
+        w.slot,
+        w.lessonCodePrefix || "",
+        w.outcome,
+        ti.taught ? "yes" : "no",
+        ti.date || "",
+        rks.join("; ")
+      ]);
+    });
+    return buildCsvString(rows);
+  }
+
+  // Expose pure export builders on window for local verification if needed (contains only Pupil N data)
+  window.__awardsTrackerTestHooks = {
+    getBackupObject: buildCleanBackupObject,
+    getCsv: function (tab) {
+      if (tab === "elc") return buildElcCsv();
+      if (tab === "bio") return buildBioCsv();
+      if (tab === "hosp") return buildHospCsv();
+      if (tab === "unit") return buildUnitCsv();
+      if (tab === "sow") return buildSowCsv();
+      return "";
+    }
+  };
+
+  // --- MASTER RENDER & EVENT WIRING ---
+  function renderClassSizeSelect() {
+    var sel = $("classSizeSelect");
+    var cur = activeClassSize();
+    if (!sel.options.length) {
+      for (var i = 1; i <= 20; i++) {
+        sel.appendChild(el("option", { value: String(i), text: i + (i === 13 ? " (default)" : "") }));
+      }
+    }
+    sel.value = String(cur);
+  }
+
+  function switchTab(tabId) {
+    ui.activeTab = tabId;
+    ["elc", "bio", "hosp", "unit", "sow"].forEach(function (t) {
+      var btn = $("tabBtn-" + t);
+      var panel = $("panel-" + t);
+      var active = (t === tabId);
+      btn.setAttribute("aria-selected", active ? "true" : "false");
+      panel.hidden = !active;
+    });
+  }
+
+  function renderAll() {
+    $("showTags").value = getShowMode();
+    renderClassSizeSelect();
+    updateFirstRunBanner();
+    renderElcTab();
+    renderBioTab();
+    renderHospTab();
+    renderUnitTab();
+    renderSowTab();
+    renderFactsChecklist();
+    if (ui.printSpec && !$("printPreviewWrap").hidden) {
+      refreshPrintPreviewDOM();
+    }
+  }
+
+  // Top controls
+  $("showTags").onchange = function () {
+    setShowMode(this.value);
+    renderAll();
+  };
+
+  $("classSizeSelect").onchange = function () {
+    state.classSize = Math.max(1, Math.min(20, Number(this.value) || 13));
+    saveState();
+    renderAll();
+  };
+
+  // Tab navigation (click + arrow keys)
+  var tabOrder = ["elc", "bio", "hosp", "unit", "sow"];
+  tabOrder.forEach(function (t, idx) {
+    var btn = $("tabBtn-" + t);
+    btn.onclick = function () { switchTab(t); };
+    btn.onkeydown = function (ev) {
+      if (ev.key === "ArrowRight" || ev.key === "ArrowLeft") {
+        ev.preventDefault();
+        var nextIdx = ev.key === "ArrowRight" ? (idx + 1) % tabOrder.length : (idx - 1 + tabOrder.length) % tabOrder.length;
+        switchTab(tabOrder[nextIdx]);
+        $("tabBtn-" + tabOrder[nextIdx]).focus();
+      }
+    };
+  });
+
+  // Tab 1 events
+  $("btnElcShowAll").onclick = function () {
+    ui.elcShowAll = !ui.elcShowAll;
+    this.setAttribute("aria-pressed", ui.elcShowAll ? "true" : "false");
+    this.textContent = ui.elcShowAll ? "Showing all pupils" : "Show all pupils";
+    renderElcTab();
+  };
+  $("btnCloseElcEditor").onclick = function () {
+    ui.elcEdit = null;
+    $("elcEditorBox").hidden = true;
+  };
+  $("elcDateInput").onchange = function () {
+    if (ui.elcEdit) renderElcEditorBody();
+  };
+  $("btnSaveElcAttempt").onclick = function () {
+    if (!ui.elcEdit) return;
+    var rawMark = Number($("elcMarkInput").value);
+    if (isNaN(rawMark) || rawMark < 0 || rawMark > 25) {
+      announce("Enter a mark between 0 and 25.", "warn");
+      return;
+    }
+    var mark = Math.round(rawMark);
+    var dt = $("elcDateInput").value || todayISO();
+    var note = redactPublic($("elcNoteInput").value.trim()).slice(0, 120);
+    var pKey = String(ui.elcEdit.pupil);
+    var tId = ui.elcEdit.testId;
+    var warnMsg = checkElcRetakeUnder14Days(ui.elcEdit.pupil, tId, dt);
+    if (!state.elcAttempts[pKey]) state.elcAttempts[pKey] = {};
+    if (!state.elcAttempts[pKey][tId]) state.elcAttempts[pKey][tId] = [];
+    state.elcAttempts[pKey][tId].push({ mark: mark, date: dt, note: note });
+    saveState();
+    renderElcTab();
+    announce(warnMsg ? (warnMsg + " Saved mark " + mark + "/25 for Pupil " + pKey + " (" + tId + ").") : ("Saved " + mark + "/25 for Pupil " + pKey + " on " + tId + "."), warnMsg ? "warn" : "ok");
+  };
+  $("btnExportElcCsv").onclick = function () {
+    downloadFile("awards_elc_science_" + todayISO() + ".csv", buildElcCsv(), "text/csv;charset=utf-8");
+    announce("Exported Entry Level Science CSV (Pupil N codes only).", "ok");
+  };
+
+  // Tab 2 events
+  $("btnBioShowAll").onclick = function () {
+    ui.bioShowAll = !ui.bioShowAll;
+    this.setAttribute("aria-pressed", ui.bioShowAll ? "true" : "false");
+    this.textContent = ui.bioShowAll ? "Showing all pupils" : "Show all pupils";
+    renderBioTab();
+  };
+  $("btnPrintBioClass").onclick = function () {
+    openPrintPreview({ kind: "bioClass", pupil: 0 });
+  };
+  $("btnPreviewPracLog").onclick = function () {
+    var box = $("bioPullPreview");
+    box.hidden = false;
+    box.textContent = "";
+    var res = computePracLogMatches();
+    if (!res.matches.length) {
+      box.appendChild(el("p", { class: "small", text: "No new Biology core practical changes to pull (all matching entries are already recorded)." }));
+      return;
+    }
+    box.appendChild(el("p", {}, [el("strong", { text: "Preview — " + res.matches.length + " matching practical log record(s) will update:" })]));
+    var ul = el("ul");
+    res.matches.forEach(function (m) {
+      ul.appendChild(el("li", { text: "Pupil " + m.pupil + " · " + m.cpId + ": " + m.oldStatus + " → " + m.newStatus + " (" + m.date + ")" }));
+    });
+    box.appendChild(ul);
+    var row = el("div", { class: "row" });
+    var applyBtn = el("button", { type: "button", class: "primary", id: "btnApplyPracLog", text: "Apply " + res.matches.length + " change(s)" });
+    applyBtn.onclick = function () {
+      res.matches.forEach(function (m) {
+        var pk = String(m.pupil);
+        if (!state.bioPracticals[pk]) state.bioPracticals[pk] = {};
+        var old = getBioCell(m.pupil, m.cpId);
+        state.bioPracticals[pk][m.cpId] = {
+          status: m.newStatus,
+          date: m.date,
+          inBook: old.inBook
+        };
+      });
+      box.hidden = true;
+      saveState();
+      renderBioTab();
+      announce("Applied " + res.matches.length + " practical log record(s).", "ok");
+    };
+    var cancelBtn = el("button", { type: "button", text: "Cancel" });
+    cancelBtn.onclick = function () { box.hidden = true; };
+    row.appendChild(applyBtn);
+    row.appendChild(cancelBtn);
+    box.appendChild(row);
+  };
+  $("btnCloseBioEditor").onclick = function () {
+    ui.bioEdit = null;
+    $("bioEditorBox").hidden = true;
+  };
+  $("btnSaveBioCell").onclick = function () {
+    if (!ui.bioEdit) return;
+    var pk = String(ui.bioEdit.pupil);
+    if (!state.bioPracticals[pk]) state.bioPracticals[pk] = {};
+    var stVal = $("bioStatusSelect").value;
+    state.bioPracticals[pk][ui.bioEdit.cpId] = {
+      status: stVal,
+      date: stVal === "not done" ? "" : ($("bioDateInput").value || todayISO()),
+      inBook: Boolean($("bioBookCheck").checked)
+    };
+    $("bioEditorBox").hidden = true;
+    ui.bioEdit = null;
+    saveState();
+    renderBioTab();
+    announce("Saved practical record for Pupil " + pk + ".", "ok");
+  };
+  $("btnCloseBioTopicEditor").onclick = function () {
+    ui.bioTopicEdit = null;
+    $("bioTopicEditorBox").hidden = true;
+  };
+  $("btnSaveBioTopic").onclick = function () {
+    if (!ui.bioTopicEdit) return;
+    var pk = String(ui.bioTopicEdit.pupil);
+    var mk = redactPublic($("bioTopicMarkInput").value.trim()).slice(0, 40);
+    if (!mk) {
+      announce("Enter a topic check mark first.", "warn");
+      return;
+    }
+    if (!state.bioTopicChecks[pk]) state.bioTopicChecks[pk] = {};
+    state.bioTopicChecks[pk][ui.bioTopicEdit.slot] = {
+      mark: mk,
+      date: $("bioTopicDateInput").value || todayISO()
+    };
+    $("bioTopicEditorBox").hidden = true;
+    ui.bioTopicEdit = null;
+    saveState();
+    renderBioTab();
+    announce("Saved topic check for Pupil " + pk + ".", "ok");
+  };
+  $("btnClearBioTopic").onclick = function () {
+    if (!ui.bioTopicEdit) return;
+    var pk = String(ui.bioTopicEdit.pupil);
+    if (state.bioTopicChecks[pk]) delete state.bioTopicChecks[pk][ui.bioTopicEdit.slot];
+    $("bioTopicEditorBox").hidden = true;
+    ui.bioTopicEdit = null;
+    saveState();
+    renderBioTab();
+  };
+  $("btnExportBioCsv").onclick = function () {
+    downloadFile("awards_biology_practicals_" + todayISO() + ".csv", buildBioCsv(), "text/csv;charset=utf-8");
+    announce("Exported Biology practicals CSV (Pupil N codes only).", "ok");
+  };
+
+  // Tab 3 events (Hospitality)
+  $("btnHospIncludeOthers").onclick = function () {
+    ui.hospShowAll = !ui.hospShowAll;
+    this.setAttribute("aria-pressed", ui.hospShowAll ? "true" : "false");
+    this.textContent = ui.hospShowAll ? "Showing all pathways" : "Include BUILD & GROW pupils";
+    renderHospTab();
+  };
+  $("btnCloseHospEditor").onclick = function () {
+    ui.hospEdit = null;
+    $("hospEditorBox").hidden = true;
+  };
+  $("btnSaveHospEntry").onclick = function () {
+    if (!ui.hospEdit) return;
+    var hrs = Number($("hospHoursInput").value);
+    if (!(hrs > 0) || hrs > 60) {
+      announce("Enter hours greater than 0 (up to 60).", "warn");
+      return;
+    }
+    var pk = String(ui.hospEdit.pupil);
+    var modId = ui.hospEdit.modId;
+    if (!state.hospEntries[pk]) state.hospEntries[pk] = {};
+    if (!state.hospEntries[pk][modId]) state.hospEntries[pk][modId] = [];
+    state.hospEntries[pk][modId].push({
+      id: "he_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+      challenge: redactPublic($("hospChallengeInput").value.trim() || "Challenge").slice(0, 60),
+      section: $("hospSectionSelect").value === "B" ? "B" : "A",
+      hours: Math.round(hrs * 100) / 100,
+      evidenceType: $("hospEvidenceSelect").value || "photo of product or set-up",
+      date: $("hospDateInput").value || todayISO(),
+      status: $("hospStatusSelect").value || "evidenced",
+      whereKept: redactPublic($("hospWhereInput").value.trim()).slice(0, 80),
+      inPortfolio: Boolean($("hospPortfolioCheck").checked),
+      adultSigned: Boolean($("hospAdultSignCheck").checked)
+    });
+    $("hospChallengeInput").value = "";
+    saveState();
+    renderHospTab();
+    var c = calcHospForPupil(ui.hospEdit.pupil);
+    announce("Logged " + hrs + " h in " + modId + " for Pupil " + pk + " (Total: " + c.totalHours + " h = " + c.totalCredits + (c.totalCredits === 1 ? " credit" : " credits") + ").", "ok");
+  };
+  $("btnExportHospCsv").onclick = function () {
+    downloadFile("awards_hospitality_" + todayISO() + ".csv", buildHospCsv(), "text/csv;charset=utf-8");
+    announce("Exported Hospitality CSV (Pupil N codes only).", "ok");
+  };
+
+  // Tab 4 events (Unit awards)
+  $("unitPathFilter").onchange = function () { renderUnitTab(); };
+  $("btnAddUnit").onclick = function () {
+    var title = redactPublic($("newUnitTitle").value.trim()).slice(0, 120);
+    var lines = $("newUnitOutcomes").value.split(/\r?\n/).map(function (l) { return redactPublic(l.trim()); }).filter(Boolean);
+    if (!title) {
+      announce("Enter a unit title first.", "warn");
+      $("newUnitTitle").focus();
+      return;
+    }
+    if (!lines.length) {
+      announce("Enter at least one outcome (one per line).", "warn");
+      $("newUnitOutcomes").focus();
+      return;
+    }
+    state.units.push({
+      id: "unit_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+      title: title,
+      outcomes: lines,
+      sowWeekKeys: [],
+      records: {}
+    });
+    $("newUnitTitle").value = "";
+    $("newUnitOutcomes").value = "";
+    saveState();
+    renderAll();
+    announce("Added unit: " + title + " (" + lines.length + " outcomes).", "ok");
+  };
+  $("btnCloseUnitEditor").onclick = function () {
+    ui.unitEdit = null;
+    $("unitEditorBox").hidden = true;
+  };
+  $("btnSaveUnitCell").onclick = function () {
+    if (!ui.unitEdit) return;
+    var u = state.units.filter(function (x) { return x.id === ui.unitEdit.unitId; })[0];
+    if (!u) return;
+    var pk = String(ui.unitEdit.pupil);
+    var oKey = String(ui.unitEdit.outcomeIdx);
+    if (!u.records[pk]) u.records[pk] = {};
+    var done = Boolean($("unitDoneCheck").checked);
+    u.records[pk][oKey] = {
+      done: done,
+      evidenceType: $("unitEvidenceSelect").value || "Seen by teacher",
+      date: done ? ($("unitDateInput").value || todayISO()) : ""
+    };
+    $("unitEditorBox").hidden = true;
+    ui.unitEdit = null;
+    saveState();
+    renderUnitTab();
+    announce("Saved unit outcome record for Pupil " + pk + ".", "ok");
+  };
+  $("btnExportUnitCsv").onclick = function () {
+    downloadFile("awards_unit_awards_" + todayISO() + ".csv", buildUnitCsv(), "text/csv;charset=utf-8");
+    announce("Exported Unit awards CSV (Pupil N codes only).", "ok");
+  };
+
+  // Tab 5 events (Scheme of work)
+  $("sowPathSelect").onchange = function () { renderSowTab(); };
+  $("btnExportSowCsv").onclick = function () {
+    downloadFile("awards_scheme_of_work_" + todayISO() + ".csv", buildSowCsv(), "text/csv;charset=utf-8");
+    announce("Exported Scheme of work CSV.", "ok");
+  };
+
+  // Print preview controls
+  $("printCopyMode").onchange = function () { refreshPrintPreviewDOM(); };
+  $("btnTriggerPrint").onclick = function () {
+    refreshPrintPreviewDOM();
+    document.body.classList.add("printing-record");
+    window.print();
+    setTimeout(function () { document.body.classList.remove("printing-record"); }, 500);
+  };
+  $("btnClosePrintPreview").onclick = function () {
+    $("printPreviewWrap").hidden = true;
+    ui.printSpec = null;
+  };
+
+  // Backup, Import & Clear All
+  $("btnExportJson").onclick = function () {
+    var payload = JSON.stringify(buildCleanBackupObject(), null, 2);
+    downloadFile("awards_tracker_backup_" + todayISO() + ".json", payload, "application/json;charset=utf-8");
+    announce("Exported JSON backup (Pupil N codes only).", "ok");
+  };
+
+  $("importJsonInput").onchange = function (ev) {
+    var file = ev.target.files && ev.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      var parsed = safeJsonParse(String(reader.result || ""), null);
+      if (!parsed || typeof parsed !== "object") {
+        announce("Could not read backup JSON file.", "warn");
+        return;
+      }
+      state = sanitizeLoadedState(parsed);
+      saveState();
+      renderAll();
+      announce("Restored awards tracker data from backup JSON.", "ok");
+    };
+    reader.readAsText(file);
+    ev.target.value = "";
+  };
+
+  $("btnOpenClearBox").onclick = function () {
+    $("clearConfirmBox").hidden = false;
+    $("clearConfirmInput").value = "";
+    $("clearConfirmInput").focus();
+  };
+  $("btnCancelClearAll").onclick = function () {
+    $("clearConfirmBox").hidden = true;
+    $("clearConfirmInput").value = "";
+  };
+  $("btnConfirmClearAll").onclick = function () {
+    if ($("clearConfirmInput").value.trim() !== "CLEAR") {
+      announce("Type CLEAR in capital letters to confirm deleting saved awards data.", "warn");
+      $("clearConfirmInput").focus();
+      return;
+    }
+    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+    state = emptyState();
+    ui.elcEdit = null;
+    ui.bioEdit = null;
+    ui.bioTopicEdit = null;
+    ui.hospEdit = null;
+    ui.unitEdit = null;
+    $("elcEditorBox").hidden = true;
+    $("bioEditorBox").hidden = true;
+    $("bioTopicEditorBox").hidden = true;
+    $("hospEditorBox").hidden = true;
+    $("unitEditorBox").hidden = true;
+    $("clearConfirmBox").hidden = true;
+    $("clearConfirmInput").value = "";
+    syncUnitRequirements();
+    renderAll();
+    announce("Cleared all saved awards tracker data on this device.", "warn");
+  };
+
+  // Initial render
+  renderAll();
+})();
+</script>
+</body>
+</html>
