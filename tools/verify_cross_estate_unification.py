@@ -3030,7 +3030,7 @@ CATALOGUE_PINS = {
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L2/VOC_LAUNCH_A2_W08_L2.html": "a75a50b647563adb992d86017284ba4999be3d2f3452661f57a6a27b182e0dc8",
         "kits/class_tools/Catch_up_Tracker.html": "96f2ce0b51d5de0e276af6837f6184af1ce50c19047974cb447a7b7683714db1",
         "kits/class_tools/Class_names.html": "dba42cbc6b3338e785f3dfcf7238c6a58da19dab6203d59ed3b57a36ca115514",
-        "kits/class_tools/My_tools.html": "d4d7485fad2ac7d784e49f2d58421a853d3374acb0bd564f5f576a51c85bfe33",
+        "kits/class_tools/My_tools.html": "ec7a266f33f3e3b876288ea579e837cf60c8d0a99c5f465e32168ca10ea817d9",
         "kits/class_tools/Practical_log.html": "55efd79709ff4e87244065ac36fb7cafcd6975bd4b598e52c1e3654e025d946d",
         "kits/class_tools/Requests.html": "ab84f625d0d8c927a2528dac0791f743f214550b3c334917d23bced1f35e3f9e",
         "kits/class_tools/Missed_last_week.html": "eae521ae7b0d9edade064035ca76b4587461d531ceaceab186b8104f5b058f2b",
@@ -3039,6 +3039,7 @@ CATALOGUE_PINS = {
         "kits/class_tools/Retrieval_builder.html": "83c1559ba255e6a77b177c2ca07d1e6ca71d9f4ed8ab8a9fdd29e6de2b845842",
         "kits/class_tools/Coverage_map.html": "0b77cfccc85ae76c9a66f9ac4a4b26a0bad576a1c6538e1c4f6924a338af3308",
         "kits/class_tools/Spooky_Story.html": "ce1d09844095fdd3e01cfbdfcaff2872d79599ecbf20c294c8c80c1370b5f59a",
+        "kits/class_tools/Award_tracker.html": "d392e8084696bff990072c04a85bfd904ba2c5ce826db8f8c0d19166df98127f",
         "2 Physics 10/L2c_Ohms_Law_PhET_Take2 (1).html": "48e12e89b4377bae06c64543bc687068c9c9fab44aeb8df5ad5492237aa63098",
         "5_6 Local Choice/Rivers/L1b_Your_River_Your_Home.html": "0214768965079f1687ab605f90f41489223201cea3d79b5301ecf99f1641c573",
         "Art/BUILD_BRONZE_W1-W7_2026-27/BUILD_Art_Bronze_W1_What_Getting_Better_Would_Look_Like.html": "b6d37613e4ec6e4f5a763b19a3038624cb704a91f24c444c6a790b83de7230a6",
@@ -3713,7 +3714,8 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-11 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main b0549e44, which holds the merges of Site #634 (admission of the sitemap that follows links) and Site #589 (the audience pages rebuilt as static pages); no other line of the caller changes.
 # Re-cut 2026-11-11 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 07c96fdf, the merge of Site #635 (admission of the unlisted reading story page); no other line of the caller file changes.
 # Re-cut 2026-11-11 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main 1a161f22, the merge of Site #637 (the five audience pages' main class renamed so content blockers stop hiding it); no other line of the caller file changes.
-    "lessons": "403f97de3cabd2d0ec36f69fed01e7d4338a0ca493fc4a20f4c3714b8ab2cf8e",
+# Re-cut 2026-11-12 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 60647ba7, the merge of Site #636 (admission of the unlisted awards tracker page and the My tools page that links to it).
+    "lessons": "cc6be1b3927861b462daeb73d7951aff3ba01520b0cb8625eda5a893c428c1df",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.

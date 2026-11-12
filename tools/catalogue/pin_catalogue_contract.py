@@ -5615,6 +5615,8 @@ REVIEWED_PATHS += ('kits/class_tools/Quick_capture.html', 'kits/class_tools/Less
 REVIEWED_PATHS += ('kits/class_tools/Retrieval_builder.html', 'kits/class_tools/Coverage_map.html')
 # 2026-11-11: a choose-your-path reading story for class reading time joins the unlisted pages (noindex, no names, no network; device storage only).
 REVIEWED_PATHS += ('kits/class_tools/Spooky_Story.html',)
+# 2026-11-11: an awards tracker joins the unlisted class pages (noindex, no names, no network; device storage only; exports say Pupil N).
+REVIEWED_PATHS += ('kits/class_tools/Award_tracker.html',)
 
 
 # Pathway labels phase 2 (Lessons #824, owner approval 8 Nov 2026 14:34Z): the relabelled lesson pages and the
