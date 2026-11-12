@@ -3714,7 +3714,8 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-11 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main b0549e44, which holds the merges of Site #634 (admission of the sitemap that follows links) and Site #589 (the audience pages rebuilt as static pages); no other line of the caller changes.
 # Re-cut 2026-11-11 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 07c96fdf, the merge of Site #635 (admission of the unlisted reading story page); no other line of the caller file changes.
 # Re-cut 2026-11-11 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main 1a161f22, the merge of Site #637 (the five audience pages' main class renamed so content blockers stop hiding it); no other line of the caller file changes.
-    "lessons": "403f97de3cabd2d0ec36f69fed01e7d4338a0ca493fc4a20f4c3714b8ab2cf8e",
+# Re-cut 2026-11-12 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 60647ba7, the merge of Site #636 (admission of the unlisted awards tracker page and the My tools page that links to it).
+    "lessons": "cc6be1b3927861b462daeb73d7951aff3ba01520b0cb8625eda5a893c428c1df",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
