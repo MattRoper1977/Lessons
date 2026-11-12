@@ -5617,6 +5617,8 @@ REVIEWED_PATHS += ('kits/class_tools/Retrieval_builder.html', 'kits/class_tools/
 REVIEWED_PATHS += ('kits/class_tools/Spooky_Story.html',)
 # 2026-11-11: an awards tracker joins the unlisted class pages (noindex, no names, no network; device storage only; exports say Pupil N).
 REVIEWED_PATHS += ('kits/class_tools/Award_tracker.html',)
+# 2026-11-12: a pupil CV builder with a print-all lesson record joins the unlisted class pages (noindex, no names, no network; device storage only).
+REVIEWED_PATHS += ('kits/class_tools/My_CV_builder.html',)
 
 
 # Pathway labels phase 2 (Lessons #824, owner approval 8 Nov 2026 14:34Z): the relabelled lesson pages and the

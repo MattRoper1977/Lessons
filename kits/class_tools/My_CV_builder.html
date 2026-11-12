@@ -1,0 +1,1218 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>My CV Builder</title>
+<style>
+
+:root{--ink:#172842;--navy:#122442;--accent:#2845a1;--surface:#fff;--wash:#e8eff8;--line:#adbed3;--hint:#eff4fc;--ok:#22654f}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--wash);color:var(--ink);font:18px/1.4 Arial,sans-serif}
+button,input,textarea{font:inherit;color:inherit}
+button{min-height:48px;border:2px solid #96aaca;border-radius:10px;background:white;padding:7px 13px;font-weight:700;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}
+button:focus-visible,input:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:3px solid #a44708;outline-offset:3px}
+button[aria-pressed=true]{background:#fff0c6;border-color:#8d530f;box-shadow:inset 0 0 0 1px #8d530f}
+button.primary{background:var(--accent);border-color:var(--accent);color:white}
+p,h1,h2,h3,ol,ul{margin:0}
+h1{font-size:clamp(28px,3vw,38px);line-height:1.1}
+h2{font-size:27px;line-height:1.14}
+h3{font-size:21px;line-height:1.17}
+.mast{background:var(--navy);color:white}
+.mast-inner{max-width:1380px;margin:auto;min-height:78px;padding:12px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.mast-title{display:flex;align-items:center;gap:11px}
+.badge{background:#e1ebff;color:var(--navy);border-radius:9px;padding:8px 11px;font-weight:800;letter-spacing:.04em}
+.mast-actions,.route-bar,.step-buttons,.dialog-actions,.chip-row{display:flex;flex-wrap:wrap;gap:7px}
+.mast-actions button{color:var(--navy)}
+.workspace{max-width:1380px;margin:auto;padding:14px 20px 25px}
+.privacy{display:flex;justify-content:space-between;gap:7px;flex-wrap:wrap;padding:2px 2px 12px}
+.privacy p:first-child{font-weight:700}
+.layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,.9fr);gap:14px;align-items:start}
+.edit-side{display:grid;gap:12px;min-width:0}
+.editor{display:grid;grid-template-columns:176px minmax(0,1fr);gap:11px;align-items:start;min-width:0}
+.step-rail,.edit-card,.preview,.checks,.finish{border:1px solid var(--line);background:white;border-radius:13px;padding:14px;min-width:0}
+.step-rail{padding:8px}
+.step-rail ol{list-style:none;padding:0;display:grid;gap:5px}
+.step-rail button{width:100%;text-align:left;font-size:18px;display:flex;align-items:center;gap:7px;padding:6px 8px}
+.step-rail button[aria-current=step]{background:#e1eaff;border-color:var(--accent);box-shadow:inset 4px 0 var(--accent)}
+.step-rail button span:first-child{width:24px;flex:none;font-weight:800;color:var(--accent)}
+#toggleSteps{display:none}
+.edit-card,.checks,.finish{display:grid;gap:11px}
+.step-heading p{font-weight:bold;color:var(--accent);margin-bottom:2px}
+.route-bar button{font-size:18px;min-width:0}
+#cvForm{display:grid;gap:11px}
+.cv-field{display:grid;gap:4px;min-width:0}
+.cv-field label{font-weight:700}
+.cv-field input,.cv-field textarea{width:100%;min-width:0;border:2px solid #96aac5;border-radius:8px;background:#fff;padding:8px 10px;min-height:48px}
+.cv-field textarea{resize:vertical;min-height:85px}
+.skill-box{min-width:0;margin:0;padding:8px 11px 12px;border:1px solid #a9bed5;border-radius:9px;display:grid;gap:7px}
+.skill-box legend{font-weight:bold;padding:0 5px}
+#routeHelp:not(:empty){background:var(--hint);border-left:4px solid var(--accent);padding:9px 11px;border-radius:7px;display:grid;gap:7px}
+.chip-row button{text-align:left;font-size:18px}
+.step-buttons{justify-content:space-between;padding-top:2px}
+.checks ul,.improve{list-style:none;padding:0;display:grid;gap:6px}
+.checks ul{grid-template-columns:1fr 1fr}
+.checks li{display:flex;gap:8px;align-items:baseline}
+.mark{font-weight:bold;min-width:19px;color:#43546b}
+[data-pass=true] .mark{color:var(--ok)}
+.improve label{display:flex;gap:8px;align-items:baseline;min-height:40px}
+.improve input{width:19px;height:19px;flex:none}
+.fine{color:#41536b}
+.file-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#fileStatus:empty{display:none}
+#fileStatus:not(:empty){background:#e7efff;padding:8px 10px;border-radius:8px}
+.preview{position:sticky;top:10px}
+.preview>h2{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap;padding-bottom:8px}
+.preview>h2 span{font-size:18px;color:#52637d;font-weight:normal}
+#preview{min-height:210px;border:1px solid #c3cedf;border-radius:8px;padding:13px}
+.cv-page{font:var(--cv-size,12.5pt)/1.23 Arial,sans-serif;color:#111;overflow-wrap:anywhere}
+.cv-page h1{font-size:1.86em;line-height:1.1;margin:0 0 .16em;font-weight:750}
+.cv-page .contact,.cv-page .practice-note{margin:0 0 .25em;font-size:.93em}
+.cv-page section{margin:.58em 0 0}
+.cv-page h2{font-size:1.05em;line-height:1.15;margin:0 0 .18em;border-bottom:1px solid #777;padding:0 0 .15em}
+.cv-page p{margin:.22em 0;white-space:pre-wrap}
+.cv-page ul{padding:0 0 0 1.2em;margin:.2em 0}
+.cv-page li{margin:.24em 0;white-space:pre-wrap}
+.cv-page .empty{color:#52637d}
+#printProbe{position:absolute;left:-10000px;top:0;width:186mm;visibility:hidden}
+#printCV{display:none}
+dialog{border:2px solid var(--line);border-radius:12px;padding:18px;width:min(530px,calc(100% - 24px));color:var(--ink)}
+dialog::backdrop{background:#12244277}
+dialog p{margin:9px 0 15px}
+.dialog-actions{justify-content:flex-end}
+@media(max-width:1040px){
+ .layout{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+ .editor{grid-template-columns:146px minmax(0,1fr)}
+}
+@media(max-width:800px){
+ .workspace{padding:10px}
+ .mast-inner{padding:10px}
+ .layout,.editor{grid-template-columns:minmax(0,1fr)}
+ .preview{position:static}
+ #toggleSteps{display:block}
+ .step-rail ol{display:none}
+ .step-rail.open ol{display:grid;margin-top:6px}
+ .checks ul,.file-actions{grid-template-columns:minmax(0,1fr)}
+}
+@page{size:A4 portrait;margin:12mm}
+@media print{
+ html,body{background:#fff;color:#111;margin:0;padding:0}
+ #builderApp,#printProbe{display:none!important}
+ #printCV{display:block;width:auto}
+ #printCV .cv-page{color:#000}
+}
+
+
+#whatNow{padding:8px 10px;background:#eaf1fc;border-left:4px solid var(--accent);border-radius:8px;display:grid;gap:5px}
+#whatNow h3{font-size:19px;color:#213a82}
+#whatNow ol{padding-left:24px}
+#whatNow p{font-weight:700}
+.field-help:not(:empty){display:grid;gap:7px;background:#eff4fc;border:1px solid #bccce0;border-radius:9px;padding:8px 9px;margin-top:3px}
+.field-help p{font-size:18px;line-height:1.22}
+.skill-bank{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+.skill-bank button{display:flex;align-items:center;gap:7px;min-width:0;padding:5px 6px;text-align:left;line-height:1.14;font-size:18px}
+.skill-bank svg{width:26px;height:26px;flex:none;color:#2845a1}
+.sample-grid button{max-width:100%;min-width:0;overflow-wrap:anywhere;line-height:1.2}
+@media(max-width:440px){.skill-bank button{gap:4px;padding-inline:4px}.skill-bank svg{width:22px;height:22px}}
+
+/* ---- lesson steps (pupil edition) ---- */
+#lessonBar{background:#fff;border-bottom:2px solid var(--line)}
+#lessonBar ol{list-style:none;margin:auto;max-width:1380px;padding:8px 20px;display:flex;gap:6px;flex-wrap:wrap}
+#lessonBar li{flex:1 1 150px;min-width:0}
+#lessonBar button{width:100%;min-height:52px;padding:4px 8px;font-size:17px;line-height:1.15;display:flex;align-items:center;gap:7px;text-align:left}
+#lessonBar button .n{flex:none;width:28px;height:28px;border-radius:50%;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--accent);background:#fff}
+#lessonBar button[aria-current=step]{background:var(--accent);border-color:var(--accent);color:#fff}
+#lessonBar button[data-done=true] .n{background:var(--ok);border-color:var(--ok);color:#fff}
+#lessonStages{display:grid;gap:12px}
+.lesson-card{border:1px solid var(--line);background:#fff;border-radius:13px;padding:16px 18px;display:grid;gap:12px;max-width:1000px;width:100%;margin:auto}
+.lesson-card .eyebrow{font-weight:bold;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;font-size:16px}
+.lnow{padding:8px 12px;background:#eaf1fc;border-left:4px solid var(--accent);border-radius:8px;display:grid;gap:4px}
+.lnow h3{font-size:19px;color:#213a82}
+.lnow ol{padding-left:24px}
+.lnow p{font-weight:700}
+.lfield{display:grid;gap:4px}
+.lfield label{font-weight:700}
+.lfield textarea,.lfield input[type=text]{width:100%;border:2px solid #96aac5;border-radius:8px;background:#fff;padding:8px 10px;min-height:48px}
+.lfield textarea{min-height:84px;resize:vertical}
+.lchoices{display:flex;gap:8px;flex-wrap:wrap}
+.lchoices button{flex:1 1 150px}
+.llines{display:grid;gap:8px}
+.llines button{text-align:left;font-weight:normal;font-size:19px}
+.llines button b{color:var(--accent)}
+.lquote{font-size:22px;font-weight:700;background:var(--hint);border-left:4px solid var(--accent);padding:10px 12px;border-radius:7px}
+.lreveal:not(:empty){background:#e6f3ec;border-left:4px solid var(--ok);padding:9px 11px;border-radius:7px;font-weight:700}
+.lreveal.think:not(:empty){background:#fff0c6;border-color:#8d530f}
+.lticks{list-style:none;padding:0;display:grid;gap:4px}
+.lticks label{display:flex;gap:10px;align-items:center;min-height:44px}
+.lticks input{width:24px;height:24px;flex:none}
+.lnav{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.lesson-strip{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:13px;padding:10px 14px;margin-bottom:12px}
+.lsum{list-style:none;padding:0;display:grid;gap:5px}
+.lsum li{display:flex;gap:8px;align-items:baseline}
+.lsum .mark{font-weight:bold;min-width:19px;color:#43546b}
+.lsum [data-pass=true] .mark{color:var(--ok)}
+#printRecord{display:none}
+.rec{font:11pt/1.24 Arial,sans-serif;color:#000}
+.rec h1{font-size:17pt;margin:0 0 1pt}
+.rec .top{display:flex;justify-content:space-between;gap:12pt;flex-wrap:wrap;border-bottom:2pt solid #000;padding-bottom:4pt;margin-bottom:6pt}
+.rec section{break-inside:avoid;margin:0 0 4pt;border:1pt solid #555;border-radius:4pt;padding:3pt 6pt}
+.rec h2{font-size:11.2pt;margin:0 0 1pt;border:0;padding:0}
+.rec p{margin:1pt 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.rec .q{color:#333;font-size:9.4pt}
+.rec .a{font-weight:bold}
+.rec .none{font-weight:normal;color:#555}
+.rec .adult{display:grid;gap:5pt;padding-top:5pt}
+.rec .line{border-bottom:1pt solid #000;height:15pt}
+@media print{
+ body.print-all #printRecord{display:block;break-after:page;page-break-after:always}
+}
+
+</style>
+</head>
+<body>
+<div id="builderApp">
+  <header class="mast">
+    <div class="mast-inner">
+      <div class="mast-title"><span class="badge" aria-hidden="true">CV</span><h1>My CV Builder</h1></div>
+      <div class="mast-actions">
+        <button id="practice" type="button">Practice person</button>
+        <button id="reset" type="button">Start again</button>
+      </div>
+    </div>
+  </header>
+
+  <nav id="lessonBar" aria-label="Lesson steps"><ol id="lessonList"></ol></nav>
+  <div id="lessonStages" class="workspace">
+    <section class="lesson-card" data-lstage="1" aria-labelledby="l1t" hidden>
+      <p class="eyebrow">Step 1 of 7 · Arrival · 1 minute</p>
+      <h2 id="l1t" tabindex="-1">Settle and check in</h2>
+      <div class="lnow"><h3>What I do now</h3><ol><li>Choose how you are starting.</li><li>Think of one task you did in class, at home or at a club.</li><li>Press Next.</li></ol><p>Done when: you have chosen how you are starting.</p></div>
+      <p><b>How are you starting today?</b> You can pass.</p>
+      <div class="lchoices" role="group" aria-label="How I am starting">
+        <button type="button" data-lset="start" data-v="Ready" aria-pressed="false">✔ Ready</button>
+        <button type="button" data-lset="start" data-v="Help" aria-pressed="false">? Help</button>
+        <button type="button" data-lset="start" data-v="Pause" aria-pressed="false">|| Pause</button>
+      </div>
+      <div class="lfield"><label for="l-task">One task I did (you can leave this blank)</label><textarea id="l-task" data-l="task" maxlength="200" rows="2" placeholder="I helped to …"></textarea></div>
+      <div class="lnav"><span></span><button type="button" class="primary" data-lgo="2">Next: Starter ▶</button></div>
+    </section>
+
+    <section class="lesson-card" data-lstage="2" aria-labelledby="l2t" hidden>
+      <p class="eyebrow">Step 2 of 7 · Starter · Think</p>
+      <h2 id="l2t" tabindex="-1">What makes a skill claim stronger?</h2>
+      <div class="lnow"><h3>What I do now</h3><ol><li>Read the skill claim.</li><li>Type one thing the learner could show a reader.</li><li>Press Reveal answer.</li></ol><p>Done when: you can name a detail a reader could check.</p></div>
+      <p class="lquote">A learner says “I am careful.” What could they show a reader?</p>
+      <div class="lfield"><label for="l-starter">My idea</label><textarea id="l-starter" data-l="starter" maxlength="250" rows="2" placeholder="They could show …"></textarea></div>
+      <div><button type="button" id="lReveal">Reveal answer</button></div>
+      <p class="lreveal" id="lRevealText" role="status"></p>
+      <div class="lnav"><button type="button" data-lgo="1">◀ Back</button><button type="button" class="primary" data-lgo="3">Next: We do ▶</button></div>
+    </section>
+
+    <section class="lesson-card" data-lstage="3" aria-labelledby="l3t" hidden>
+      <p class="eyebrow">Step 3 of 7 · We do · One shared choice</p>
+      <h2 id="l3t" tabindex="-1">Improve a weak CV line</h2>
+      <div class="lnow"><h3>What I do now</h3><ol><li>Read the three lines.</li><li>Tap the line with a true action.</li><li>Press Check, then say why it is stronger.</li></ol><p>Done when: you can say what makes the line stronger.</p></div>
+      <p><b>Which line shows careful sorting?</b></p>
+      <div class="llines" role="group" aria-label="Three CV lines">
+        <button type="button" data-lset="pick" data-v="A" aria-pressed="false"><b>A</b> · I am amazing at all jobs.</button>
+        <button type="button" data-lset="pick" data-v="B" aria-pressed="false"><b>B</b> · I sorted class kit by label and checked it against the list.</button>
+        <button type="button" data-lset="pick" data-v="C" aria-pressed="false"><b>C</b> · I am very careful.</button>
+      </div>
+      <div><button type="button" id="lCheck">Check</button></div>
+      <p class="lreveal" id="lCheckText" role="status"></p>
+      <div class="lfield"><label for="l-because">The strongest line is stronger because …</label><textarea id="l-because" data-l="because" maxlength="250" rows="2" placeholder="It is stronger because it says what the learner …"></textarea></div>
+      <div class="lnav"><button type="button" data-lgo="2">◀ Back</button><button type="button" class="primary" data-lgo="4">Next: Build my CV ▶</button></div>
+    </section>
+
+    <section class="lesson-card" data-lstage="5" aria-labelledby="l5t" hidden>
+      <p class="eyebrow">Step 5 of 7 · Review · Partner check</p>
+      <h2 id="l5t" tabindex="-1">Check and improve one line</h2>
+      <div class="lnow"><h3>What I do now</h3><ol><li>Share one skill line with a partner or an adult. Keep private details private.</li><li>Check the action and one detail.</li><li>Change the line in your CV if it can be stronger.</li></ol><p>Done when: your strongest line is ready.</p></div>
+      <ul class="lticks">
+        <li><label><input type="checkbox" data-lrev="0"><span>I shared one skill line.</span></label></li>
+        <li><label><input type="checkbox" data-lrev="1"><span>My line has a true action.</span></label></li>
+        <li><label><input type="checkbox" data-lrev="2"><span>My line has a capital letter and a full stop.</span></label></li>
+        <li><label><input type="checkbox" data-lrev="3"><span>I used one suggestion to improve it.</span></label></li>
+      </ul>
+      <div class="lfield"><label for="l-before">My line before</label><textarea id="l-before" data-l="before" maxlength="250" rows="2"></textarea></div>
+      <div><button type="button" id="lCopyLine">Copy my first skill line here</button></div>
+      <div class="lfield"><label for="l-after">My line after I improved it</label><textarea id="l-after" data-l="after" maxlength="250" rows="2"></textarea></div>
+      <div class="lnav"><button type="button" data-lgo="4">◀ Back to my CV</button><button type="button" class="primary" data-lgo="6">Next: Exit and my voice ▶</button></div>
+    </section>
+
+    <section class="lesson-card" data-lstage="6" aria-labelledby="l6t" hidden>
+      <p class="eyebrow">Step 6 of 7 · Exit and my voice</p>
+      <h2 id="l6t" tabindex="-1">What did you improve?</h2>
+      <div class="lnow"><h3>What I do now</h3><ol><li>Type the one line you improved, or the detail you added.</li><li>Choose how confident you feel.</li><li>Say what helped you today.</li></ol><p>Done when: you can explain one change.</p></div>
+      <div class="lfield"><label for="l-exit">One thing I improved in my CV</label><textarea id="l-exit" data-l="exit" maxlength="250" rows="2" placeholder="I added …"></textarea></div>
+      <p><b>How confident do I feel about writing a CV line?</b></p>
+      <div class="lchoices" role="group" aria-label="My confidence">
+        <button type="button" data-lset="conf" data-v="1 · I need help" aria-pressed="false">1 · I need help</button>
+        <button type="button" data-lset="conf" data-v="2 · I am getting there" aria-pressed="false">2 · I am getting there</button>
+        <button type="button" data-lset="conf" data-v="3 · I can do this" aria-pressed="false">3 · I can do this</button>
+      </div>
+      <div class="lfield"><label for="l-helped">My voice: what helped me today?</label><textarea id="l-helped" data-l="helped" maxlength="250" rows="2" placeholder="It helped when …"></textarea></div>
+      <div class="lfield"><label for="l-note">One thing I want my teacher to know (you can leave this blank)</label><textarea id="l-note" data-l="note" maxlength="250" rows="2"></textarea></div>
+      <div class="lnav"><button type="button" data-lgo="5">◀ Back</button><button type="button" class="primary" data-lgo="7">Next: Print all my work ▶</button></div>
+    </section>
+
+    <section class="lesson-card" data-lstage="7" aria-labelledby="l7t" hidden>
+      <p class="eyebrow">Step 7 of 7 · Finish</p>
+      <h2 id="l7t" tabindex="-1">Print all my work</h2>
+      <div class="lnow"><h3>What I do now</h3><ol><li>Check the list below.</li><li>Press Print all my work.</li><li>Collect two pages: my lesson record and my CV.</li></ol><p>Done when: both pages are printed, or saved as a PDF.</p></div>
+      <ul class="lsum" id="lSummary"></ul>
+      <div class="file-actions">
+        <button type="button" class="primary" id="printAll">Print all my work</button>
+        <button type="button" id="printCvOnly">Print my CV only</button>
+        <button type="button" id="saveHtml2">Save my CV</button>
+        <button type="button" id="clearLesson">Clear my lesson answers</button>
+      </div>
+      <p class="fine">No printer here? In the print window, choose “Save as PDF” as the printer. You can print the PDF later, at school or at home.</p>
+      <p id="lessonStatus" role="status" class="fine"></p>
+      <div class="lnav"><button type="button" data-lgo="6">◀ Back</button><span></span></div>
+    </section>
+  </div>
+  <main class="workspace" hidden>
+    <div class="lesson-strip"><p><b>Step 4 of 7 · Build my CV.</b> Fill the 8 sections. When Check my CV looks right, go on.</p><button type="button" class="primary" data-lgo="5">Next: Check and improve ▶</button></div>
+    <div class="privacy"><p>Nothing is sent anywhere.</p><p id="storageStatus">Checking draft saving on this browser…</p></div>
+    <div class="layout">
+      <div class="edit-side">
+        <div class="editor">
+          <nav class="step-rail" aria-label="CV sections">
+            <button id="toggleSteps" type="button" aria-expanded="false" aria-controls="stepList">All 8 steps</button>
+            <ol id="stepList"></ol>
+          </nav>
+          <section class="edit-card" aria-labelledby="stepTitle">
+            <div class="step-heading"><p id="stepCount"></p><h2 id="stepTitle" tabindex="-1"></h2></div>
+            <div class="route-bar" role="group" aria-label="Choose how to write">
+              <button data-route="0" type="button" aria-pressed="false">Supported</button>
+              <button data-route="1" type="button" aria-pressed="true">Independent</button>
+              <button data-route="2" type="button" aria-pressed="false">Aspire</button>
+            </div>
+            <div id="whatNow"></div><p id="stepHint"></p>
+            <form id="cvForm" autocomplete="off" novalidate></form>
+            <div id="routeHelp"></div>
+            <div class="step-buttons">
+              <button id="back" type="button">Back</button>
+              <button id="next" class="primary" type="button">Next step</button>
+            </div>
+          </section>
+        </div>
+        <section class="checks" aria-labelledby="checkTitle" id="cvCheck" tabindex="-1">
+          <h2 id="checkTitle">Check my CV</h2>
+          <ul id="checks"></ul>
+          <p id="fitStatus" class="fine"></p>
+        </section>
+        <section class="finish" aria-labelledby="finishTitle">
+          <h2 id="finishTitle">Save and print</h2>
+          <div class="file-actions">
+            <button id="saveHtml" class="primary" type="button">Save my CV</button>
+            <button id="saveWord" type="button">Save as a Word file</button>
+            <button id="openFile" type="button">Open my saved CV</button>
+            <button id="printCv" type="button">Print my CV</button>
+          </div>
+          <input id="cvFile" type="file" accept=".html,.htm,.doc" hidden aria-label="Choose your saved CV">
+          <p id="fileStatus" role="status" tabindex="-1"></p>
+        </section>
+      </div>
+      <aside class="preview" aria-labelledby="previewTitle">
+        <h2 id="previewTitle">My CV <span>Live preview</span></h2>
+        <div id="preview"></div>
+      </aside>
+    </div>
+  </main>
+  <dialog id="confirmBox" aria-labelledby="dialogTitle">
+    <h2 id="dialogTitle"></h2>
+    <p id="dialogText"></p>
+    <div class="dialog-actions">
+      <button id="cancel" type="button"></button>
+      <button id="confirm" class="primary" type="button"></button>
+    </div>
+  </dialog>
+</div>
+<div id="printProbe" aria-hidden="true"></div>
+<div id="printRecord" aria-label="Printable lesson record"></div>
+<div id="printCV" aria-label="Printable CV"></div>
+<script>
+const nowSteps=[[["Type an agreed name or choose Practice person.", "Press Next step."], "A name is on the CV."], [["Ask an adult before typing contact details.", "Leave any box blank if you choose.", "Press Next step."], "Agreed details are entered or left blank."], [["Choose words that fit you.", "Write two short sentences.", "Press Next step."], "Your profile says what you are like and what you are learning."], [["Choose three skills.", "Add a true example for each skill.", "Press Next step."], "Three skills each have an example."], [["Name your learning or courses.", "Check whether you are learning or have finished.", "Press Next step."], "Your course status is accurate."], [["Choose something you have done.", "Write what you did and how.", "Press Next step."], "Your experience shows one true action."], [["Choose an interest you can talk about.", "Write one short line.", "Press Next step."], "Your CV shows a real interest."], [["Keep “Available on request” or check your wording.", "Press Check my CV."], "You have checked the references line and the full CV."]];
+
+'use strict';
+
+const $ = id => document.getElementById(id);
+const make = (tag, value, className) => {
+  const node = document.createElement(tag);
+  if (value !== undefined) node.textContent = value;
+  if (className) node.className = className;
+  return node;
+};
+const button = (label, action) => {
+  const node = make('button', label);
+  node.type = 'button';
+  node.onclick = action;
+  return node;
+};
+const field = (key, label, max, starter, words, sentences, multiline = false) =>
+  ({key, label, max, starter, words, sentences, multiline});
+
+const skills = [
+  {word:'Careful checking', bank:['sorted','matched','checked'], starter:'I showed this when I sorted …', sample:'I showed this when I sorted ___ by label and checked the list.'},
+  {word:'Teamwork', bank:['helped','shared','listened'], starter:'I showed this when I worked with …', sample:'I showed this when I worked with ___ to finish ___.'},
+  {word:'Organisation', bank:['planned','prepared','tidied'], starter:'I showed this when I prepared …', sample:'I showed this when I prepared ___ so the team could ___.'}
+];
+const sections = [
+  {title:'Name', hint:'Use your own name if your teacher says it is OK, or choose Practice person.', fields:[
+    field('name','Your name',70,'My name is …',['Practice Learner'],['Practice Learner','___'])
+  ]},
+  {title:'Contact', hint:'Ask an adult before you type contact details. Town, phone and email are optional.', fields:[
+    field('town','Town (optional)',55,'Town, if agreed',[],[]),
+    field('phone','Phone (optional)',30,'Phone, if agreed',[],[]),
+    field('email','Email (optional)',90,'Email, if agreed',[],[])
+  ]},
+  {title:'About me', hint:'Write a short personal profile. Say what you are like and what you are learning to do.', fields:[
+    field('profile','Personal profile',290,'I enjoy … I am learning to …',['reliable','organised','curious','learning'],
+      ['I enjoy ___ and I am learning to ___.','I am a ___ learner who likes ___.'],true)
+  ]},
+  {title:'My skills', hint:'Add three skills. For each one, name something you really did and how you did it.', fields:
+    skills.flatMap((s,i) => [
+      field('skill'+i,'Skill '+(i+1),60,'A skill I can show is …',[s.word,'Listening','Problem solving'],[s.word,'___']),
+      field('example'+i,'True example for skill '+(i+1),225,s.starter,s.bank,[s.sample,'I showed this when I ___ and ___.'],true)
+    ])
+  },
+  {title:'Education and courses', hint:'Use general course names. Say whether you are learning, working towards a result or have completed it.', fields:[
+    field('education','Learning or courses',220,'I am working towards …',['learning','working towards','completed'],
+      ['I am working towards ___.','I am learning how to ___.'],true)
+  ]},
+  {title:'Experience', hint:'Think about work experience, volunteering, school jobs, jobs at home or clubs.', fields:[
+    field('experience','Experience or responsibilities',260,'I helped to …',['volunteered','helped','organised','prepared'],
+      ['I helped to ___ by ___.','I took responsibility for ___.'],true)
+  ]},
+  {title:'Interests', hint:'Choose interests you can talk about. A short line is enough.', fields:[
+    field('interests','Interests',165,'I enjoy …',['making','reading','walking','music'],
+      ['I enjoy ___ because ___.','I spend time practising ___.'],true)
+  ]},
+  {title:'References', hint:'Available on request is ready to use. Keep other people’s details out of your CV.', fields:[
+    field('references','References',90,'Available on request',['available','on request'],['Available on request'])
+  ]}
+];
+
+
+const skillBank = [
+ ['Careful checking','check','I showed this when I matched the kit labels to a list before putting the kit away.','I showed this when I checked the numbers on a tally and fixed one entry.'],
+ ['Listening','listen','I showed this when I listened to two instructions and then set out the right materials.','I showed this when I let a partner finish speaking and repeated their main point.'],
+ ['Teamwork','team','I showed this when I set out chairs with a partner and checked our row together.','I showed this when I shared the jobs for a group display and finished my part.'],
+ ['Timekeeping','clock','I showed this when I used a clock to get the trays ready before the session started.','I showed this when I reminded my group about the time so we could finish and tidy up.'],
+ ['Following safety rules','shield','I showed this when I washed my hands and waited for an adult to check the food labels.','I showed this when I followed the classroom safety steps before starting a practical task.'],
+ ['Using tools carefully','tools','I showed this when I used a ruler to mark a straight line and checked it before cutting.','I showed this when I used the agreed tool for the job and returned it to the marked tray.'],
+ ['Helping customers','talk','I showed this when I greeted someone at a stall and pointed out the prices.','I showed this when I listened to an order and read it back before handing it over.'],
+ ['Keeping a work area clean','clean','I showed this when I wiped the work surface and put the used kit away.','I showed this when I sorted the scraps and left a clear space for the next group.'],
+ ['Being creative','idea','I showed this when I sketched two sign ideas and chose the one people could read best.','I showed this when I made a display from spare card and changed the layout after feedback.'],
+ ['Staying calm','calm','I showed this when I paused, asked for help and tried a difficult step again.','I showed this when I took a short breath and waited my turn during a busy group task.'],
+ ['Problem solving','puzzle','I showed this when I tried two ways to stop a paper sign falling over.','I showed this when I spotted a missing label and made a new one from the list.'],
+ ['Organising kit','organise','I showed this when I put the model parts into separate boxes by size.','I showed this when I set the right kit on each table before the group arrived.']
+];
+const bankPictures = {
+ check:'M11 4h26v40H11zM16 14h16M16 23h16M17 34l5 5 9-11',
+ listen:'M16 35v-6c0-5 10-5 10-13a7 7 0 0 0-14 0M9 16a10 10 0 0 1 20 0c0 10-7 12-8 17l-2 7h-6l-2-7M37 16c4 3 4 8 0 11',
+ team:'M13 16a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm22 0a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM5 38V26q8-11 16 0v12m6 0V26q8-11 16 0v12M19 28h10',
+ clock:'M24 43a19 19 0 1 0 0-38 19 19 0 0 0 0 38zm0-31v13l8 4',
+ shield:'M24 4l15 7v12c0 10-6 16-15 21-9-5-15-11-15-21V11zM17 25l5 5 10-12',
+ tools:'M8 40l5 4 17-24m-9-6 8-10 11 8-7 10zm-7 6 21 24 6-5-17-20',
+ talk:'M5 8h38v26H22l-12 8v-8H5zM12 17h24m-24 9h16',
+ clean:'M6 29l20-18 16 16-20 16zM12 23l16 16M33 5v8m-4-4h8',
+ idea:'M16 34c0-4-1-6-4-9-8-9-1-20 12-20s20 11 12 20c-3 3-4 5-4 9zm2 7h12m-10 4h8',
+ calm:'M5 25c6-9 11-9 18 0s12 9 20 0M9 14h10m10 0h10M9 37h30',
+ puzzle:'M7 8h13a5 5 0 1 1 10 0h11v13a5 5 0 1 0 0 10v10H29a5 5 0 1 0-10 0H7V29a5 5 0 1 0 0-10z',
+ organise:'M4 8h40v33H4zM4 22h40M16 11v28m16-28v28M8 16h4m8 0h8m8 0h4'
+};
+const describeWords=['careful','reliable','organised','patient','creative','calm','curious','helpful'];
+const describeLines=[
+ 'I am a careful learner who enjoys making things.',
+ 'I am reliable when I have a job to do and I check it before I finish.',
+ 'I enjoy working with a team and I am learning to organise materials.',
+ 'I am patient when a task is difficult and I ask for help when I need it.'
+];
+const experienceBank=[
+ ['Cake stall','I helped at a cake stall. I checked the labels and told visitors the prices.'],
+ ['Looking after a pet','I looked after a pet. I filled its water bowl and cleaned its space.'],
+ ['A job at home','I helped with a job at home. I sorted the washing and put it away.'],
+ ['A club','I helped at a club. I set out the materials before the group started.'],
+ ['Work experience','On work experience I followed a checklist and put the stock in the right place.'],
+ ['A classroom job','I took a classroom job. I checked the kit and returned it to its trays.'],
+ ['Volunteering','I volunteered to help with an activity. I welcomed people and showed them where to go.'],
+ ['Helping with a display','I helped with a display. I chose the headings and checked they could be read.']
+];
+const interestBank=[
+ ['Making models','I enjoy making models and improving my designs.'],
+ ['Drawing','I enjoy drawing and trying new ways to show an idea.'],
+ ['Cooking','I enjoy cooking simple dishes and learning new skills.'],
+ ['Reading','I enjoy reading and talking about the parts I remember.'],
+ ['Walking','I enjoy walking and noticing changes around me.'],
+ ['Music','I enjoy listening to music and practising rhythms.'],
+ ['Sport','I enjoy practising a sport and working with others.'],
+ ['Gardening','I enjoy looking after plants and watching them grow.'],
+ ['Puzzles','I enjoy solving puzzles and checking my answers.'],
+ ['Looking after animals','I enjoy looking after animals and learning what they need.']
+];
+
+function skillIcon(name) {
+  const ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('viewBox','0 0 48 48');
+  svg.setAttribute('aria-hidden','true');
+  const path=document.createElementNS(ns,'path');
+  path.setAttribute('d',bankPictures[name]);
+  path.setAttribute('fill','none');
+  path.setAttribute('stroke','currentColor');
+  path.setAttribute('stroke-width','3');
+  path.setAttribute('stroke-linecap','round');
+  path.setAttribute('stroke-linejoin','round');
+  svg.append(path);
+  return svg;
+}
+function appendSkillChoices(help,i,exampleField){
+  const title=make('h3','Skill word bank');
+  const bank=make('div',undefined,'skill-bank');
+  bank.setAttribute('role','group');
+  bank.setAttribute('aria-label','Skill word bank');
+  for(const [name,icon] of skillBank){
+    const chip=button('',()=>{
+      writeHere('skill'+i,name);
+      const example=$('field-example'+i);
+      if(example)example.focus();
+    });
+    chip.append(skillIcon(icon),make('span',name));
+    bank.append(chip);
+  }
+  help.append(title,make('p','Tap a skill to see two examples you can change.'),bank);
+  if(exampleField&&text('skill'+i))help.append(make('p','Pick a bank skill for examples, or write your own true action.'));
+}
+function addSampleButtons(help,rows,key){
+  const examples=make('div',undefined,'chip-row sample-grid');
+  for(const [label,line] of rows){
+    const control=button(label,()=>writeHere(key,line));
+    control.title=line;
+    examples.append(control);
+  }
+  help.append(examples);
+}
+function renderRicherSupported(help,spec){
+  const match=/^(skill|example)([0-2])$/.exec(spec.key);
+  if(match){
+    const i=+match[2];
+    const named=skillBank.find(item=>item[0].toLowerCase()===text('skill'+i).toLowerCase());
+    if(match[1]==='skill'||!named){
+      appendSkillChoices(help,i,match[1]==='example');
+    }else{
+      help.append(make('h3',named[0]+' · True examples'),make('p','Tap one line and change it so it is true for you.'));
+      addSampleButtons(help,named.slice(2).map(line=>[line,line]),spec.key);
+    }
+    return true;
+  }
+  if(spec.key==='profile'){
+    help.append(make('h3','Describing words'));
+    addSampleButtons(help,describeWords.map(word=>[word,word]),spec.key);
+    help.append(make('h3','Ready sentences'),make('p','Change any words that do not describe you.'));
+    addSampleButtons(help,describeLines.map(line=>[line,line]),spec.key);
+    return true;
+  }
+  if(spec.key==='experience'||spec.key==='interests'){
+    help.append(make('h3',spec.key==='experience'?'Experience ideas':'Interest ideas'),
+      make('p','Tap an idea and change the sentence so it is true for you.'));
+    addSampleButtons(help,spec.key==='experience'?experienceBank:interestBank,spec.key);
+    return true;
+  }
+  return false;
+}
+
+
+const fields = sections.flatMap(section => section.fields);
+const limits = Object.fromEntries(fields.map(item => [item.key,item.max]));
+const emptyDraft = () => ({...Object.fromEntries(fields.map(item => [item.key,''])), references:'Available on request', practice:false});
+const practiceDraft = () => ({
+  ...emptyDraft(),
+  practice:true, name:'Practice Learner',
+  profile:'I enjoy organising materials and working with a team. I am learning to check my work before sharing it.',
+  skill0:'Careful checking', example0:'I showed this when I sorted six pieces of class kit by label and checked them against a list.',
+  skill1:'Teamwork', example1:'I showed this when I set out chairs with a partner and agreed who would check the row.',
+  skill2:'Organisation', example2:'I showed this when I gathered the tools for a model and put each one back in its tray.',
+  education:'I am working towards a practical skills course.',
+  experience:'I helped to set up a classroom activity. I prepared the kit and tidied the workspace afterwards.',
+  interests:'I enjoy making paper models and solving puzzles.'
+});
+
+const key = 'careers-cv-w01-v1';
+let draft = emptyDraft();
+let storageWorks = true;
+let step = 0, route = 1, target = 'name';
+let saved = '', printed = '', printing = '';
+let fits = true;
+const improve = new Set();
+const text = name => draft[name].trim();
+const complete = name => text(name).length > 0 && !/___|\[.*?\]/u.test(text(name));
+const signature = () => JSON.stringify(draft);
+const sectionFor = index => sections[index];
+
+function validate(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw) || typeof raw.name !== 'string')
+    throw new Error('This file does not contain a My CV Builder draft.');
+  const result = emptyDraft();
+  for (const name of Object.keys(limits)) {
+    if (typeof raw[name] === 'string') result[name] = raw[name].slice(0,limits[name]);
+  }
+  result.practice = raw.practice === true;
+  return result;
+}
+
+function updateStorageStatus() {
+  $('storageStatus').textContent = storageWorks
+    ? 'Draft saves in this browser as you type.'
+    : 'Draft saving is unavailable here. Use Save my CV before you leave.';
+}
+
+try {
+  const raw = localStorage.getItem(key);
+  if (raw) {
+    const cache = JSON.parse(raw);
+    draft = validate(cache.draft);
+    saved = typeof cache.saved === 'string' ? cache.saved : '';
+    printed = typeof cache.printed === 'string' ? cache.printed : '';
+  }
+} catch {
+  // A browser may deny access to storage for local files.
+  storageWorks = false;
+}
+updateStorageStatus();
+
+function persist() {
+  try {
+    localStorage.setItem(key,JSON.stringify({draft,saved,printed}));
+    if (!storageWorks) {
+      storageWorks = true;
+      updateStorageStatus();
+    }
+  } catch {
+    storageWorks = false;
+    updateStorageStatus();
+  }
+}
+
+function tell(message) {
+  $('fileStatus').textContent = message;
+}
+
+function confirmChoice(title, message, cancel, label, action) {
+  $('dialogTitle').textContent = title;
+  $('dialogText').textContent = message;
+  $('cancel').textContent = cancel;
+  $('confirm').textContent = label;
+  $('cancel').onclick = () => $('confirmBox').close();
+  $('confirm').onclick = () => {
+    $('confirmBox').close();
+    action();
+  };
+  $('confirmBox').showModal();
+  $('cancel').focus();
+}
+
+function showSteps(open) {
+  $('toggleSteps').setAttribute('aria-expanded',String(open));
+  document.querySelector('.step-rail').classList.toggle('open',open);
+}
+$('toggleSteps').onclick = () => showSteps($('toggleSteps').getAttribute('aria-expanded')!=='true');
+
+for (const [i,section] of sections.entries()) {
+  const entry = make('li');
+  const choose = button('',() => go(i));
+  choose.dataset.step = String(i);
+  choose.append(make('span',String(i+1)),make('span',section.title));
+  entry.append(choose);
+  $('stepList').append(entry);
+}
+
+function makeField(spec) {
+  const host = make('div',undefined,'cv-field');
+  const label = make('label',spec.label);
+  const input = make(spec.multiline?'textarea':'input');
+  input.id = 'field-'+spec.key;
+  input.name = spec.key;
+  input.maxLength = spec.max;
+  input.value = draft[spec.key];
+  input.setAttribute('autocomplete','off');
+  if (spec.key==='phone') input.inputMode = 'tel';
+  if (spec.key==='email') input.inputMode = 'email';
+  if (spec.multiline) input.rows = 3;
+  input.placeholder = spec.starter;
+  label.htmlFor = input.id;
+  input.onfocus = () => {
+    if (target!==spec.key) {
+      target = spec.key;
+      showHelp();
+    }
+  };
+  input.oninput = () => {
+    draft[spec.key] = input.value;
+    improve.clear();
+    tell('');
+    persist();
+    refresh();
+  };
+  const help = make('div',undefined,'field-help');
+  help.dataset.fieldHelp = spec.key;
+  host.append(label,input,help);
+  return host;
+}
+
+function renderStep() {
+  const section = sectionFor(step);
+  $('stepCount').textContent = 'Step '+(step+1)+' of '+sections.length;
+  $('stepTitle').textContent = section.title;
+  $('stepHint').textContent = section.hint;
+  const instruction = nowSteps[step];
+  const numbered = make('ol');
+  numbered.append(...instruction[0].map(t=>make('li',t)));
+  $('whatNow').replaceChildren(make('h3','What I do now'),numbered,make('p','Done when: '+instruction[1]));
+  $('cvForm').replaceChildren();
+  if (step===3) {
+    for (let i=0;i<skills.length;i++) {
+      const group = make('fieldset',undefined,'skill-box');
+      group.append(make('legend','Skill '+(i+1)+' and its example'),
+                   makeField(section.fields[i*2]),makeField(section.fields[i*2+1]));
+      $('cvForm').append(group);
+    }
+  } else {
+    $('cvForm').append(...section.fields.map(makeField));
+  }
+  document.querySelectorAll('[data-step]').forEach(node => {
+    if (+node.dataset.step===step) node.setAttribute('aria-current','step');
+    else node.removeAttribute('aria-current');
+  });
+  $('back').disabled = step===0;
+  $('next').textContent = step===sections.length-1?'Check my CV':'Next step';
+  showHelp();
+}
+
+function go(index, focus = true) {
+  step = Math.max(0,Math.min(sections.length-1,index));
+  target = sectionFor(step).fields[0].key;
+  showSteps(false);
+  renderStep();
+  if (focus) $('stepTitle').focus();
+}
+$('cvForm').onsubmit = event => event.preventDefault();
+$('back').onclick = () => go(step-1);
+$('next').onclick = () => {
+  if (step===sections.length-1) $('cvCheck').focus();
+  else go(step+1);
+};
+
+function writeHere(name, value) {
+  const box = $('field-'+name);
+  if (!box) return;
+  box.value = value.slice(0,limits[name]);
+  box.dispatchEvent(new Event('input',{bubbles:true}));
+  box.focus();
+  const blank = box.value.indexOf('___');
+  if (blank>=0) box.setSelectionRange(blank,blank+3);
+  else box.setSelectionRange(box.value.length,box.value.length);
+}
+
+function showHelp() {
+  const spec = sectionFor(step).fields.find(item => item.key===target) || sectionFor(step).fields[0];
+  $('routeHelp').replaceChildren();
+  for(const node of document.querySelectorAll('[data-field-help]'))node.replaceChildren();
+  const help = route===0 ? document.querySelector('[data-field-help="'+spec.key+'"]') : $('routeHelp');
+  if (route===0) {
+    if(renderRicherSupported(help,spec))return;
+    if (step===1) {
+      help.append(make('h3','Word bank'),make('p','Choose a contact box only after asking an adult.'));
+      const words = make('div',undefined,'chip-row');
+      for (const name of ['town','phone','email'])
+        words.append(button(name,() => $('field-'+name).focus()));
+      const entries = make('div',undefined,'chip-row');
+      entries.append(button('Leave all contact details blank',() => {
+        for (const name of ['town','phone','email']) {
+          draft[name] = '';
+          $('field-'+name).value = '';
+        }
+        persist();refresh();tell('Contact fields cleared.');
+      }),button('Add a town if agreed',() => writeHere('town','___')));
+      help.append(words,make('h3','Ready choices'),entries);
+      return;
+    }
+    help.append(make('h3','Word bank · '+spec.label));
+    const words = make('div',undefined,'chip-row');
+    for (const word of spec.words) {
+      words.append(button(word,() => {
+        const value = text(spec.key);
+        writeHere(spec.key,spec.multiline&&value?value+' '+word:word);
+      }));
+    }
+    const sentences = make('div',undefined,'chip-row');
+    for (const sentence of spec.sentences)
+      sentences.append(button(sentence==='___'?'Type my name':sentence,() => writeHere(spec.key,sentence)));
+    help.append(words,make('h3','Tap a line, then make it true for you'),sentences);
+  } else if (route===1) {
+    help.append(make('h3',step===1?'Optional contact details':'Sentence starter · '+spec.label),
+      make('p',step===1?'My town is … (only if an adult agrees).':spec.starter));
+  } else {
+    help.append(make('h3','Improve it'),make('p','Use your own words. Check sentences where this section needs them.'));
+    const list = make('ul',undefined,'improve');
+    for (const [i,label] of ['I used an action verb.','I added a number or useful detail.','I checked the example is true.'].entries()) {
+      const li = make('li'), row = make('label'), tick = make('input');
+      const id = step+':'+i;
+      tick.type = 'checkbox';
+      tick.checked = improve.has(id);
+      tick.onchange = () => tick.checked ? improve.add(id) : improve.delete(id);
+      row.append(tick,make('span',label));
+      li.append(row);
+      list.append(li);
+    }
+    help.append(list);
+  }
+}
+
+for (const toggle of document.querySelectorAll('[data-route]')) {
+  toggle.onclick = () => {
+    route = +toggle.dataset.route;
+    document.querySelectorAll('[data-route]').forEach(control =>
+      control.setAttribute('aria-pressed',String(control===toggle)));
+    showHelp();
+  };
+}
+
+function exampleLine(value) {
+  return !value || /^I showed this when\b/iu.test(value) ? value : 'I showed this when '+value;
+}
+function buildCv(showEmpty) {
+  const cv = make('article',undefined,'cv-page');
+  cv.append(make('h1',text('name')||'My CV'));
+  if (draft.practice) cv.append(make('p','Fictional classroom example','practice-note'));
+  const contact = ['town','phone','email'].map(text).filter(Boolean).join(' · ');
+  if (contact) cv.append(make('p',contact,'contact'));
+  const add = (title, content, prompt) => {
+    if (!content && !showEmpty) return;
+    const part = make('section');
+    part.append(make('h2',title));
+    part.append(content||make('p',prompt,'empty'));
+    cv.append(part);
+  };
+  const para = key => text(key) ? make('p',text(key)) : null;
+  add('About me',para('profile'),'Add a short personal profile.');
+  const list = make('ul');
+  for (let i=0;i<skills.length;i++) {
+    const label = text('skill'+i), example = exampleLine(text('example'+i));
+    if (!label&&!example) continue;
+    const li = make('li');
+    if (label) li.append(make('strong',label));
+    if (label&&example) li.append(document.createTextNode(' — '));
+    if (example) li.append(document.createTextNode(example));
+    list.append(li);
+  }
+  add('My skills',list.children.length?list:null,'Add three skills with true examples.');
+  add('Education and courses',para('education'),'Add your learning or courses.');
+  add('Experience',para('experience'),'Add something you have done.');
+  add('Interests',para('interests'),'Add an interest.');
+  add('References',para('references'),'Use Available on request.');
+  return cv;
+}
+
+const startSize = 12.5;
+const minSize = 10.5;
+const availableHeight = 273 * 96/25.4 - 2;
+let printSize = startSize;
+
+function fitPrint() {
+  const probe = $('printProbe');
+  let size = startSize;
+  probe.style.setProperty('--cv-size',size+'pt');
+  while (probe.getBoundingClientRect().height>availableHeight && size>minSize) {
+    size = Math.max(minSize,size-.5);
+    probe.style.setProperty('--cv-size',size+'pt');
+  }
+  fits = probe.getBoundingClientRect().height<=availableHeight;
+  printSize = size;
+  $('printCV').style.setProperty('--cv-size',size+'pt');
+  $('fitStatus').textContent = fits
+    ? size===startSize?'The current CV fits on one A4 page.':'The CV fits one A4 page with slightly smaller text.'
+    : 'Your CV may take more than one page. Shorten a few lines and check again.';
+}
+function refresh() {
+  $('preview').replaceChildren(buildCv(true));
+  const cv = buildCv(false);
+  $('printCV').replaceChildren(cv);
+  $('printProbe').replaceChildren(cv.cloneNode(true));
+  fitPrint();
+  const skillsReady = skills.every((_,i) => complete('skill'+i)&&complete('example'+i));
+  const full = ['profile','education','experience','interests','references'].every(complete) && complete('name') && skillsReady;
+  const sentences = ['profile','education','experience','interests'].map(text)
+    .concat(skills.map((_,i)=>exampleLine(text('example'+i))));
+  const punctuated = sentences.every(s=>/^\p{Lu}[\s\S]*\.$/u.test(s));
+  const rows = [
+    ['Name there',complete('name')],
+    ['Three skills, each with an example',skillsReady],
+    ['All required sections filled',full],
+    ['Capital letters and full stops',punctuated],
+    ['Fits one A4 page',fits&&complete('name')],
+    ['Saved',saved===signature()],
+    ['Printed',printed===signature()]
+  ];
+  $('checks').replaceChildren(...rows.map(([label,pass]) => {
+    const row = make('li');
+    row.dataset.pass = String(pass);
+    const icon = make('span',pass?'✓':'○','mark');
+    icon.setAttribute('aria-label',pass?'Done':'To check');
+    row.append(icon,make('span',label));
+    return row;
+  }));
+}
+
+function replaceDraft(next, message, wasSaved = false) {
+  draft = next;
+  improve.clear();
+  saved = wasSaved ? signature() : '';
+  printed = '';
+  persist();
+  go(0,false);
+  refresh();
+  tell(message);
+  $('stepTitle').focus();
+}
+$('practice').onclick = () => confirmChoice('Use a practice person?',
+  'This replaces the current draft with a fictional CV. Save your work first if you want to keep it.',
+  'Keep my draft','Use practice person',() => replaceDraft(practiceDraft(),'Practice CV loaded. All its details are fictional.'));
+$('reset').onclick = () => confirmChoice('Start again?',
+  'This clears the draft from this browser. Files you downloaded are kept.',
+  'Keep my draft','Clear draft',() => replaceDraft(emptyDraft(),'Draft cleared.'));
+
+function base64Encode(value) {
+  return btoa(Array.from(new TextEncoder().encode(value),b=>String.fromCharCode(b)).join(''));
+}
+function base64Decode(value) {
+  return new TextDecoder('utf-8',{fatal:true}).decode(Uint8Array.from(atob(value),c=>c.charCodeAt(0)));
+}
+
+const exportStyle = '@page{size:A4 portrait;margin:12mm}body{margin:0;color:#111;background:#fff}'+
+  'article{font:'+startSize+'pt/1.23 Arial,sans-serif;overflow-wrap:anywhere}'+
+  'h1{font-size:1.86em;margin:0 0 .16em}h2{font-size:1.05em;margin:0 0 .18em;border-bottom:1px solid #777;padding:0 0 .15em}'+
+  'section{margin:.58em 0 0}p{margin:.22em 0;white-space:pre-wrap}li{margin:.24em 0;white-space:pre-wrap}'+
+  'ul{margin:.2em 0;padding-left:1.2em}.contact,.practice-note{font-size:.93em}'+
+  '@media screen{article{max-width:186mm;margin:18px auto;padding:12px}}';
+
+function richText(value) {
+  let result = '';
+  for (let i=0;i<value.length;i++) {
+    const ch = value[i], c = value.charCodeAt(i);
+    if (ch==='\r') continue;
+    if (ch==='\n') result += '\\line ';
+    else if (ch==='\\'||ch==='{'||ch==='}') result += '\\'+ch;
+    else if (c<32 || c>126) result += '\\u'+(c>32767?c-65536:c)+'?';
+    else result += ch;
+  }
+  return result;
+}
+function wordDocument(encoded) {
+  const body = Math.round(printSize*2);
+  const cv = buildCv(false);
+  const rtf = [
+    '{\\rtf1\\ansi\\ansicpg1252\\uc1\\deff0\\deflang2057',
+    '{\\fonttbl{\\f0 Arial;}}',
+    '{\\*\\mycvdata '+encoded+'}',
+    '\\paperw11907\\paperh16839\\margl680\\margr680\\margt680\\margb680\\f0'
+  ];
+  for (const child of cv.children) {
+    if (child.tagName==='H1') {
+      rtf.push('\\pard\\keepn\\sa95\\b\\fs44 '+richText(child.textContent)+'\\b0\\par');
+    } else if (child.tagName==='SECTION') {
+      rtf.push('\\pard\\keepn\\sb115\\sa38\\b\\fs'+(body+3)+' '+richText(child.querySelector('h2').textContent)+'\\b0\\par');
+      for (const row of child.querySelectorAll('p,li')) {
+        const prefix = row.querySelector('strong');
+        const words = prefix
+          ? '\\b '+richText(prefix.textContent)+'\\b0 '+richText(row.textContent.slice(prefix.textContent.length))
+          : richText(row.textContent);
+        rtf.push('\\pard\\sa45\\sl255\\slmult1\\fs'+body+' '+words+'\\par');
+      }
+    } else {
+      rtf.push('\\pard\\sa45\\fs'+body+' '+richText(child.textContent)+'\\par');
+    }
+  }
+  return rtf.join('\n')+'\n}';
+}
+
+
+function documentFor(word) {
+  const encoded = base64Encode(JSON.stringify({version:1,draft}));
+  if (word) return wordDocument(encoded);
+  const style = exportStyle.replace('font:'+startSize+'pt','font:'+printSize+'pt');
+  return '<!doctype html><html lang="en-GB"><head><meta charset="utf-8">'+
+    '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; base-uri \'none\'; form-action \'none\'">'+
+    '<meta name="my-cv-data" content="'+encoded+'"><title>My CV</title><style>'+style+
+    '</style></head><body>'+buildCv(false).outerHTML+'</body></html>';
+}
+function download(word) {
+  const first = text('name').split(/\s+/u)[0].replace(/[^\p{L}\p{N}_-]/gu,'').slice(0,40)||'MyCV';
+  const kind = word?'doc':'html';
+  const blob = new Blob([word?'':'\ufeff',documentFor(word)],{type:word?'application/msword':'text/html;charset=utf-8'});
+  const object = URL.createObjectURL(blob);
+  const link = make('a');
+  link.href = object;
+  link.download = 'CV_'+first+'.'+kind;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(()=>URL.revokeObjectURL(object),2000);
+  saved = signature();
+  persist();
+  refresh();
+  tell('Download started. Look in Downloads or your browser’s download list. Move it to the folder your teacher tells you.');
+}
+$('saveHtml').onclick = () => download(false);
+$('saveWord').onclick = () => download(true);
+$('openFile').onclick = () => $('cvFile').click();
+$('cvFile').onchange = async () => {
+  const file = $('cvFile').files[0];
+  $('cvFile').value = '';
+  if (!file) return;
+  try {
+    if (file.size>1024*1024) throw new Error('File too large');
+    const content = await file.text();
+    const match = /<meta name="my-cv-data" content="([A-Za-z0-9+/=]+)">/u.exec(content);
+    const rtf = /^\{\\rtf1\b/u.test(content) && /\{\\\*\\mycvdata ([A-Za-z0-9+/=]+)\}/u.exec(content);
+    if (!match&&!rtf) throw new Error('No CV draft found');
+    const payload = JSON.parse(base64Decode((match||rtf)[1]));
+    if (payload.version!==1) throw new Error('Unknown version');
+    const next = validate(payload.draft);
+    const load = () => replaceDraft(next,'Saved CV opened. You can carry on editing.',true);
+    if (signature()!==JSON.stringify(emptyDraft()) && signature()!==JSON.stringify(next)) {
+      confirmChoice('Open the saved CV?','This replaces the draft on this screen.','Keep this draft','Open saved CV',load);
+    } else load();
+  } catch {
+    tell('That file could not be opened. Choose a file downloaded from My CV Builder. Your current draft is still here.');
+  }
+};
+
+function sendToPrint() {
+  printing = signature();
+  window.print();
+}
+$('printCv').onclick = () => {
+  refresh();
+  if (fits) sendToPrint();
+  else confirmChoice('Your CV may need two pages',
+    'Shorten a few lines to fit one page. You can print this draft if your teacher agrees.',
+    'Keep editing','Print anyway',sendToPrint);
+};
+
+window.addEventListener('afterprint',() => {
+  if (!printing) return;
+  const started = printing;
+  printing = '';
+  confirmChoice('Did your CV print?',
+    'Check that you have the printed page. If you cancelled, you can try again with an adult.',
+    'Not yet','Yes, mark printed',() => {
+      printed = started;
+      persist();
+      refresh();
+      tell('Print checked. Keep the printed CV safe.');
+    });
+});
+
+go(0,false);
+refresh();
+
+/* ================= lesson steps (pupil edition) ================= */
+const lessonKey = 'careers-cv-w01-lesson-v1';
+const lessonText = ['task','starter','because','before','after','exit','helped','note'];
+const lessonBlank = () => ({stage:1,start:'',pick:'',conf:'',revealed:false,checked:false,review:[false,false,false,false],
+  task:'',starter:'',because:'',before:'',after:'',exit:'',helped:'',note:''});
+let lesson = lessonBlank();
+try {
+  const raw = localStorage.getItem(lessonKey);
+  if (raw) {
+    const cache = JSON.parse(raw), next = lessonBlank();
+    if (cache && typeof cache === 'object') {
+      for (const name of lessonText) if (typeof cache[name] === 'string') next[name] = cache[name].slice(0,250);
+      for (const name of ['start','pick','conf']) if (typeof cache[name] === 'string') next[name] = cache[name].slice(0,40);
+      if (Array.isArray(cache.review)) next.review = next.review.map((_,i) => cache.review[i] === true);
+      next.revealed = cache.revealed === true;
+      next.checked = cache.checked === true;
+      if (Number.isInteger(cache.stage) && cache.stage >= 1 && cache.stage <= 7) next.stage = cache.stage;
+      lesson = next;
+    }
+  }
+} catch {
+  // Storage may be unavailable for local files: answers then last until the page is closed.
+}
+function saveLesson() {
+  try { localStorage.setItem(lessonKey,JSON.stringify(lesson)); } catch { /* shown by the builder's storage line */ }
+}
+const lessonNames = ['Arrival','Starter','We do','Build my CV','Check and improve','Exit and my voice','Print all my work'];
+const cvReady = () => complete('name') && skills.every((_,i) => complete('skill'+i) && complete('example'+i));
+const lessonDone = () => [
+  !!lesson.start,
+  lesson.starter.trim().length > 0,
+  !!lesson.pick && lesson.because.trim().length > 0,
+  cvReady(),
+  lesson.review.some(Boolean) || lesson.after.trim().length > 0,
+  lesson.exit.trim().length > 0 && !!lesson.conf,
+  false
+];
+for (const [i,name] of lessonNames.entries()) {
+  const item = make('li'), control = button('',() => showStage(i+1));
+  control.dataset.lbar = String(i+1);
+  control.append(make('span',String(i+1),'n'),make('span',name));
+  item.append(control);
+  $('lessonList').append(item);
+}
+function paintBar() {
+  const done = lessonDone();
+  for (const control of document.querySelectorAll('[data-lbar]')) {
+    const n = +control.dataset.lbar;
+    if (n === lesson.stage) control.setAttribute('aria-current','step'); else control.removeAttribute('aria-current');
+    control.dataset.done = String(done[n-1]);
+    control.firstChild.textContent = done[n-1] ? '✓' : String(n);
+    control.setAttribute('aria-label','Step '+n+': '+lessonNames[n-1]+(done[n-1]?' (done)':''));
+  }
+}
+const starterAnswer = 'A true action, a work record or a piece of feedback can show what the learner did.';
+const pickNotes = {
+  A:'Have another look. A is a big claim, but it names no action a reader could check.',
+  B:'Yes. B names a true action (sorted, checked) and a detail (by label, against the list).',
+  C:'Have another look. C names a quality, but no action a reader could check.'
+};
+function paintLesson() {
+  for (const box of document.querySelectorAll('[data-l]')) box.value = lesson[box.dataset.l];
+  for (const control of document.querySelectorAll('[data-lset]'))
+    control.setAttribute('aria-pressed',String(lesson[control.dataset.lset] === control.dataset.v));
+  for (const tick of document.querySelectorAll('[data-lrev]')) tick.checked = lesson.review[+tick.dataset.lrev];
+  $('lRevealText').textContent = lesson.revealed ? starterAnswer : '';
+  $('lCheckText').textContent = lesson.checked && lesson.pick ? pickNotes[lesson.pick] : '';
+  $('lCheckText').classList.toggle('think',lesson.checked && lesson.pick !== 'B');
+  paintBar();
+}
+for (const box of document.querySelectorAll('[data-l]')) {
+  box.oninput = () => { lesson[box.dataset.l] = box.value; saveLesson(); paintBar(); };
+}
+for (const control of document.querySelectorAll('[data-lset]')) {
+  control.onclick = () => {
+    const name = control.dataset.lset;
+    lesson[name] = lesson[name] === control.dataset.v ? '' : control.dataset.v;
+    if (name === 'pick') lesson.checked = false;
+    saveLesson(); paintLesson();
+  };
+}
+for (const tick of document.querySelectorAll('[data-lrev]')) {
+  tick.onchange = () => { lesson.review[+tick.dataset.lrev] = tick.checked; saveLesson(); paintBar(); };
+}
+$('lReveal').onclick = () => { lesson.revealed = true; saveLesson(); paintLesson(); };
+$('lCheck').onclick = () => {
+  if (!lesson.pick) { $('lCheckText').textContent = 'Tap a line first, then press Check.'; $('lCheckText').classList.add('think'); return; }
+  lesson.checked = true; saveLesson(); paintLesson();
+};
+$('lCopyLine').onclick = () => {
+  const line = [0,1,2].map(i => exampleLine(text('example'+i))).find(Boolean);
+  if (!line) { $('l-before').placeholder = 'Add a skill example in Build my CV first.'; return; }
+  lesson.before = line.slice(0,250); saveLesson(); paintLesson(); $('l-after').focus();
+};
+function summaryRows() {
+  const done = lessonDone();
+  return lessonNames.slice(0,6).map((name,i) => [i+1+' '+name,done[i]]);
+}
+function paintSummary() {
+  $('lSummary').replaceChildren(...summaryRows().map(([label,pass]) => {
+    const row = make('li');
+    row.dataset.pass = String(pass);
+    const icon = make('span',pass?'✓':'○','mark');
+    icon.setAttribute('aria-label',pass?'Done':'Not finished yet');
+    row.append(icon,make('span',label+(pass?'':' (not finished yet, you can still print)')));
+    return row;
+  }));
+}
+function showStage(n, focus = true) {
+  lesson.stage = Math.max(1,Math.min(7,n));
+  saveLesson();
+  for (const card of document.querySelectorAll('[data-lstage]')) card.hidden = +card.dataset.lstage !== lesson.stage;
+  $('lessonStages').hidden = lesson.stage === 4;
+  document.querySelector('main.workspace').hidden = lesson.stage !== 4;
+  if (lesson.stage === 4) refresh();
+  if (lesson.stage === 7) paintSummary();
+  paintBar();
+  if (focus) {
+    const heading = lesson.stage === 4 ? $('stepTitle') : $('l'+lesson.stage+'t');
+    window.scrollTo(0,0);
+    if (heading) heading.focus({preventScroll:true});
+  }
+}
+for (const control of document.querySelectorAll('[data-lgo]')) control.onclick = () => showStage(+control.dataset.lgo);
+
+function buildRecord() {
+  const rec = make('article',undefined,'rec');
+  const top = make('div',undefined,'top');
+  const left = make('div');
+  left.append(make('h1','My lesson record'),make('p','Careers · Build and improve a CV'));
+  const right = make('div');
+  right.append(make('p','Name: '+(text('name')||'______________________')),
+    make('p','Date: '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})));
+  top.append(left,right);
+  rec.append(top);
+  const part = (title, rows) => {
+    const box = make('section');
+    box.append(make('h2',title));
+    for (const [question,answer] of rows) {
+      if (question) box.append(make('p',question,'q'));
+      box.append(make('p',answer||'Not answered.',answer?'a':'a none'));
+    }
+    rec.append(box);
+  };
+  part('1 Arrival',[['How I started',lesson.start],['One task I did',lesson.task.trim()]]);
+  part('2 Starter',[['A learner says “I am careful.” What could they show a reader?',lesson.starter.trim()]]);
+  part('3 We do',[['Which line shows careful sorting?',lesson.pick?('I chose line '+lesson.pick+(lesson.checked?(lesson.pick==='B'?' (checked: correct)':' (checked: not the strongest line)'):'')):''],
+    ['The strongest line is stronger because …',lesson.because.trim()]]);
+  const checks = [...$('checks').children].map(row => (row.dataset.pass==='true'?'✓ ':'○ ')+row.lastChild.textContent).join('   ');
+  part('4 You do · Build my CV',[['','My CV is on the next page.'],['Check my CV',checks]]);
+  const ticks = [...document.querySelectorAll('[data-lrev]')].filter(t => t.checked).map(t => '✓ '+t.nextElementSibling.textContent).join('   ');
+  part('5 Check and improve',[['My checks',ticks],['My line before',lesson.before.trim()],['My line after I improved it',lesson.after.trim()]]);
+  part('6 Exit',[['One thing I improved in my CV',lesson.exit.trim()],['How confident I feel',lesson.conf]]);
+  part('7 My voice',[['What helped me today',lesson.helped.trim()],['One thing I want my teacher to know',lesson.note.trim()]]);
+  const adult = make('section',undefined,'adult');
+  adult.append(make('p','Help used (adult circles one):   I  independent      S  supported'),
+    make('p','Adult reply to my voice (tick R when replied):   R ☐'),make('div',undefined,'line'));
+  rec.append(adult);
+  return rec;
+}
+function printEverything() {
+  refresh();
+  $('printRecord').replaceChildren(buildRecord());
+  const send = () => { document.body.classList.add('print-all'); sendToPrint(); };
+  if (fits) send();
+  else confirmChoice('Your CV may need two pages',
+    'Shorten a few lines to fit one page. You can print this draft if your teacher agrees.',
+    'Keep editing','Print anyway',send);
+}
+window.addEventListener('afterprint',() => document.body.classList.remove('print-all'));
+$('printAll').onclick = printEverything;
+$('printCvOnly').onclick = () => $('printCv').click();
+$('saveHtml2').onclick = () => { download(false); $('lessonStatus').textContent = 'CV download started. Look in Downloads.'; };
+$('clearLesson').onclick = () => confirmChoice('Clear my lesson answers?',
+  'This clears the answers for steps 1, 2, 3, 5 and 6 from this browser. Your CV draft is kept.',
+  'Keep my answers','Clear answers',() => { lesson = lessonBlank(); lesson.stage = 7; saveLesson(); paintLesson(); paintSummary();
+    $('lessonStatus').textContent = 'Lesson answers cleared.'; });
+$('reset').onclick = () => confirmChoice('Start again?',
+  'This clears your CV draft and your lesson answers from this browser. Files you downloaded are kept.',
+  'Keep my work','Clear everything',() => { lesson = lessonBlank(); saveLesson(); paintLesson();
+    replaceDraft(emptyDraft(),'Draft and lesson answers cleared.'); showStage(1); });
+
+// The lesson file opens the builder straight at step 4 (frame name or #cv); pupils start at step 1.
+if (window.name === 'mbmCvBuilder' || location.hash === '#cv') lesson.stage = 4;
+paintLesson();
+showStage(lesson.stage,false);
+window.__cvLesson = () => ({lesson:JSON.parse(JSON.stringify(lesson)),done:lessonDone(),fits});
+
+
+</script>
+</body>
+</html>
+

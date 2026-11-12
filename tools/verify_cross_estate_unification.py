@@ -3040,6 +3040,7 @@ CATALOGUE_PINS = {
         "kits/class_tools/Coverage_map.html": "0b77cfccc85ae76c9a66f9ac4a4b26a0bad576a1c6538e1c4f6924a338af3308",
         "kits/class_tools/Spooky_Story.html": "ce1d09844095fdd3e01cfbdfcaff2872d79599ecbf20c294c8c80c1370b5f59a",
         "kits/class_tools/Award_tracker.html": "d392e8084696bff990072c04a85bfd904ba2c5ce826db8f8c0d19166df98127f",
+        "kits/class_tools/My_CV_builder.html": "a40a03dda30827076fbcff4919691a3b8c40f2853e23766c90a4c2600cfceef4",
         "2 Physics 10/L2c_Ohms_Law_PhET_Take2 (1).html": "48e12e89b4377bae06c64543bc687068c9c9fab44aeb8df5ad5492237aa63098",
         "5_6 Local Choice/Rivers/L1b_Your_River_Your_Home.html": "0214768965079f1687ab605f90f41489223201cea3d79b5301ecf99f1641c573",
         "Art/BUILD_BRONZE_W1-W7_2026-27/BUILD_Art_Bronze_W1_What_Getting_Better_Would_Look_Like.html": "b6d37613e4ec6e4f5a763b19a3038624cb704a91f24c444c6a790b83de7230a6",
