@@ -5619,6 +5619,8 @@ REVIEWED_PATHS += ('kits/class_tools/Spooky_Story.html',)
 REVIEWED_PATHS += ('kits/class_tools/Award_tracker.html',)
 # 2026-11-12: a pupil CV builder with a print-all lesson record joins the unlisted class pages (noindex, no names, no network; device storage only).
 REVIEWED_PATHS += ('kits/class_tools/My_CV_builder.html',)
+# 2026-11-13: a home-screen manifest and its three plain icons join the unlisted class pages (no names, no network, no offline cache).
+REVIEWED_PATHS += ('kits/class_tools/manifest.webmanifest', 'kits/class_tools/icon-192.png', 'kits/class_tools/icon-512.png', 'kits/class_tools/icon-maskable-512.png')
 
 
 # Pathway labels phase 2 (Lessons #824, owner approval 8 Nov 2026 14:34Z): the relabelled lesson pages and the
