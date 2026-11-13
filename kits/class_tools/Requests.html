@@ -4,99 +4,2721 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
 <meta name="author" content="Lesson resource">
 <meta name="creator" content="Lesson resource">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'self' data:; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; manifest-src 'self' data:; worker-src 'self'">
-<title>Request box</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; frame-src 'none'; worker-src 'self'; manifest-src 'self' data:; base-uri 'none'; form-action 'none'">
 <link rel="manifest" href="manifest.webmanifest">
-<style>
-:root{--ink:#1d2433;--accent:#1f5fa8;--soft:#eef3fa;--line:#c9d3e3;--ok:#178841;--warn:#b36205;--bg:#ffffff;--focus:#073d83}
-@media (prefers-color-scheme: dark){:root{--ink:#e8edf5;--accent:#8db8f0;--soft:#1c2433;--line:#3a4658;--ok:#5fd08a;--warn:#f0b060;--bg:#11161f;--focus:#bedaff}}
-*{box-sizing:border-box}
-html,body{overflow-wrap:break-word}
-body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.5 "Segoe UI",Arial,sans-serif}
-main{max-width:640px;margin:0 auto;padding:20px 16px 40px}
-h1{font-size:24px;margin:0 0 4px;color:var(--accent)}
-p{margin:8px 0}
-.note{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:17px}
-textarea{width:100%;min-height:300px;font:18px/1.6 inherit;padding:10px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
-.row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
-button,label.btn{font:inherit;font-size:17px;min-height:48px;min-width:48px;padding:12px 16px;border-radius:10px;border:2px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
-button.ghost,label.btn{background:transparent;color:var(--accent)}
-input[type=file]{display:none}
-#msg{min-height:1.5em;font-weight:600}
-.ok{color:var(--ok)}.warn{color:var(--warn)}
-ol{padding-left:22px}li{margin:4px 0}
-
-select,input[type=text],input[type=date]{font:inherit;font-size:17px;min-height:48px;min-width:48px;padding:8px 10px;border:2px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);max-width:100%}
-a{color:var(--accent);display:inline-flex;align-items:center;min-height:48px}
-:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media (max-width:520px){.grid{grid-template-columns:1fr}select{width:100%}}
-.field label{display:block;font-size:17px;font-weight:600;margin-bottom:2px}
-table{border-collapse:collapse;width:100%;font-size:17px}td,th{border:1px solid var(--line);padding:6px;text-align:left}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:12px 0}
-.tile{display:block;padding:14px;border:2px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink);background:var(--soft)}
-.tile b{display:block;color:var(--accent);font-size:19px}.tile span{font-size:17px}
-h2{font-size:20px;margin-top:22px}
-@media print{.noprint{display:none!important}}
-</style>
-</head>
-<body>
-<main>
-<p class="noprint"><a href="My_tools.html">&larr; My tools</a></p>
-<h1>Request box</h1>
-<p class="note">Ask for anything: a catch-up sheet, a fix, a new resource. No pupil names, please. Use pupil codes.</p>
-<div class="field"><label for="req">What do you need?</label><textarea id="req" style="min-height:160px" placeholder="e.g. Catch-up sheet for GROW Science week 3 lesson 2, ready by Thursday"></textarea></div>
-<div class="grid" style="margin-top:10px">
- <div class="field"><label for="when">Needed by</label><select id="when"><option>No rush</option><option>This week</option><option>Tomorrow</option><option>Today</option></select></div>
-</div>
-<div class="row noprint"><button id="save">Save request file</button></div>
-<p id="msg" aria-live="polite"></p>
-<h2>Then</h2>
-<ol><li>Put the file in Drive › <b>_INBOX › Requests</b>.</li><li>The home laptop adds it to <b>_AUTOMATION › Requests.txt</b>, which the agents check.</li></ol>
-</main>
-<script>
-(function(){"use strict";var $=function(i){return document.getElementById(i);};
-var KEEP_UPPER={BUILD:1,GROW:1,LAUNCH:1,ALL:1,RE:1,DT:1,ICT:1,RSE:1,PSHE:1,RSHE:1,SCI:1,ART:1,HUM:1,VOC:1,SCIENCE:1,HUMANITIES:1,CAREERS:1,VOCATIONAL:1,CREATIVE:1,ARTS:1,COMMUNITY:1,PROJECTS:1,MONDAY:1,TUESDAY:1,WEDNESDAY:1,THURSDAY:1,FRIDAY:1,PUPIL:1,WEEK:1,LESSON:1};
-function escRe(s){return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");}
-function redact(text){
- var s=String(text==null?"":text),pairs=[];
- function add(w,rep,cs){w=String(w||"").trim();if(!w||/^(?:Pupil\s*|P)?\d+$/i.test(w))return;if(KEEP_UPPER[w.toUpperCase()])return;pairs.push([w,rep,!!cs]);}
- try{
-  var k=JSON.parse(localStorage.getItem("mbm_pupil_key_v1")||"{}")||{};
-  Object.keys(k).forEach(function(n){var lbl=String(k[n]||"").trim();if(lbl){add(lbl,"Pupil "+n,false);lbl.split(/\s+/).forEach(function(w){if(w.length>1)add(w,"Pupil "+n,false);});var ini=lbl.split(/\s+/).map(function(w){return w.charAt(0);}).join("").toUpperCase().slice(0,3);if(ini.length>1)add(ini,"Pupil "+n,true);}});
- }catch(e){}
- try{
-  var tr=JSON.parse(localStorage.getItem("mbm_catchup_tracker_v1")||"{}")||{},p=tr.pupils||{},all=[].concat(p.BUILD||[],p.GROW||[],p.LAUNCH||[]);
-  all.forEach(function(lbl,i){var n=i+1;lbl=String(lbl||"").trim();if(lbl&&!/^(?:Pupil\s*|P)?\d+$/i.test(lbl)){add(lbl,"Pupil "+n,false);lbl.split(/\s+/).forEach(function(w){if(w.length>1)add(w,"Pupil "+n,false);});}});
- }catch(e){}
- ["mbm_class_names_v1","mbm_names_list_v1"].forEach(function(storageKey){
-  try{
-   var raw=localStorage.getItem(storageKey);if(!raw)return;
-   var v;try{v=JSON.parse(raw);}catch(e){v=raw;}
-   var lines=Array.isArray(v)?v:String(v).split(/\r?\n/);
-   lines.forEach(function(line,idx){line=String(line||"").trim();if(!line||line.charAt(0)==="#")return;var rep=storageKey==="mbm_class_names_v1"&&idx<20?"Pupil "+(idx+1):"[name]";add(line,rep,false);line.split(/\s+/).forEach(function(w){if(w.length>1)add(w,rep,false);});});
-  }catch(e){}
- });
- pairs.sort(function(a,b){return b[0].length-a[0].length;});
- var slots=[];
- pairs.forEach(function(p){
-  var re=new RegExp("(^|[^\\p{L}\\p{N}_])("+escRe(p[0])+")(?:['’]s)?(?=$|[^\\p{L}\\p{N}_])",p[2]?"gu":"giu");
-  s=s.replace(re,function(_,pre){var id=slots.length;slots.push(p[1]);return pre+"\u0001"+id+"\u0002";});
- });
- s=s.replace(/\b([A-Z][a-z]{1,25})\s+([A-Z][a-z]{1,25})\b/g,function(m,w1,w2){
-  if(KEEP_UPPER[w1.toUpperCase()]||KEEP_UPPER[w2.toUpperCase()])return m;
-  var id=slots.length;slots.push("[name]");return "\u0001"+id+"\u0002";
- });
- return s.replace(/\u0001(\d+)\u0002/g,function(_,id){return slots[+id];});
+<title>Prompt studio</title>
+<meta name="theme-color" content="#153e64">
+<style id="mainStyle">
+:root,html[data-theme="light"]{
+  color-scheme:light;
+  --ink:#18283b;
+  --accent:#153e64;
+  --soft:#edf3f7;
+  --line:#52677c;
+  --bg:#ffffff;
+  --focus:#713600;
+  --ok:#155724;
+  --ok-bg:#e3f4e8;
+  --warn:#6b3a00;
+  --warn-bg:#fff2dc;
+  --miss:#7a1c1c;
+  --miss-bg:#fdeaea;
+  --build:#21465f;
+  --grow:#174d3d;
+  --launch:#50336f;
 }
-function say(t,c){$("msg").textContent=t;$("msg").className=c||"";}
-$("save").onclick=function(){var t=redact($("req").value.trim());if(!t){say("Type your request first.","warn");return;}
- var now=new Date(),body="Needed by: "+$("when").value+"\r\n"+t.replace(/\r?\n/g,"\r\n")+"\r\n";
- var a=document.createElement("a");a.style.display="none";a.href=URL.createObjectURL(new Blob([body],{type:"text/plain"}));
- a.download="request_"+now.toISOString().slice(0,16).replace(/[:T]/g,"-")+".txt";document.body.appendChild(a);a.click();a.remove();
- setTimeout(function(){URL.revokeObjectURL(a.href);},1000);$("req").value="";say("Saved. Put it in Drive: _INBOX › Requests.","ok");};
-window.addEventListener("beforeprint",function(){if($("req").value)$("req").value=redact($("req").value);});
+@media(prefers-color-scheme:dark){
+  html:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#f4f7fb;
+    --accent:#c6e2ff;
+    --soft:#1b2a3d;
+    --line:#a9bdd2;
+    --bg:#101b29;
+    --focus:#ffd4a8;
+    --ok:#a8edb9;
+    --ok-bg:#163522;
+    --warn:#ffd79e;
+    --warn-bg:#3b2608;
+    --miss:#ffb8b8;
+    --miss-bg:#3c1818;
+    --build:#b9dcf5;
+    --grow:#a8e4ce;
+    --launch:#e0cafa;
+  }
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#f4f7fb;
+  --accent:#c6e2ff;
+  --soft:#1b2a3d;
+  --line:#a9bdd2;
+  --bg:#101b29;
+  --focus:#ffd4a8;
+  --ok:#a8edb9;
+  --ok-bg:#163522;
+  --warn:#ffd79e;
+  --warn-bg:#3b2608;
+  --miss:#ffb8b8;
+  --miss-bg:#3c1818;
+  --build:#b9dcf5;
+  --grow:#a8e4ce;
+  --launch:#e0cafa;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{
+  margin:0;
+  padding:0;
+  max-width:100%;
+  overflow-x:hidden;
+  background:var(--bg);
+  color:var(--ink);
+  font:18px/1.45 system-ui,sans-serif;
+  overflow-wrap:anywhere;
+}
+main{
+  max-width:1000px;
+  margin:0 auto;
+  padding:8px 12px 40px;
+}
+h1{font-size:24px;line-height:1.15;margin:0}
+h2{font-size:21px;line-height:1.25;margin:0 0 8px}
+h3{font-size:18px;line-height:1.25;margin:8px 0 6px}
+p{margin:5px 0 8px}
+a{color:var(--accent)}
+button,input,textarea,select{font:inherit;color:inherit}
+button,.btn,select,input:not([type=checkbox]){min-height:48px;min-width:48px}
+button,.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 12px;
+  border:2px solid var(--accent);
+  border-radius:10px;
+  background:var(--bg);
+  color:var(--accent);
+  font-size:17px;
+  font-weight:600;
+  text-decoration:none;
+  cursor:pointer;
+  text-align:center;
+  touch-action:manipulation;
+  max-width:100%;
+}
+button.primary,.btn.primary,button[aria-pressed="true"]{
+  background:var(--accent);
+  color:var(--bg);
+}
+button:disabled{opacity:.55;cursor:default}
+input:not([type=checkbox]),textarea,select{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  padding:8px 10px;
+  border:2px solid var(--line);
+  border-radius:8px;
+  background:var(--bg);
+  color:var(--ink);
+  font-size:17px;
+}
+textarea{
+  min-height:132px;
+  line-height:1.45;
+  resize:vertical;
+}
+label{display:block;font-weight:600;font-size:16px;margin-bottom:3px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+button:focus-visible,.btn:focus-visible{position:relative;z-index:1}
+
+/* Live tabbed header matching My_tools.html */
+.app-header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:var(--bg);
+  padding:4px 0 6px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:8px;
+}
+.top-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:0;
+}
+.title-cluster{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  min-width:0;
+}
+.back-btn{
+  padding:6px 10px;
+  font-size:16px;
+  min-height:46px;
+}
+.net-pill{
+  font-size:13.5px;
+  padding:2px 8px;
+  border-radius:999px;
+  font-weight:650;
+  border:1px solid var(--line);
+  background:var(--soft);
+  white-space:nowrap;
+}
+.workspace-nav{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:6px;
+  margin:6px 0 0;
+}
+.nav-tab{
+  min-height:46px;
+  padding:5px 4px;
+  border-radius:10px;
+  border:2px solid var(--line);
+  background:var(--soft);
+  color:var(--ink);
+  font-size:15.5px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+}
+.nav-tab[aria-selected="true"]{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:var(--bg);
+}
+.sub-tabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin:6px 0 10px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--line);
+}
+.sub-tab{
+  min-height:46px;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:15.5px;
+  border:1.5px solid var(--line);
+  background:var(--bg);
+  color:var(--ink);
+  flex:1 1 150px;
+}
+.sub-tab[aria-selected="true"]{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:var(--bg);
+}
+
+.panel{
+  padding:11px 12px;
+  border:2px solid var(--line);
+  border-radius:14px;
+  background:var(--soft);
+  margin:0 0 12px;
+  min-width:0;
+}
+.callout{
+  padding:8px 10px;
+  border:1.5px solid var(--line);
+  border-radius:10px;
+  background:var(--bg);
+  font-size:15.5px;
+  margin:6px 0;
+}
+.storage-warn{
+  background:var(--warn-bg);
+  color:var(--warn);
+  border:2px solid var(--warn);
+  border-radius:10px;
+  padding:8px 10px;
+  font-size:15.5px;
+  font-weight:650;
+  margin:0 0 8px;
+}
+
+/* Compact slot bar & controls for phone-first 360x740 fold */
+.slot-line{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:6px 10px;
+  border:1.5px solid var(--line);
+  border-radius:10px;
+  background:var(--bg);
+  margin-bottom:6px;
+}
+.slot-line-text{
+  flex:1 1 auto;
+  min-width:0;
+  line-height:1.22;
+}
+.slot-line-text strong{
+  display:block;
+  font-size:15.5px;
+  color:var(--accent);
+}
+.slot-sub{
+  display:block;
+  font-size:14px;
+  opacity:.92;
+}
+#toggleSlotBtn{
+  flex:0 0 auto;
+  min-height:46px;
+  min-width:68px;
+  padding:6px 10px;
+  font-size:15px;
+}
+.controls-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  padding:8px;
+  margin:0 0 8px;
+  border:1.5px solid var(--line);
+  border-radius:10px;
+  background:var(--bg);
+}
+.field{min-width:0}
+
+/* Starter top chip + 6 prompt chips */
+.starter-wrap{
+  margin:0 0 6px;
+}
+.starter-chip{
+  width:100%;
+  min-height:46px;
+  padding:6px 10px;
+  font-size:15.5px;
+  border:2px solid var(--warn);
+  background:var(--warn-bg);
+  color:var(--warn);
+}
+.starter-chip[aria-pressed="true"]{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:var(--bg);
+}
+.chip-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px;
+  margin:0 0 8px;
+}
+.chip-btn{
+  min-height:46px;
+  padding:6px 8px;
+  font-size:15px;
+  line-height:1.18;
+  border:1.5px solid var(--line);
+  background:var(--bg);
+  color:var(--ink);
+}
+.chip-btn[aria-pressed="true"]{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:var(--bg);
+}
+
+.row{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+  margin:6px 0;
+}
+.copy-bar{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:6px;
+  margin:0 0 6px;
+}
+#copyPromptBtn{
+  flex:1 1 132px;
+  min-height:46px;
+}
+#goMakeSlipBtn{
+  flex:0 1 auto;
+  min-height:46px;
+  font-size:15.5px;
+  padding:6px 10px;
+}
+.copied-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 11px;
+  min-height:40px;
+  border-radius:999px;
+  font-size:15px;
+  font-weight:750;
+  background:var(--ok-bg);
+  color:var(--ok);
+  border:2px solid var(--ok);
+}
+
+.assistants-inline{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px 10px;
+  padding:7px 10px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--bg);
+  margin:6px 0 8px;
+  font-size:15px;
+}
+.assistant-empty{
+  font-weight:650;
+  margin:0;
+}
+.exact-box{
+  background:var(--bg);
+  border:2px dashed var(--line);
+  border-radius:10px;
+  padding:9px 10px;
+  margin:8px 0 4px;
+}
+.exact-box-head{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:4px 8px;
+  font-size:14.5px;
+  font-weight:700;
+  color:var(--accent);
+  margin-bottom:5px;
+}
+#exactCopyPreview{
+  margin:0;
+  font:15px/1.42 ui-monospace,Consolas,monospace;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  max-height:220px;
+  overflow-y:auto;
+  color:var(--ink);
+}
+.status-line{
+  min-height:1.35em;
+  font-size:15.5px;
+  font-weight:650;
+  margin:4px 0;
+}
+.ok{color:var(--ok)}
+.warn{color:var(--warn)}
+
+.two-col{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin:8px 0;
+}
+.assistant-slot-row{
+  display:grid;
+  grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);
+  gap:8px;
+  margin:8px 0;
+  padding:8px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--bg);
+}
+
+/* Single A5 desk slip preview */
+.slip-preview-wrap{margin-top:10px}
+#slipSheet{
+  background:#ffffff;
+  color:#111622;
+  border:2px solid #18283b;
+  border-radius:12px;
+  padding:14px 16px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:10px;
+  min-height:290px;
+}
+#slipSheet.extra-large .slip-title{font-size:25px}
+#slipSheet.extra-large .slip-steps li{font-size:21px}
+#slipSheet.extra-large .slip-done{font-size:19px}
+.slip-meta{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px 10px;
+  border-bottom:2px solid #18283b;
+  padding-bottom:7px;
+  font-size:15px;
+}
+.slip-pupil-pill,.tier-level-pill{
+  display:inline-block;
+  background:#153e64;
+  color:#ffffff;
+  font-size:17px;
+  font-weight:750;
+  padding:3px 11px;
+  border-radius:8px;
+}
+.slip-tags,.tier-topic{
+  font-size:14.5px;
+  color:#243447;
+  font-weight:650;
+}
+.slip-adapt-line{
+  font-size:14px;
+  color:#243447;
+  background:#edf3f7;
+  border-radius:6px;
+  padding:4px 8px;
+  margin:4px 0 0;
+}
+.slip-title{
+  font-size:22px;
+  line-height:1.24;
+  font-weight:750;
+  margin:4px 0;
+  color:#111622;
+}
+.slip-steps,.tier-steps{
+  list-style:none;
+  padding:0;
+  margin:4px 0;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+.slip-steps li,.tier-steps li{
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+  font-size:18.5px;
+  line-height:1.35;
+  color:#111622;
+  padding:3px 0;
+  border-bottom:1px solid #d5dfe9;
+}
+.slip-steps li:last-child,.tier-steps li:last-child{border-bottom:none}
+.step-box{
+  flex:0 0 20px;
+  width:20px;
+  height:20px;
+  margin-top:3px;
+  border:2px solid #111622;
+  border-radius:4px;
+  display:inline-block;
+}
+.step-num{font-weight:750;flex:0 0 auto}
+.step-text{flex:1 1 auto;min-width:0}
+.slip-done,.tier-done{
+  margin-top:auto;
+  border-top:2px solid #18283b;
+  padding-top:7px;
+  font-size:17px;
+  line-height:1.32;
+  color:#111622;
+}
+
+/* Three-tier A4 horizontal slip splitter preview */
+#splitterSheet{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.tier-slip{
+  background:#ffffff;
+  color:#111622;
+  border:2px solid #18283b;
+  border-radius:10px;
+  padding:11px 14px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:6px;
+}
+.tier-head{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px 10px;
+  border-bottom:1.5px solid #18283b;
+  padding-bottom:5px;
+}
+.tier-title{
+  font-size:19px;
+  line-height:1.22;
+  font-weight:750;
+  margin:2px 0;
+  color:#111622;
+}
+.tier-steps li{
+  font-size:16.5px;
+  line-height:1.3;
+}
+.tier-done{
+  font-size:15.5px;
+  padding-top:5px;
+}
+.cut-guide{
+  border-top:1.5px dashed var(--line);
+  text-align:center;
+  font-size:13px;
+  color:var(--ink);
+  opacity:.8;
+  line-height:1;
+  padding-top:2px;
+}
+
+.site-foot{
+  margin-top:16px;
+  padding-top:10px;
+  border-top:1px solid var(--line);
+  font-size:15px;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px 12px;
+}
+
+@media(max-width:820px){
+  .controls-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:540px){
+  main{padding:6px 10px 32px}
+  .panel{padding:9px 10px}
+  .controls-grid,.two-col,.assistant-slot-row{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:420px){
+  h1{font-size:20px}
+  .net-pill{display:none}
+  .nav-tab{font-size:14px;padding:4px 2px}
+  .back-btn{padding:5px 8px;font-size:15px}
+  .chip-btn{font-size:14.5px;padding:5px 6px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+}
+
+@media print{
+  html,body{
+    background:#ffffff!important;
+    color:#000000!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:visible!important;
+  }
+  main{
+    max-width:none!important;
+    margin:0!important;
+    padding:0!important;
+  }
+  #studioPaneSlip{
+    display:block!important;
+    border:none!important;
+    background:transparent!important;
+    padding:0!important;
+    margin:0!important;
+  }
+  .slip-preview-wrap{
+    margin:0!important;
+    padding:0!important;
+  }
+  body[data-slip-mode="single"] #splitterPrintRegion{display:none!important}
+  body[data-slip-mode="single"] #slipPrintRegion{display:block!important}
+  body[data-slip-mode="splitter"] #slipPrintRegion{display:none!important}
+  body[data-slip-mode="splitter"] #splitterPrintRegion{display:block!important}
+
+  /* Exact 1-page A5 desk slip print geometry (148mm x 210mm, 7mm margin -> 134mm x 196mm printable) */
+  #slipSheet{
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:space-between!important;
+    gap:2.5mm!important;
+    width:100%!important;
+    max-width:134mm!important;
+    min-height:0!important;
+    max-height:186mm!important;
+    margin:0 auto!important;
+    padding:5mm 5.5mm!important;
+    border:2px solid #000000!important;
+    border-radius:5px!important;
+    background:#ffffff!important;
+    color:#000000!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+    break-after:avoid!important;
+    page-break-after:avoid!important;
+    overflow:hidden!important;
+  }
+  .slip-pupil-pill,.tier-level-pill{
+    background:#ffffff!important;
+    color:#000000!important;
+    border:1.8pt solid #000000!important;
+    font-size:12.5pt!important;
+    padding:0.8mm 2.8mm!important;
+  }
+  .slip-meta{
+    border-bottom:1.6pt solid #000000!important;
+    padding-bottom:1.8mm!important;
+    font-size:10pt!important;
+  }
+  .slip-tags,.slip-adapt-line,.tier-topic{
+    color:#000000!important;
+    background:transparent!important;
+    font-size:9.5pt!important;
+    padding:0!important;
+  }
+  .slip-title{
+    font-size:15.5pt!important;
+    line-height:1.18!important;
+    margin:1.5mm 0!important;
+    color:#000000!important;
+  }
+  .slip-steps{
+    gap:1.8mm!important;
+    margin:1mm 0!important;
+  }
+  .slip-steps li{
+    font-size:13pt!important;
+    line-height:1.3!important;
+    padding:1mm 0!important;
+    border-bottom:0.6pt solid #777777!important;
+    color:#000000!important;
+  }
+  .slip-done{
+    border-top:1.6pt solid #000000!important;
+    padding-top:1.8mm!important;
+    font-size:12pt!important;
+    line-height:1.28!important;
+    color:#000000!important;
+  }
+
+  /* Exact 1-page A4 three-tier horizontal splitter geometry (210mm x 297mm, 7mm margin -> 196mm x 283mm printable) */
+  #splitterSheet{
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:space-between!important;
+    gap:2.5mm!important;
+    width:100%!important;
+    max-width:196mm!important;
+    max-height:278mm!important;
+    margin:0 auto!important;
+    padding:0!important;
+    overflow:hidden!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  .tier-slip{
+    height:86mm!important;
+    max-height:86mm!important;
+    padding:3.5mm 4.5mm!important;
+    border:1.6pt solid #000000!important;
+    border-radius:3mm!important;
+    background:#ffffff!important;
+    color:#000000!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:space-between!important;
+    gap:1.2mm!important;
+    overflow:hidden!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  .tier-head{
+    border-bottom:1.2pt solid #000000!important;
+    padding-bottom:1.2mm!important;
+  }
+  .tier-level-pill{
+    font-size:11pt!important;
+    padding:0.5mm 2.5mm!important;
+  }
+  .tier-title{
+    font-size:12.8pt!important;
+    line-height:1.16!important;
+    margin:0.8mm 0!important;
+    color:#000000!important;
+  }
+  .tier-steps{
+    gap:1mm!important;
+    margin:0.5mm 0!important;
+  }
+  .tier-steps li{
+    font-size:10.6pt!important;
+    line-height:1.24!important;
+    padding:0.6mm 0!important;
+    border-bottom:0.5pt solid #888888!important;
+    color:#000000!important;
+  }
+  .step-box{
+    width:3.8mm!important;
+    height:3.8mm!important;
+    flex:0 0 3.8mm!important;
+    margin-top:0.6mm!important;
+    border:1.3pt solid #000000!important;
+  }
+  .tier-done{
+    border-top:1.2pt solid #000000!important;
+    padding-top:1.2mm!important;
+    font-size:10pt!important;
+    line-height:1.22!important;
+    color:#000000!important;
+  }
+  .cut-guide{
+    border-top:1pt dashed #444444!important;
+    color:#000000!important;
+    font-size:8pt!important;
+    line-height:1!important;
+    padding:0!important;
+    margin:0!important;
+  }
+
+  .noprint,.panel.noprint{display:none!important}
+}
+</style>
+<style id="dynamicPrintPage">@page { size: A5 portrait; margin: 7mm; }</style>
+</head>
+<body data-slip-mode="single">
+<main>
+  <header class="app-header noprint">
+    <div class="top-bar">
+      <a class="btn back-btn" id="studioBackLink" href="My_tools.html">&larr; My tools</a>
+      <div class="title-cluster">
+        <h1>Prompt studio</h1>
+        <span id="offlinePill" class="net-pill">Saved on this device</span>
+      </div>
+    </div>
+    <nav class="workspace-nav" role="tablist" aria-label="Prompt studio views">
+      <button type="button" role="tab" class="nav-tab" id="tabBtnPrompts" data-studio-tab="prompts" aria-selected="true">Prompts</button>
+      <button type="button" role="tab" class="nav-tab" id="tabBtnSlip" data-studio-tab="slip" aria-selected="false">Make slip</button>
+      <button type="button" role="tab" class="nav-tab" id="tabBtnRequest" data-studio-tab="request" aria-selected="false">Request box</button>
+      <button type="button" role="tab" class="nav-tab" id="tabBtnAssistants" data-studio-tab="assistants" aria-selected="false">Assistants</button>
+    </nav>
+  </header>
+
+  <p id="storageWarning" class="storage-warn noprint" hidden></p>
+
+  <!-- TAB 1: PROMPTS (PHONE-FIRST FOLD) -->
+  <section class="panel noprint" id="studioPanePrompts" aria-labelledby="tabBtnPrompts">
+    <div id="slotLine" class="slot-line">
+      <div class="slot-line-text" aria-live="polite">
+        <strong id="slotPrimaryText">Next slot</strong>
+        <span id="slotSecondaryText" class="slot-sub"></span>
+      </div>
+      <button type="button" id="toggleSlotBtn" aria-expanded="false" aria-controls="slotControlsBox">Slot &#9662;</button>
+    </div>
+
+    <div id="slotControlsBox" class="controls-grid" hidden>
+      <div class="field">
+        <label for="slotSelect">Lesson slot</label>
+        <select id="slotSelect"></select>
+      </div>
+      <div class="field">
+        <label for="tierSelect">Tier</label>
+        <select id="tierSelect">
+          <option value="Supported">Supported</option>
+          <option value="Independent">Independent</option>
+          <option value="Aspire">Aspire</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="pupilSelect">Pupil code</label>
+        <select id="pupilSelect"></select>
+      </div>
+      <div class="field">
+        <label for="timeSelect">Time available</label>
+        <select id="timeSelect">
+          <option value="3 minutes">3 minutes</option>
+          <option value="5 minutes">5 minutes</option>
+          <option value="10 minutes" selected>10 minutes</option>
+          <option value="15 minutes">15 minutes</option>
+          <option value="20 minutes">20 minutes</option>
+          <option value="35 minutes">35 minutes</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="starterChipWrap" class="starter-wrap" hidden>
+      <button type="button" class="chip-btn starter-chip" id="starterChipBtn" data-chip="starter" aria-pressed="false">Starter for next lesson</button>
+    </div>
+
+    <div id="chipGrid" class="chip-grid" role="group" aria-label="Prompt chips">
+      <button type="button" class="chip-btn" data-chip="stretch" aria-pressed="true">Stretch task</button>
+      <button type="button" class="chip-btn" data-chip="unstick" aria-pressed="false">Unstick (smaller steps)</button>
+      <button type="button" class="chip-btn" data-chip="hinge" aria-pressed="false">Hinge question</button>
+      <button type="button" class="chip-btn" data-chip="extension" aria-pressed="false">Extension for one pupil</button>
+      <button type="button" class="chip-btn" data-chip="upgrade" aria-pressed="false">Upgrade this lesson file</button>
+      <button type="button" class="chip-btn" data-chip="catchup" aria-pressed="false">Catch-up arrival task</button>
+    </div>
+
+    <div id="copyActionRow" class="copy-bar">
+      <button type="button" class="primary" id="copyPromptBtn">Copy prompt</button>
+      <span id="copiedBadge" class="copied-badge" role="status" aria-live="polite" hidden>Copied</span>
+      <button type="button" id="goMakeSlipBtn">Paste reply, make slip</button>
+    </div>
+
+    <div id="assistantsInlineBar" class="assistants-inline">
+      <div>
+        <p id="assistantEmptyMsg" class="assistant-empty">Add an assistant in settings</p>
+        <div id="assistantButtonsRow" class="row" style="margin:0" hidden></div>
+        <span class="slot-sub">Copying and slip-making work offline; opening an assistant needs signal.</span>
+      </div>
+      <button type="button" id="openAssistantsInlineBtn">Settings</button>
+    </div>
+
+    <p id="promptStatus" class="status-line" aria-live="polite"></p>
+
+    <div class="field" style="margin-top:8px">
+      <label for="promptInput">Editable prompt (age 14 to 16; fixed reply shape)</label>
+      <textarea id="promptInput" spellcheck="true"></textarea>
+    </div>
+
+    <div class="exact-box">
+      <div class="exact-box-head">
+        <span>Exact text that will be copied (codes only)</span>
+        <span id="charCount">0 chars</span>
+      </div>
+      <pre id="exactCopyPreview" aria-live="polite"></pre>
+    </div>
+  </section>
+
+  <!-- TAB 2: PASTE REPLY, MAKE SLIP (SINGLE A5 OR THREE-TIER A4 SPLITTER) -->
+  <section class="panel" id="studioPaneSlip" aria-labelledby="tabBtnSlip" hidden>
+    <div class="noprint">
+      <h2>Paste reply, make slip</h2>
+      <div class="sub-tabs" role="tablist" aria-label="Slip output mode">
+        <button type="button" role="tab" class="sub-tab" id="modeSingleBtn" data-slip-mode="single" aria-selected="true">Single A5 slip (Pupil N)</button>
+        <button type="button" role="tab" class="sub-tab" id="modeSplitterBtn" data-slip-mode="splitter" aria-selected="false">Three-tier A4 splitter</button>
+      </div>
+
+      <div id="singleSlipControls" class="two-col">
+        <div class="field">
+          <label for="slipPupilSelect">Slip for</label>
+          <select id="slipPupilSelect"></select>
+        </div>
+        <div class="field">
+          <label for="slipScaleSelect">Print / type size</label>
+          <select id="slipScaleSelect">
+            <option value="large" selected>Large type (standard A5)</option>
+            <option value="xlarge">Extra-large type</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="splitterSlipControls" class="callout" hidden>
+        <p style="margin:0 0 6px"><b>Three-tier A4 splitter:</b> paste one task (or a three-tier reply) below to print <b>one A4 page</b> with three horizontal slips — <b>Supported</b>, <b>Independent</b>, <b>Aspire</b> — sharing the same title and topic, with no pupil code.</p>
+        <button type="button" id="copySplitterPromptBtn">Copy 3-tier task prompt</button>
+      </div>
+
+      <div class="field" style="margin-top:8px">
+        <label for="replyInput" id="replyInputLabel">Paste assistant reply (Title, 3 numbered steps, Done when)</label>
+        <textarea id="replyInput" placeholder="Title: Quick check on heat transfer&#10;1. Read the three energy cards on your desk.&#10;2. Match each card to conduction, convection, or radiation.&#10;3. Write one everyday example under your best match.&#10;Done when: All three cards are matched and one example sentence is checked."></textarea>
+      </div>
+
+      <div class="row">
+        <button type="button" class="primary" id="makeSlipBtn">Make slip</button>
+        <button type="button" id="printSlipBtn">Print A5 slip</button>
+        <button type="button" id="saveSlipBtn">Save</button>
+      </div>
+      <p id="slipStatus" class="status-line" aria-live="polite"></p>
+
+      <div id="savedSlipsWrap" class="callout" hidden>
+        <div class="field">
+          <label for="savedSlipsSelect">Saved slips on this device (codes only)</label>
+          <select id="savedSlipsSelect"></select>
+        </div>
+        <div class="row" style="margin-bottom:0">
+          <button type="button" id="loadSavedSlipBtn">Load saved</button>
+          <button type="button" id="clearSavedSlipsBtn">Clear saved</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODE 1 PRINT REGION: HALF-PAGE A5 DESK SLIP -->
+    <div id="slipPrintRegion" class="slip-preview-wrap">
+      <article id="slipSheet" aria-label="Half-page A5 desk slip">
+        <div>
+          <div class="slip-meta">
+            <span id="slipPupilBadge" class="slip-pupil-pill">Pupil 1</span>
+            <span id="slipMetaText" class="slip-tags">LESSON &middot; Independent &middot; 10 minutes</span>
+          </div>
+          <p id="slipAdaptBar" class="slip-adapt-line" hidden></p>
+          <h3 id="slipTitle" class="slip-title">Desk task slip</h3>
+          <ol id="slipSteps" class="slip-steps">
+            <li><span class="step-box" aria-hidden="true"></span><span class="step-num">1.</span><span class="step-text">Paste a reply above and press Make slip.</span></li>
+            <li><span class="step-box" aria-hidden="true"></span><span class="step-num">2.</span><span class="step-text">Read one instruction line at a time and tick each box as you go.</span></li>
+            <li><span class="step-box" aria-hidden="true"></span><span class="step-num">3.</span><span class="step-text">Check the Done when line at the foot before finishing.</span></li>
+          </ol>
+        </div>
+        <div id="slipFooter" class="slip-done">
+          <b>Done when:</b> <span id="slipDoneText">All steps above are ticked and checked.</span>
+        </div>
+      </article>
+    </div>
+
+    <!-- MODE 2 PRINT REGION: ONE A4 PAGE WITH THREE HORIZONTAL SLIPS (SUPPORTED, INDEPENDENT, ASPIRE) -->
+    <div id="splitterPrintRegion" class="slip-preview-wrap" hidden>
+      <div id="splitterSheet" role="region" aria-label="Three-tier A4 slip splitter"></div>
+    </div>
+  </section>
+
+  <!-- TAB 3: REQUEST BOX (KEEPING EVERY LIVE REQUESTS.HTML ID & CONTROL WORKING) -->
+  <section class="panel noprint" id="studioPaneRequest" aria-labelledby="tabBtnRequest" hidden>
+    <h2>Request box</h2>
+    <p class="callout">Ask for anything: a catch-up sheet, a fix, a new resource, or send a studio prompt to the home laptop. Codes only — no pupil names.</p>
+    <div class="row">
+      <button type="button" id="fillReqFromPromptBtn">Fill from current studio prompt</button>
+    </div>
+    <div class="field">
+      <label for="req">What do you need?</label>
+      <textarea id="req" placeholder="e.g. Catch-up sheet for GROW Science week 3 lesson 2, ready by Thursday"></textarea>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <label for="when">Needed by</label>
+        <select id="when">
+          <option>No rush</option>
+          <option>This week</option>
+          <option>Tomorrow</option>
+          <option>Today</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="laneSelect">Processing lane</label>
+        <select id="laneSelect"></select>
+      </div>
+    </div>
+    <div class="row">
+      <button type="button" class="primary" id="save">Save request file</button>
+    </div>
+    <p id="msg" class="status-line" aria-live="polite"></p>
+    <h3>Then</h3>
+    <ol>
+      <li>Put the file in your synced folder &rsaquo; <b>_INBOX &rsaquo; Requests</b>.</li>
+      <li>The home laptop adds it to <b>_AUTOMATION &rsaquo; Requests.txt</b> for routing.</li>
+    </ol>
+  </section>
+
+  <!-- TAB 4: MY ASSISTANTS SETTINGS (DEVICE ONLY, KEY mbm_assistants_v1) -->
+  <section class="panel noprint" id="studioPaneAssistants" aria-labelledby="tabBtnAssistants" hidden>
+    <h2>My assistants</h2>
+    <p class="callout">Type up to three button labels and plain home page addresses. Saved on this device only (<code>mbm_assistants_v1</code>). Any query string or fragment is removed so prompt text never enters a web address.</p>
+    <div class="assistant-slot-row">
+      <div class="field">
+        <label for="astLabel1">Button 1 label</label>
+        <input id="astLabel1" type="text" maxlength="28" autocomplete="off" placeholder="e.g. Assistant 1">
+      </div>
+      <div class="field">
+        <label for="astUrl1">Button 1 home address</label>
+        <input id="astUrl1" type="text" inputmode="url" maxlength="200" autocomplete="off" spellcheck="false" placeholder="Plain web address">
+      </div>
+    </div>
+    <div class="assistant-slot-row">
+      <div class="field">
+        <label for="astLabel2">Button 2 label</label>
+        <input id="astLabel2" type="text" maxlength="28" autocomplete="off" placeholder="e.g. Assistant 2">
+      </div>
+      <div class="field">
+        <label for="astUrl2">Button 2 home address</label>
+        <input id="astUrl2" type="text" inputmode="url" maxlength="200" autocomplete="off" spellcheck="false" placeholder="Plain web address">
+      </div>
+    </div>
+    <div class="assistant-slot-row">
+      <div class="field">
+        <label for="astLabel3">Button 3 label</label>
+        <input id="astLabel3" type="text" maxlength="28" autocomplete="off" placeholder="e.g. Assistant 3">
+      </div>
+      <div class="field">
+        <label for="astUrl3">Button 3 home address</label>
+        <input id="astUrl3" type="text" inputmode="url" maxlength="200" autocomplete="off" spellcheck="false" placeholder="Plain web address">
+      </div>
+    </div>
+    <div class="row">
+      <button type="button" class="primary" id="saveAssistantsBtn">Save assistants</button>
+      <button type="button" id="clearAssistantsBtn">Clear saved assistants</button>
+    </div>
+    <p id="assistantsStatus" class="status-line" aria-live="polite"></p>
+  </section>
+
+  <footer class="site-foot noprint">
+    <a id="footerHomeLink" href="My_tools.html">My tools</a>
+    <button type="button" id="toggleAllStudioBtn">Show all sections</button>
+    <span>Made by Matt &middot; Codes only &middot; Saved on this device</span>
+  </footer>
+</main>
+
+<script>
+(function(){
+  'use strict';
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  var KEYS = {
+    assistants: 'mbm_assistants_v1',
+    savedSlips: 'mbm_saved_slips_v1',
+    times: 'mbm_period_times_v1',
+    term: 'mbm_term_config_v1',
+    theme: 'mbm_tools_theme_v1',
+    commPart: 'mbm_tools_comm_part_v1',
+    sharedPath: 'mbm_tools_path_v1',
+    pupilKey: 'mbm_pupil_key_v1',
+    profile: 'mbm_pupil_profile_v1',
+    classNames: 'mbm_class_names_v1',
+    extraNames: 'mbm_names_list_v1',
+    tally: 'mbm_exit_tally_v1',
+    tracker: 'mbm_catchup_tracker_v1'
+  };
+
+  // Safe localStorage wrapper with in-memory fallback when file:// restricts storage
+  var memStore = Object.create(null);
+  var storageBlocked = false;
+
+  function flagStorageIssue(){
+    if (storageBlocked) return;
+    storageBlocked = true;
+    var w = $('storageWarning');
+    if (w){
+      w.hidden = false;
+      w.textContent = 'Browser storage is restricted in this viewer. Copying prompts, making slips, printing, and saving request files still work for this visit.';
+    }
+  }
+
+  function rawGet(key){
+    try {
+      var v = window.localStorage.getItem(key);
+      if (v !== null) return v;
+    } catch (e) {
+      flagStorageIssue();
+    }
+    return Object.prototype.hasOwnProperty.call(memStore, key) ? memStore[key] : null;
+  }
+
+  function rawSet(key, val){
+    memStore[key] = String(val);
+    try {
+      window.localStorage.setItem(key, String(val));
+      return true;
+    } catch (e) {
+      flagStorageIssue();
+      return false;
+    }
+  }
+
+  function rawRemove(key){
+    delete memStore[key];
+    try {
+      window.localStorage.removeItem(key);
+      return true;
+    } catch (e) {
+      flagStorageIssue();
+      return false;
+    }
+  }
+
+  function readJSON(key, fallback){
+    var raw = rawGet(key);
+    if (raw === null || raw === '') return fallback;
+    try {
+      var parsed = JSON.parse(raw);
+      return parsed === null || parsed === undefined ? fallback : parsed;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  // Apply saved theme if set in My tools (read-only)
+  (function applySavedTheme(){
+    var th = readJSON(KEYS.theme, 'auto');
+    if (th === 'light' || th === 'dark'){
+      document.documentElement.setAttribute('data-theme', th);
+    }
+  })();
+
+  // Consume optional same-tab navigation handoff from My_tools.html or Quick_capture.html (zero URL text, zero storage write)
+  var navHandoff = null;
+  (function consumeWindowHandoff(){
+    try {
+      var raw = String(window.name || '').trim();
+      if (!raw || raw.charAt(0) !== '{') return;
+      var obj = JSON.parse(raw);
+      if (obj && obj.mbmStudioNav === 1){
+        navHandoff = obj;
+        window.name = '';
+      }
+    } catch (e) {}
+  })();
+
+  function applyBackLink(){
+    var back = $('studioBackLink');
+    if (navHandoff && navHandoff.from === 'Quick_capture.html'){
+      back.href = 'Quick_capture.html';
+      back.innerHTML = '&larr; Quick capture';
+    } else {
+      back.href = 'My_tools.html';
+      back.innerHTML = '&larr; My tools';
+    }
+  }
+
+  // Timetable & lesson-code rules matching live My_tools.html and Quick_capture.html (including ONE_BEHIND)
+  var DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+  var TT = {
+    Monday:    [[1,'LAUNCH','Vocational'],[2,'GROW','Science'],[3,'BUILD','Science'],[4,'LAUNCH','Science'],[5,'BUILD','Creative Arts'],[6,'GROW','Creative Arts']],
+    Tuesday:   [[1,'BUILD','Creative Arts'],[2,'LAUNCH','Humanities'],[3,'BUILD','Careers'],[4,'GROW','Science'],[5,'BUILD','RE'],[6,'LAUNCH','ICT']],
+    Wednesday: [[1,'BUILD','RSHE'],[2,'LAUNCH','Science'],[3,'GROW','PSHE'],[4,'BUILD','Science'],[5,'GROW','Creative Arts'],[6,'LAUNCH','Vocational']],
+    Thursday:  [[1,'LAUNCH','DT'],[2,'GROW','RE'],[3,'BUILD','Humanities'],[4,'LAUNCH','RSE'],[5,'ALL','Community Projects']],
+    Friday:    [[1,'LAUNCH','Careers'],[2,'GROW','Humanities'],[3,'BUILD','Vocational'],[4,'LAUNCH','Science']]
+  };
+  var PREFIX = {
+    Science:'SCI', Vocational:'VOC', 'Creative Arts':'ART', Humanities:'HUM',
+    Careers:'CAREERS', RE:'RE', ICT:'ICT', RSHE:'RSHE', PSHE:'PSHE', DT:'DT',
+    RSE:'RSE', 'Community Projects':'COMM'
+  };
+  var ONE_BEHIND = { 'LAUNCH|Careers':1, 'GROW|Humanities':1, 'BUILD|Vocational':1 };
+  var LN = {};
+  (function(){
+    var counts = {};
+    DAYS.forEach(function(d){
+      TT[d].forEach(function(row){
+        var k = row[1] + '|' + row[2];
+        counts[k] = (counts[k] || 0) + 1;
+        LN[d + '|' + row[0]] = counts[k];
+      });
+    });
+  })();
+
+  var SCHOOL_DAY = [
+    {label:'Check-in and reading',start:'09:00',end:'09:30'},
+    {p:1,start:'09:30',end:'10:10'},
+    {p:2,start:'10:10',end:'10:50'},
+    {label:'Break',start:'10:50',end:'11:00'},
+    {p:3,start:'11:00',end:'11:40'},
+    {p:4,start:'11:40',end:'12:20'},
+    {label:'Lunch',start:'12:20',end:'12:50'},
+    {p:5,start:'12:50',end:'13:30'},
+    {p:6,start:'13:30',end:'14:10'},
+    {label:'Check-out',start:'14:10',end:'14:30'}
+  ];
+
+  var DEFAULT_GROUPS = { BUILD:[4,7,9,12], GROW:[1,3,5,8,11], LAUNCH:[2,6,10] };
+  var PATH_TO_TIER = { BUILD:'Supported', GROW:'Independent', LAUNCH:'Aspire', ALL:'Independent' };
+  var TALLY_WORDS = { got:'Got it', nearly:'Partly', again:'Not yet', absent:'Absent' };
+  var TIER_LEVELS = ['Supported', 'Independent', 'Aspire'];
+
+  function pad(n){ return String(n).padStart(2, '0'); }
+
+  function defaultSchoolTimes(){
+    var periods = SCHOOL_DAY.filter(function(s){ return s.p; });
+    return {
+      v: 2,
+      starts: periods.map(function(s){ return s.start; }),
+      ends: periods.map(function(s){ return s.end; }),
+      confirmed: true
+    };
+  }
+
+  function validSchoolTimes(val){
+    var fmt = function(t){ return typeof t === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(t); };
+    return !!val && val.v === 2 && Array.isArray(val.starts) && Array.isArray(val.ends) &&
+      val.starts.length === 6 && val.ends.length === 6 &&
+      val.starts.every(function(st, i){
+        return fmt(st) && fmt(val.ends[i]) && val.ends[i] > st && (!i || st >= val.ends[i - 1]);
+      });
+  }
+
+  function getSchoolTimes(){
+    var saved = readJSON(KEYS.times, null);
+    return validSchoolTimes(saved) ? saved : defaultSchoolTimes();
+  }
+
+  function getTermConfig(){
+    var raw = readJSON(KEYS.term, null);
+    if (raw && typeof raw.w1Monday === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.w1Monday)){
+      var parts = raw.w1Monday.split('-').map(Number);
+      return { y:parts[0], m:parts[1], d:parts[2], skipW1Mon:raw.skipW1Mon !== false };
+    }
+    return { y:2026, m:11, d:2, skipW1Mon:true };
+  }
+
+  function getCommPart(){
+    if (navHandoff && (+navHandoff.commPart === 1 || +navHandoff.commPart === 2)) return +navHandoff.commPart;
+    var saved = readJSON(KEYS.commPart, 1);
+    return +saved === 2 ? 2 : 1;
+  }
+
+  function lessonCode(w, path, subj, n, part){
+    var effPart = part || getCommPart();
+    var taughtW = Math.max(1, +w - (ONE_BEHIND[path + '|' + subj] || 0));
+    var wk = 'A2_W' + pad(taughtW);
+    if (subj === 'Community Projects'){
+      var cw = +w === 4 ? (+effPart === 2 ? 4 : 3) : (+w < 4 ? Math.max(1, +w - 1) : +w);
+      return 'COMMUNITY_A2_W' + pad(cw);
+    }
+    if (subj === 'Science'){
+      return path === 'GROW' ? 'GROW_SCI_' + wk + '_P' + n : 'SCI_' + path + '_' + wk + '_L' + n;
+    }
+    if (subj === 'Creative Arts') return 'ART_' + path + '_' + wk + '_P' + n;
+    if (subj === 'RE') return path + '_RE_' + wk;
+    var base = (PREFIX[subj] || 'LES') + '_' + path + '_' + wk;
+    return subj === 'Vocational' && path === 'LAUNCH' && +w === 7 ? base + ' L' + n : base;
+  }
+
+  function schoolWeek(date, cfg){
+    var tc = cfg || getTermConfig();
+    var monOffset = (date.getDay() + 6) % 7;
+    var utcDay = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate() - monOffset);
+    var utcStart = Date.UTC(tc.y, tc.m - 1, tc.d);
+    return 1 + Math.round((utcDay - utcStart) / 604800000);
+  }
+
+  function schoolSlotsForDate(date, times, cfg){
+    var tc = cfg || getTermConfig();
+    var w = schoolWeek(date, tc);
+    var day = DAYS[date.getDay() - 1];
+    if (w < 1 || w > 7 || !day || (tc.skipW1Mon && w === 1 && day === 'Monday')) return [];
+    var mkClock = function(hm){
+      var parts = hm.split(':').map(Number);
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate(), parts[0], parts[1]);
+    };
+    return TT[day].map(function(row){
+      var n = LN[day + '|' + row[0]];
+      var path = row[1];
+      var subj = row[2];
+      var codePath = path === 'ALL' ? 'GROW' : path;
+      return {
+        w: w,
+        day: day,
+        p: row[0],
+        path: path,
+        subject: subj,
+        lesson: n,
+        code: subj === 'Community Projects' ? lessonCode(w, 'ALL', subj, n) : lessonCode(w, codePath, subj, n),
+        start: mkClock(times.starts[row[0] - 1]),
+        end: mkClock(times.ends[row[0] - 1])
+      };
+    });
+  }
+
+  function detectLiveSlot(now, times){
+    var cfg = getTermConfig();
+    var candidates = [];
+    for (var offset = 0; offset < 14; offset++){
+      var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
+      var daySlots = schoolSlotsForDate(d, times, cfg);
+      for (var i = 0; i < daySlots.length; i++) candidates.push(daySlots[i]);
+    }
+    var current = candidates.find(function(s){ return now >= s.start && now < s.end; });
+    var upcoming = candidates.filter(function(s){ return s.start > now; });
+    var chosen = current || upcoming[0] || null;
+    if (!chosen){
+      var fallbackW = Math.min(7, Math.max(1, schoolWeek(now, cfg) || 2));
+      var fallbackDay = (cfg.skipW1Mon && fallbackW === 1) ? 'Tuesday' : 'Monday';
+      var r = TT[fallbackDay][0];
+      var n = LN[fallbackDay + '|' + r[0]];
+      chosen = {
+        w: fallbackW, day: fallbackDay, p: r[0], path: r[1], subject: r[2], lesson: n,
+        code: lessonCode(fallbackW, r[1] === 'ALL' ? 'GROW' : r[1], r[2], n)
+      };
+      return { slot: chosen, stateLabel: 'Next' };
+    }
+    return { slot: chosen, stateLabel: current ? 'Now' : 'Next' };
+  }
+
+  // Redaction: scrubs saved pupil labels, initials, names lists, honorifics, and unknown Title-Case full names
+  var KEEP_UPPER = {
+    BUILD:1,GROW:1,LAUNCH:1,ALL:1,SUPPORTED:1,INDEPENDENT:1,ASPIRE:1,
+    RE:1,DT:1,ICT:1,RSE:1,PSHE:1,RSHE:1,SCI:1,ART:1,HUM:1,VOC:1,COMM:1,
+    SCIENCE:1,HUMANITIES:1,CAREERS:1,VOCATIONAL:1,CREATIVE:1,ARTS:1,COMMUNITY:1,PROJECTS:1,
+    MONDAY:1,TUESDAY:1,WEDNESDAY:1,THURSDAY:1,FRIDAY:1,
+    PUPIL:1,PUPILS:1,GROUP:1,CLASS:1,WEEK:1,LESSON:1,PERIOD:1,SLOT:1,TIER:1,AGE:1,RANGE:1,TIME:1,AVAILABLE:1,MINUTES:1,
+    TASK:1,STRETCH:1,UNSTICK:1,SMALLER:1,STEPS:1,STEP:1,HINGE:1,QUESTION:1,QUESTIONS:1,
+    EXTENSION:1,UPGRADE:1,FILE:1,CATCH:1,ARRIVAL:1,REPLY:1,SHAPE:1,EXACT:1,ONLY:1,
+    TITLE:1,DONE:1,WHEN:1,CHECK:1,DESK:1,SLIP:1,SLIPS:1,LINE:1,NUMBERED:1,THREE:1,SHORT:1,PLAIN:1,ENGLISH:1,UK:1,
+    TALLY:1,STATE:1,GOT:1,PARTLY:1,NOT:1,YET:1,ABSENT:1,RECORDED:1,SIGNAL:1,EXIT:1,RETRIEVAL:1,STARTER:1,
+    ADAPTATIONS:1,ADAPTATION:1,HELP:1,VOCABULARY:1,BANK:1,SENTENCE:1,STARTERS:1,LARGE:1,ENLARGED:1,PRINT:1,
+    ONE:1,EXTRA:1,SPACE:1,VISUAL:1,READ:1,ALOUD:1,READER:1,FEWER:1,MOVEMENT:1,BREAK:1,NOW:1,NEXT:1,CARD:1,
+    TODAY:1,TOMORROW:1,RUSH:1,LANE:1,AUTO:1,NEEDED:1,BY:1,TARGET:1,CHIP:1,HTML:1,A5:1,A4:1,
+    QUICK:1,HEAT:1,ENERGY:1,TRANSFER:1,CIRCUIT:1,CELLS:1,FORCE:1,FORCES:1,LIGHT:1,SOUND:1,WATER:1,EARTH:1,
+    SAFETY:1,TOOLS:1,KITCHEN:1,BUDGET:1,MONEY:1,HEALTH:1,DESIGN:1,MEDIA:1,MUSIC:1,DRAMA:1,CODING:1,DATA:1,
+    GRAPH:1,TABLE:1,CHART:1,MAP:1,TIMELINE:1,SOURCE:1,SOURCES:1,STORY:1,WRITING:1,READING:1,SPELLING:1,
+    GRAMMAR:1,MATHS:1,NUMBER:1,SHAPES:1,MEASURE:1,PRACTICAL:1,WORKSHOP:1,REVIEW:1,PLENARY:1,
+    QUIZ:1,MATCH:1,SORT:1,ORDER:1,LABEL:1,DRAW:1,EXPLAIN:1,COMPARE:1,TEST:1,PLAN:1,DRAFT:1,EDIT:1,FINAL:1,
+    FIRST:1,SECOND:1,THIRD:1,MAIN:1,CORE:1,KEY:1,NEW:1,OPEN:1,CALM:1,CLEAR:1,SIMPLE:1,DAILY:1,WEEKLY:1,
+    HOME:1,ROOM:1,BOARD:1,NONE:1,SET:1,SPLITTER:1,TOPIC:1,SAME:1,PAGE:1
+  };
+
+  function escRe(s){ return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  function redact(text){
+    var s = String(text == null ? '' : text);
+    var pairs = [];
+    function add(w, rep, caseSens){
+      w = String(w || '').trim();
+      if (!w || /^(?:Pupil\s*|P)?\d+$/i.test(w)) return;
+      if (KEEP_UPPER[w.toUpperCase()]) return;
+      pairs.push([w, rep, !!caseSens]);
+    }
+
+    var keyObj = readJSON(KEYS.pupilKey, {});
+    if (keyObj && typeof keyObj === 'object'){
+      Object.keys(keyObj).forEach(function(n){
+        if (!/^(?:[1-9]|1[0-9]|20)$/.test(String(n))) return;
+        var lbl = String(keyObj[n] || '').trim();
+        if (!lbl) return;
+        add(lbl, 'Pupil ' + n, false);
+        lbl.split(/\s+/).forEach(function(part){ if (part.length > 1) add(part, 'Pupil ' + n, false); });
+        var ini = lbl.split(/\s+/).map(function(part){ return part.charAt(0); }).join('').toUpperCase().slice(0, 3);
+        if (ini.length > 1) add(ini, 'Pupil ' + n, true);
+      });
+    }
+
+    var tr = readJSON(KEYS.tracker, {});
+    if (tr && tr.pupils && typeof tr.pupils === 'object'){
+      var allTr = [].concat(tr.pupils.BUILD || [], tr.pupils.GROW || [], tr.pupils.LAUNCH || []);
+      allTr.forEach(function(lbl, idx){
+        var n = idx + 1;
+        lbl = String(lbl || '').trim();
+        if (lbl && !/^(?:Pupil\s*|P)?\d+$/i.test(lbl)){
+          add(lbl, 'Pupil ' + n, false);
+          lbl.split(/\s+/).forEach(function(part){ if (part.length > 1) add(part, 'Pupil ' + n, false); });
+        }
+      });
+    }
+
+    [KEYS.classNames, KEYS.extraNames].forEach(function(sk){
+      var raw = rawGet(sk);
+      if (!raw) return;
+      var parsed;
+      try { parsed = JSON.parse(raw); } catch (e) { parsed = raw; }
+      var lines = Array.isArray(parsed) ? parsed : String(parsed).split(/\r?\n/);
+      lines.forEach(function(line, idx){
+        line = String(line || '').trim();
+        if (!line || line.charAt(0) === '#') return;
+        var rep = (sk === KEYS.classNames && idx < 20) ? ('Pupil ' + (idx + 1)) : '[name]';
+        add(line, rep, false);
+        line.split(/\s+/).forEach(function(part){ if (part.length > 1) add(part, rep, false); });
+      });
+    });
+
+    pairs.sort(function(a, b){ return b[0].length - a[0].length; });
+    var slots = [];
+    pairs.forEach(function(p){
+      var re = new RegExp('(^|[^\\p{L}\\p{N}_])(' + escRe(p[0]) + ")(?:['\u2019]s)?(?=$|[^\\p{L}\\p{N}_])", p[2] ? 'gu' : 'giu');
+      s = s.replace(re, function(_, pre){
+        var id = slots.length;
+        slots.push(p[1]);
+        return pre + '\u0001' + id + '\u0002';
+      });
+    });
+
+    s = s.replace(/\b(?:Mr|Mrs|Ms|Miss|Mx|Dr)\.?\s+[A-Z][a-z]{1,25}\b/g, function(){
+      var id = slots.length;
+      slots.push('[staff]');
+      return '\u0001' + id + '\u0002';
+    });
+
+    s = s.replace(/\b([A-Z][a-z]{1,25})\s+([A-Z][a-z]{1,25})\b/g, function(m, w1, w2){
+      if (KEEP_UPPER[w1.toUpperCase()] || KEEP_UPPER[w2.toUpperCase()]) return m;
+      var id = slots.length;
+      slots.push('[name]');
+      return '\u0001' + id + '\u0002';
+    });
+
+    return s.replace(/\u0001(\d+)\u0002/g, function(_, id){ return slots[+id]; });
+  }
+
+  // Codes-only roster & adaptation tags (never reads private profile notes)
+  function getCodedGroups(){
+    var groups = { BUILD:[], GROW:[], LAUNCH:[] };
+    var assigned = Object.create(null);
+    var tr = readJSON(KEYS.tracker, {});
+    var prof = readJSON(KEYS.profile, {});
+    var hasAny = false;
+
+    if (tr && tr.pupils && typeof tr.pupils === 'object'){
+      var running = 0;
+      ['BUILD','GROW','LAUNCH'].forEach(function(path){
+        var arr = Array.isArray(tr.pupils[path]) ? tr.pupils[path] : [];
+        arr.forEach(function(entry){
+          running += 1;
+          var m = String(entry || '').trim().match(/^(?:Pupil\s*|P)?(\d+)$/i);
+          var n = m ? +m[1] : running;
+          if (n >= 1 && n <= 20 && !assigned[n]){
+            groups[path].push(n);
+            assigned[n] = path;
+            hasAny = true;
+          }
+        });
+      });
+    }
+
+    if (prof && prof.pupils && typeof prof.pupils === 'object'){
+      Object.keys(prof.pupils).forEach(function(id){
+        var n = +id;
+        if (n < 1 || n > 20 || assigned[n]) return;
+        var pObj = prof.pupils[id];
+        if (pObj && typeof pObj === 'object' && (pObj.group === 'BUILD' || pObj.group === 'GROW' || pObj.group === 'LAUNCH')){
+          groups[pObj.group].push(n);
+          assigned[n] = pObj.group;
+          hasAny = true;
+        }
+      });
+    }
+
+    if (!hasAny){
+      return {
+        BUILD: DEFAULT_GROUPS.BUILD.slice(),
+        GROW: DEFAULT_GROUPS.GROW.slice(),
+        LAUNCH: DEFAULT_GROUPS.LAUNCH.slice()
+      };
+    }
+    return groups;
+  }
+
+  function pupilPathway(n, groups){
+    n = +n;
+    if (groups.BUILD.indexOf(n) !== -1) return 'BUILD';
+    if (groups.GROW.indexOf(n) !== -1) return 'GROW';
+    if (groups.LAUNCH.indexOf(n) !== -1) return 'LAUNCH';
+    return '';
+  }
+
+  function pupilAdaptTags(n){
+    var prof = readJSON(KEYS.profile, {});
+    if (!prof || !prof.pupils || typeof prof.pupils !== 'object') return [];
+    var rec = prof.pupils[String(n)] || prof.pupils[n];
+    if (!rec || typeof rec !== 'object' || !Array.isArray(rec.adapt)) return [];
+    return rec.adapt
+      .filter(function(item){ return typeof item === 'string' && item.trim(); })
+      .slice(0, 4)
+      .map(function(item){ return redact(item.trim().slice(0, 80)); });
+  }
+
+  // Reads mbm_exit_tally_v1 for a slot (normalising got/nearly/again/absent)
+  function normalTallyState(rawState){
+    var v = String(rawState || '').trim().toLowerCase();
+    if (v === 'got' || v === 'got it') return 'got';
+    if (v === 'nearly' || v === 'partly' || v === 'partial') return 'nearly';
+    if (v === 'again' || v === 'not yet' || v === 'more') return 'again';
+    if (v === 'absent' || v === 'missed') return 'absent';
+    return '';
+  }
+
+  function slotTallyMap(slot){
+    var tallies = readJSON(KEYS.tally, {});
+    var out = Object.create(null);
+    if (!slot || !tallies || typeof tallies !== 'object') return out;
+    var prefix = slot.w + '|' + slot.day + '|' + slot.p + '|';
+    Object.keys(tallies).forEach(function(k){
+      if (k.indexOf(prefix) !== 0) return;
+      var n = +k.slice(prefix.length);
+      var rec = tallies[k];
+      if (n >= 1 && n <= 20 && rec && typeof rec === 'object'){
+        var st = normalTallyState(rec.state);
+        if (st) out[n] = st;
+      }
+    });
+    return out;
+  }
+
+  function tallyCountsForMap(tMap){
+    var counts = { got:0, nearly:0, again:0, absent:0, total:0 };
+    Object.keys(tMap).forEach(function(n){
+      var st = tMap[n];
+      if (counts[st] !== undefined){
+        counts[st] += 1;
+        counts.total += 1;
+      }
+    });
+    return counts;
+  }
+
+  function tallySummaryText(tMap){
+    var counts = tallyCountsForMap(tMap);
+    if (!counts.total) return 'No tallies yet';
+    var parts = [];
+    if (counts.got) parts.push(counts.got + ' got it');
+    if (counts.nearly) parts.push(counts.nearly + ' partly');
+    if (counts.again) parts.push(counts.again + ' not yet');
+    if (counts.absent) parts.push(counts.absent + ' absent');
+    return parts.join(', ');
+  }
+
+  function starterSignalCount(tMap){
+    var counts = tallyCountsForMap(tMap);
+    return counts.nearly + counts.again;
+  }
+
+  // Tabs (in-memory only; writes nothing to storage)
+  var currentStudioTab = 'prompts';
+  var showAllSections = false;
+
+  function applyStudioTab(tabName){
+    if (['prompts', 'slip', 'request', 'assistants'].indexOf(tabName) !== -1){
+      currentStudioTab = tabName;
+    }
+    document.querySelectorAll('[data-studio-tab]').forEach(function(btn){
+      var sel = !showAllSections && btn.getAttribute('data-studio-tab') === currentStudioTab;
+      btn.setAttribute('aria-selected', String(sel));
+    });
+    $('studioPanePrompts').hidden = !showAllSections && currentStudioTab !== 'prompts';
+    $('studioPaneSlip').hidden = !showAllSections && currentStudioTab !== 'slip';
+    $('studioPaneRequest').hidden = !showAllSections && currentStudioTab !== 'request';
+    $('studioPaneAssistants').hidden = !showAllSections && currentStudioTab !== 'assistants';
+    $('toggleAllStudioBtn').textContent = showAllSections ? 'Return to tabbed view' : 'Show all sections';
+  }
+
+  // Slip output mode: 'single' (A5 Pupil N) vs 'splitter' (One A4 page, 3 horizontal slips: Supported, Independent, Aspire)
+  var slipMode = 'single';
+
+  function applySlipMode(mode){
+    slipMode = mode === 'splitter' ? 'splitter' : 'single';
+    document.body.setAttribute('data-slip-mode', slipMode);
+    $('modeSingleBtn').setAttribute('aria-selected', String(slipMode === 'single'));
+    $('modeSplitterBtn').setAttribute('aria-selected', String(slipMode === 'splitter'));
+    $('singleSlipControls').hidden = slipMode !== 'single';
+    $('splitterSlipControls').hidden = slipMode !== 'splitter';
+    $('slipPrintRegion').hidden = slipMode !== 'single';
+    $('splitterPrintRegion').hidden = slipMode !== 'splitter';
+    $('printSlipBtn').textContent = slipMode === 'splitter' ? 'Print A4 splitter' : 'Print A5 slip';
+    $('dynamicPrintPage').textContent = slipMode === 'splitter'
+      ? '@page { size: A4 portrait; margin: 7mm; }'
+      : '@page { size: A5 portrait; margin: 7mm; }';
+    refreshSlipPreview(false);
+  }
+
+  // Build selectable slots across Weeks 1..7, preselecting handoff slot or live/next timetabled slot
+  var allSlots = [];
+  var liveInfo = detectLiveSlot(new Date(), getSchoolTimes());
+
+  function buildSlotOptions(){
+    var cfg = getTermConfig();
+    var sel = $('slotSelect');
+    sel.replaceChildren();
+    allSlots = [];
+    var targetIndex = 0;
+    var matchW = (navHandoff && +navHandoff.w >= 1 && +navHandoff.w <= 7) ? +navHandoff.w : (liveInfo.slot ? liveInfo.slot.w : 2);
+    var matchDay = (navHandoff && DAYS.indexOf(navHandoff.day) !== -1) ? navHandoff.day : (liveInfo.slot ? liveInfo.slot.day : 'Monday');
+    var matchP = (navHandoff && +navHandoff.p >= 1 && +navHandoff.p <= 6) ? +navHandoff.p : (liveInfo.slot ? liveInfo.slot.p : 1);
+
+    for (var w = 1; w <= 7; w++){
+      for (var dIdx = 0; dIdx < DAYS.length; dIdx++){
+        var day = DAYS[dIdx];
+        if (cfg.skipW1Mon && w === 1 && day === 'Monday') continue;
+        var rows = TT[day];
+        for (var rIdx = 0; rIdx < rows.length; rIdx++){
+          var row = rows[rIdx];
+          var n = LN[day + '|' + row[0]];
+          var path = row[1];
+          var subj = row[2];
+          var effPath = path === 'ALL'
+            ? ((navHandoff && ['BUILD','GROW','LAUNCH'].indexOf(navHandoff.path) !== -1) ? navHandoff.path : 'GROW')
+            : path;
+          var code = subj === 'Community Projects'
+            ? lessonCode(w, 'ALL', subj, n)
+            : lessonCode(w, effPath, subj, n);
+          var slotObj = { w:w, day:day, p:row[0], path:path, effPath:effPath, subject:subj, lesson:n, code:code };
+          var idx = allSlots.length;
+          allSlots.push(slotObj);
+          if (w === matchW && day === matchDay && row[0] === matchP){
+            targetIndex = idx;
+          }
+          var opt = document.createElement('option');
+          opt.value = String(idx);
+          opt.textContent = 'W' + w + ' ' + day.slice(0, 3) + ' P' + row[0] + ' · ' + code + ' (' + subj + ')';
+          sel.appendChild(opt);
+        }
+      }
+    }
+    sel.value = String(targetIndex);
+  }
+
+  function currentSlot(){
+    var idx = +($('slotSelect').value || 0);
+    return allSlots[idx] || liveInfo.slot;
+  }
+
+  function populatePupilSelectors(slot, preserveSelection){
+    var prevPromptPupil = preserveSelection ? $('pupilSelect').value : '';
+    var prevSlipPupil = preserveSelection ? $('slipPupilSelect').value : '';
+    var groups = getCodedGroups();
+    var tMap = slotTallyMap(slot);
+
+    var pSel = $('pupilSelect');
+    var sSel = $('slipPupilSelect');
+    pSel.replaceChildren();
+    sSel.replaceChildren();
+
+    var grpOpt = document.createElement('option');
+    grpOpt.value = 'group';
+    grpOpt.textContent = 'Whole class / group (codes only)';
+    pSel.appendChild(grpOpt);
+
+    var clsSlipOpt = document.createElement('option');
+    clsSlipOpt.value = 'class';
+    clsSlipOpt.textContent = 'Whole class starter (no pupil code)';
+    sSel.appendChild(clsSlipOpt);
+
+    var effPath = slot ? (slot.effPath || slot.path) : 'GROW';
+    var defaultSlipN = 1;
+    if (effPath && groups[effPath] && groups[effPath].length){
+      defaultSlipN = groups[effPath][0];
+    }
+
+    for (var n = 1; n <= 20; n++){
+      var pPath = pupilPathway(n, groups);
+      var pTier = PATH_TO_TIER[pPath] || '';
+      var tState = tMap[n] ? TALLY_WORDS[tMap[n]] : '';
+      var suffixParts = [];
+      if (pTier) suffixParts.push(pTier);
+      if (tState) suffixParts.push(tState);
+      var label = 'Pupil ' + n + (suffixParts.length ? ' (' + suffixParts.join(' · ') + ')' : '');
+
+      var o1 = document.createElement('option');
+      o1.value = String(n);
+      o1.textContent = label;
+      pSel.appendChild(o1);
+
+      var o2 = document.createElement('option');
+      o2.value = String(n);
+      o2.textContent = label;
+      sSel.appendChild(o2);
+    }
+
+    pSel.value = (preserveSelection && prevPromptPupil) ? prevPromptPupil : String(defaultSlipN);
+    sSel.value = (preserveSelection && prevSlipPupil) ? prevSlipPupil : String(defaultSlipN);
+  }
+
+  function pickHelpfulPupil(slot, preferredStates){
+    var groups = getCodedGroups();
+    var tMap = slotTallyMap(slot);
+    var effPath = slot ? (slot.effPath || slot.path) : '';
+    var pool = (effPath && groups[effPath] && groups[effPath].length)
+      ? groups[effPath]
+      : [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+    for (var sIdx = 0; sIdx < preferredStates.length; sIdx++){
+      var st = preferredStates[sIdx];
+      for (var i = 0; i < pool.length; i++){
+        if (tMap[pool[i]] === st) return pool[i];
+      }
+      for (var n = 1; n <= 20; n++){
+        if (tMap[n] === st) return n;
+      }
+    }
+    return pool[0] || 1;
+  }
+
+  function refreshStarterChipVisibility(slot){
+    var tMap = slotTallyMap(slot);
+    var signal = starterSignalCount(tMap);
+    var wrap = $('starterChipWrap');
+    wrap.hidden = signal < 2;
+    return signal;
+  }
+
+  function renderSlotLine(){
+    var slot = currentSlot();
+    var tMap = slotTallyMap(slot);
+    var tier = $('tierSelect').value || 'Independent';
+    var timeAvail = $('timeSelect').value || '10 minutes';
+    var isLiveMatch = liveInfo.slot && slot && liveInfo.slot.w === slot.w && liveInfo.slot.day === slot.day && liveInfo.slot.p === slot.p;
+    var prefix = isLiveMatch ? liveInfo.stateLabel : ('W' + slot.w);
+    $('slotPrimaryText').textContent = prefix + ' · ' + slot.day.slice(0, 3) + ' P' + slot.p + ' · ' + slot.code;
+    $('slotSecondaryText').textContent = slot.subject + ' · ' + tier + ' · ' + timeAvail + ' · ' + tallySummaryText(tMap);
+    refreshStarterChipVisibility(slot);
+  }
+
+  // Prompt chips (6 standard + conditional Exit-tally starter chip)
+  var activeChip = 'stretch';
+
+  var CHIP_META = {
+    starter:   { label:'Starter for next lesson', defaultTime:'3 minutes' },
+    stretch:   { label:'Stretch task', defaultTime:'10 minutes' },
+    unstick:   { label:'Unstick (smaller steps)', defaultTime:'5 minutes' },
+    hinge:     { label:'Hinge question', defaultTime:'5 minutes' },
+    extension: { label:'Extension for one pupil', defaultTime:'10 minutes' },
+    upgrade:   { label:'Upgrade this lesson file', defaultTime:'20 minutes' },
+    catchup:   { label:'Catch-up arrival task', defaultTime:'10 minutes' }
+  };
+
+  function buildChipPrompt(chipKey){
+    var slot = currentSlot();
+    var tier = $('tierSelect').value || 'Independent';
+    var timeAvail = $('timeSelect').value || '10 minutes';
+    var pupilVal = $('pupilSelect').value;
+    var tMap = slotTallyMap(slot);
+    var tallyLine = tallySummaryText(tMap);
+    var counts = tallyCountsForMap(tMap);
+
+    if (chipKey === 'starter'){
+      var classGroup = slot.path === 'ALL' ? (slot.effPath || 'ALL') : slot.path;
+      var starterLines = [
+        'Request type: Starter for next lesson',
+        'Lesson code: ' + slot.code + ' (' + slot.subject + ')',
+        'Target: Class (' + classGroup + ')',
+        'Tier: ' + tier,
+        'Pupil age range: 14 to 16',
+        'Time available: 3 minutes',
+        'Adaptation tags: Calm retrieval check',
+        'Tally state: ' + counts.nearly + ' partly, ' + counts.again + ' not yet (' + tallyLine + ')',
+        '',
+        'Write a calm three-minute retrieval starter for the next ' + slot.subject + ' lesson following ' + slot.code + ' at the ' + tier + ' tier (ages 14 to 16, 3 minutes). Revisit and check the key idea where ' + (counts.nearly + counts.again) + ' pupils recorded Partly or Not yet, with short clear lines and no heavy copying.',
+        '',
+        'Use plain UK English and pupil codes only (never any person name). Reply in this exact shape:',
+        'Title: <clear short starter title>',
+        '1. <retrieval check one — one instruction on one line>',
+        '2. <retrieval check two — one instruction on one line>',
+        '3. <quick self-check step — one instruction on one line>',
+        'Done when: <one concrete 3-minute check line at the foot>'
+      ];
+      return redact(starterLines.join('\n'));
+    }
+
+    var targetCode = pupilVal === 'group' ? ('Group (' + tier + ')') : ('Pupil ' + (+pupilVal));
+    var pupilTally = (pupilVal !== 'group' && tMap[+pupilVal]) ? TALLY_WORDS[tMap[+pupilVal]] : '';
+    var adaptList = pupilVal !== 'group' ? pupilAdaptTags(+pupilVal) : [];
+
+    var lines = [
+      'Request type: ' + (CHIP_META[chipKey] ? CHIP_META[chipKey].label : 'Classroom task'),
+      'Lesson code: ' + slot.code + ' (' + slot.subject + ')',
+      'Target: ' + targetCode,
+      'Tier: ' + tier,
+      'Pupil age range: 14 to 16',
+      'Time available: ' + timeAvail,
+      'Adaptation tags: ' + (adaptList.length ? adaptList.join('; ') : 'None set'),
+      'Tally state: ' + (pupilTally ? (targetCode + ' — ' + pupilTally + ' (class: ' + tallyLine + ')') : tallyLine),
+      ''
+    ];
+
+    if (chipKey === 'stretch'){
+      lines.push('Create a calm stretch task for ' + targetCode + ' on ' + slot.code + ' (' + slot.subject + ') pitched at the ' + tier + ' tier for ages 14 to 16 in ' + timeAvail + '. Deepen thinking on today\'s core idea without adding long reading.');
+    } else if (chipKey === 'unstick'){
+      lines.push('Break the main task of ' + slot.code + ' (' + slot.subject + ') into smaller, low-overload micro-steps for ' + targetCode + ' at the ' + tier + ' tier (ages 14 to 16, ' + timeAvail + '). Keep sentences short and concrete, one action per step.');
+    } else if (chipKey === 'hinge'){
+      lines.push('Write a quick mid-lesson hinge check for ' + slot.code + ' (' + slot.subject + ') at the ' + tier + ' tier (ages 14 to 16, ' + timeAvail + ') so the teacher can spot the main misconception in under two minutes and pupils know what to fix.');
+    } else if (chipKey === 'extension'){
+      var pCode = pupilVal === 'group' ? ('Pupil ' + (+$('slipPupilSelect').value || 1)) : ('Pupil ' + (+pupilVal));
+      lines.push('Write a self-directed one-pupil extension desk slip for ' + pCode + ' on ' + slot.code + ' (' + slot.subject + ') at the ' + tier + ' tier (ages 14 to 16, ' + timeAvail + '). Make it achievable independently with zero extra teacher explanation.');
+    } else if (chipKey === 'upgrade'){
+      lines.push('Draft a calm upgrade spine for lesson file ' + slot.code + ' (' + slot.subject + ') at the ' + tier + ' tier (ages 14 to 16, ' + timeAvail + '), tightening the core pupil task into clear plain-English instructions and an independent completion check.');
+    } else if (chipKey === 'catchup'){
+      lines.push('Create a calm catch-up arrival task for ' + targetCode + ' joining or catching up on ' + slot.code + ' (' + slot.subject + ') at the ' + tier + ' tier (ages 14 to 16, ' + timeAvail + '), needing no prior board talk to begin.');
+    }
+
+    lines.push('');
+    lines.push('Use plain UK English and pupil codes only (never any person name). Reply in this exact shape:');
+    lines.push('Title: <clear short title>');
+    lines.push('1. <step one — one instruction on one line>');
+    lines.push('2. <step two — one instruction on one line>');
+    lines.push('3. <step three — one instruction on one line>');
+    lines.push('Done when: <one concrete check line at the foot>');
+
+    return redact(lines.join('\n'));
+  }
+
+  function buildThreeTierSplitterPrompt(){
+    var slot = currentSlot();
+    var timeAvail = $('timeSelect').value || '10 minutes';
+    var lines = [
+      'Request type: Three-tier A4 slip splitter',
+      'Lesson code: ' + slot.code + ' (' + slot.subject + ')',
+      'Levels: Supported, Independent, Aspire',
+      'Pupil age range: 14 to 16',
+      'Time available: ' + timeAvail,
+      '',
+      'Write ONE shared classroom task for ' + slot.code + ' (' + slot.subject + ') in ' + timeAvail + ' (ages 14 to 16) split into three versions — Supported, Independent, Aspire — with the exact same Title and topic so no pupil is singled out. Include no pupil codes or names.',
+      '',
+      'Reply in this exact shape:',
+      'Title: <shared short title>',
+      'Supported:',
+      '1. <step one>',
+      '2. <step two>',
+      '3. <step three>',
+      'Done when: <check line>',
+      'Independent:',
+      '1. <step one>',
+      '2. <step two>',
+      '3. <step three>',
+      'Done when: <check line>',
+      'Aspire:',
+      '1. <step one>',
+      '2. <step two>',
+      '3. <step three>',
+      'Done when: <check line>'
+    ];
+    return redact(lines.join('\n'));
+  }
+
+  function syncExactPreview(){
+    var clean = redact($('promptInput').value.trim());
+    $('exactCopyPreview').textContent = clean;
+    $('charCount').textContent = clean.length + ' chars';
+    return clean;
+  }
+
+  function setStatus(id, msg, cls){
+    var node = $(id);
+    if (!node) return;
+    node.textContent = msg;
+    node.className = 'status-line' + (cls ? ' ' + cls : '');
+  }
+
+  var copiedFlashTimer = null;
+  function flashCopiedBadge(){
+    var badge = $('copiedBadge');
+    badge.textContent = 'Copied';
+    badge.hidden = false;
+    if (copiedFlashTimer) clearTimeout(copiedFlashTimer);
+    copiedFlashTimer = setTimeout(function(){
+      badge.hidden = true;
+    }, 2000);
+  }
+
+  function execCommandCopyFallback(text){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', 'readonly');
+    ta.style.position = 'fixed';
+    ta.style.top = '-9999px';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    ta.remove();
+    return ok;
+  }
+
+  function copyTextImmediate(text, statusTargetId, statusMessage){
+    var clean = redact(String(text || '').trim());
+    if (!clean){
+      setStatus(statusTargetId || 'promptStatus', 'Write or choose a prompt chip first.', 'warn');
+      return;
+    }
+    var syncCopied = execCommandCopyFallback(clean);
+    flashCopiedBadge();
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function'){
+      navigator.clipboard.writeText(clean).then(function(){
+        setStatus(statusTargetId || 'promptStatus', statusMessage || 'Copied codes-only prompt to clipboard.', 'ok');
+      }).catch(function(){
+        if (syncCopied){
+          setStatus(statusTargetId || 'promptStatus', statusMessage || 'Copied codes-only prompt to clipboard.', 'ok');
+        } else {
+          setStatus(statusTargetId || 'promptStatus', 'Select the Exact text box below and copy manually.', 'warn');
+        }
+      });
+    } else if (syncCopied){
+      setStatus(statusTargetId || 'promptStatus', statusMessage || 'Copied codes-only prompt to clipboard.', 'ok');
+    } else {
+      setStatus(statusTargetId || 'promptStatus', 'Select the Exact text box below and copy manually.', 'warn');
+    }
+  }
+
+  function copyExactPrompt(reasonLabel){
+    var exact = syncExactPreview();
+    copyTextImmediate(exact, 'promptStatus', (reasonLabel || 'Copied') + ' — exact codes-only prompt is on the clipboard.');
+  }
+
+  // My assistants settings (mbm_assistants_v1): plain home page addresses only, zero query or fragment
+  function sanitizeAssistantAddress(raw){
+    var trimmed = String(raw || '').trim();
+    if (!trimmed) return { ok:true, empty:true, url:'', stripped:false };
+    var parsed;
+    try {
+      parsed = new URL(trimmed);
+    } catch (e) {
+      return { ok:false, error:'Enter a full web address starting with https: or http:.' };
+    }
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:'){
+      return { ok:false, error:'Assistant addresses must use https: or http: only.' };
+    }
+    if (!parsed.hostname){
+      return { ok:false, error:'Include a valid host name in the address.' };
+    }
+    var hadExtra = Boolean(parsed.search || parsed.hash || parsed.username || parsed.password);
+    parsed.username = '';
+    parsed.password = '';
+    parsed.search = '';
+    parsed.hash = '';
+    return {
+      ok: true,
+      empty: false,
+      url: parsed.origin + parsed.pathname,
+      stripped: hadExtra
+    };
+  }
+
+  function loadAssistants(){
+    var raw = readJSON(KEYS.assistants, []);
+    if (!Array.isArray(raw)) return [];
+    var clean = [];
+    for (var i = 0; i < raw.length && clean.length < 3; i++){
+      var item = raw[i];
+      if (!item || typeof item !== 'object') continue;
+      var label = redact(String(item.label || '').trim().slice(0, 28));
+      var check = sanitizeAssistantAddress(item.url);
+      if (label && check.ok && !check.empty){
+        clean.push({ label:label, url:check.url });
+      }
+    }
+    return clean;
+  }
+
+  function populateAssistantInputs(list){
+    for (var i = 1; i <= 3; i++){
+      var item = list[i - 1];
+      $('astLabel' + i).value = item ? item.label : '';
+      $('astUrl' + i).value = item ? item.url : '';
+    }
+  }
+
+  function renderLaneOptions(assistantsList){
+    var sel = $('laneSelect');
+    var prev = sel.value;
+    sel.replaceChildren();
+    var baseLanes = [
+      ['auto', 'Auto (router picks by task)'],
+      ['lesson_files', 'Lesson files lane (HTML and layout)'],
+      ['calm_prose', 'Calm prose lane (scaffolds and slips)'],
+      ['question_checks', 'Checks lane (hinge and starters)']
+    ];
+    baseLanes.forEach(function(pair){
+      var o = document.createElement('option');
+      o.value = pair[0];
+      o.textContent = pair[1];
+      sel.appendChild(o);
+    });
+    (assistantsList || []).forEach(function(item, idx){
+      var o = document.createElement('option');
+      o.value = 'assistant_' + (idx + 1);
+      o.textContent = 'Assistant ' + (idx + 1) + ' (' + item.label + ')';
+      sel.appendChild(o);
+    });
+    if (prev && Array.from(sel.options).some(function(o){ return o.value === prev; })){
+      sel.value = prev;
+    }
+  }
+
+  function renderAssistantsBar(){
+    var list = loadAssistants();
+    var emptyMsg = $('assistantEmptyMsg');
+    var row = $('assistantButtonsRow');
+    row.replaceChildren();
+    if (!list.length){
+      emptyMsg.hidden = false;
+      emptyMsg.textContent = 'Add an assistant in settings';
+      row.hidden = true;
+    } else {
+      emptyMsg.hidden = true;
+      row.hidden = false;
+      list.forEach(function(item){
+        var a = document.createElement('a');
+        a.className = 'btn assistant-open-btn';
+        a.href = item.url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = 'Open ' + item.label;
+        row.appendChild(a);
+      });
+    }
+    renderLaneOptions(list);
+  }
+
+  function saveAssistantsFromForm(){
+    var next = [];
+    var strippedAny = false;
+    for (var i = 1; i <= 3; i++){
+      var lbl = redact($('astLabel' + i).value.trim().slice(0, 28));
+      var urlRaw = $('astUrl' + i).value.trim();
+      if (!lbl && !urlRaw) continue;
+      if (!lbl){
+        setStatus('assistantsStatus', 'Button ' + i + ': enter a short button label.', 'warn');
+        return;
+      }
+      if (!urlRaw){
+        setStatus('assistantsStatus', 'Button ' + i + ': enter a plain home page address.', 'warn');
+        return;
+      }
+      var res = sanitizeAssistantAddress(urlRaw);
+      if (!res.ok){
+        setStatus('assistantsStatus', 'Button ' + i + ': ' + res.error, 'warn');
+        return;
+      }
+      if (res.stripped) strippedAny = true;
+      next.push({ label:lbl, url:res.url });
+    }
+    rawSet(KEYS.assistants, JSON.stringify(next));
+    populateAssistantInputs(next);
+    renderAssistantsBar();
+    var msg = next.length
+      ? ('Saved ' + next.length + ' assistant button' + (next.length === 1 ? '' : 's') + ' on this device.' + (strippedAny ? ' Query/fragment removed to keep a plain address.' : ''))
+      : 'No assistants entered. Add an assistant in settings when ready.';
+    setStatus('assistantsStatus', msg, 'ok');
+  }
+
+  // Offline reply parsers: Single A5 slip AND Three-tier A4 splitter
+  function cleanMarkdownLine(line){
+    return String(line || '')
+      .replace(/^\s*#{1,6}\s*/, '')
+      .replace(/\*\*([^*]+)\*\*/g, '$1')
+      .replace(/__([^_]+)__/g, '$1')
+      .replace(/`([^`]+)`/g, '$1')
+      .trim();
+  }
+
+  function parseSingleReply(rawText){
+    var scrubbed = redact(String(rawText || '').replace(/```[\s\S]*?```/g, function(block){
+      return block.replace(/```[a-zA-Z]*\r?\n?/g, '');
+    }));
+    var rawLines = scrubbed.split(/\r?\n/).map(cleanMarkdownLine).filter(Boolean);
+
+    var slot = currentSlot();
+    var chipTitle = CHIP_META[activeChip] ? CHIP_META[activeChip].label : 'Desk task';
+    var title = '';
+    var doneWhen = '';
+    var steps = [];
+    var plainCandidates = [];
+
+    for (var i = 0; i < rawLines.length; i++){
+      var ln = rawLines[i];
+      if (/^(Supported|Independent|Aspire)\s*[:\-–]?$/i.test(ln)) continue;
+      var mTitle = ln.match(/^Title\s*[:\-–]\s*(.+)$/i);
+      if (mTitle && !title){
+        title = mTitle[1].trim();
+        continue;
+      }
+      var mDone = ln.match(/^(?:Done\s+when|Finished\s+when|Complete\s+when|Success\s+check)\s*[:\-–]\s*(.+)$/i);
+      if (mDone){
+        doneWhen = mDone[1].trim();
+        continue;
+      }
+      var mNum = ln.match(/^(?:Step\s*)?(\d{1,2})[\.\)\-:]\s*(.+)$/i);
+      if (mNum){
+        steps.push(mNum[2].trim());
+        continue;
+      }
+      var mBul = ln.match(/^[\-*•\u25a1\u2610]\s*(.+)$/);
+      if (mBul){
+        steps.push(mBul[1].trim());
+        continue;
+      }
+      plainCandidates.push(ln);
+    }
+
+    if (!title && plainCandidates.length) title = plainCandidates.shift();
+    if (!steps.length && plainCandidates.length) steps = plainCandidates.slice(0, 5);
+    if (!title) title = chipTitle + ' · ' + slot.subject;
+    if (!steps.length){
+      steps = [
+        'Read the task heading carefully before starting.',
+        'Complete each stage one line at a time on your page.',
+        'Check your work against the Done when line below.'
+      ];
+    }
+    if (!doneWhen){
+      doneWhen = 'All ' + Math.min(steps.length, 5) + ' steps above are ticked and checked.';
+    }
+
+    return {
+      title: redact(title.slice(0, 110)),
+      steps: steps.slice(0, 5).map(function(st){ return redact(st.replace(/\s+/g, ' ').slice(0, 180)); }),
+      doneWhen: redact(doneWhen.slice(0, 160))
+    };
+  }
+
+  function stripPupilCodeForSplitter(text){
+    return redact(String(text || ''))
+      .replace(/\bPupil\s*\d+\b/gi, 'your page')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function parseSplitterReply(rawText){
+    var scrubbed = redact(String(rawText || '').replace(/```[\s\S]*?```/g, function(block){
+      return block.replace(/```[a-zA-Z]*\r?\n?/g, '');
+    }));
+    var rawLines = scrubbed.split(/\r?\n/).map(cleanMarkdownLine).filter(Boolean);
+    var slot = currentSlot();
+
+    var sharedTitle = '';
+    var buckets = { Supported:{steps:[], doneWhen:''}, Independent:{steps:[], doneWhen:''}, Aspire:{steps:[], doneWhen:''} };
+    var currentBucket = '';
+    var sawTierHeading = false;
+
+    for (var i = 0; i < rawLines.length; i++){
+      var ln = rawLines[i];
+      var mTitle = ln.match(/^Title\s*[:\-–]\s*(.+)$/i);
+      if (mTitle && !sharedTitle){
+        sharedTitle = mTitle[1].trim();
+        continue;
+      }
+      var mTier = ln.match(/^(?:\[|\d+[\.\)]\s*)?(Supported|Independent|Aspire)\s*(?:\]|\)|[:\-–])?\s*$/i);
+      if (mTier){
+        var canon = mTier[1].charAt(0).toUpperCase() + mTier[1].slice(1).toLowerCase();
+        currentBucket = canon;
+        sawTierHeading = true;
+        continue;
+      }
+      if (currentBucket){
+        var mDone = ln.match(/^(?:Done\s+when|Finished\s+when|Complete\s+when|Success\s+check)\s*[:\-–]\s*(.+)$/i);
+        if (mDone){
+          buckets[currentBucket].doneWhen = mDone[1].trim();
+          continue;
+        }
+        var mStep = ln.match(/^(?:Step\s*)?(?:\d{1,2}[\.\)\-:]|[\-*•\u25a1\u2610])\s*(.+)$/i);
+        if (mStep){
+          buckets[currentBucket].steps.push(mStep[1].trim());
+          continue;
+        }
+      }
+    }
+
+    var base = parseSingleReply(rawText);
+    var finalTitle = stripPupilCodeForSplitter(sharedTitle || base.title || ('Class task · ' + slot.subject)).slice(0, 100);
+    var s1 = stripPupilCodeForSplitter(base.steps[0] || 'Read the prompt and underline the key words.');
+    var s2 = stripPupilCodeForSplitter(base.steps[1] || 'Complete the main task step on your page.');
+    var s3 = stripPupilCodeForSplitter(base.steps[2] || 'Check each answer calmly before finishing.');
+    var baseDone = stripPupilCodeForSplitter(base.doneWhen || 'All three steps above are ticked and checked.');
+
+    var fallbackTiers = {
+      Supported: {
+        steps: [
+          ('Start step by step (underline key terms): ' + s1).slice(0, 165),
+          ('One part at a time (use key-word clues): ' + s2).slice(0, 165),
+          ('Guided finish and tick: ' + s3).slice(0, 165)
+        ],
+        doneWhen: (baseDone.replace(/\.$/, '') + ' (tick each box as you go).').slice(0, 150)
+      },
+      Independent: {
+        steps: [s1.slice(0, 165), s2.slice(0, 165), s3.slice(0, 165)],
+        doneWhen: baseDone.slice(0, 150)
+      },
+      Aspire: {
+        steps: [
+          s1.slice(0, 165),
+          s2.slice(0, 165),
+          (s3.replace(/\.$/, '') + ' — then add one clear reason or fresh example.').slice(0, 165)
+        ],
+        doneWhen: (baseDone.replace(/\.$/, '') + ', including a clear reason or example.').slice(0, 150)
+      }
+    };
+
+    var outTiers = {};
+    TIER_LEVELS.forEach(function(lvl){
+      var b = buckets[lvl];
+      if (sawTierHeading && b.steps.length){
+        outTiers[lvl] = {
+          steps: b.steps.slice(0, 3).map(function(x){ return stripPupilCodeForSplitter(x).slice(0, 165); }),
+          doneWhen: stripPupilCodeForSplitter(b.doneWhen || fallbackTiers[lvl].doneWhen).slice(0, 150)
+        };
+      } else {
+        outTiers[lvl] = fallbackTiers[lvl];
+      }
+    });
+
+    return {
+      title: finalTitle,
+      topic: slot.code + ' · ' + slot.subject,
+      tiers: outTiers
+    };
+  }
+
+  function renderSingleSlip(data){
+    var slipTarget = $('slipPupilSelect').value || '1';
+    var slot = currentSlot();
+    var tier = $('tierSelect').value || 'Independent';
+    var timeAvail = $('timeSelect').value || '10 minutes';
+
+    if (slipTarget === 'class'){
+      var clsPath = slot.path === 'ALL' ? (slot.effPath || 'ALL') : slot.path;
+      $('slipPupilBadge').textContent = 'Starter · ' + clsPath;
+      $('slipAdaptBar').hidden = true;
+      $('slipAdaptBar').textContent = '';
+    } else {
+      var pupilNum = Math.min(20, Math.max(1, +slipTarget || 1));
+      var adapts = pupilAdaptTags(pupilNum);
+      $('slipPupilBadge').textContent = 'Pupil ' + pupilNum;
+      if (adapts.length){
+        $('slipAdaptBar').hidden = false;
+        $('slipAdaptBar').textContent = 'Support: ' + adapts.join(' · ');
+      } else {
+        $('slipAdaptBar').hidden = true;
+        $('slipAdaptBar').textContent = '';
+      }
+    }
+    $('slipMetaText').textContent = slot.code + ' · ' + tier + ' · ' + timeAvail;
+    $('slipTitle').textContent = data.title;
+
+    var ol = $('slipSteps');
+    ol.replaceChildren();
+    data.steps.forEach(function(stepLine, idx){
+      var li = document.createElement('li');
+      var box = document.createElement('span');
+      box.className = 'step-box';
+      box.setAttribute('aria-hidden', 'true');
+      var num = document.createElement('span');
+      num.className = 'step-num';
+      num.textContent = (idx + 1) + '.';
+      var txt = document.createElement('span');
+      txt.className = 'step-text';
+      txt.textContent = stepLine;
+      li.appendChild(box);
+      li.appendChild(num);
+      li.appendChild(txt);
+      ol.appendChild(li);
+    });
+
+    $('slipDoneText').textContent = data.doneWhen;
+    $('slipSheet').classList.toggle('extra-large', $('slipScaleSelect').value === 'xlarge');
+  }
+
+  function renderSplitterSheet(splitData){
+    var container = $('splitterSheet');
+    container.replaceChildren();
+    TIER_LEVELS.forEach(function(lvl, idx){
+      if (idx > 0){
+        var cut = document.createElement('div');
+        cut.className = 'cut-guide';
+        cut.setAttribute('aria-hidden', 'true');
+        cut.textContent = 'Cut line';
+        container.appendChild(cut);
+      }
+      var tierInfo = splitData.tiers[lvl];
+      var art = document.createElement('article');
+      art.className = 'tier-slip';
+      art.setAttribute('data-tier', lvl);
+
+      var topWrap = document.createElement('div');
+      var head = document.createElement('div');
+      head.className = 'tier-head';
+      var topicSpan = document.createElement('span');
+      topicSpan.className = 'tier-topic';
+      topicSpan.textContent = splitData.topic;
+      var lvlPill = document.createElement('span');
+      lvlPill.className = 'tier-level-pill';
+      lvlPill.textContent = lvl;
+      head.appendChild(topicSpan);
+      head.appendChild(lvlPill);
+
+      var h3 = document.createElement('h3');
+      h3.className = 'tier-title';
+      h3.textContent = splitData.title;
+
+      var ol = document.createElement('ol');
+      ol.className = 'tier-steps';
+      tierInfo.steps.forEach(function(stepLine, sIdx){
+        var li = document.createElement('li');
+        var box = document.createElement('span');
+        box.className = 'step-box';
+        box.setAttribute('aria-hidden', 'true');
+        var num = document.createElement('span');
+        num.className = 'step-num';
+        num.textContent = (sIdx + 1) + '.';
+        var txt = document.createElement('span');
+        txt.className = 'step-text';
+        txt.textContent = stepLine;
+        li.appendChild(box);
+        li.appendChild(num);
+        li.appendChild(txt);
+        ol.appendChild(li);
+      });
+
+      topWrap.appendChild(head);
+      topWrap.appendChild(h3);
+      topWrap.appendChild(ol);
+
+      var foot = document.createElement('div');
+      foot.className = 'tier-done';
+      var b = document.createElement('b');
+      b.textContent = 'Done when: ';
+      var doneSpan = document.createElement('span');
+      doneSpan.textContent = tierInfo.doneWhen;
+      foot.appendChild(b);
+      foot.appendChild(doneSpan);
+
+      art.appendChild(topWrap);
+      art.appendChild(foot);
+      container.appendChild(art);
+    });
+  }
+
+  function refreshSlipPreview(announce){
+    var raw = $('replyInput').value.trim();
+    if (!raw && announce){
+      setStatus('slipStatus', 'Paste the assistant reply (or type steps) above first.', 'warn');
+      return false;
+    }
+    if (slipMode === 'splitter'){
+      var splitData = parseSplitterReply(raw);
+      renderSplitterSheet(splitData);
+      if (announce){
+        setStatus('slipStatus', 'Three-tier A4 splitter ready (Supported, Independent, Aspire — nothing stored until Save).', 'ok');
+      }
+    } else {
+      var singleData = parseSingleReply(raw);
+      renderSingleSlip(singleData);
+      if (announce){
+        var targetVal = $('slipPupilSelect').value;
+        var who = targetVal === 'class' ? 'class starter' : ('Pupil ' + Math.min(20, Math.max(1, +targetVal || 1)));
+        setStatus('slipStatus', 'A5 slip ready for ' + who + ' (nothing stored until Save).', 'ok');
+      }
+    }
+    return true;
+  }
+
+  // Explicit Save for slips (mbm_saved_slips_v1 — nothing stored unless Save pressed)
+  function loadSavedSlips(){
+    var arr = readJSON(KEYS.savedSlips, []);
+    return Array.isArray(arr) ? arr : [];
+  }
+
+  function renderSavedSlipsMenu(){
+    var list = loadSavedSlips();
+    var wrap = $('savedSlipsWrap');
+    var sel = $('savedSlipsSelect');
+    sel.replaceChildren();
+    if (!list.length){
+      wrap.hidden = true;
+      return;
+    }
+    wrap.hidden = false;
+    list.forEach(function(item, idx){
+      var o = document.createElement('option');
+      o.value = String(idx);
+      var prefix = item.mode === 'splitter' ? '3-tier A4' : (item.pupil === 'class' ? 'Starter' : ('Pupil ' + item.pupil));
+      o.textContent = prefix + ' · ' + item.lesson + ' · ' + item.title;
+      sel.appendChild(o);
+    });
+  }
+
+  function saveCurrentSlipExplicit(){
+    var raw = $('replyInput').value.trim();
+    var slot = currentSlot();
+    var tier = $('tierSelect').value || 'Independent';
+    var timeAvail = $('timeSelect').value || '10 minutes';
+    var entry;
+    if (slipMode === 'splitter'){
+      var splitData = parseSplitterReply(raw);
+      renderSplitterSheet(splitData);
+      entry = {
+        savedAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
+        mode: 'splitter',
+        lesson: redact(slot.code),
+        time: redact(timeAvail),
+        title: splitData.title,
+        rawText: redact(raw)
+      };
+    } else {
+      var parsed = parseSingleReply(raw);
+      renderSingleSlip(parsed);
+      var pTarget = $('slipPupilSelect').value === 'class' ? 'class' : Math.min(20, Math.max(1, +($('slipPupilSelect').value || 1)));
+      entry = {
+        savedAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
+        mode: 'single',
+        pupil: pTarget,
+        lesson: redact(slot.code),
+        tier: redact(tier),
+        time: redact(timeAvail),
+        title: parsed.title,
+        steps: parsed.steps,
+        doneWhen: parsed.doneWhen
+      };
+    }
+    var existing = loadSavedSlips();
+    existing.unshift(entry);
+    rawSet(KEYS.savedSlips, JSON.stringify(existing.slice(0, 12)));
+    renderSavedSlipsMenu();
+    setStatus('slipStatus', 'Saved on this device (codes only).', 'ok');
+  }
+
+  // Request box (#req, #when, #save, #msg — 100% compatible with live Requests.html)
+  function downloadTextFile(filename, content){
+    var blob = new Blob([content], { type:'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function saveRequestBoxFile(){
+    var t = redact($('req').value.trim());
+    if (!t){
+      setStatus('msg', 'Type your request first.', 'warn');
+      return;
+    }
+    var now = new Date();
+    var slot = currentSlot();
+    var lane = $('laneSelect').value || 'auto';
+    var lines = [
+      'Needed by: ' + redact($('when').value),
+      'Lane: ' + redact(lane),
+      'Lesson: ' + redact(slot.code),
+      '',
+      t
+    ];
+    var body = lines.join('\r\n').replace(/\r?\n/g, '\r\n') + '\r\n';
+    var fname = 'request_' + now.toISOString().slice(0, 16).replace(/[:T]/g, '-') + '.txt';
+    downloadTextFile(fname, body);
+    $('req').value = '';
+    setStatus('msg', 'Saved. Put it in your synced folder: _INBOX \u203a Requests.', 'ok');
+  }
+
+  // Slot & chip selection wiring
+  var pupilManuallyChosen = false;
+
+  function applySlotDefaults(slot, preservePupil, initialHandoff){
+    var effPath = slot.effPath || slot.path;
+    var mappedTier = (initialHandoff && ['Supported','Independent','Aspire'].indexOf(initialHandoff.tier) !== -1)
+      ? initialHandoff.tier
+      : (PATH_TO_TIER[effPath] || 'Independent');
+    $('tierSelect').value = mappedTier;
+    if (initialHandoff && initialHandoff.time && Array.from($('timeSelect').options).some(function(o){ return o.value === initialHandoff.time; })){
+      $('timeSelect').value = initialHandoff.time;
+    }
+    if (!preservePupil) pupilManuallyChosen = false;
+    populatePupilSelectors(slot, !!preservePupil);
+    renderSlotLine();
+  }
+
+  function selectChip(chipKey, doCopy, keepCurrentTime){
+    activeChip = chipKey;
+    document.querySelectorAll('[data-chip]').forEach(function(b){
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-chip') === chipKey));
+    });
+    if (!keepCurrentTime && CHIP_META[chipKey] && CHIP_META[chipKey].defaultTime){
+      $('timeSelect').value = CHIP_META[chipKey].defaultTime;
+    }
+    var slot = currentSlot();
+    if (chipKey === 'starter'){
+      $('pupilSelect').value = 'group';
+      $('slipPupilSelect').value = 'class';
+      if (slipMode !== 'single') applySlipMode('single');
+    } else if (!pupilManuallyChosen){
+      var preferred = ['got', 'nearly'];
+      if (chipKey === 'unstick') preferred = ['again', 'nearly'];
+      else if (chipKey === 'catchup') preferred = ['absent', 'again'];
+      var autoPupil = pickHelpfulPupil(slot, preferred);
+      $('pupilSelect').value = String(autoPupil);
+      $('slipPupilSelect').value = String(autoPupil);
+      var groups = getCodedGroups();
+      var pPath = pupilPathway(autoPupil, groups);
+      if (pPath && PATH_TO_TIER[pPath]){
+        $('tierSelect').value = PATH_TO_TIER[pPath];
+      }
+    }
+    renderSlotLine();
+    var built = buildChipPrompt(chipKey);
+    $('promptInput').value = built;
+    syncExactPreview();
+    refreshSlipPreview(false);
+    if (doCopy){
+      copyExactPrompt(CHIP_META[chipKey].label);
+    }
+  }
+
+  // Event listeners
+  document.querySelectorAll('[data-studio-tab]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      showAllSections = false;
+      applyStudioTab(btn.getAttribute('data-studio-tab'));
+      window.scrollTo({ top:0, behavior:'auto' });
+    });
+  });
+
+  $('toggleAllStudioBtn').addEventListener('click', function(){
+    showAllSections = !showAllSections;
+    applyStudioTab(currentStudioTab);
+  });
+
+  $('toggleSlotBtn').addEventListener('click', function(){
+    var box = $('slotControlsBox');
+    var nextOpen = box.hidden;
+    box.hidden = !nextOpen;
+    $('toggleSlotBtn').setAttribute('aria-expanded', String(nextOpen));
+    $('toggleSlotBtn').innerHTML = nextOpen ? 'Slot &#9652;' : 'Slot &#9662;';
+  });
+
+  $('slotSelect').addEventListener('change', function(){
+    applySlotDefaults(currentSlot(), false, null);
+    if (activeChip === 'starter' && $('starterChipWrap').hidden){
+      activeChip = 'stretch';
+    }
+    selectChip(activeChip, false, false);
+  });
+
+  $('tierSelect').addEventListener('change', function(){
+    renderSlotLine();
+    $('promptInput').value = buildChipPrompt(activeChip);
+    syncExactPreview();
+    refreshSlipPreview(false);
+  });
+
+  $('pupilSelect').addEventListener('change', function(){
+    pupilManuallyChosen = true;
+    var v = $('pupilSelect').value;
+    if (v !== 'group'){
+      $('slipPupilSelect').value = v;
+      var groups = getCodedGroups();
+      var pPath = pupilPathway(+v, groups);
+      if (pPath && PATH_TO_TIER[pPath]){
+        $('tierSelect').value = PATH_TO_TIER[pPath];
+      }
+    }
+    renderSlotLine();
+    $('promptInput').value = buildChipPrompt(activeChip);
+    syncExactPreview();
+    refreshSlipPreview(false);
+  });
+
+  $('timeSelect').addEventListener('change', function(){
+    renderSlotLine();
+    $('promptInput').value = buildChipPrompt(activeChip);
+    syncExactPreview();
+    refreshSlipPreview(false);
+  });
+
+  document.querySelectorAll('[data-chip]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      selectChip(btn.getAttribute('data-chip'), true, false);
+    });
+  });
+
+  $('copyPromptBtn').addEventListener('click', function(){
+    copyExactPrompt('Copied');
+  });
+
+  $('goMakeSlipBtn').addEventListener('click', function(){
+    showAllSections = false;
+    applyStudioTab('slip');
+    $('replyInput').focus();
+  });
+
+  $('openAssistantsInlineBtn').addEventListener('click', function(){
+    showAllSections = false;
+    applyStudioTab('assistants');
+    $('astLabel1').focus();
+  });
+
+  $('promptInput').addEventListener('input', function(){
+    syncExactPreview();
+    setStatus('promptStatus', 'Preview updated below. Tap Copy prompt when ready.', '');
+  });
+
+  $('modeSingleBtn').addEventListener('click', function(){ applySlipMode('single'); });
+  $('modeSplitterBtn').addEventListener('click', function(){ applySlipMode('splitter'); });
+
+  $('copySplitterPromptBtn').addEventListener('click', function(){
+    var pText = buildThreeTierSplitterPrompt();
+    $('promptInput').value = pText;
+    syncExactPreview();
+    copyTextImmediate(pText, 'slipStatus', 'Copied 3-tier splitter prompt to clipboard.');
+  });
+
+  $('slipPupilSelect').addEventListener('change', function(){ refreshSlipPreview(false); });
+  $('slipScaleSelect').addEventListener('change', function(){
+    $('slipSheet').classList.toggle('extra-large', $('slipScaleSelect').value === 'xlarge');
+  });
+
+  $('makeSlipBtn').addEventListener('click', function(){ refreshSlipPreview(true); });
+
+  $('printSlipBtn').addEventListener('click', function(){
+    refreshSlipPreview(false);
+    window.print();
+  });
+
+  $('saveSlipBtn').addEventListener('click', saveCurrentSlipExplicit);
+
+  $('loadSavedSlipBtn').addEventListener('click', function(){
+    var list = loadSavedSlips();
+    var rec = list[+($('savedSlipsSelect').value || 0)];
+    if (!rec) return;
+    if (rec.mode === 'splitter'){
+      applySlipMode('splitter');
+      $('replyInput').value = rec.rawText || ('Title: ' + rec.title);
+      refreshSlipPreview(false);
+      setStatus('slipStatus', 'Loaded saved 3-tier A4 splitter.', 'ok');
+    } else {
+      applySlipMode('single');
+      $('slipPupilSelect').value = String(rec.pupil || 1);
+      $('replyInput').value = 'Title: ' + rec.title + '\n' +
+        (rec.steps || []).map(function(st, i){ return (i + 1) + '. ' + st; }).join('\n') +
+        '\nDone when: ' + (rec.doneWhen || '');
+      refreshSlipPreview(false);
+      setStatus('slipStatus', 'Loaded saved slip.', 'ok');
+    }
+  });
+
+  $('clearSavedSlipsBtn').addEventListener('click', function(){
+    rawRemove(KEYS.savedSlips);
+    renderSavedSlipsMenu();
+    setStatus('slipStatus', 'Cleared saved slips from this device.', 'ok');
+  });
+
+  $('fillReqFromPromptBtn').addEventListener('click', function(){
+    $('req').value = syncExactPreview();
+    setStatus('msg', 'Filled request box with current codes-only prompt.', 'ok');
+  });
+
+  $('save').addEventListener('click', saveRequestBoxFile);
+  $('saveAssistantsBtn').addEventListener('click', saveAssistantsFromForm);
+
+  $('clearAssistantsBtn').addEventListener('click', function(){
+    rawRemove(KEYS.assistants);
+    populateAssistantInputs([]);
+    renderAssistantsBar();
+    setStatus('assistantsStatus', 'Cleared saved assistants from this device.', 'ok');
+  });
+
+  window.addEventListener('storage', function(){
+    renderSlotLine();
+  });
+
+  window.addEventListener('beforeprint', function(){
+    if ($('req').value) $('req').value = redact($('req').value);
+    if ($('promptInput').value){
+      $('promptInput').value = redact($('promptInput').value);
+      syncExactPreview();
+    }
+    if ($('replyInput').value){
+      $('replyInput').value = redact($('replyInput').value);
+    }
+    refreshSlipPreview(false);
+  });
+
+  // Initial cold-load setup (writes NOTHING to localStorage)
+  applyBackLink();
+  buildSlotOptions();
+  applySlotDefaults(currentSlot(), false, navHandoff);
+  var initialAssistants = loadAssistants();
+  populateAssistantInputs(initialAssistants);
+  renderAssistantsBar();
+  renderSavedSlipsMenu();
+  selectChip('stretch', false, Boolean(navHandoff && navHandoff.time));
+  applySlipMode('single');
+  applyStudioTab('prompts');
 })();
 </script>
 </body>
