@@ -1,0 +1,43 @@
+id             release   staging   verdict
+------------------------------------------------------------------------------------
+C1             false     true      MATCHED PAIR
+    all 21 hostile shapes boot clean and paint the archive screen
+    release 2 broken: [settings:null (TypeError: Cannot read properties of null (reading 'difficulty')) · profile:null (TypeError: Cannot read properties of null (reading 'operationsCleared'))] -> staging 0 broken: []
+C1-scope       null      null      MEASURED
+    the defect scope, measured rather than assumed
+    keys that break on the literal string null: settings=BREAKS · profile=BREAKS · activeRun=fine
+C1-continue    null      null      MEASURED
+    Continue state across hostile activeRun payloads
+    staging activeRun:null:offered · activeRun:[]:offered · activeRun:{bad:offered · activeRun:"x":offered · activeRun:7:offered · activeRun:true:offered · activeRun:"":offered
+C2             false     true      MATCHED PAIR
+    every bad autostart parameter set boots to a visible archive screen with no error
+    release 5/5 broken: [?autostart=1&overclock=bogus (TypeError: Cannot read properties of undefined (reading 'name')) · ?autostart=1&mode=bogus (archive screen not visible) · ?autostart=1&class=bogus (TypeError: Cannot read properties of undefined (reading 'reserve')) · ?autostart=1&mode=bogus&class=bogus&overclock=bogus (TypeError: Cannot read properties of undefined (reading 'reserve')) · ?autostart=1 (archive screen not visible)] -> staging 0/5
+C3a            false     true      MATCHED PAIR
+    window.__COA_QA is absent from the shipped payload and from the running page
+    release source 1 mentions, live typeof object -> staging source 0 mentions, live typeof undefined
+C3b            false     true      MATCHED PAIR
+    the autostart block is gone with it
+    release 1 mentions -> staging 0
+C3c            true      true      ALREADY CORRECT ON RELEASE — asserted so removing the QA hook cannot break deploy
+    each mode and each chassis reaches a painting game canvas through the real UI (4 configurations, the union not the cross product)
+    release 0 failed: [] -> staging 0 failed: []
+C4             false     true      MATCHED PAIR
+    the subtitle panel never intersects the drawn HUD band (4 viewports x largeHud off/on)
+    release 6/8 overlap: [915x412/largeHud=false overlap 40px (sub 264-330, hud 290-396) · 915x412/largeHud=true overlap 40px (sub 264-330, hud 290-396) · 844x390/largeHud=false overlap 40px (sub 242-308, hud 268-374) · 844x390/largeHud=true overlap 40px (sub 242-308, hud 268-374) · 740x360/largeHud=false overlap 40px (sub 212-278, hud 238-344) · 740x360/largeHud=true overlap 40px (sub 212-278, hud 238-344)] -> staging 0/8: []
+C4-derivation  null      null      MEASURED
+    the clearance is derived, not guessed
+    915x412/largeHud=false: --hud-bottom=134px · 915x412/largeHud=true: --hud-bottom=134px · 844x390/largeHud=false: --hud-bottom=134px · 844x390/largeHud=true: --hud-bottom=134px · 740x360/largeHud=false: --hud-bottom=134px · 740x360/largeHud=true: --hud-bottom=134px · 1280x600/largeHud=false: --hud-bottom=146px · 1280x600/largeHud=true: --hud-bottom=146px
+C5.4           false     true      MATCHED PAIR
+    the viewport no longer blocks pinch zoom
+    release <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"> -> staging <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+C5.5a          false     true      MATCHED PAIR
+    booting under prefers-reduced-motion seeds the in-game reduced-motion setting
+    release {"bodyClass":"","reduced":false} -> staging {"bodyClass":"reducedMotion","reduced":true}
+C5.5b          null      null      ASSERTED
+    an explicit stored user choice still overrides the OS seed
+    stored reducedMotion:false under prefers-reduced-motion → body has the class: staging false
+C0             null      null      ASSERTED
+    Class of Ashes appears nowhere on the shelf, in either audience page, or in any curation record
+    checked data/source-manifests/games.json, games/index.html, for/pupils/index.html, tools/render_audience_homepages.py · mentions: none
+
+0 failure(s); 0 inconclusive
