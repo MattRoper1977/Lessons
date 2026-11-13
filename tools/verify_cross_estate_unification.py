@@ -3030,11 +3030,11 @@ CATALOGUE_PINS = {
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L2/VOC_LAUNCH_A2_W08_L2.html": "a75a50b647563adb992d86017284ba4999be3d2f3452661f57a6a27b182e0dc8",
         "kits/class_tools/Catch_up_Tracker.html": "3b4cac07245fd807c860525dd35bb81ef987157ada609b71b5263f7b66651f22",
         "kits/class_tools/Class_names.html": "cb9b8032dcc74a3ffdf40bbfe39147b88a629e0344f6b6d11b1543f7664c57cd",
-        "kits/class_tools/My_tools.html": "14ad3705fcc43841330ef79061427ab8ec610a09216070cf5cd4ac00149cf2ee",
+        "kits/class_tools/My_tools.html": "929086636ee84a49d4f945642236b46688ab7e9f9a431f8e950ff513b81c21f6",
         "kits/class_tools/Practical_log.html": "6fded535b36c2768955ae9a9486fb6cb5fe24ed6109d3502208026ae01193f26",
-        "kits/class_tools/Requests.html": "d46023213fb5f7c35b3e6a1b776e59c2cd062090775b49b5154ac5931980b346",
+        "kits/class_tools/Requests.html": "6a26d977647960ebb20d03fd2e32185739a91ee9e1dce30ed3d7bde6ea819ca3",
         "kits/class_tools/Missed_last_week.html": "b33ff12ee8364ad6b9d387d6c79fd620ef62088b2580f17c9d0a9bc7a053f9bf",
-        "kits/class_tools/Quick_capture.html": "75678e9dab390b59fbea5d84c37726f7f9d3555a398bbe529db8f3ad7a437efb",
+        "kits/class_tools/Quick_capture.html": "66303b1ab6c15b41eb978ce55447dc9b291a3655a5c0fe5783597f17b21383fa",
         "kits/class_tools/Lesson_extras.html": "d24e23daad49fa205ec86104a460510eafdf239ee00a41c5b107e9390b3d66b4",
         "kits/class_tools/Retrieval_builder.html": "465ef8378004577904c63096f5dfbec9d7844816a43d10f9b3a4d0080950e7fb",
         "kits/class_tools/Coverage_map.html": "7c426809cc452ff7930b210fb6948d5620c0a742c5005753bb7065e15b223016",
@@ -3722,7 +3722,8 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-12 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 60647ba7, the merge of Site #636 (admission of the unlisted awards tracker page and the My tools page that links to it).
 # Re-cut 2026-11-12 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main b48f94a2, the merge of Site #638 (admission of the unlisted pupil CV builder page); no other line of the caller file changes.
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
-    "lessons": "2a06abf87cc423f3e4f46e1ccba23368d5323892dd96c859b18471a92abe7b84",
+# Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
+    "lessons": "00dacb2df9062b44689fa044ff68a804400d159e230bea62566b0ecc5578cc4c",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
