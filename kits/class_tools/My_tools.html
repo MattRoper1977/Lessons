@@ -6,8 +6,9 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="author" content="Lesson resource">
 <meta name="creator" content="Lesson resource">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; manifest-src data:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; manifest-src 'self' data:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'">
 <title>My tools</title>
+<link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#153e64">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,8 +18,9 @@
 <link id="appIcon" rel="icon" type="image/svg+xml">
 <link id="touchIcon" rel="apple-touch-icon">
 <style id="mainStyle">
-:root{color-scheme:light dark;--ink:#18283b;--accent:#153e64;--soft:#edf3f7;--line:#52677c;--bg:#fff;--focus:#713600;--ok:#155724;--ok-bg:#e3f4e8;--warn:#6b3a00;--warn-bg:#fff2dc;--miss:#7a1c1c;--miss-bg:#fdeaea;--build:#21465f;--grow:#174d3d;--launch:#50336f}
-@media(prefers-color-scheme:dark){:root{--ink:#f4f7fb;--accent:#c6e2ff;--soft:#1b2a3d;--line:#a9bdd2;--bg:#101b29;--focus:#ffd4a8;--ok:#a8edb9;--ok-bg:#163522;--warn:#ffd79e;--warn-bg:#3b2608;--miss:#ffb8b8;--miss-bg:#3c1818;--build:#b9dcf5;--grow:#a8e4ce;--launch:#e0cafa}}
+:root,html[data-theme="light"]{color-scheme:light;--ink:#18283b;--accent:#153e64;--soft:#edf3f7;--line:#52677c;--bg:#fff;--focus:#713600;--ok:#155724;--ok-bg:#e3f4e8;--warn:#6b3a00;--warn-bg:#fff2dc;--miss:#7a1c1c;--miss-bg:#fdeaea;--build:#21465f;--grow:#174d3d;--launch:#50336f}
+@media(prefers-color-scheme:dark){html:not([data-theme="light"]){color-scheme:dark;--ink:#f4f7fb;--accent:#c6e2ff;--soft:#1b2a3d;--line:#a9bdd2;--bg:#101b29;--focus:#ffd4a8;--ok:#a8edb9;--ok-bg:#163522;--warn:#ffd79e;--warn-bg:#3b2608;--miss:#ffb8b8;--miss-bg:#3c1818;--build:#b9dcf5;--grow:#a8e4ce;--launch:#e0cafa}}
+html[data-theme="dark"]{color-scheme:dark;--ink:#f4f7fb;--accent:#c6e2ff;--soft:#1b2a3d;--line:#a9bdd2;--bg:#101b29;--focus:#ffd4a8;--ok:#a8edb9;--ok-bg:#163522;--warn:#ffd79e;--warn-bg:#3b2608;--miss:#ffb8b8;--miss-bg:#3c1818;--build:#b9dcf5;--grow:#a8e4ce;--launch:#e0cafa}
 *{box-sizing:border-box}html{scroll-padding:20px}body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.45 system-ui,sans-serif;overflow-wrap:anywhere}main{max-width:1000px;margin:auto;padding:16px 14px 48px}h1{font-size:28px;margin:0}h2{font-size:23px;margin:22px 0 10px}h3{font-size:19px;margin:0 0 6px}p{margin:6px 0 10px}a{color:var(--accent)}button,input,textarea,select{font:inherit;color:inherit}button,.btn,select,input:not([type=checkbox]),summary{min-height:48px;min-width:48px}button,.btn{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border:2px solid var(--accent);border-radius:10px;background:var(--bg);color:var(--accent);font-size:17px;font-weight:600;text-decoration:none;cursor:pointer;text-align:center;touch-action:manipulation}button.primary,.btn.primary{background:var(--accent);color:var(--bg)}button[aria-pressed=true]{background:var(--accent);color:var(--bg)}button:disabled{opacity:.55;cursor:default}input:not([type=checkbox]),textarea,select{width:100%;max-width:100%;padding:8px 10px;border:2px solid var(--line);border-radius:8px;background:var(--bg)}input[type=checkbox]{width:24px;height:24px;flex:none;margin:0}textarea{min-height:140px}label{display:block;font-weight:600}summary{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:650;padding:4px 2px}summary::before{content:'+';font-size:22px;line-height:1;flex:none}details[open]>summary::before{content:'−'}:focus-visible{outline:3px solid var(--focus);outline-offset:3px}button:focus-visible,.btn:focus-visible{position:relative;z-index:1}.note,.panel{padding:12px 14px;border:2px solid var(--line);border-radius:14px;background:var(--soft);margin:12px 0}.row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center}.row>*{max-width:100%;min-width:0}.small,.hint{font-size:16px}.status{min-height:1.4em;font-weight:650}.check{display:flex;gap:12px;align-items:center;min-height:48px}.file{position:absolute;width:1px!important;height:1px!important;min-height:0!important;opacity:0;overflow:hidden;padding:0!important;border:0!important}.file:focus-visible+.btn{outline:3px solid var(--focus);outline-offset:4px}[hidden]{display:none!important}.badge{display:inline-block;border:2px solid currentColor;border-radius:8px;padding:1px 8px;font-size:16px;font-weight:650}.section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.section-head h2{margin:0}.empty{padding:8px 0;font-size:16px}ol{padding-left:24px}li{margin:6px 0}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .top-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:0 0 8px}.show-wrap{display:flex;align-items:center;gap:6px;min-width:0}.show-wrap label{white-space:nowrap;font-size:16px;margin:0}.show-wrap select{width:auto;min-width:128px;padding:6px 8px}
 input::placeholder,textarea::placeholder{color:var(--ink);opacity:.8}.tile{-webkit-touch-callout:none;touch-action:manipulation}.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:12px;margin:12px 0}.tool{position:relative;min-width:0;display:flex;gap:6px;border:2px solid var(--line);border-radius:12px;background:var(--soft)}.tile{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0;padding:14px;text-decoration:none;color:var(--ink);border-radius:10px}.tile b{color:var(--accent);font-size:20px}.tile span{font-size:16px}.tile .badge{align-self:flex-start}.pin{flex:none;width:48px;min-width:48px;height:48px;padding:0;margin:6px 6px 0 0;font-size:24px}
@@ -61,7 +63,116 @@ input::placeholder,textarea::placeholder{color:var(--ink);opacity:.8}.tile{-webk
 .stack-list{display:flex;flex-direction:column;gap:8px;margin:8px 0}
 .stack-meta{flex:1 1 200px;min-width:0}
 .stack-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-#printObserverSheet,#printPrivateSlip{display:none}
+#printObserverSheet,#printPrivateSlip,#printDeskCardsSheet,#boardDialog{display:none}
+/* --- Calm Owl Edition: Clean Workspace Tabs, Period Strip, Sub-Pills & Pupil Aids --- */
+.app-header{position:sticky;top:0;z-index:20;background:var(--bg);padding:8px 0 6px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.workspace-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:8px 0 2px}
+.nav-tab{min-height:48px;padding:6px 4px;border-radius:10px;border:2px solid var(--line);background:var(--soft);color:var(--ink);font-size:15.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:5px;position:relative}
+.nav-tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.nav-dot{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;border-radius:999px;font-size:12.5px;font-weight:750;background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn)}
+.nav-tab[aria-selected="true"] .nav-dot{background:var(--bg);color:var(--accent);border-color:var(--bg)}
+.period-strip{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin:0 0 10px}
+.p-chip{min-height:48px;padding:4px 2px;border-radius:9px;border:1.5px solid var(--line);background:var(--soft);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:13px;line-height:1.15}
+.p-chip b{font-size:14px}
+.p-chip span{font-size:11.5px;opacity:.9;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.p-chip.is-live{border-color:var(--ok);border-width:2px}
+.p-chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.p-chip.is-done::after{content:'✓';font-size:11px;font-weight:800}
+.sub-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.sub-tab{min-height:48px;padding:6px 12px;border-radius:999px;font-size:15px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.sub-tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.day-switcher{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0 0 10px}
+.turn-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:10px;background:var(--bg);border:1px solid var(--line);margin:6px 0 10px}
+.micro-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}
+.micro-actions button{min-height:48px;font-size:14.5px;padding:6px}
+.stage-track{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.stage-pill{min-height:48px;padding:6px 10px;border-radius:10px;font-size:14.5px;font-weight:700;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+.stage-pill[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.board-support-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:12px}
+.chunk-list{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.chunk-item{display:flex;align-items:center;gap:10px;min-height:48px;padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:var(--bg);cursor:pointer;text-align:left;width:100%;justify-content:flex-start;color:var(--ink)}
+.chunk-item[aria-pressed="true"]{background:var(--ok-bg);border-color:var(--ok);color:var(--ok);text-decoration:line-through}
+.board-stem-box{background:var(--soft);border:2px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.stem-display{font-size:19px;font-weight:650;padding:8px 10px;border-radius:10px;background:var(--bg);border-left:4px solid var(--accent)}
+.cards-preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0}
+.desk-card{background:#fff;color:#14243a;border:2px solid #153e64;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:5px}
+.desk-card-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1.5px solid #153e64;padding-bottom:4px;font-weight:800;font-size:17px;color:#153e64}
+.desk-card p{margin:2px 0;font-size:14px;color:#14243a}
+.radar-strip{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+#printDeskCardsSheet{display:none}
+@media(max-width:680px){
+  .board-support-grid,.cards-preview-grid,.day-switcher{grid-template-columns:1fr}
+}
+@media(max-width:420px){
+  .nav-tab{font-size:14px;padding:4px 2px}
+  .p-chip span{display:none}
+}
+@media print{
+  body.print-desk-cards #printDeskCardsSheet{display:block!important}
+  .print-cards-grid{display:grid;grid-template-columns:99mm 99mm;grid-auto-rows:62mm;gap:3mm;justify-content:center}
+  .print-desk-card{border:1.5pt solid #000;border-radius:3mm;padding:4mm;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;break-inside:avoid;color:#000;background:#fff;font:10.5pt/1.3 system-ui,sans-serif}
+  .print-desk-card-top{display:flex;justify-content:space-between;border-bottom:1pt solid #000;padding-bottom:1.5mm;font-weight:700;font-size:12pt}
+  .print-tear-key{margin-top:6mm;padding-top:3mm;border-top:1.5pt dashed #000;font:10pt/1.35 system-ui,sans-serif;color:#000}
+}
+
+#boardDialog[open]{display:block}
+.title-cluster{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.top-controls{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
+.net-pill{font-size:13.5px;padding:2px 8px;border-radius:999px;font-weight:650;border:1px solid var(--line);background:var(--soft);white-space:nowrap}
+.net-pill.offline{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.now-progress{height:6px;border-radius:999px;background:var(--bg);border:1px solid var(--line);overflow:hidden;margin:6px 0 4px}
+.now-progress-bar{height:100%;width:0%;background:var(--accent);transition:width .3s ease}
+.now-progress-bar.warn{background:var(--warn)}
+.badge.warn{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.badge.ok{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}
+.tally-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:4px}
+.tally-strip button{width:100%;padding:6px 4px;font-size:15px}
+.tally-strip button[data-tally-state="got"][aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:var(--bg)}
+.tally-strip button[data-tally-state="nearly"][aria-pressed="true"]{background:var(--warn);border-color:var(--warn);color:var(--bg)}
+.tally-strip button[data-tally-state="again"][aria-pressed="true"]{background:var(--miss);border-color:var(--miss);color:var(--bg)}
+.pupil-actions-3{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;margin-top:4px}
+.pupil-actions-3 button{padding:8px 6px;font-size:15px}
+.brief-note-box{margin-top:4px;padding:8px;border:1px solid var(--line);border-radius:10px;background:var(--soft)}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip-btn{min-height:48px;padding:6px 10px;font-size:14.5px;border-width:1px}
+.hub-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0}
+.hub-box{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.hub-box h3{margin:0 0 4px;font-size:18px}
+.qr-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px;background:#fff;color:#18283b;border:2px solid var(--line);border-radius:12px;margin:8px 0}
+.qr-wrap svg{width:min(220px,68vw);height:min(220px,68vw);display:block}
+.mono-code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:15px;word-break:break-all;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--soft)}
+.board-dialog{position:fixed;inset:0;width:100vw;max-width:100vw;height:100vh;max-height:100vh;margin:0;padding:0;border:0;background:var(--bg);color:var(--ink);z-index:999;overflow-y:auto}
+.board-dialog::backdrop{background:rgba(16,27,41,.92)}
+body.board-open{overflow:hidden}
+body.board-open>main{visibility:hidden}
+.board-shell{max-width:1060px;margin:0 auto;padding:16px;display:flex;flex-direction:column;gap:14px;min-height:100vh}
+.board-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:2px solid var(--line);padding-bottom:10px}
+.board-clock-card{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:16px;text-align:center}
+.board-digits{font-size:clamp(46px,11vw,84px);font-weight:800;font-variant-numeric:tabular-nums;line-height:1.05;margin:4px 0;color:var(--accent)}
+.board-bar{height:18px;border-radius:999px;background:var(--bg);border:2px solid var(--line);overflow:hidden;margin:10px 0}
+.board-bar-fill{height:100%;width:100%;background:var(--accent);transition:width .35s linear}
+.board-bar-fill.warn{background:var(--warn)}
+.board-bar-fill.done{background:var(--ok)}
+.board-presets{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:8px}
+.nnt-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.nnt-card{background:var(--soft);border:2px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.nnt-step{font-size:14px;font-weight:750;letter-spacing:.04em;color:var(--accent)}
+.nnt-text{font-size:21px;font-weight:700;min-height:2.6em}
+.voice-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.calm-box{background:var(--soft);border:2px solid var(--accent);border-radius:14px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.calm-Cue{font-size:20px;font-weight:700}
+@media(max-width:680px){
+  .hub-grid,.nnt-grid{grid-template-columns:1fr}
+  .voice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:420px){
+  .top-bar{gap:6px}
+  h1{font-size:22px}
+  .show-wrap label{display:none}
+  .show-wrap select{min-width:106px;padding:6px}
+  #openBoardBtn{padding:6px 10px;font-size:15.5px}
+}
+
 @media(max-width:680px){
   .brief-pupils,.handover-grid,.slot-grid{grid-template-columns:1fr}
   .sheet-doc thead{display:none}
@@ -87,10 +198,10 @@ input::placeholder,textarea::placeholder{color:var(--ink);opacity:.8}.tile{-webk
 @media print{
   body{background:#fff!important;color:#000!important;margin:0;padding:0}
   body>main{display:none!important}
-  .private-tag,.noprint{display:none!important}
+  .private-tag,.noprint,#boardDialog{display:none!important}
   body.print-observer-sheet #printObserverSheet{display:block!important}
   body.print-private-slip #printPrivateSlip{display:block!important}
-  body:not(.print-observer-sheet):not(.print-private-slip)::before{content:'Private: keep this copy. Print is turned off here to keep pupil labels private.';font:18px/1.5 sans-serif;color:#000}
+  body:not(.print-observer-sheet):not(.print-private-slip):not(.print-desk-cards)::before{content:'Private: keep this copy. Print is turned off here to keep pupil labels private.';font:18px/1.5 sans-serif;color:#000}
   .sheet-doc{color:#000!important;font-size:11pt;line-height:1.35}
   .sheet-doc h2{font-size:18pt;color:#000!important;border-bottom:2px solid #000}
   .sheet-doc h3{font-size:13pt;color:#000!important}
@@ -104,23 +215,50 @@ input::placeholder,textarea::placeholder{color:var(--ink);opacity:.8}.tile{-webk
 </head>
 <body>
 <main>
-<div class="top-bar">
-  <h1>My tools</h1>
-  <div class="show-wrap">
-    <label for="showTags">Show</label>
-    <select id="showTags" aria-label="Show pupils on screen as">
-      <option value="initials">Initials</option>
-      <option value="first">First name</option>
-      <option value="number">Number</option>
-    </select>
+<header class="app-header noprint">
+  <div class="top-bar" style="margin:0">
+    <div class="title-cluster">
+      <h1>My tools</h1>
+      <span id="netBadge" class="net-pill" role="status" aria-live="polite">Saved on this device</span>
+    </div>
+    <div class="top-controls">
+      <button type="button" id="openBoardBtn" aria-label="Open projector-safe classroom board">Board</button>
+      <div class="show-wrap">
+        <label for="showTags">Show</label>
+        <select id="showTags" aria-label="Show pupils on screen as">
+          <option value="initials">Initials</option>
+          <option value="first">First name</option>
+          <option value="number">Number</option>
+        </select>
+      </div>
+    </div>
   </div>
-</div>
+  <nav class="workspace-nav" role="tablist" aria-label="Classroom workspace views">
+    <button type="button" role="tab" class="nav-tab" id="tabBtnNow" data-ws-tab="now" aria-selected="true">Now</button>
+    <button type="button" role="tab" class="nav-tab" id="tabBtnDay" data-ws-tab="day" aria-selected="false">Day <span id="dayTabBadge" class="nav-dot" hidden>0</span></button>
+    <button type="button" role="tab" class="nav-tab" id="tabBtnAid" data-ws-tab="aid" aria-selected="false">Pupil aids</button>
+    <button type="button" role="tab" class="nav-tab" id="tabBtnTools" data-ws-tab="tools" aria-selected="false">All tools</button>
+  </nav>
+</header>
+
+<div id="periodTimeline" class="period-strip noprint" role="group" aria-label="Today's six periods — tap to inspect"></div>
 
 <section class="now panel" id="nowCard" aria-labelledby="nowTitle">
 <div class="section-head"><h2 id="nowTitle">Now</h2><span id="nowState" class="badge">Checking clock</span></div>
+<div id="nowProgressWrap" class="now-progress" hidden role="progressbar" aria-label="Current period time elapsed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="nowProgressBar" class="now-progress-bar"></div></div>
 <p id="nowWhen" class="hint"></p><h3 id="nowLesson"></h3><p id="nowCode" class="code"></p>
 <p id="nowHint" class="hint"></p>
-<div id="sharedPath" hidden><label for="nowPath">Choose a group for this shared lesson</label><select id="nowPath"><option>BUILD</option><option>GROW</option><option>LAUNCH</option></select></div>
+<div id="sharedPath" hidden>
+  <label for="nowPath">Choose a group for this shared lesson</label>
+  <select id="nowPath"><option>BUILD</option><option>GROW</option><option>LAUNCH</option></select>
+</div>
+<div id="commPartWrap" hidden style="margin:6px 0">
+  <label for="nowCommPart">Community session half (Week 4)</label>
+  <select id="nowCommPart">
+    <option value="1">First 40 min · Session 3 part 1 (W03)</option>
+    <option value="2">Second 40 min · Session 3 part 2 (W04)</option>
+  </select>
+</div>
 <div class="now-actions"><a class="btn primary" id="nowCapture" href="Quick_capture.html?now=1">Quick capture</a><a class="btn" id="nowExtras" href="Lesson_extras.html">Lesson extras</a><a class="btn" id="nowTracker" href="Catch_up_Tracker.html">Catch-up tracker</a></div>
 <p id="nextLesson" class="hint"></p>
 
@@ -131,47 +269,82 @@ input::placeholder,textarea::placeholder{color:var(--ink);opacity:.8}.tile{-webk
     <span id="briefUndoText">Attendance updated</span>
     <button type="button" id="briefUndoBtn">Undo</button>
   </div>
-  <div class="row">
-    <button type="button" id="suggestTaBtn">Suggest TA focus</button>
-    <button type="button" id="clearTaBtn">Clear TA focus</button>
+
+  <div class="sub-tabs" role="tablist" aria-label="Room brief sections">
+    <button type="button" role="tab" class="sub-tab" data-brief-pane="teach" aria-selected="true">Teach &amp; tally</button>
+    <button type="button" role="tab" class="sub-tab" data-brief-pane="handover" aria-selected="false">TA &amp; observer sheets</button>
+    <button type="button" role="tab" class="sub-tab" data-brief-pane="pick" aria-selected="false">Switch lesson</button>
   </div>
-  <div id="briefPupils" class="brief-pupils" role="region" aria-label="Pupils in this lesson"></div>
-  <div>
-    <label for="briefFocusNote">Supporting adult / lesson focus note (optional)</label>
-    <input type="text" id="briefFocusNote" maxlength="220" autocomplete="off" placeholder="e.g. Prompt verbal rehearsal before writing">
-    <p class="hint">Names typed here stay on this device: observer copies use Pupil N, and the private TA slip uses initials.</p>
-  </div>
-  <div class="handover-grid" role="group" aria-label="Observer and TA handover actions">
-    <button type="button" class="primary" id="saveObserverHtml">Save observer HTML</button>
-    <button type="button" id="saveObserverTxt">Save observer text</button>
-    <button type="button" id="copyObserverTxt">Copy observer summary</button>
-    <button type="button" id="toggleObserverPreview" aria-expanded="false">Preview observer sheet</button>
-    <button type="button" id="printObserverBtn">Print observer sheet</button>
-    <button type="button" id="toggleTaPreview" aria-expanded="false">Preview private TA slip</button>
-    <button type="button" id="printTaSlipBtn">Print private TA slip</button>
-  </div>
-  <p id="briefStatus" class="status" role="status" aria-live="polite"></p>
-  <div id="observerPreviewBox" class="preview-sheet" hidden aria-label="Observer sheet preview"></div>
-  <div id="taSlipPreviewBox" class="preview-sheet" hidden aria-label="Private TA slip preview"></div>
-  <details id="slotPickerDetails">
-    <summary>Preview another lesson this term</summary>
-    <p class="hint">Pick any lesson this half-term to check starting points, set TA focus, or save its observer sheet.</p>
-    <div class="slot-grid">
-      <div><label for="pickWeek">Week</label><select id="pickWeek"></select></div>
-      <div><label for="pickDay">Day</label><select id="pickDay"></select></div>
-      <div><label for="pickPeriod">Period</label><select id="pickPeriod"></select></div>
+
+  <div id="briefPaneTeach">
+    <div class="turn-bar">
+      <span id="invitedTurnText" class="small">Invited turns (no cold-calling): tap Next invited turn for a calm prompt.</span>
+      <div class="row" style="margin:0">
+        <button type="button" id="nextInvitedTurnBtn">Next invited turn</button>
+        <button type="button" id="resetTurnsBtn">Reset turns</button>
+      </div>
     </div>
     <div class="row">
-      <button type="button" class="primary" id="applyPreviewBtn">Preview chosen lesson</button>
-      <button type="button" id="useLiveClockBtn">Back to live clock</button>
+      <button type="button" class="primary" id="briefAllGotBtn">✓ All present got it</button>
+      <button type="button" id="suggestTaBtn">Suggest TA focus</button>
+      <button type="button" id="clearTaBtn">Clear TA focus</button>
+      <a class="btn" id="briefPracticalLink" href="Practical_log.html" hidden>Log practical</a>
     </div>
-  </details>
+    <div id="briefPupils" class="brief-pupils" role="region" aria-label="Pupils in this lesson"></div>
+  </div>
+
+  <div id="briefPaneHandover" hidden>
+    <div>
+      <label for="briefFocusNote">Supporting adult / lesson focus note (optional)</label>
+      <input type="text" id="briefFocusNote" maxlength="220" autocomplete="off" placeholder="e.g. Prompt verbal rehearsal before writing">
+      <p class="hint">Names typed here stay on this device: observer copies use Pupil N, and the private TA slip uses initials.</p>
+    </div>
+    <div class="handover-grid" role="group" aria-label="Observer and TA handover actions">
+      <button type="button" class="primary" id="printTaSlipBtn">Print private TA slip</button>
+      <button type="button" id="toggleTaPreview" aria-expanded="false">Preview private TA slip</button>
+      <button type="button" id="printObserverBtn">Print observer sheet</button>
+      <button type="button" id="toggleObserverPreview" aria-expanded="false">Preview observer sheet</button>
+      <button type="button" id="saveObserverHtml">Save observer HTML</button>
+      <button type="button" id="saveObserverTxt">Save observer text</button>
+      <button type="button" id="copyObserverTxt">Copy observer summary</button>
+    </div>
+    <div id="taSlipPreviewBox" class="preview-sheet" hidden aria-label="Private TA slip preview"></div>
+    <div id="observerPreviewBox" class="preview-sheet" hidden aria-label="Observer sheet preview"></div>
+  </div>
+
+  <div id="briefPanePick" hidden>
+    <details id="slotPickerDetails" open>
+      <summary>Preview another lesson this term</summary>
+      <p class="hint">Pick any lesson this half-term (or tap P1–P6 above for today).</p>
+      <div class="slot-grid">
+        <div><label for="pickWeek">Week</label><select id="pickWeek"></select></div>
+        <div><label for="pickDay">Day</label><select id="pickDay"></select></div>
+        <div><label for="pickPeriod">Period</label><select id="pickPeriod"></select></div>
+      </div>
+      <div class="row">
+        <button type="button" class="primary" id="applyPreviewBtn">Preview chosen lesson</button>
+        <button type="button" id="useLiveClockBtn">Back to live clock</button>
+      </div>
+    </details>
+  </div>
+  <p id="briefStatus" class="status" role="status" aria-live="polite"></p>
 </details>
 
-<details id="periodTimesDetails"><summary id="period-times">Check period times</summary><p class="hint">Start and end times use this device's clock. Break and lunch are not lessons.</p><form id="timesForm"><div id="timesInputs" class="time-grid"></div><div class="row"><button type="submit">Save period times</button><button id="resetSchoolTimes" type="button">Reset to school day</button></div></form><p id="timeStatus" role="status"></p></details>
+<details id="periodTimesDetails"><summary id="period-times">Check period times, term dates &amp; theme</summary><p class="hint">Start and end times use this device's clock. Break and lunch are not lessons.</p><form id="timesForm"><div id="timesInputs" class="time-grid"></div><div class="slot-grid" style="margin-top:10px"><div><label for="termStartInput">Week 1 Monday</label><input type="date" id="termStartInput" value="2026-11-02"></div><div><label for="themeSelect">Screen theme</label><select id="themeSelect"><option value="auto">System auto</option><option value="light">Calm light</option><option value="dark">Calm dark</option></select></div><div class="check"><input type="checkbox" id="skipW1MonCheck" checked><label for="skipW1MonCheck" style="margin:0">Week 1 Mon non-teaching</label></div></div><div class="row"><button type="submit" class="primary">Save settings</button><button id="resetSchoolTimes" type="button">Reset to school defaults</button></div></form><p id="timeStatus" role="status"></p></details>
 </section>
 
-<details id="morningCheckinDetails" class="panel">
+<section id="wsSectionDay" hidden aria-label="Daily routines">
+<div class="day-switcher" role="group" aria-label="Choose time-of-day routine">
+  <button type="button" class="sub-tab" data-day-focus="morning" aria-selected="true">1 · Morning check-in</button>
+  <button type="button" class="sub-tab" data-day-focus="eod" aria-selected="false">2 · End-of-day pack</button>
+  <button type="button" class="sub-tab" data-day-focus="tomorrow" aria-selected="false">3 · Tomorrow copier</button>
+</div>
+<div class="panel" id="fairnessRadarPanel" style="margin-top:0">
+  <div class="section-head"><h3 style="margin:0">Quiet-pupil recognition radar (this week)</h3><button type="button" id="clearPraiseWeekBtn" style="min-height:48px;font-size:14.5px;padding:4px 10px">New week reset</button></div>
+  <p class="hint" id="fairnessHint">Tap + Praise on a pupil in Room brief or below when you spot calm effort, so quiet pupils never go a week unnoticed.</p>
+  <div id="fairnessRadarStrip" class="radar-strip" role="region" aria-label="Weekly recognition radar"></div>
+</div>
+<details id="morningCheckinDetails" class="panel" open>
   <summary id="morningSummary">Morning check-in · 0 in, 0 out · 0 catch-up ready</summary>
   <p class="hint">09:00 to 09:30 check-in and reading. Mark anyone off sick once for the day; tap Back in now if a pupil arrives late.</p>
   <div id="morningUndoBar" class="undo-bar" hidden role="status">
@@ -195,6 +368,7 @@ input::placeholder,textarea::placeholder{color:var(--ink);opacity:.8}.tile{-webk
   <p id="eodMeta" class="hint"></p>
   <div class="row">
     <button type="button" class="primary" id="saveDayPackBtn">Save today's pack</button>
+    <button type="button" id="previewLastFridayBtn" hidden>Preview Friday lessons</button>
   </div>
   <p id="eodStatus" class="status" role="status" aria-live="polite"></p>
 </details>
@@ -210,12 +384,127 @@ input::placeholder,textarea::placeholder{color:var(--ink);opacity:.8}.tile{-webk
   <p id="copierStatus" class="status" role="status" aria-live="polite"></p>
 </details>
 
+</section>
+
+<section id="wsSectionAid" hidden aria-label="Pupil classroom aids">
+  <div class="panel">
+    <div class="section-head">
+      <h2 style="margin:0">Projector classroom board &amp; scaffolds</h2>
+      <div class="row" style="margin:0">
+        <button type="button" id="applyLessonPresetBtn" hidden>Load lesson preset</button>
+        <input type="file" id="importBoardPresetsFile" class="file" accept=".json,application/json">
+        <label for="importBoardPresetsFile" class="btn" role="button" tabindex="0">Import board_presets.json</label>
+        <button type="button" class="primary" id="openBoardFromAidBtn">Launch full-screen board</button>
+      </div>
+    </div>
+    <p id="presetBannerText" class="hint" style="margin:4px 0 8px"></p>
+    <p class="hint">Strictly pupil-safe: zero pupil names, codes, dates or term words appear on the projected screen. Pre-load key words, sentence starters and 4-step chunked task lists below before projecting.</p>
+
+    <div class="hub-grid">
+      <div class="hub-box">
+        <h3>Chunked task checklist (board)</h3>
+        <p class="hint">Breaks multi-step tasks into 4 calm, tickable lines on the board for working-memory support.</p>
+        <label for="aidChunk0">Step 1</label>
+        <input type="text" id="aidChunk0" maxlength="90" value="Read the box or listen to the model">
+        <label for="aidChunk1" style="margin-top:6px">Step 2</label>
+        <input type="text" id="aidChunk1" maxlength="90" value="Choose your route: ◆ Supported · ▲ Independent · ★ Aspire">
+        <label for="aidChunk2" style="margin-top:6px">Step 3</label>
+        <input type="text" id="aidChunk2" maxlength="90" value="Complete the task one step at a time">
+        <label for="aidChunk3" style="margin-top:6px">Step 4</label>
+        <input type="text" id="aidChunk3" maxlength="90" value="Check in the same colour, on the same page">
+        <div class="row">
+          <button type="button" id="saveBoardScaffoldsBtn" class="primary">Save board checklist &amp; stems</button>
+          <button type="button" id="resetBoardScaffoldsBtn">Reset defaults</button>
+        </div>
+      </div>
+
+      <div class="hub-box">
+        <h3>Key vocabulary &amp; sentence starter</h3>
+        <p class="hint">Displayed on the classroom board during We do / You do. Any pupil name typed by mistake is automatically redacted.</p>
+        <label for="aidKeyWords">Key words (comma or · separated)</label>
+        <input type="text" id="aidKeyWords" maxlength="120" placeholder="e.g. measure, compare, fair check, conclusion">
+        <label for="aidSentenceStem" style="margin-top:8px">Sentence starter prompt</label>
+        <input type="text" id="aidSentenceStem" maxlength="140" placeholder="e.g. The result shows that ___ because ___.">
+        <p id="aidScaffoldStatus" class="status" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-head">
+      <h2 style="margin:0">Printable Card A–E desk cards (You do slide)</h2>
+      <div class="row" style="margin:0">
+        <button type="button" id="toggleDeskCardsPreviewBtn" aria-expanded="false">Preview cards</button>
+        <button type="button" class="primary" id="printDeskCardsBtn">Print A–E desk cards</button>
+      </div>
+    </div>
+    <p class="hint">Matches the lettered target-card boxes on your CALM v4 You do slides ("Your adult will give you your card"). Each card face shows only Card A, Card B, etc., the pupil's active target and dignified help cues—never names or Pupil N codes—with a dashed adult tear-off initials key at the bottom.</p>
+    <div id="deskCardsPreviewBox" class="cards-preview-grid" hidden aria-label="Preview of lettered pupil desk cards"></div>
+  </div>
+</section>
+
+<section id="wsSectionTools" hidden aria-label="Tools launcher, sync and settings">
+<div class="row" style="justify-content:space-between;margin-top:0">
+  <span class="hint">Tip: press kbd / to jump straight to search.</span>
+  <button type="button" id="toggleAllInOneLayoutBtn" aria-pressed="false" style="min-height:48px;font-size:15px">Show all sections on one page</button>
+</div>
+<details id="offlineHubDetails" class="panel">
+  <summary id="offlineHubSummary">Offline hub · Sync, safe backup &amp; quick request</summary>
+  <p class="hint" id="orderCheckLine">Checking device roster and backup state…</p>
+  <div id="hubUndoBar" class="undo-bar" hidden role="status">
+    <span id="hubUndoText">Updated</span>
+    <button type="button" id="hubUndoBtn">Undo</button>
+  </div>
+  <div class="hub-grid">
+    <div class="hub-box">
+      <h3>Phone ↔ laptop tally sync</h3>
+      <p class="hint">Moves today's tally states and absences offline using Pupil N codes only (no names or notes).</p>
+      <div class="row">
+        <button type="button" class="primary" id="copySyncCodeBtn">Copy today's sync code</button>
+        <button type="button" id="toggleSyncQrBtn" aria-expanded="false">Show sync QR</button>
+      </div>
+      <div id="syncCodeDisplay" class="mono-code" hidden></div>
+      <div id="syncQrWrap" class="qr-wrap" hidden aria-label="Offline tally sync QR code"></div>
+      <label for="pasteSyncInput" style="margin-top:8px">Apply a sync code from your other device</label>
+      <input type="text" id="pasteSyncInput" autocomplete="off" placeholder="Paste MBM1-... sync code here">
+      <div class="row">
+        <button type="button" id="applySyncCodeBtn">Apply sync code</button>
+      </div>
+      <p id="syncStatus" class="status" role="status" aria-live="polite"></p>
+    </div>
+
+    <div class="hub-box">
+      <h3>Safe device backup &amp; restore</h3>
+      <p class="hint">Saves all tallies, catch-ups, targets, practicals, awards, pins and settings as Pupil N only. Private names never leave this device.</p>
+      <div class="row">
+        <button type="button" class="primary" id="exportSafeBackupBtn">Save safe backup (.json)</button>
+        <input type="file" id="importSafeBackupFile" class="file" accept=".json,application/json">
+        <label for="importSafeBackupFile" class="btn" role="button" tabindex="0" id="importSafeBackupLabel">Restore backup (.json)</label>
+      </div>
+      <p id="backupStatus" class="status" role="status" aria-live="polite"></p>
+
+      <h3 style="margin-top:12px">Quick request file (_INBOX)</h3>
+      <div class="chip-row" aria-label="Quick request templates">
+        <button type="button" class="chip-btn" data-req-chip="missing_links">Missing catch-up links</button>
+        <button type="button" class="chip-btn" data-req-chip="tomorrow_check">Tomorrow print &amp; reteach</button>
+        <button type="button" class="chip-btn" data-req-chip="cover_pack">Cover sheet needed</button>
+      </div>
+      <label for="quickReqText" style="margin-top:6px">What should the home laptop prepare?</label>
+      <textarea id="quickReqText" rows="3" style="min-height:92px" placeholder="Type a request — any pupil names are replaced with Pupil N before saving."></textarea>
+      <div class="row">
+        <button type="button" id="saveQuickReqBtn">Save request (.txt)</button>
+      </div>
+      <p id="quickReqStatus" class="status" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</details>
+
 <div class="search"><label for="toolSearch">Find a tool</label><input type="search" id="toolSearch" placeholder="Type a tool or a task" autocomplete="off"><p class="hint" id="searchStatus" role="status"></p></div>
 <section id="pinnedSection" aria-labelledby="pinnedTitle"><h2 id="pinnedTitle">Pinned</h2><p class="hint" id="pinHelp">Tap a star, or hold a tile, to keep it here.</p><div id="pinnedTiles" class="tiles"></div></section>
 <section id="recentSection" aria-labelledby="recentTitle"><h2 id="recentTitle">Last used</h2><p class="hint" id="recentHelp">Your last three tools will appear here.</p><div id="recentTiles" class="tiles"></div></section>
 
 <p id="homeStatus" class="status" role="status"></p>
-<p class="note">Private page. Nothing here is stored online. Your folder links open only when you tap them.</p>
+
 <section class="tool-group"><h2>Today</h2><div class="tiles"><a class="tile" href="Quick_capture.html"><b>Quick capture</b><span>Exit tally, evidence photos and the IEDP helper.</span></a><a class="tile" id="tomorrowTile" href="https://drive.google.com/drive/u/0/search?q=type%3Afolder%20Tomorrow" target="_blank" rel="noopener"><b>Tomorrow pack</b><span id="tomorrowHint">_OUTBOX / Tomorrow. Find the folder in Drive, or save its direct link below.</span></a><a class="tile" href="Lesson_extras.html"><b>Lesson extras</b><span>Visitor sheet and cover pack from a lesson file, made on this device.</span></a><a class="tile" href="Practical_log.html"><b>Practical log</b><span>Tick who did each experiment (pupil codes only).</span></a><a class="tile" href="Requests.html"><b>Request box</b><span>Ask for something; the agents pick it up.</span></a></div></section>
 <details class="note"><summary>Set Tomorrow folder link</summary><p>The direct Tomorrow folder link was not available in the reference. Until set, the tile searches Drive for folders called Tomorrow. Choose the one inside _OUTBOX.</p><form id="tomorrowForm"><label for="tomorrowUrl">Paste the Drive _OUTBOX / Tomorrow folder link</label><input id="tomorrowUrl" type="url" placeholder="https://drive.google.com/drive/folders/…" autocomplete="off"><div class="row"><button type="submit">Save folder link</button></div></form><p id="folderStatus" role="status"></p></details>
 <section class="tool-group"><h2>This week</h2><div class="tiles"><a class="tile" href="Catch_up_Tracker.html"><b>Catch-up tracker</b><span>Who missed what, and the right catch-up sheet.</span></a><a class="tile" href="Quick_capture.html#absence-panel"><b>Absent catch-up</b><span>Preview missed lessons and save a catch-up request.</span></a><a class="tile" href="Missed_last_week.html"><b>Missed last week</b><span>Catch-up sheets for the lessons that did not run, and when to use them.</span></a></div></section>
@@ -236,9 +525,103 @@ input::placeholder,textarea::placeholder{color:var(--ink);opacity:.8}.tile{-webk
   </details>
 </section>
 
-<p class="note">How it works: a tool saves a small file, you put it in the right Drive folder, and the home laptop does the rest within 15 minutes. Results appear in Drive.</p>
+
 <section class="tool-group"><h2>New tools</h2><p class="hint">Home sheets, report drafts and the look ahead are made on your laptop and wait in your Drive outbox.</p><div class="tiles"><a class="tile" href="Retrieval_builder.html"><b>Retrieval builder</b><span>Make quick questions to help pupils remember.</span><span class="badge">New</span></a><a class="tile" href="Coverage_map.html"><b>Coverage map</b><span>See what has been taught.</span><span class="badge">New</span></a><a class="tile" href="Award_tracker.html"><b>Awards tracker</b><span>Track Entry Level Science, Biology practicals, Hospitality credits and Unit awards.</span><span class="badge">New</span></a></div></section>
+<details class="note"><summary>Privacy &amp; how Drive folders work</summary><p>Private page: nothing here is stored online, and your Drive folder links open only when you tap them. When a tool saves a small file, drop it in the matching Drive _INBOX folder and your home laptop builds the result within 15 minutes.</p></details>
+<section class="panel" id="toolsPeriodTimesMount"></section>
+</section>
 </main>
+<script id="mbmBoardPresetsData" type="application/json">{"SCI_LAUNCH_A2_W02_L3":{"chunks":["1 Choose (◆): Which process gives a cell features suited to one job: division , elongati","Choose your route: ◆ Supported · ▲ Independent · ★ Aspire","2 Finish: A root hair cell has a thin extension so that it can absorb more ________.","Check in the same colour, on the same page"],"code":"SCI_LAUNCH_A2_W02_L3","keyWords":"shows / cannot show / extra check · but · division · elongation / a meristem · root age (days) · root length / mm","pathway":"LAUNCH","stem":"Today I can explain growth and differentiation and use evidence to repair claims about stem cells.","title":"Master: Growth, differentiation and stem-cell evidence"}}</script>
+<section id="printDeskCardsSheet" aria-hidden="true"></section>
+<dialog id="boardDialog" class="board-dialog noprint" aria-labelledby="boardHeading">
+  <div class="board-shell">
+    <div class="board-top">
+      <div>
+        <span class="pill" id="boardPathBadge">Projector safe · Zero pupil data</span>
+        <h2 id="boardHeading" style="margin:4px 0 0">Classroom board</h2>
+      </div>
+      <div class="row" style="margin:0">
+        <span id="boardLiveClock" class="badge" aria-live="off">--:--</span>
+        <button type="button" id="boardChimeBtn" aria-pressed="false">Chime: Off</button>
+        <button type="button" class="primary" id="closeBoardBtn">Exit board (Esc)</button>
+      </div>
+    </div>
+
+    <div class="board-clock-card">
+      <div id="boardTimerLabel" class="hint">Lesson timer</div>
+      <div id="boardDigits" class="board-digits" role="timer" aria-live="off">05:00</div>
+      <div class="board-bar" aria-hidden="true"><div id="boardBarFill" class="board-bar-fill"></div></div>
+      <div class="row" style="justify-content:center">
+        <button type="button" class="primary" id="boardStartPauseBtn">Start</button>
+        <button type="button" id="boardPlusMinBtn">+1 min</button>
+        <button type="button" id="boardResetBtn">Reset</button>
+      </div>
+      <div class="board-presets" role="group" aria-label="Timer presets">
+        <button type="button" data-board-mins="5" data-board-lbl="Arrival routine (5 min)">5m Arrival</button>
+        <button type="button" data-board-mins="10" data-board-lbl="Read &amp; model (10 min)">10m Model</button>
+        <button type="button" data-board-mins="15" data-board-lbl="Desk task (15 min)">15m Task</button>
+        <button type="button" data-board-mins="20" data-board-lbl="Practical / studio (20 min)">20m Practical</button>
+        <button type="button" data-board-mins="5" data-board-lbl="Calm pack-away &amp; exit (5 min)">5m Pack away</button>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="margin:0 0 6px">Lesson stage</h3>
+      <div id="boardStageTrack" class="stage-track" role="group" aria-label="CALM v4 lesson stage"></div>
+    </div>
+
+    <div class="board-support-grid">
+      <div class="board-stem-box">
+        <div class="section-head"><h3 style="margin:0">Task steps (tap as completed)</h3><button type="button" id="boardResetChunksBtn" style="min-height:48px;font-size:14px;padding:4px 10px">Uncheck all</button></div>
+        <div id="boardChunkList" class="chunk-list"></div>
+      </div>
+      <div class="board-stem-box">
+        <h3 style="margin:0">Key words &amp; starter</h3>
+        <div id="boardKeyWordsBox" class="stem-display">Ready · Safe · One step at a time</div>
+        <div id="boardStemBox" class="stem-display">Check your answer in the same colour, on the same page.</div>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="margin:0 0 8px">Now · Next · Then</h3>
+      <div class="nnt-grid">
+        <div class="nnt-card">
+          <span class="nnt-step">1 · NOW</span>
+          <div id="nntText0" class="nnt-text">Arrival strip</div>
+          <select id="nntSelect0" aria-label="Choose Now step"></select>
+        </div>
+        <div class="nnt-card">
+          <span class="nnt-step">2 · NEXT</span>
+          <div id="nntText1" class="nnt-text">Read &amp; model together</div>
+          <select id="nntSelect1" aria-label="Choose Next step"></select>
+        </div>
+        <div class="nnt-card">
+          <span class="nnt-step">3 · THEN</span>
+          <div id="nntText2" class="nnt-text">Desk task &amp; same-page edit</div>
+          <select id="nntSelect2" aria-label="Choose Then step"></select>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="margin:0 0 8px">Working voice</h3>
+      <div class="voice-grid" role="group" aria-label="Classroom voice level">
+        <button type="button" data-voice="Silent solo" aria-pressed="true">Silent solo</button>
+        <button type="button" data-voice="Partner whisper" aria-pressed="false">Partner whisper</button>
+        <button type="button" data-voice="Table talk" aria-pressed="false">Table talk</button>
+        <button type="button" data-voice="Group check" aria-pressed="false">Group check</button>
+      </div>
+    </div>
+
+    <div class="calm-box">
+      <div>
+        <strong>Calm 60 reset pacer</strong>
+        <div id="calmCueText" class="calm-Cue">Tap Start Calm 60 for a steady 60-second breathing reset.</div>
+      </div>
+      <button type="button" id="calm60Btn">Start Calm 60</button>
+    </div>
+  </div>
+</dialog>
 <section id="printObserverSheet" aria-hidden="true"></section>
 <section id="printPrivateSlip" aria-hidden="true"></section>
 <script>
@@ -262,11 +645,37 @@ const KEYS = {
   covAbs: 'mbm_coverage_absences_v1',
   targets: 'mbm_iedp_targets_v1',
   practical: 'mbm_practical_log_v1',
-  brief: 'mbm_room_brief_v1'
+  brief: 'mbm_room_brief_v1',
+  awards: 'mbm_awards_tracker_v1',
+  term: 'mbm_term_config_v1',
+  theme: 'mbm_tools_theme_v1',
+  commPart: 'mbm_tools_comm_part_v1',
+  board: 'mbm_board_timer_v1'
 };
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-const WEEKS = [[1,'02 Nov'],[2,'09 Nov'],[3,'16 Nov'],[4,'23 Nov'],[5,'30 Nov'],[6,'07 Dec'],[7,'14 Dec']];
+const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function readTermConfig(){
+  try {
+    const raw = JSON.parse(localStorage.getItem(KEYS.term) || 'null');
+    if (raw && typeof raw.w1Monday === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.w1Monday)) {
+      const [y, m, d] = raw.w1Monday.split('-').map(Number);
+      const dt = new Date(y, m - 1, d, 12);
+      if (!Number.isNaN(dt.getTime())) return { w1Monday: raw.w1Monday, y, m, d, skipW1Mon: raw.skipW1Mon !== false };
+    }
+  } catch (e) {}
+  return { w1Monday: '2026-11-02', y: 2026, m: 11, d: 2, skipW1Mon: true };
+}
+let termCfg = readTermConfig();
+function buildWeeksList(cfg = termCfg){
+  const out = [];
+  for (let w = 1; w <= 7; w++) {
+    const dt = new Date(cfg.y, cfg.m - 1, cfg.d + (w - 1) * 7, 12);
+    out.push([w, String(dt.getDate()).padStart(2, '0') + ' ' + MONTHS_SHORT[dt.getMonth()]]);
+  }
+  return out;
+}
+let WEEKS = buildWeeksList(termCfg);
 const PATHWAYS = ['BUILD', 'GROW', 'LAUNCH'];
 const DEFAULT_GROUPS = { BUILD: [4, 7, 9, 12], GROW: [1, 3, 5, 8, 11], LAUNCH: [2, 6, 10] };
 
@@ -302,7 +711,7 @@ function write(key, value){ try{ localStorage.setItem(key, JSON.stringify(value)
 function pad(n){ return String(n).padStart(2, '0'); }
 function dateISO(d = new Date()){ return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
 function dateStamp(d = new Date()){ return dateISO(d).replace(/-/g, ''); }
-function lessonDate(w, d){ return new Date(2026, 10, 2 + (+w - 1) * 7 + DAYS.indexOf(d), 12); }
+function lessonDate(w, d){ return new Date(termCfg.y, termCfg.m - 1, termCfg.d + (+w - 1) * 7 + DAYS.indexOf(d), 12); }
 function escapeHTML(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function escapeRE(s){ return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 function el(tag, attrs = {}, text){
@@ -312,8 +721,11 @@ function el(tag, attrs = {}, text){
   return node;
 }
 
+// Friday classes that started one lesson late run one lesson behind the calendar week.
+const ONE_BEHIND = { 'LAUNCH|Careers': 1, 'GROW|Humanities': 1, 'BUILD|Vocational': 1 };
+function taughtWeek(w, path, subj){ return Math.max(1, +w - (ONE_BEHIND[path + '|' + subj] || 0)); }
 function lessonCode(w, path, subj, n, part = 1){
-  const week = 'A2_W' + pad(w);
+  const week = 'A2_W' + pad(taughtWeek(w, path, subj));
   if (subj === 'Community Projects'){ const cw = +w === 4 ? (+part === 2 ? 4 : 3) : (+w < 4 ? Math.max(1, +w - 1) : +w); return 'COMMUNITY_A2_W' + pad(cw); }
   if (subj === 'Science') return path === 'GROW' ? 'GROW_SCI_' + week + '_P' + n : 'SCI_' + path + '_' + week + '_L' + n;
   if (subj === 'Creative Arts') return 'ART_' + path + '_' + week + '_P' + n;
@@ -340,10 +752,10 @@ function validSchoolTimes(value){
   const format = t => typeof t === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(t);
   return !!value && value.v === 2 && Array.isArray(value.starts) && Array.isArray(value.ends) && value.starts.length === 6 && value.ends.length === 6 && value.starts.every((start, i) => format(start) && format(value.ends[i]) && value.ends[i] > start && (!i || start >= value.ends[i - 1]));
 }
-function schoolWeek(date){ return 1 + Math.round((Date.UTC(date.getFullYear(), date.getMonth(), date.getDate() - (date.getDay() + 6) % 7) - Date.UTC(2026, 10, 2)) / 604800000); }
+function schoolWeek(date){ return 1 + Math.round((Date.UTC(date.getFullYear(), date.getMonth(), date.getDate() - (date.getDay() + 6) % 7) - Date.UTC(termCfg.y, termCfg.m - 1, termCfg.d)) / 604800000); }
 function schoolSlots(date, times){
   const w = schoolWeek(date), day = DAYS[date.getDay() - 1];
-  if (w < 1 || w > 7 || !day || (w === 1 && day === 'Monday')) return [];
+  if (w < 1 || w > 7 || !day || (termCfg.skipW1Mon && w === 1 && day === 'Monday')) return [];
   const clock = text => { const [h, m] = text.split(':').map(Number); return new Date(date.getFullYear(), date.getMonth(), date.getDate(), h, m); };
   return TT[day].map(row => ({ w, day, p: row[0], path: row[1], subject: row[2], lesson: LN[day + '|' + row[0]], start: clock(times.starts[row[0] - 1]), end: clock(times.ends[row[0] - 1]) }));
 }
@@ -631,44 +1043,57 @@ function enqueueLessonInQC(sendQueue, w, d, p, path, subj, lesson, code){
   };
 }
 
-// --- Undo Stack for Attendance, Catch-up Done, and End-of-day All Got It ---
-let lastUndo = null;
+// --- 5-Step Undo Stack for Room Brief Tally/Attendance, Morning Check-in, End-of-day, and Sync ---
+const undoStack = [];
+function refreshUndoBars(){
+  const top = undoStack[undoStack.length - 1] || null;
+  ['brief', 'morning', 'eod', 'hub'].forEach(prefix => {
+    const bar = $(prefix + 'UndoBar'), txt = $(prefix + 'UndoText'), btn = $(prefix + 'UndoBtn');
+    if (!bar || !txt || !btn) return;
+    if (top && prefix === top.kind) {
+      txt.textContent = top.labelText;
+      btn.textContent = undoStack.length > 1 ? 'Undo (' + undoStack.length + ')' : 'Undo';
+      bar.hidden = false;
+    } else {
+      bar.hidden = true;
+    }
+  });
+}
 function saveUndoSnapshot(kind, labelText){
-  lastUndo = {
+  undoStack.push({
     kind,
     labelText,
     tallyRaw: localStorage.getItem(KEYS.tally),
     trackerRaw: localStorage.getItem(KEYS.tracker),
     queueRaw: localStorage.getItem(KEYS.qcQueue),
-    covRaw: localStorage.getItem(KEYS.covAbs)
-  };
-  ['brief', 'morning', 'eod'].forEach(prefix => {
-    const bar = $(prefix + 'UndoBar'), txt = $(prefix + 'UndoText');
-    if (!bar || !txt) return;
-    if (prefix === kind) { txt.textContent = labelText; bar.hidden = false; }
-    else bar.hidden = true;
+    covRaw: localStorage.getItem(KEYS.covAbs),
+    briefRaw: localStorage.getItem(KEYS.brief)
   });
+  if (undoStack.length > 5) undoStack.shift();
+  refreshUndoBars();
 }
 function restoreRawKey(key, raw){
   try { if (raw === null) localStorage.removeItem(key); else localStorage.setItem(key, raw); } catch(e){}
 }
 function runUndo(){
-  if (!lastUndo) return;
-  const u = lastUndo; lastUndo = null;
+  if (!undoStack.length) return;
+  const u = undoStack.pop();
   restoreRawKey(KEYS.tally, u.tallyRaw);
   restoreRawKey(KEYS.tracker, u.trackerRaw);
   restoreRawKey(KEYS.qcQueue, u.queueRaw);
   restoreRawKey(KEYS.covAbs, u.covRaw);
-  ['briefUndoBar', 'morningUndoBar', 'eodUndoBar'].forEach(id => { if ($(id)) $(id).hidden = true; });
+  restoreRawKey(KEYS.brief, u.briefRaw);
+  refreshUndoBars();
   renderAll();
 }
 $('briefUndoBtn').onclick = runUndo;
 $('morningUndoBtn').onclick = runUndo;
 $('eodUndoBtn').onclick = runUndo;
+$('hubUndoBtn').onclick = runUndo;
 
 // --- Shared Attendance Marks ("Out today" & "Back in now" identical across A and B) ---
 function slotsOnDay(w, day, timesObj){
-  if (!DAYS.includes(day) || w < 1 || w > 7 || (w === 1 && day === 'Monday')) return [];
+  if (!DAYS.includes(day) || w < 1 || w > 7 || (termCfg.skipW1Mon && w === 1 && day === 'Monday')) return [];
   const baseDate = lessonDate(w, day);
   const clock = text => { const [h, m] = text.split(':').map(Number); return new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), h, m); };
   return TT[day].map(row => ({
@@ -868,7 +1293,7 @@ function nextSlotTextFor(path, subj, now){
       const cand = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset), dow = cand.getDay();
       if (dow < 1 || dow > 5) continue;
       const dName = DAYS[dow - 1], wk = schoolWeek(cand);
-      if (wk === 1 && dName === 'Monday') continue;
+      if ((wk < 1 || wk > 7) || (termCfg.skipW1Mon && wk === 1 && dName === 'Monday')) continue;
       for (const [per, sPath, sSubj] of (TT[dName] || [])) {
         if (sPath !== normPath && sPath !== 'ALL') continue;
         if (matchSubj && sSubj !== subj) continue;
@@ -897,10 +1322,115 @@ function currentActiveSlot(now = new Date()){
   return { ...c, isPreview: false };
 }
 
+let commPart = +read(KEYS.commPart, 1) === 2 ? 2 : 1;
+const BRIEF_NOTE_CHIPS = ['Verbal rehearsal helped', 'Used word bank well', 'Check start next lesson', 'Independent finish'];
+const PRACTICAL_SUBJECTS = new Set(['Science', 'Vocational', 'DT', 'ICT', 'Creative Arts']);
+let openNotePupils = new Set();
+
+function activeLessonCode(slot, path){
+  const part = (slot.subject === 'Community Projects' && +slot.w === 4) ? commPart : 1;
+  return lessonCode(slot.w, path, slot.subject, slot.lesson, part);
+}
+
+function setBriefPupilTally(slot, effPath, n, nextState, nextNote, skipUndo = false, reRender = true){
+  const roster = buildRoster();
+  const code = activeLessonCode(slot, effPath);
+  if (!skipUndo) {
+    const lbl = nextState !== undefined
+      ? (nextState ? (pupilTag(n, roster) + ' → ' + stateLabel(nextState)) : ('Cleared tally for ' + pupilTag(n, roster)))
+      : ('Saved note for ' + pupilTag(n, roster));
+    saveUndoSnapshot('brief', lbl);
+  }
+  const tallies = read(KEYS.tally, {}) || {};
+  const tracker = ensureTrackerState(roster);
+  const sendQueue = read(KEYS.qcQueue, {}) || {};
+  const tk = [slot.w, slot.day, slot.p, n].join('|');
+  const prev = tallies[tk] || {};
+  const rec = {
+    ...prev,
+    code,
+    path: effPath,
+    subj: slot.subject,
+    note: nextNote !== undefined ? nextNote : (prev.note || ''),
+    ts: new Date().toISOString()
+  };
+  if (nextState !== undefined) {
+    if (nextState) rec.state = nextState;
+    else delete rec.state;
+  }
+  // Sync tracker ownership identically to Quick_capture.html
+  const ownership = rec.tracker;
+  if (ownership && (!rec.state || rec.state === 'got')) {
+    if (JSON.stringify(tracker.marks?.[ownership.key]) === JSON.stringify(ownership.written)) {
+      if (ownership.before === null) delete tracker.marks[ownership.key];
+      else tracker.marks[ownership.key] = ownership.before;
+      tracker.dirtySinceBackup = true;
+    }
+    delete rec.tracker;
+  } else if (rec.state && ['absent', 'nearly', 'again'].includes(rec.state)) {
+    const trState = ({ absent: 'missed', nearly: 'partial', again: 'more' })[rec.state];
+    const mk = trackerRowKeyFor(tracker, slot.w, slot.day, slot.p, n, effPath, roster);
+    const existing = tracker.marks[mk];
+    const owned = ownership && ownership.key === mk && JSON.stringify(existing) === JSON.stringify(ownership.written);
+    const before = owned ? ownership.before : (existing === undefined ? null : structuredClone(existing));
+    const written = { ...(existing || {}), path: effPath, subj: slot.subject, lesson: slot.lesson, state: trState, done: false, note: rec.note || '' };
+    tracker.marks[mk] = written;
+    tracker.dirtySinceBackup = true;
+    rec.tracker = { key: mk, before, written: structuredClone(written) };
+  }
+  if (rec.state === 'got') {
+    const prefix = [slot.w, slot.day, slot.p].join('|') + '|';
+    Object.keys(tracker.marks || {}).forEach(k => {
+      if (!k.startsWith(prefix)) return;
+      if (matchTrackerPupilNumber(k.slice(prefix.length), tracker, roster) !== +n) return;
+      const m = tracker.marks[k];
+      if (m && !m.done && (m.state || 'missed') === 'missed') { delete tracker.marks[k]; tracker.dirtySinceBackup = true; }
+    });
+  }
+  if (!rec.state && !rec.note) delete tallies[tk];
+  else tallies[tk] = rec;
+
+  enqueueLessonInQC(sendQueue, slot.w, slot.day, slot.p, effPath, slot.subject, slot.lesson, code);
+  write(KEYS.tracker, tracker);
+  write(KEYS.tally, tallies);
+  write(KEYS.qcQueue, sendQueue);
+  if (reRender) {
+    renderAll();
+  } else {
+    const now = new Date(), curRoster = buildRoster();
+    const active = currentActiveSlot(now);
+    if (active.slot) {
+      const m = buildBriefModel(active.slot, curRoster);
+      refreshBriefPreviews(m);
+      const pracLink = $('briefPracticalLink');
+      if (pracLink && !pracLink.hidden) pracLink.href = buildPracticalLogHref(m, m.tallies);
+    }
+    renderEndOfDayPack(now, curRoster);
+    renderOfflineHub(now, curRoster);
+  }
+}
+
+function buildPracticalLogHref(m, tallies){
+  const map = { got: 'Did it', nearly: 'Partly', again: 'Watched', absent: 'Absent' };
+  const results = m.rows.map(r => {
+    const st = r.out ? 'absent' : (tallies[[m.slot.w, m.slot.day, m.slot.p, r.n].join('|')]?.state || '');
+    return map[st] ? (r.n + ':' + map[st]) : '';
+  }).filter(Boolean).join(',');
+  const q = new URLSearchParams({
+    from: 'tally',
+    date: dateISO(lessonDate(m.slot.w, m.slot.day)),
+    path: m.effPath,
+    subj: m.slot.subject,
+    lesson: m.code,
+    results
+  });
+  return 'Practical_log.html#' + q.toString();
+}
+
 function buildBriefModel(slot, roster = buildRoster()){
   if (!slot) return null;
   const effPath = slot.path === 'ALL' ? sharedPath : slot.path;
-  const code = lessonCode(slot.w, effPath, slot.subject, slot.lesson);
+  const code = activeLessonCode(slot, effPath);
   const slotKey = [slot.w, slot.day, slot.p, effPath].join('|');
   const tallies = read(KEYS.tally, {}) || {};
   const tracker = ensureTrackerState(roster);
@@ -909,6 +1439,9 @@ function buildBriefModel(slot, roster = buildRoster()){
   const pupils = (roster.groups[effPath] || []).slice();
 
   const rows = pupils.map(n => {
+    const curRec = tallies[[slot.w, slot.day, slot.p, n].join('|')] || {};
+    const curState = ['got', 'nearly', 'again', 'absent'].includes(curRec.state) ? curRec.state : '';
+    const curNote = String(curRec.note || '');
     const out = isPupilAbsentInSlot(n, slot.w, slot.day, slot.p, tallies, tracker, roster);
     const last = lastSubjectTallyForPupil(n, effPath, slot.subject, slot.w, slot.day, slot.p, tallies);
     const catchups = openCatchupsForPupil(n, tracker, roster);
@@ -917,12 +1450,13 @@ function buildBriefModel(slot, roster = buildRoster()){
     const firstTarget = String(targets[n] || '').split(/\r?\n/).map(s => s.trim()).find(Boolean) || '';
     const taFocus = focusList.includes(n);
     const watch = !out && (taFocus || (last && ['again', 'nearly'].includes(last.state)) || subjCatchups.length > 0);
-    return { n, grp: effPath, out, last, catchups, subjCatchups, adapts, firstTarget, taFocus, watch };
+    return { n, grp: effPath, out, curState, curNote, last, catchups, subjCatchups, adapts, firstTarget, taFocus, watch };
   });
 
   const outCount = rows.filter(r => r.out).length;
   const watchCount = rows.filter(r => r.watch).length;
-  return { slot, effPath, code, slotKey, rows, outCount, watchCount, focusList, roster };
+  const talliedCount = rows.filter(r => r.curState || r.out).length;
+  return { slot, effPath, code, slotKey, rows, outCount, watchCount, talliedCount, focusList, roster, tallies };
 }
 
 function stateLabel(st){ return ({ got: 'Got it', nearly: 'Partly', again: 'Not yet', absent: 'Absent' })[st] || 'No prior tally'; }
@@ -1011,13 +1545,22 @@ function renderRoomBrief(activeCtx, roster = buildRoster()){
     return;
   }
   const m = buildBriefModel(slot, roster);
-  $('roomBriefSummary').textContent = 'Room brief · ' + m.rows.length + ' pupil' + (m.rows.length === 1 ? '' : 's') + ', ' + m.outCount + ' out, ' + m.watchCount + ' to watch';
+  const tallySummaryBit = m.talliedCount ? (' · ' + m.talliedCount + '/' + m.rows.length + ' tallied') : '';
+  $('roomBriefSummary').textContent = 'Room brief · ' + m.rows.length + ' pupil' + (m.rows.length === 1 ? '' : 's') + ', ' + m.outCount + ' out, ' + m.watchCount + ' to watch' + tallySummaryBit;
+
+  const pracLink = $('briefPracticalLink');
+  if (pracLink) {
+    const showPrac = PRACTICAL_SUBJECTS.has(slot.subject);
+    pracLink.hidden = !showPrac;
+    if (showPrac) pracLink.href = buildPracticalLogHref(m, m.tallies);
+  }
 
   const stats = $('briefStats');
   stats.replaceChildren(
     el('span', { class: 'pill path-' + m.effPath }, m.effPath + ' · ' + m.rows.length + ' pupils'),
     el('span', { class: m.outCount ? 'pill miss' : 'pill ok' }, m.outCount + ' out'),
     el('span', { class: m.watchCount ? 'pill warn' : 'pill ok' }, m.watchCount + ' to watch'),
+    el('span', { class: m.talliedCount === m.rows.length && m.rows.length ? 'pill ok' : 'pill' }, m.talliedCount + ' of ' + m.rows.length + ' tallied'),
     el('span', { class: 'pill' }, m.focusList.length + ' TA focus')
   );
 
@@ -1035,6 +1578,10 @@ function renderRoomBrief(activeCtx, roster = buildRoster()){
 
     const sigs = el('div', { class: 'brief-signals' });
     if (r.out) sigs.append(el('span', { class: 'pill miss' }, 'Out today'));
+    else if (r.curState && r.curState !== 'absent') {
+      const curCls = r.curState === 'got' ? 'pill ok' : (r.curState === 'nearly' ? 'pill warn' : 'pill miss');
+      sigs.append(el('span', { class: curCls }, 'This lesson: ' + stateLabel(r.curState)));
+    }
     if (r.taFocus && !r.out) sigs.append(el('span', { class: 'pill warn' }, 'TA focus'));
     if (r.last) {
       const cls = ['again', 'nearly'].includes(r.last.state) ? 'pill warn' : (r.last.state === 'got' ? 'pill ok' : 'pill');
@@ -1060,7 +1607,23 @@ function renderRoomBrief(activeCtx, roster = buildRoster()){
       card.append(el('p', { class: 'target-line' }, 'Target: ' + (cleanT.length > 78 ? cleanT.slice(0, 75) + '…' : cleanT)));
     }
 
-    const actions = el('div', { class: 'pupil-actions' });
+    // In-place 1-tap Exit Tally buttons (Got it / Partly / Not yet)
+    const tallyBar = el('div', { class: 'tally-strip', role: 'group', 'aria-label': 'Lesson exit tally for Pupil ' + r.n });
+    [['got', '✓ Got it'], ['nearly', '◐ Partly'], ['again', '↻ Not yet']].forEach(([stKey, stText]) => {
+      const active = !r.out && r.curState === stKey;
+      const tb = el('button', {
+        type: 'button',
+        'data-tally-state': stKey,
+        'data-brief-tally': r.n + ':' + stKey,
+        'aria-pressed': String(active),
+        'aria-label': stText.slice(2) + ' · Pupil ' + r.n
+      }, stText);
+      tb.onclick = () => setBriefPupilTally(slot, m.effPath, r.n, active ? '' : stKey);
+      tallyBar.append(tb);
+    });
+    card.append(tallyBar);
+
+    const actions = el('div', { class: 'pupil-actions-3' });
     const outBtn = el('button', { type: 'button', 'aria-pressed': String(r.out), 'data-brief-out': r.n }, r.out ? 'Back in now' : 'Out today');
     outBtn.onclick = () => {
       if (r.out) markPupilBackInNow(r.n, slot.w, slot.day, 'brief');
@@ -1069,11 +1632,56 @@ function renderRoomBrief(activeCtx, roster = buildRoster()){
     const taBtn = el('button', { type: 'button', 'aria-pressed': String(r.taFocus), 'data-brief-ta': r.n }, 'TA focus');
     taBtn.onclick = () => {
       const next = r.taFocus ? m.focusList.filter(x => x !== r.n) : [...m.focusList, r.n];
+      saveUndoSnapshot('brief', (r.taFocus ? 'Cleared TA focus for ' : 'Added TA focus for ') + pupilTag(r.n, roster));
       writeBriefFocusSlot(m.slotKey, next);
       renderAll();
     };
-    actions.append(outBtn, taBtn);
-    card.append(actions);
+    const noteKey = m.slotKey + '|' + r.n;
+    const isNoteOpen = openNotePupils.has(noteKey);
+    const noteBtn = el('button', {
+      type: 'button',
+      'aria-expanded': String(isNoteOpen),
+      'data-brief-note-btn': r.n,
+      'aria-label': 'Lesson note for Pupil ' + r.n
+    }, r.curNote ? 'Note •' : 'Note');
+    const noteBox = el('div', { class: 'brief-note-box' });
+    noteBox.hidden = !isNoteOpen;
+    let noteSnapDone = false;
+    const noteInput = el('input', {
+      type: 'text',
+      maxlength: '240',
+      value: r.curNote,
+      'data-brief-note-input': r.n,
+      placeholder: 'Quick lesson note (redacted to Pupil N when shared)',
+      'aria-label': 'Tally note for Pupil ' + r.n
+    });
+    noteInput.oninput = () => {
+      const val = noteInput.value;
+      setBriefPupilTally(slot, m.effPath, r.n, undefined, val, noteSnapDone, false);
+      noteSnapDone = true;
+      noteBtn.textContent = val.trim() ? 'Note •' : 'Note';
+    };
+    const chipWrap = el('div', { class: 'chip-row' });
+    BRIEF_NOTE_CHIPS.forEach(chip => {
+      const cb = el('button', { type: 'button', class: 'chip-btn' }, chip);
+      cb.onclick = () => {
+        noteInput.value = chip;
+        setBriefPupilTally(slot, m.effPath, r.n, undefined, chip, false, false);
+        noteBtn.textContent = 'Note •';
+      };
+      chipWrap.append(cb);
+    });
+    noteBox.append(noteInput, chipWrap);
+    noteBtn.onclick = () => {
+      if (openNotePupils.has(noteKey)) openNotePupils.delete(noteKey);
+      else openNotePupils.add(noteKey);
+      noteBox.hidden = !openNotePupils.has(noteKey);
+      noteBtn.setAttribute('aria-expanded', String(!noteBox.hidden));
+      if (!noteBox.hidden) noteInput.focus();
+    };
+
+    actions.append(outBtn, taBtn, noteBtn);
+    card.append(actions, noteBox);
     box.append(card);
   });
 
@@ -1108,9 +1716,19 @@ $('clearTaBtn').onclick = () => {
   const c = currentActiveSlot(new Date());
   if (!c.slot) return;
   const m = buildBriefModel(c.slot);
+  saveUndoSnapshot('brief', 'Cleared TA focus');
   writeBriefFocusSlot(m.slotKey, []);
   $('briefStatus').textContent = 'TA focus cleared for this lesson.';
   renderAll();
+};
+
+$('briefAllGotBtn').onclick = () => {
+  const c = currentActiveSlot(new Date());
+  if (!c.slot) return;
+  const s = c.slot, effPath = s.path === 'ALL' ? sharedPath : s.path;
+  const code = activeLessonCode(s, effPath);
+  markLessonSafeAllGotIt({ w: s.w, d: s.day, p: s.p, path: effPath, subj: s.subject, lesson: s.lesson, code, date: dateISO(lessonDate(s.w, s.day)) }, 'brief');
+  $('briefStatus').textContent = 'Marked all present pupils Got it for ' + effPath + ' ' + s.subject + ' (absent pupils kept).';
 };
 
 $('briefFocusNote').oninput = () => {
@@ -1182,13 +1800,20 @@ $('printObserverBtn').onclick = () => printBriefSheet(false);
 $('printTaSlipBtn').onclick = () => printBriefSheet(true);
 
 // Populate slot picker
-WEEKS.forEach(([w, dt]) => $('pickWeek').append(el('option', { value: w }, 'Week ' + w + ' (' + dt + ')')));
+function populatePickWeeks(pref){
+  const sel = $('pickWeek'), cur = pref || sel.value || '2';
+  sel.replaceChildren();
+  WEEKS = buildWeeksList(termCfg);
+  WEEKS.forEach(([w, dt]) => sel.append(el('option', { value: w }, 'Week ' + w + ' (' + dt + ')')));
+  if ([...sel.options].some(o => o.value === String(cur))) sel.value = String(cur);
+}
 function populatePickDays(pref){
   const w = +$('pickWeek').value || 2, sel = $('pickDay');
   sel.replaceChildren();
-  (w === 1 ? DAYS.slice(1) : DAYS).forEach(d => sel.append(el('option', { value: d }, d)));
+  ((termCfg.skipW1Mon && w === 1) ? DAYS.slice(1) : DAYS).forEach(d => sel.append(el('option', { value: d }, d)));
   if (pref && [...sel.options].some(o => o.value === pref)) sel.value = pref;
 }
+populatePickWeeks('2');
 function populatePickPeriods(pref){
   const d = $('pickDay').value || 'Wednesday', sel = $('pickPeriod');
   sel.replaceChildren();
@@ -1360,18 +1985,18 @@ function todayExpandedLessons(now = new Date()){
   baseSlots.forEach(s => {
     const paths = s.path === 'ALL' ? PATHWAYS : [s.path];
     paths.forEach(path => {
-      const code = lessonCode(s.w, path, s.subject, s.lesson);
+      const code = activeLessonCode(s, path);
       out.push({ w: s.w, d: s.day, p: s.p, path, subj: s.subject, lesson: s.lesson, code, date: dateISO(lessonDate(s.w, s.day)) });
     });
   });
   return out;
 }
 
-function markLessonSafeAllGotIt(c){
+function markLessonSafeAllGotIt(c, undoTarget = 'eod'){
   const roster = buildRoster();
   const pupils = roster.groups[c.path] || [];
   if (!pupils.length) return;
-  saveUndoSnapshot('eod', 'Marked ' + c.d.slice(0, 3) + ' P' + c.p + ' ' + c.path + ' All got it (absent kept)');
+  saveUndoSnapshot(undoTarget, 'Marked ' + c.d.slice(0, 3) + ' P' + c.p + ' ' + c.path + ' All got it (absent kept)');
   const tallies = read(KEYS.tally, {}) || {};
   const tracker = ensureTrackerState(roster);
   const sendQueue = read(KEYS.qcQueue, {}) || {};
@@ -1498,9 +2123,64 @@ async function saveTodaysPack(){
     pracCount = 1;
   }
 
-  // 4. Dated clean tracker JSON backup (Pupil N only; zero photos in pack)
+  // 4. Dated clean tracker JSON backup + Awards tracker JSON backup (Pupil N only; zero photos in pack)
   const cleanBackup = buildPublicTrackerBackupObject(tracker, roster);
   files.push(new File([JSON.stringify(cleanBackup, null, 2) + '\n'], 'Backup/catch_up_tracker_' + dateISO(now) + '.json', { type: 'application/json;charset=utf-8' }));
+
+  let awardsCount = 0;
+  const rawAwards = read(KEYS.awards, null);
+  if (rawAwards && typeof rawAwards === 'object' && Object.keys(rawAwards).length > 0) {
+    const cleanAwards = deepRedactObjectPublic(rawAwards, roster);
+    files.push(new File([JSON.stringify(cleanAwards, null, 2) + '\n'], 'Backup/awards_tracker_' + dateISO(now) + '.json', { type: 'application/json;charset=utf-8' }));
+    awardsCount = 1;
+  }
+  // 5. Queued Book-Marking Pass files from Quick capture -> _INBOX_Marking/BOOKMARK_*.json
+  const rawBookStore = read('mbm_book_marking_v1', null);
+  if (rawBookStore && typeof rawBookStore === 'object') {
+    Object.values(rawBookStore).forEach(entry => {
+      if (!entry || !entry.code || !entry.books || typeof entry.books !== 'object') return;
+      const cleanBooks = [];
+      Object.entries(entry.books).forEach(([pn, b]) => {
+        const num = +pn;
+        if (!Number.isInteger(num) || num < 1 || num > 20 || !b) return;
+        if (!(Array.isArray(b.tags) && b.tags.length) && !b.strength && !b.edit_prompt && !b.voice_reply) return;
+        cleanBooks.push({
+          pupil: 'Pupil ' + num,
+          route: String(b.route || 'Independent'),
+          tags: Array.isArray(b.tags) ? b.tags.map(String) : [],
+          strength: redactPublic(b.strength || '', roster),
+          edit_prompt: redactPublic(b.edit_prompt || '', roster),
+          voice_reply: redactPublic(b.voice_reply || '', roster),
+          reply_owed: !!b.reply_owed && !String(b.voice_reply || '').trim()
+        });
+      });
+      if (cleanBooks.length) {
+        const bStamp = String(entry.date || dateISO(now)).replace(/-/g, '');
+        const bOut = {
+          schema: 'mbm_bookmark_v1',
+          code: String(entry.code),
+          date: String(entry.date || dateISO(now)),
+          week: entry.week || '',
+          day: entry.day || '',
+          period: entry.period || '',
+          pathway: entry.pathway || '',
+          subject: entry.subject || '',
+          books: cleanBooks
+        };
+        files.push(new File([JSON.stringify(bOut, null, 2) + '\n'], '_INBOX_Marking/BOOKMARK_' + bStamp + '_' + fileCode(String(entry.code)) + '.json', { type: 'application/json;charset=utf-8' }));
+      }
+    });
+  }
+
+  // 6. Weekly Praise Radar snapshot (Pupil N counts only -> feeds Friday Praise Postcards)
+  if (typeof owlState === 'object' && owlState?.praise && Object.keys(owlState.praise).length > 0) {
+    const cleanPraise = {};
+    Object.entries(owlState.praise).forEach(([pn, cnt]) => {
+      const num = +pn;
+      if (Number.isInteger(num) && num >= 1 && num <= 20) cleanPraise['Pupil ' + num] = Number(cnt) || 0;
+    });
+    files.push(new File([JSON.stringify({ date: dateISO(now), praise: cleanPraise }, null, 2) + '\n'], 'Backup/praise_radar_' + dateISO(now) + '.json', { type: 'application/json;charset=utf-8' }));
+  }
 
   const packDate = todayLessons[0]?.date ? todayLessons[0].date.replace(/-/g, '') : dateStamp(now);
   const zipFile = await makeZip(files, 'DAY_PACK_' + packDate + '.zip');
@@ -1511,7 +2191,7 @@ async function saveTodaysPack(){
   write(KEYS.tracker, tracker);
   write(KEYS.qcQueue, sendQueue);
 
-  $('eodStatus').textContent = 'Saved ' + zipFile.name + ' (' + tallyCount + ' tally CSV' + (tallyCount === 1 ? '' : 's') + ', ' + absCount + ' absence request' + (absCount === 1 ? '' : 's') + (pracCount ? ', 1 practical CSV' : '') + ', 1 tracker backup). No photos included.';
+  $('eodStatus').textContent = 'Saved ' + zipFile.name + ' (' + tallyCount + ' tally CSV' + (tallyCount === 1 ? '' : 's') + ', ' + absCount + ' absence request' + (absCount === 1 ? '' : 's') + (pracCount ? ', 1 practical CSV' : '') + ', 1 tracker backup' + (awardsCount ? ', 1 awards backup' : '') + '). No photos included.';
   renderAll();
 }
 $('saveDayPackBtn').onclick = () => saveTodaysPack().catch(() => { $('eodStatus').textContent = 'Could not prepare pack. Try again.'; });
@@ -1570,10 +2250,22 @@ function renderEndOfDayPack(now = new Date(), roster = buildRoster()){
     box.append(row);
   });
 
+  const dayLabel = lessons[0] ? (lessons[0].d + ' W' + lessons[0].w) : 'Today';
+  const isWeekend = now.getDay() === 0 || now.getDay() === 6;
+  const friBtn = $('previewLastFridayBtn');
+  if (friBtn) {
+    friBtn.hidden = !isWeekend;
+    friBtn.onclick = () => {
+      const friDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (now.getDay() === 0 ? 2 : 1), 12);
+      const fw = Math.max(1, Math.min(7, schoolWeek(friDate)));
+      previewOverride = { w: fw, day: 'Friday', p: 1 };
+      renderAll();
+    };
+  }
   const pracNote = Array.isArray(practicalRows) && practicalRows.length ? (' · ' + practicalRows.length + ' practical row(s) queued') : '';
   const dirtyNote = tracker.dirtySinceBackup ? ' · Tracker backup needed' : ' · Tracker backed up';
-  $('eodSummary').textContent = 'End-of-day pack · ' + completeCount + ' of ' + lessons.length + ' lessons tallied';
-  $('eodMeta').textContent = completeCount + ' of ' + lessons.length + ' lessons tallied today' + pracNote + dirtyNote + '. Book photos stay in Quick capture › Photo (never in this pack).';
+  $('eodSummary').textContent = 'End-of-day pack (' + dayLabel + ') · ' + completeCount + ' of ' + lessons.length + ' lessons tallied';
+  $('eodMeta').textContent = dayLabel + ': ' + completeCount + ' of ' + lessons.length + ' lessons tallied' + pracNote + dirtyNote + '. Book photos stay in Quick capture › Photo (never in this pack).';
 }
 
 // --- Feature E: Tomorrow's Copier and Reteach Drawer (Counts ONLY on Copy Copier List) ---
@@ -1683,8 +2375,76 @@ let sharedPath = read(KEYS.sharedPath, 'BUILD');
 if (!PATHWAYS.includes(sharedPath)) sharedPath = 'BUILD';
 $('nowPath').value = sharedPath;
 
+function applyTheme(mode){
+  const clean = ['auto', 'light', 'dark'].includes(mode) ? mode : 'auto';
+  if (clean === 'auto') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', clean);
+  if ($('themeSelect')) $('themeSelect').value = clean;
+}
+applyTheme(read(KEYS.theme, 'auto'));
+
+function updateNetBadge(){
+  const b = $('netBadge');
+  if (!b) return;
+  if (location.protocol === 'file:') {
+    b.textContent = 'Local offline';
+    b.className = 'net-pill';
+  } else if (navigator.onLine === false) {
+    b.textContent = 'Offline · saved on device';
+    b.className = 'net-pill offline';
+  } else {
+    b.textContent = 'Saved on this device';
+    b.className = 'net-pill';
+  }
+}
+window.addEventListener('online', updateNetBadge);
+window.addEventListener('offline', updateNetBadge);
+updateNetBadge();
+
+function computeLiveTimingBadge(now, active, c){
+  const progWrap = $('nowProgressWrap'), progBar = $('nowProgressBar');
+  const badgeEl = $('nowState');
+  badgeEl.className = 'badge';
+  if (active.isPreview) {
+    progWrap.hidden = true;
+    return 'Preview';
+  }
+  const s = active.slot;
+  if (!s) {
+    progWrap.hidden = true;
+    return 'No lesson';
+  }
+  if (c.current) {
+    const totalMs = Math.max(60000, s.end - s.start);
+    const elapsedMs = Math.max(0, Math.min(totalMs, now - s.start));
+    const minsLeft = Math.max(1, Math.ceil((s.end - now) / 60000));
+    const pct = Math.round((elapsedMs / totalMs) * 100);
+    progWrap.hidden = false;
+    progWrap.setAttribute('aria-valuenow', String(pct));
+    progBar.style.width = pct + '%';
+    const warn = minsLeft <= 5;
+    progBar.className = 'now-progress-bar' + (warn ? ' warn' : '');
+    if (warn) badgeEl.className = 'badge warn';
+    else badgeEl.className = 'badge ok';
+    return 'Now · ' + minsLeft + 'm left';
+  }
+  // Check if same-day Check-in, Break, or Lunch before next slot
+  if (dateISO(now) === dateISO(s.start) && s.start > now) {
+    const minsUntil = Math.ceil((s.start - now) / 60000);
+    if (minsUntil <= 45) {
+      const mOfDay = now.getHours() * 60 + now.getMinutes();
+      const phase = (mOfDay >= 540 && mOfDay < 570) ? 'Check-in' : (s.p === 3 ? 'Break' : (s.p === 5 ? 'Lunch' : 'Next'));
+      progWrap.hidden = true;
+      return phase + ' · P' + s.p + ' in ' + minsUntil + 'm';
+    }
+  }
+  progWrap.hidden = true;
+  return 'Next';
+}
+
 function renderNow(now = new Date(), roster = buildRoster()){
   $('showTags').value = roster.show;
+  $('nowCommPart').value = String(commPart);
   const active = currentActiveSlot(now);
   const c = active.isPreview ? active : nowContext(now);
   const s = active.slot;
@@ -1694,24 +2454,29 @@ function renderNow(now = new Date(), roster = buildRoster()){
   $('nowTracker').dataset.toolId = 'Catch_up_Tracker.html';
 
   if (!s) {
+    $('nowState').className = 'badge';
     $('nowState').textContent = 'No lesson';
+    $('nowProgressWrap').hidden = true;
     $('nowWhen').textContent = '';
     $('nowLesson').textContent = 'No lesson in the saved timetable';
     $('nowCode').textContent = '';
-    $('nowHint').textContent = 'Choose a lesson inside Quick capture.';
+    $('nowHint').textContent = 'Use Preview another lesson inside Room brief, or update Week 1 Monday in Check period times.';
     $('nowExtras').href = 'Lesson_extras.html';
     $('nextLesson').textContent = '';
     $('sharedPath').hidden = true;
+    $('commPartWrap').hidden = true;
     renderRoomBrief(active, roster);
     return;
   }
-  $('nowState').textContent = active.isPreview ? 'Preview' : (c.current ? 'Now' : 'Next');
+  const effPath = s.path === 'ALL' ? sharedPath : s.path;
+  $('nowState').textContent = computeLiveTimingBadge(now, active, c);
   $('nowWhen').textContent = (active.isPreview ? ('Preview: ' + schoolSlotText(s, times)) : schoolNowText(c, times, now)) + ' · Week ' + s.w;
-  $('nowLesson').textContent = s.subject + ' · ' + (s.path === 'ALL' ? 'All groups' : s.path);
-  $('nowCode').textContent = lessonCode(s.w, s.path === 'ALL' ? sharedPath : s.path, s.subject, s.lesson);
-  $('nowExtras').href = extrasLink(s, s.path === 'ALL' ? sharedPath : s.path);
+  $('nowLesson').textContent = s.subject + ' · ' + (s.path === 'ALL' ? 'All groups (' + effPath + ')' : s.path);
+  $('nowCode').textContent = activeLessonCode(s, effPath);
+  $('nowExtras').href = extrasLink(s, effPath);
   $('sharedPath').hidden = s.path !== 'ALL';
-  $('nowHint').textContent = (timesMigrated ? 'Period times set to your school day. ' : '') + (active.isPreview ? 'Previewing chosen lesson.' : (c.current ? 'Ready for this lesson.' : 'Ready for the next lesson.'));
+  $('commPartWrap').hidden = !(s.subject === 'Community Projects' && +s.w === 4);
+  $('nowHint').textContent = (timesMigrated ? 'Period times set to your school day. ' : '') + (active.isPreview ? 'Previewing chosen lesson.' : (c.current ? 'Ready for this lesson — open Room brief for 1-tap tally & TA focus.' : 'Ready for the next lesson.'));
   $('nextLesson').textContent = active.isPreview ? 'Tap Back to live clock inside Room brief when finished.' : (c.next ? 'Next: ' + shortSlot(c.next) : 'No later lesson in this timetable.');
   renderRoomBrief(active, roster);
 }
@@ -1722,11 +2487,22 @@ function renderAll(){
   renderMorningCheckin(now, roster);
   renderEndOfDayPack(now, roster);
   renderTomorrowDrawer(now, roster);
+  renderOfflineHub(now, roster);
+  syncBoardLessonHeader(now);
+  if (typeof renderPeriodTimeline === 'function') renderPeriodTimeline(now, roster);
+  if (typeof decoratePupilCardsAndRadar === 'function') decoratePupilCardsAndRadar(now, roster);
+  if (typeof renderDeskCardsPreview === 'function') renderDeskCardsPreview();
+  if (typeof refreshPresetBanner === 'function') refreshPresetBanner(now);
 }
 
 $('showTags').onchange = e => setShowMode(e.target.value);
 
-function fillTimeInputs(){ for (let i = 0; i < 6; i++) { $('time-' + i).value = times.starts[i]; $('end-' + i).value = times.ends[i]; } }
+function fillTimeInputs(){
+  for (let i = 0; i < 6; i++) { $('time-' + i).value = times.starts[i]; $('end-' + i).value = times.ends[i]; }
+  $('termStartInput').value = termCfg.w1Monday;
+  $('skipW1MonCheck').checked = termCfg.skipW1Mon;
+  $('themeSelect').value = read(KEYS.theme, 'auto');
+}
 for (let i = 0; i < 6; i++) {
   const group = document.createElement('div'), heading = document.createElement('strong');
   heading.textContent = 'Period ' + (i + 1);
@@ -1738,24 +2514,52 @@ for (let i = 0; i < 6; i++) {
   }
   $('timesInputs').append(group);
 }
+fillTimeInputs();
+
+$('themeSelect').onchange = () => {
+  const m = $('themeSelect').value;
+  write(KEYS.theme, m);
+  applyTheme(m);
+};
+
 $('timesForm').onsubmit = e => {
   e.preventDefault();
   const next = { ...times, v: 2, starts: Array.from({ length: 6 }, (_, i) => $('time-' + i).value), ends: Array.from({ length: 6 }, (_, i) => $('end-' + i).value), confirmed: true };
   if (!validTimes(next)) { $('timeStatus').textContent = 'Use a start and end for each period. Periods must not overlap.'; return; }
+  const rawDate = $('termStartInput').value || '2026-11-02';
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(rawDate)) { $('timeStatus').textContent = 'Choose a valid Week 1 Monday date.'; return; }
   times = next; timesMigrated = false;
-  const ok = write(TIMES, times);
-  $('timeStatus').textContent = ok ? '✓ Times saved on this device.' : 'Times used for this visit. Could not save on this device.';
+  const ok1 = write(TIMES, times);
+  write(KEYS.term, { w1Monday: rawDate, skipW1Mon: $('skipW1MonCheck').checked });
+  termCfg = readTermConfig();
+  populatePickWeeks($('pickWeek').value);
+  populatePickDays($('pickDay').value);
+  populatePickPeriods($('pickPeriod').value);
+  const chosenTheme = $('themeSelect').value;
+  write(KEYS.theme, chosenTheme);
+  applyTheme(chosenTheme);
+  $('timeStatus').textContent = ok1 ? '✓ Period times, term start and theme saved on this device.' : 'Settings applied for this visit.';
   renderAll();
 };
 $('resetSchoolTimes').onclick = () => {
-  times = schoolTimes(); timesMigrated = true; write(TIMES, times); fillTimeInputs();
-  $('timeStatus').textContent = 'Period times set to your school day';
+  times = schoolTimes(); timesMigrated = true; write(TIMES, times);
+  write(KEYS.term, { w1Monday: '2026-11-02', skipW1Mon: true });
+  termCfg = readTermConfig();
+  write(KEYS.theme, 'auto');
+  applyTheme('auto');
+  fillTimeInputs();
+  populatePickWeeks('2');
+  populatePickDays('Wednesday');
+  populatePickPeriods(1);
+  $('timeStatus').textContent = 'Reset to school day defaults (Week 1: 02 Nov 2026).';
   renderAll();
 };
 $('nowPath').onchange = () => { sharedPath = $('nowPath').value; write(KEYS.sharedPath, sharedPath); renderAll(); };
+$('nowCommPart').onchange = () => { commPart = +$('nowCommPart').value === 2 ? 2 : 1; write(KEYS.commPart, commPart); renderAll(); };
 
 function checkHashTarget(){
   if (location.hash === '#period-times') {
+    if (typeof applyWorkspaceView === 'function') { owlState.allInOne = false; applyWorkspaceView('tools'); }
     $('periodTimesDetails').open = true;
     $('periodTimesDetails').scrollIntoView();
   }
@@ -1831,10 +2635,1223 @@ window.addEventListener('storage', e => {
 });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) renderAll(); });
 
+
+// --- Offline SVG QR Generator (ISO 18004 byte-mode Version 1..9, zero dependencies) ---
+const makeOfflineQR = (() => {
+  const EXP = new Uint8Array(512), LOG = new Uint8Array(256);
+  let p = 1;
+  for (let i = 0; i < 255; i++) { EXP[i] = EXP[i + 255] = p; LOG[p] = i; p = (p << 1) ^ (p & 128 ? 285 : 0); }
+  function rs(data, ecLen){
+    let g = [1];
+    for (let i = 0; i < ecLen; i++) {
+      const ng = new Array(g.length + 1).fill(0);
+      for (let j = 0; j < g.length; j++) { ng[j] ^= g[j]; ng[j + 1] ^= g[j] ? EXP[LOG[g[j]] + i] : 0; }
+      g = ng;
+    }
+    const rem = new Array(ecLen).fill(0);
+    for (let i = 0; i < data.length; i++) {
+      const f = data[i] ^ rem.shift(); rem.push(0);
+      if (f) for (let j = 0; j < ecLen; j++) rem[j] ^= g[j + 1] ? EXP[LOG[g[j + 1]] + LOG[f]] : 0;
+    }
+    return rem;
+  }
+  const VCFG = [[0],[19,7,1,[]],[34,10,1,[6,18]],[55,15,1,[6,22]],[80,20,1,[6,26]],[108,26,1,[6,30]],[136,18,2,[6,34]],[156,20,2,[6,22,38],0x07C94],[194,24,2,[6,24,42],0x085BC],[232,30,2,[6,26,46],0x09A99]];
+  return function(text){
+    const bytes = new TextEncoder().encode(String(text || ''));
+    let ver = 1;
+    while (ver <= 9 && bytes.length > VCFG[ver][0] - 2) ver++;
+    if (ver > 9) return null;
+    const cfg = VCFG[ver], dc = cfg[0], ec = cfg[1], blks = cfg[2], al = cfg[3], sz = ver * 4 + 17;
+    const bits = [];
+    const push = (v, n) => { for (let i = n - 1; i >= 0; i--) bits.push((v >> i) & 1); };
+    push(4, 4); push(bytes.length, 8);
+    for (let i = 0; i < bytes.length; i++) push(bytes[i], 8);
+    for (let i = 0; i < 4 && bits.length < dc * 8; i++) bits.push(0);
+    while (bits.length % 8) bits.push(0);
+    const cw = [];
+    for (let i = 0; i < bits.length; i += 8) { let b = 0; for (let j = 0; j < 8; j++) b = (b << 1) | bits[i + j]; cw.push(b); }
+    for (let padIdx = 0; cw.length < dc; padIdx++) cw.push(padIdx & 1 ? 17 : 236);
+    const dBlks = [], eBlks = [], bLen = dc / blks;
+    for (let b = 0; b < blks; b++) { const sl = cw.slice(b * bLen, (b + 1) * bLen); dBlks.push(sl); eBlks.push(rs(sl, ec)); }
+    const out = [];
+    for (let i = 0; i < bLen; i++) for (let b = 0; b < blks; b++) out.push(dBlks[b][i]);
+    for (let i = 0; i < ec; i++) for (let b = 0; b < blks; b++) out.push(eBlks[b][i]);
+    const M = Array.from({ length: sz }, () => new Array(sz).fill(null));
+    const finder = (r, c) => {
+      for (let y = -1; y <= 7; y++) for (let x = -1; x <= 7; x++) {
+        if (r + y >= 0 && r + y < sz && c + x >= 0 && c + x < sz) {
+          M[r + y][c + x] = (y >= 0 && y <= 6 && (x === 0 || x === 6)) || (x >= 0 && x <= 6 && (y === 0 || y === 6)) || (y >= 2 && y <= 4 && x >= 2 && x <= 4) ? 1 : 0;
+        }
+      }
+    };
+    finder(0, 0); finder(0, sz - 7); finder(sz - 7, 0);
+    for (let i = 8; i < sz - 8; i++) M[6][i] = M[i][6] = (i % 2 === 0) ? 1 : 0;
+    const aL = al[al.length - 1];
+    al.forEach(r => al.forEach(c => {
+      if ((r === 6 && c === 6) || (r === 6 && c === aL) || (r === aL && c === 6)) return;
+      for (let y = -2; y <= 2; y++) for (let x = -2; x <= 2; x++) M[r + y][c + x] = (Math.abs(y) === 2 || Math.abs(x) === 2 || (y === 0 && x === 0)) ? 1 : 0;
+    }));
+    for (let i = 0; i < 9; i++) { if (M[8][i] === null) M[8][i] = 0; if (M[i][8] === null) M[i][8] = 0; }
+    for (let i = 0; i < 8; i++) { if (M[8][sz - 1 - i] === null) M[8][sz - 1 - i] = 0; if (M[sz - 1 - i][8] === null) M[sz - 1 - i][8] = 0; }
+    M[sz - 8][8] = 1;
+    if (cfg[4]) { for (let i = 0; i < 18; i++) { const bit = (cfg[4] >> i) & 1, r = Math.floor(i / 3), c = sz - 11 + (i % 3); M[r][c] = M[c][r] = bit; } }
+    let bi = 0, up = true;
+    for (let c = sz - 1; c > 0; c -= 2) {
+      if (c === 6) c--;
+      for (let s = 0; s < sz; s++) {
+        const r = up ? sz - 1 - s : s;
+        for (let dx = 0; dx < 2; dx++) {
+          const x = c - dx;
+          if (M[r][x] === null) {
+            let v = bi < out.length * 8 ? ((out[bi >> 3] >> (7 - (bi & 7))) & 1) : 0;
+            bi++;
+            if ((r + x) % 2 === 0) v ^= 1;
+            M[r][x] = v;
+          }
+        }
+      }
+      up = !up;
+    }
+    const fmt = 0x77C4;
+    for (let i = 0; i < 15; i++) {
+      const bit = (fmt >> i) & 1;
+      if (i < 6) M[i][8] = bit; else if (i < 8) M[i + 1][8] = bit; else M[sz - 15 + i][8] = bit;
+      if (i < 8) M[8][sz - 1 - i] = bit; else if (i < 9) M[8][15 - i] = bit; else M[8][14 - i] = bit;
+    }
+    let d = '';
+    for (let r = 0; r < sz; r++) for (let c = 0; c < sz; c++) if (M[r][c]) d += 'M' + (c + 2) + ',' + (r + 2) + 'h1v1h-1z';
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + (sz + 4) + ' ' + (sz + 4));
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', 'Offline sync QR code');
+    const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    bg.setAttribute('width', String(sz + 4)); bg.setAttribute('height', String(sz + 4)); bg.setAttribute('fill', '#fff');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', d); path.setAttribute('fill', '#000');
+    svg.append(bg, path);
+    return svg;
+  };
+})();
+
+// --- Offline Hub: Pupil Order Checksum, Sync Code, Safe Backup/Restore & Quick Request ---
+function computePupilOrderCode(roster = buildRoster()){
+  const entries = [];
+  for (let n = 1; n <= 20; n++) {
+    const lbl = normLabel(roster.keyByNum[n] || '');
+    const grp = roster.groupByNum[n] || '';
+    if (lbl) entries.push(n + ':' + grp + ':' + lbl);
+  }
+  if (!entries.length) {
+    // Group-only checksum when using anonymous numbers only
+    const gStr = PATHWAYS.map(p => p + '=' + (roster.groups[p] || []).join(',')).join(';');
+    const h = crc32(new TextEncoder().encode(gStr));
+    return { code: 'G' + (h & 0xfff).toString(16).toUpperCase().padStart(3, '0'), named: false };
+  }
+  const h = crc32(new TextEncoder().encode(entries.join('|')));
+  return { code: (h & 0xffff).toString(16).toUpperCase().padStart(4, '0'), named: true };
+}
+
+function deepRedactObjectPublic(val, roster){
+  if (typeof val === 'string') return redactPublic(val, roster);
+  if (Array.isArray(val)) return val.map(v => deepRedactObjectPublic(v, roster));
+  if (val && typeof val === 'object') {
+    const out = {};
+    Object.entries(val).forEach(([k, v]) => {
+      if (k === 'note' && val.adapt !== undefined) return; // Never touch profile private note
+      out[redactPublic(k, roster)] = deepRedactObjectPublic(v, roster);
+    });
+    return out;
+  }
+  return val;
+}
+
+function targetDayForHub(now = new Date()){
+  const live = schoolSlots(now, times);
+  if (live.length && !previewOverride) return { w: live[0].w, day: live[0].day };
+  const fb = currentActiveSlot(now).slot;
+  return fb ? { w: fb.w, day: fb.day } : { w: 2, day: 'Wednesday' };
+}
+
+const SYNC_ENC = { '': '0', got: '1', nearly: '2', again: '3', absent: '4' };
+const SYNC_DEC = { '0': '', '1': 'got', '2': 'nearly', '3': 'again', '4': 'absent' };
+
+function buildTodaySyncCode(now = new Date(), roster = buildRoster()){
+  const { w, day } = targetDayForHub(now);
+  const dIdx = Math.max(0, DAYS.indexOf(day));
+  const order = computePupilOrderCode(roster).code;
+  const tallies = read(KEYS.tally, {}) || {};
+  const tracker = ensureTrackerState(roster);
+  const cells = [];
+  for (let n = 1; n <= 20; n++) {
+    let pChars = '';
+    for (let p = 1; p <= 6; p++) {
+      const rec = tallies[[w, day, p, n].join('|')];
+      let st = rec && SYNC_ENC[rec.state] ? rec.state : '';
+      if (!st && isPupilAbsentInSlot(n, w, day, p, tallies, tracker, roster)) st = 'absent';
+      pChars += SYNC_ENC[st] || '0';
+    }
+    if (pChars !== '000000') cells.push(n.toString(36).toUpperCase() + pChars);
+  }
+  const core = 'W' + w + 'D' + dIdx + '-' + order + '-' + (cells.join('.') || 'NONE');
+  const chk = (crc32(new TextEncoder().encode(core)) & 0xffff).toString(16).toUpperCase().padStart(4, '0');
+  return 'MBM1-' + core + '-' + chk;
+}
+
+function applyTodaySyncCode(rawCode, allowOrderMismatch = false){
+  const clean = String(rawCode || '').trim().toUpperCase();
+  const m = clean.match(/^MBM1-(W([1-7])D([0-4])-([A-Z0-9]{4})-([A-Z0-9.]+))-([0-9A-F]{4})$/);
+  if (!m) return { ok: false, msg: 'Sync code not recognised. Copy the full MBM1-... code.' };
+  const [, core, wStr, dIdxStr, srcOrder, payload, givenChk] = m;
+  const expectChk = (crc32(new TextEncoder().encode(core)) & 0xffff).toString(16).toUpperCase().padStart(4, '0');
+  if (givenChk !== expectChk) return { ok: false, msg: 'Sync code has a typo (checksum mismatch). Copy it again.' };
+
+  const roster = buildRoster();
+  const localOrder = computePupilOrderCode(roster);
+  if (localOrder.named && !srcOrder.startsWith('G') && localOrder.code !== srcOrder && !allowOrderMismatch) {
+    return { ok: false, mismatch: true, msg: 'Order check differs (this device #' + localOrder.code + ' vs code #' + srcOrder + '). Check Class names order first, or tap Apply sync code again to force.' };
+  }
+
+  const w = +wStr, day = DAYS[+dIdxStr];
+  saveUndoSnapshot('hub', 'Applied sync code for W' + w + ' ' + day);
+  const tallies = read(KEYS.tally, {}) || {};
+  const tracker = ensureTrackerState(roster);
+  const sendQueue = read(KEYS.qcQueue, {}) || {};
+  const daySlots = slotsOnDay(w, day, times);
+  let appliedCount = 0;
+
+  if (payload !== 'NONE') {
+    payload.split('.').forEach(chunk => {
+      if (chunk.length !== 7) return;
+      const n = parseInt(chunk[0], 36);
+      if (!(n >= 1 && n <= 20)) return;
+      const grp = roster.groupByNum[n];
+      if (!grp) return;
+      for (let p = 1; p <= 6; p++) {
+        const st = SYNC_DEC[chunk[p]] || '';
+        if (!st) continue;
+        const slot = daySlots.find(s => s.p === p && (s.path === grp || s.path === 'ALL'));
+        if (!slot) continue;
+        const code = activeLessonCode(slot, grp);
+        const tk = [w, day, p, n].join('|');
+        const prev = tallies[tk] || {};
+        const rec = { ...prev, code, path: grp, subj: slot.subject, state: st, note: prev.note || '', ts: new Date().toISOString() };
+        if (['absent', 'nearly', 'again'].includes(st)) {
+          const trState = ({ absent: 'missed', nearly: 'partial', again: 'more' })[st];
+          const mk = trackerRowKeyFor(tracker, w, day, p, n, grp, roster);
+          const existing = tracker.marks[mk];
+          const before = existing === undefined ? null : structuredClone(existing);
+          const written = { ...(existing || {}), path: grp, subj: slot.subject, lesson: slot.lesson, state: trState, done: false, note: prev.note || '' };
+          tracker.marks[mk] = written;
+          rec.tracker = { key: mk, before, written: structuredClone(written) };
+        }
+        tallies[tk] = rec;
+        enqueueLessonInQC(sendQueue, w, day, p, grp, slot.subject, slot.lesson, code);
+        appliedCount++;
+      }
+    });
+  }
+  tracker.dirtySinceBackup = true;
+  write(KEYS.tracker, tracker);
+  write(KEYS.tally, tallies);
+  write(KEYS.qcQueue, sendQueue);
+  renderAll();
+  return { ok: true, msg: '✓ Synced ' + appliedCount + ' pupil-period mark(s) for Week ' + w + ' ' + day + '.' };
+}
+
+let pendingForceSyncCode = '';
+function renderOfflineHub(now = new Date(), roster = buildRoster()){
+  const order = computePupilOrderCode(roster);
+  const tracker = ensureTrackerState(roster);
+  const lastBk = tracker.lastBackup ? ('Last backup: ' + tracker.lastBackup) : 'No backup saved yet';
+  $('offlineHubSummary').textContent = 'Offline hub · Check #' + order.code + ' · Sync, backup & request';
+  $('orderCheckLine').textContent = roster.allPupils.length + ' active pupil(s) · Order check #' + order.code + ' · ' + lastBk + '. Matching check codes on phone and laptop confirm Pupil 1–20 are in the same order.';
+
+  const code = buildTodaySyncCode(now, roster);
+  if (!$('syncCodeDisplay').hidden) $('syncCodeDisplay').textContent = code;
+  if (!$('syncQrWrap').hidden) {
+    const wrap = $('syncQrWrap');
+    wrap.replaceChildren();
+    const svg = makeOfflineQR(code);
+    if (svg) wrap.append(svg, el('div', { class: 'hint', style: 'color:#18283b' }, code));
+  }
+}
+
+$('copySyncCodeBtn').onclick = () => {
+  const code = buildTodaySyncCode(new Date());
+  $('syncCodeDisplay').hidden = false;
+  $('syncCodeDisplay').textContent = code;
+  copyText(code, $('syncStatus'), 'Today sync code copied (Pupil N states only).');
+};
+
+$('toggleSyncQrBtn').onclick = () => {
+  const wrap = $('syncQrWrap'), open = wrap.hidden;
+  wrap.hidden = !open;
+  $('syncCodeDisplay').hidden = !open;
+  $('toggleSyncQrBtn').setAttribute('aria-expanded', String(open));
+  renderOfflineHub(new Date());
+};
+
+$('applySyncCodeBtn').onclick = () => {
+  const raw = $('pasteSyncInput').value.trim();
+  const force = pendingForceSyncCode && pendingForceSyncCode === raw;
+  const res = applyTodaySyncCode(raw, force);
+  $('syncStatus').textContent = res.msg;
+  pendingForceSyncCode = res.mismatch ? raw : '';
+  if (res.ok) $('pasteSyncInput').value = '';
+};
+
+function buildFullSafeBackup(roster = buildRoster()){
+  const tallies = read(KEYS.tally, {}) || {};
+  const cleanTallies = {};
+  Object.entries(tallies).forEach(([k, v]) => {
+    if (!v || typeof v !== 'object') return;
+    const copy = { ...v };
+    if (typeof copy.note === 'string') copy.note = redactPublic(copy.note, roster);
+    if (copy.tracker) delete copy.tracker;
+    cleanTallies[k] = copy;
+  });
+
+  const rawTargets = read(KEYS.targets, {}) || {};
+  const cleanTargets = {};
+  Object.entries(rawTargets).forEach(([n, txt]) => {
+    if (+n >= 1 && +n <= 20 && String(txt || '').trim()) cleanTargets[n] = redactPublic(String(txt), roster);
+  });
+
+  const cleanProfilePupils = {};
+  for (let n = 1; n <= 20; n++) {
+    const grp = roster.groupByNum[n];
+    const adapts = pupilAdapt(n, roster).map(a => redactPublic(a, roster));
+    if (grp || adapts.length) cleanProfilePupils[n] = { ...(grp ? { group: grp } : {}), ...(adapts.length ? { adapt: adapts } : {}) };
+  }
+
+  const rawPractical = read(KEYS.practical, []) || [];
+  const cleanPractical = Array.isArray(rawPractical) ? rawPractical.map(r => {
+    const m = String(r?.pupil || '').match(/(\d{1,2})/);
+    return {
+      ...deepRedactObjectPublic(r, roster),
+      pupil: m && +m[1] >= 1 && +m[1] <= 20 ? ('Pupil ' + (+m[1])) : 'Pupil 1'
+    };
+  }) : [];
+
+  const rawAwards = read(KEYS.awards, null);
+  const tracker = ensureTrackerState(roster);
+
+  return {
+    schema: 'mbm_my_tools_safe_backup_v1',
+    exportedAt: new Date().toISOString(),
+    orderCheck: computePupilOrderCode(roster).code,
+    data: {
+      times: read(TIMES, schoolTimes()),
+      term: readTermConfig(),
+      theme: read(KEYS.theme, 'auto'),
+      sharedPath: read(KEYS.sharedPath, 'BUILD'),
+      commPart: read(KEYS.commPart, 1),
+      pins: read(PINS, []),
+      recent: read(RECENT, []),
+      brief: readBriefFocusMap(),
+      board: deepRedactObjectPublic(read(KEYS.board, null), roster),
+      profilePublic: { version: 1, show: roster.show, pupils: cleanProfilePupils },
+      tally: cleanTallies,
+      tracker: buildPublicTrackerBackupObject(tracker, roster),
+      covAbs: deepRedactObjectPublic(read(KEYS.covAbs, {}) || {}, roster),
+      targets: cleanTargets,
+      practical: cleanPractical,
+      awards: rawAwards ? deepRedactObjectPublic(rawAwards, roster) : null
+    }
+  };
+}
+
+$('exportSafeBackupBtn').onclick = () => {
+  const roster = buildRoster();
+  const payload = buildFullSafeBackup(roster);
+  const file = new File([JSON.stringify(payload, null, 2) + '\n'], 'MY_TOOLS_SAFE_BACKUP_' + dateStamp(new Date()) + '.json', { type: 'application/json;charset=utf-8' });
+  downloadFile(file);
+  const tr = ensureTrackerState(roster);
+  tr.dirtySinceBackup = false;
+  tr.lastBackup = dateISO(new Date());
+  write(KEYS.tracker, tr);
+  $('backupStatus').textContent = 'Saved ' + file.name + ' (Pupil N codes only; private names kept off file).';
+  renderAll();
+};
+
+$('importSafeBackupLabel').addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('importSafeBackupFile').click(); }
+});
+
+$('importSafeBackupFile').onchange = e => {
+  const f = e.target.files?.[0];
+  e.target.value = '';
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(String(reader.result || ''));
+      if (parsed?.schema !== 'mbm_my_tools_safe_backup_v1' || !parsed.data) {
+        $('backupStatus').textContent = 'That file is not a My tools safe backup.';
+        return;
+      }
+      saveUndoSnapshot('hub', 'Restored safe device backup');
+      const d = parsed.data;
+      if (validTimes(d.times)) { times = d.times; write(TIMES, times); }
+      if (d.term?.w1Monday) { write(KEYS.term, { w1Monday: d.term.w1Monday, skipW1Mon: d.term.skipW1Mon !== false }); termCfg = readTermConfig(); }
+      if (typeof d.theme === 'string') { write(KEYS.theme, d.theme); applyTheme(d.theme); }
+      if (PATHWAYS.includes(d.sharedPath)) { sharedPath = d.sharedPath; $('nowPath').value = sharedPath; write(KEYS.sharedPath, sharedPath); }
+      if (d.commPart === 1 || d.commPart === 2) { commPart = d.commPart; write(KEYS.commPart, commPart); }
+      if (Array.isArray(d.pins)) { pins = d.pins.filter(id => tools.has(id)); write(PINS, pins); }
+      if (Array.isArray(d.recent)) { recent = d.recent.filter(id => tools.has(id)).slice(0, 3); write(RECENT, recent); }
+      if (d.brief && typeof d.brief === 'object') write(KEYS.brief, d.brief);
+      if (d.board && typeof d.board === 'object') write(KEYS.board, d.board);
+      if (d.tally && typeof d.tally === 'object') write(KEYS.tally, d.tally);
+      if (d.tracker && typeof d.tracker === 'object') write(KEYS.tracker, d.tracker);
+      if (d.covAbs && typeof d.covAbs === 'object') write(KEYS.covAbs, d.covAbs);
+      if (d.targets && typeof d.targets === 'object') write(KEYS.targets, d.targets);
+      if (Array.isArray(d.practical)) write(KEYS.practical, d.practical);
+      if (d.awards && typeof d.awards === 'object') write(KEYS.awards, d.awards);
+      // Merge public group & adapt into local profile while preserving any local private .note!
+      if (d.profilePublic?.pupils) {
+        const curProf = read(KEYS.profile, {}) || {};
+        const nextPupils = { ...(curProf.pupils || {}) };
+        Object.entries(d.profilePublic.pupils).forEach(([n, pubP]) => {
+          const oldP = nextPupils[n] || {};
+          nextPupils[n] = { ...oldP, ...(pubP.group ? { group: pubP.group } : {}), ...(Array.isArray(pubP.adapt) ? { adapt: pubP.adapt } : {}) };
+        });
+        write(KEYS.profile, { ...curProf, version: 1, show: curProf.show || d.profilePublic.show || 'initials', pupils: nextPupils });
+      }
+      fillTimeInputs();
+      populatePickWeeks($('pickWeek').value);
+      populatePickDays($('pickDay').value);
+      populatePickPeriods($('pickPeriod').value);
+      refreshRows();
+      renderAll();
+      $('backupStatus').textContent = '✓ Safe backup restored on this device (local private names preserved).';
+    } catch (err) {
+      $('backupStatus').textContent = 'Could not read that JSON file.';
+    }
+  };
+  reader.readAsText(f);
+};
+
+// Quick Request Chips & File Saver
+document.querySelectorAll('[data-req-chip]').forEach(btn => {
+  btn.onclick = () => {
+    const kind = btn.dataset.reqChip;
+    const roster = buildRoster();
+    const tracker = ensureTrackerState(roster);
+    if (kind === 'missing_links') {
+      const missing = [];
+      Object.entries(tracker.marks || {}).forEach(([, m]) => {
+        if (!m || m.done || m.state === 'done') return;
+      });
+      const codes = new Set();
+      PATHWAYS.flatMap(p => roster.groups[p] || []).forEach(n => {
+        openCatchupsForPupil(n, tracker, roster).forEach(item => {
+          if (!safeCatchupSheetUrl(item.w, item.path, item.subj, item.lesson, tracker)) {
+            codes.add(lessonCode(item.w, item.path, item.subj, item.lesson));
+          }
+        });
+      });
+      $('quickReqText').value = codes.size
+        ? ('Please prepare catch-up sheets and links for: ' + [...codes].join(', '))
+        : 'Please check open catch-ups in _OUTBOX and refresh any missing sheet links.';
+    } else if (kind === 'tomorrow_check') {
+      $('quickReqText').value = latestCopierText.trim() || 'Please check tomorrow packs in _OUTBOX / Tomorrow.';
+    } else if (kind === 'cover_pack') {
+      const s = currentActiveSlot(new Date()).slot;
+      const code = s ? activeLessonCode(s, s.path === 'ALL' ? sharedPath : s.path) : 'NEXT_LESSON';
+      $('quickReqText').value = 'Please prepare a 1-page cover and supporting-adult pack for ' + code + '.';
+    }
+    $('quickReqText').focus();
+  };
+});
+
+$('saveQuickReqBtn').onclick = () => {
+  const raw = $('quickReqText').value.trim();
+  if (!raw) { $('quickReqStatus').textContent = 'Type or pick a request above first.'; return; }
+  const roster = buildRoster();
+  const clean = redactPublic(raw, roster);
+  const now = new Date();
+  const stamp = dateStamp(now) + '_' + pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
+  const body = 'request-v1\ncreated=' + now.toISOString() + '\nsource=My_tools_offline\n\n' + clean + '\n';
+  const file = new File([body], 'REQUEST_' + stamp + '.txt', { type: 'text/plain;charset=utf-8' });
+  downloadFile(file);
+  $('quickReqStatus').textContent = 'Saved ' + file.name + ' for _INBOX (Pupil N codes only).';
+};
+
+// --- Projector-Safe Classroom Board & Calm Timer (Zero Pupil Data) ---
+const NNT_OPTIONS = [
+  'Arrival strip',
+  'Read & model together',
+  'Choose route: ◆ ▲ ★',
+  'Independent desk task',
+  'Practical bench work',
+  'Partner check',
+  'An edit in the margin, in the same colour, on the same page',
+  'Calm pack-away',
+  'Exit check',
+  'Check-in & reading'
+];
+
+let boardState = (() => {
+  const saved = read(KEYS.board, null);
+  return {
+    totalSec: Number.isInteger(saved?.totalSec) && saved.totalSec >= 60 ? saved.totalSec : 300,
+    label: typeof saved?.label === 'string' && saved.label ? saved.label : 'Arrival routine (5 min)',
+    nnt: Array.isArray(saved?.nnt) && saved.nnt.length === 3 ? saved.nnt.map(x => String(x || '')) : ['Arrival strip', 'Read & model together', 'Independent desk task'],
+    voice: typeof saved?.voice === 'string' ? saved.voice : 'Silent solo',
+    chime: !!saved?.chime
+  };
+})();
+let boardRemainSec = boardState.totalSec;
+let boardRunning = false;
+let boardTickId = null;
+let calmTickId = null;
+let calmSecLeft = 0;
+
+function saveBoardState(){ write(KEYS.board, boardState); }
+
+function playGentleChime(){
+  if (!boardState.chime) return;
+  try {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    const ctx = new Ctx();
+    [[523.25, 0, 0.28], [659.25, 0.22, 0.45]].forEach(([freq, start, dur]) => {
+      const osc = ctx.createOscillator(), gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.001, ctx.currentTime + start);
+      gain.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + start + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + start + dur);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + start);
+      osc.stop(ctx.currentTime + start + dur + 0.02);
+    });
+    setTimeout(() => ctx.close().catch(() => {}), 900);
+  } catch (e) {}
+}
+
+function syncBoardLessonHeader(now = new Date()){
+  const s = currentActiveSlot(now).slot;
+  const effPath = s ? (s.path === 'ALL' ? 'All groups' : s.path) : '';
+  $('boardHeading').textContent = s ? (s.subject + ' · ' + effPath) : 'Classroom board';
+  $('boardLiveClock').textContent = pad(now.getHours()) + ':' + pad(now.getMinutes());
+}
+
+function renderBoardUI(){
+  const mins = Math.floor(boardRemainSec / 60), secs = boardRemainSec % 60;
+  $('boardDigits').textContent = pad(mins) + ':' + pad(secs);
+  $('boardTimerLabel').textContent = boardState.label;
+  $('boardStartPauseBtn').textContent = boardRunning ? 'Pause' : (boardRemainSec === 0 ? 'Restart' : 'Start');
+  $('boardChimeBtn').setAttribute('aria-pressed', String(boardState.chime));
+  $('boardChimeBtn').textContent = boardState.chime ? 'Chime: Soft bell' : 'Chime: Off';
+  const pct = boardState.totalSec > 0 ? Math.max(0, Math.min(100, (boardRemainSec / boardState.totalSec) * 100)) : 0;
+  const fill = $('boardBarFill');
+  fill.style.width = pct + '%';
+  fill.className = 'board-bar-fill' + (boardRemainSec === 0 ? ' done' : (boardRemainSec <= 60 ? ' warn' : ''));
+
+  for (let i = 0; i < 3; i++) {
+    const val = NNT_OPTIONS.includes(boardState.nnt[i]) ? boardState.nnt[i] : NNT_OPTIONS[i];
+    $('nntText' + i).textContent = val;
+    $('nntSelect' + i).value = val;
+  }
+  document.querySelectorAll('[data-voice]').forEach(btn => {
+    btn.setAttribute('aria-pressed', String(btn.dataset.voice === boardState.voice));
+  });
+}
+
+for (let i = 0; i < 3; i++) {
+  const sel = $('nntSelect' + i);
+  NNT_OPTIONS.forEach(opt => sel.append(el('option', { value: opt }, opt)));
+  sel.onchange = () => {
+    boardState.nnt[i] = sel.value;
+    saveBoardState();
+    renderBoardUI();
+  };
+}
+
+document.querySelectorAll('[data-voice]').forEach(btn => {
+  btn.onclick = () => {
+    boardState.voice = btn.dataset.voice;
+    saveBoardState();
+    renderBoardUI();
+  };
+});
+
+document.querySelectorAll('[data-board-mins]').forEach(btn => {
+  btn.onclick = () => {
+    clearInterval(boardTickId); boardRunning = false;
+    boardState.totalSec = (+btn.dataset.boardMins || 5) * 60;
+    boardState.label = btn.dataset.boardLbl || 'Lesson timer';
+    boardRemainSec = boardState.totalSec;
+    saveBoardState();
+    renderBoardUI();
+  };
+});
+
+$('boardStartPauseBtn').onclick = () => {
+  if (boardRunning) {
+    clearInterval(boardTickId); boardRunning = false;
+    renderBoardUI();
+    return;
+  }
+  if (boardRemainSec <= 0) boardRemainSec = boardState.totalSec;
+  boardRunning = true;
+  renderBoardUI();
+  clearInterval(boardTickId);
+  boardTickId = setInterval(() => {
+    if (boardRemainSec > 0) boardRemainSec--;
+    syncBoardLessonHeader(new Date());
+    if (boardRemainSec <= 0) {
+      clearInterval(boardTickId);
+      boardRunning = false;
+      playGentleChime();
+    }
+    renderBoardUI();
+  }, 1000);
+};
+
+$('boardPlusMinBtn').onclick = () => {
+  boardRemainSec += 60;
+  if (boardRemainSec > boardState.totalSec) boardState.totalSec = boardRemainSec;
+  renderBoardUI();
+};
+
+$('boardResetBtn').onclick = () => {
+  clearInterval(boardTickId); boardRunning = false;
+  boardRemainSec = boardState.totalSec;
+  renderBoardUI();
+};
+
+$('boardChimeBtn').onclick = () => {
+  boardState.chime = !boardState.chime;
+  saveBoardState();
+  renderBoardUI();
+};
+
+$('calm60Btn').onclick = () => {
+  if (calmTickId) {
+    clearInterval(calmTickId); calmTickId = null; calmSecLeft = 0;
+    $('calm60Btn').textContent = 'Start Calm 60';
+    $('calmCueText').textContent = 'Tap Start Calm 60 for a steady 60-second breathing reset.';
+    return;
+  }
+  calmSecLeft = 60;
+  $('calm60Btn').textContent = 'Stop Calm 60';
+  const stepCue = sec => {
+    const phase = (60 - sec) % 12;
+    const word = phase < 4 ? 'Breathe in slowly…' : (phase < 6 ? 'Hold gently…' : 'Breathe out slowly…');
+    $('calmCueText').textContent = word + ' (' + sec + 's)';
+  };
+  stepCue(calmSecLeft);
+  calmTickId = setInterval(() => {
+    calmSecLeft--;
+    if (calmSecLeft <= 0) {
+      clearInterval(calmTickId); calmTickId = null;
+      $('calm60Btn').textContent = 'Start Calm 60';
+      $('calmCueText').textContent = 'Calm 60 complete — ready when you are.';
+      return;
+    }
+    stepCue(calmSecLeft);
+  }, 1000);
+};
+
+function openBoardDialog(){
+  const dlg = $('boardDialog');
+  syncBoardLessonHeader(new Date());
+  if (typeof renderBoardScaffolds === 'function') renderBoardScaffolds();
+  renderBoardUI();
+  document.body.classList.add('board-open');
+  if (typeof dlg.showModal === 'function' && !dlg.open) dlg.showModal();
+  else dlg.setAttribute('open', '');
+  $('closeBoardBtn').focus();
+}
+function closeBoardDialog(){
+  const dlg = $('boardDialog');
+  clearInterval(boardTickId); boardRunning = false;
+  if (calmTickId) { clearInterval(calmTickId); calmTickId = null; $('calm60Btn').textContent = 'Start Calm 60'; }
+  document.body.classList.remove('board-open');
+  if (typeof dlg.close === 'function' && dlg.open) dlg.close();
+  else dlg.removeAttribute('open');
+  $('openBoardBtn').focus();
+}
+$('openBoardBtn').onclick = openBoardDialog;
+$('closeBoardBtn').onclick = closeBoardDialog;
+$('boardDialog').addEventListener('close', () => { document.body.classList.remove('board-open'); });
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && $('boardDialog').open) {
+    e.preventDefault();
+    closeBoardDialog();
+    return;
+  }
+  if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    const tag = (document.activeElement?.tagName || '').toLowerCase();
+    if (!['input', 'textarea', 'select'].includes(tag) && !$('boardDialog').open) {
+      e.preventDefault();
+      $('toolSearch').focus();
+    }
+  }
+});
+
+// Offline saving of these pages waits for the website's offline cache review; nothing is registered here.
+
+
+// --- Calm Owl Edition: Workspace Tabs, Period Strip, Invited Turns, Praise Radar & Pupil Aids ---
+const OWL_KEY = 'mbm_owl_aids_v1';
+const CALM_STAGES = ['Arrival', 'Starter', 'I do', 'We do', 'You do', 'Check', 'Exit ticket', 'Your voice', 'Reset'];
+const DEFAULT_CHUNKS = [
+  'Read the box or listen to the model',
+  'Choose your route: ◆ Supported · ▲ Independent · ★ Aspire',
+  'Complete the task one step at a time',
+  'Check in the same colour, on the same page'
+];
+
+function readOwlState(){
+  const raw = read(OWL_KEY, null) || {};
+  return {
+    tab: ['now', 'day', 'aid', 'tools'].includes(raw.tab) ? raw.tab : 'now',
+    allInOne: !!raw.allInOne,
+    stage: CALM_STAGES.includes(raw.stage) ? raw.stage : 'Arrival',
+    chunks: Array.isArray(raw.chunks) && raw.chunks.length === 4 ? raw.chunks.map((c, i) => String(c || DEFAULT_CHUNKS[i]).slice(0, 90)) : DEFAULT_CHUNKS.slice(),
+    chunkDone: Array.isArray(raw.chunkDone) ? raw.chunkDone.slice(0, 4).map(Boolean) : [false, false, false, false],
+    keyWords: typeof raw.keyWords === 'string' ? raw.keyWords.slice(0, 120) : '',
+    stem: typeof raw.stem === 'string' ? raw.stem.slice(0, 140) : '',
+    turns: raw.turns && typeof raw.turns === 'object' && !Array.isArray(raw.turns) ? raw.turns : {},
+    praise: raw.praise && typeof raw.praise === 'object' && !Array.isArray(raw.praise) ? raw.praise : {}
+  };
+}
+let owlState = readOwlState();
+function saveOwlState(){ write(OWL_KEY, owlState); }
+
+function applyWorkspaceView(tabName){
+  if (['now', 'day', 'aid', 'tools'].includes(tabName)) {
+    owlState.tab = tabName;
+    saveOwlState();
+  }
+  const all = owlState.allInOne;
+  document.querySelectorAll('[data-ws-tab]').forEach(btn => {
+    btn.setAttribute('aria-selected', String(!all && btn.dataset.wsTab === owlState.tab));
+  });
+  $('nowCard').hidden = !all && owlState.tab !== 'now';
+  $('periodTimeline').hidden = !all && owlState.tab !== 'now';
+  $('wsSectionDay').hidden = !all && owlState.tab !== 'day';
+  $('wsSectionAid').hidden = !all && owlState.tab !== 'aid';
+  $('wsSectionTools').hidden = !all && owlState.tab !== 'tools';
+  $('toggleAllInOneLayoutBtn').setAttribute('aria-pressed', String(all));
+  $('toggleAllInOneLayoutBtn').textContent = all ? 'Return to clean 4-tab view' : 'Show all sections on one page';
+}
+
+document.querySelectorAll('[data-ws-tab]').forEach(btn => {
+  btn.onclick = () => {
+    owlState.allInOne = false;
+    applyWorkspaceView(btn.dataset.wsTab);
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  };
+});
+
+$('toggleAllInOneLayoutBtn').onclick = () => {
+  owlState.allInOne = !owlState.allInOne;
+  saveOwlState();
+  applyWorkspaceView(owlState.tab);
+};
+
+// Sub-tabs inside Room brief (Teach & tally | TA & observer sheets | Switch lesson)
+let activeBriefPane = 'teach';
+function setBriefPane(pane){
+  activeBriefPane = ['teach', 'handover', 'pick'].includes(pane) ? pane : 'teach';
+  document.querySelectorAll('[data-brief-pane]').forEach(btn => {
+    btn.setAttribute('aria-selected', String(btn.dataset.briefPane === activeBriefPane));
+  });
+  $('briefPaneTeach').hidden = activeBriefPane !== 'teach';
+  $('briefPaneHandover').hidden = activeBriefPane !== 'handover';
+  $('briefPanePick').hidden = activeBriefPane !== 'pick';
+}
+document.querySelectorAll('[data-brief-pane]').forEach(btn => {
+  btn.onclick = () => setBriefPane(btn.dataset.briefPane);
+});
+
+// Day section switcher (opens one drawer cleanly at a time)
+document.querySelectorAll('[data-day-focus]').forEach(btn => {
+  btn.onclick = () => {
+    const target = btn.dataset.dayFocus;
+    document.querySelectorAll('[data-day-focus]').forEach(b => b.setAttribute('aria-selected', String(b === btn)));
+    $('morningCheckinDetails').open = target === 'morning';
+    $('endOfDayDetails').open = target === 'eod';
+    $('tomorrowDrawer').open = target === 'tomorrow';
+  };
+});
+
+// 1-Tap Period Timeline (P1..P6)
+function renderPeriodTimeline(now = new Date(), roster = buildRoster()){
+  const box = $('periodTimeline');
+  if (!box) return;
+  box.replaceChildren();
+  const liveSlots = schoolSlots(now, times);
+  const active = currentActiveSlot(now);
+  const refSlot = active.slot;
+  const daySlots = (!active.isPreview && liveSlots.length)
+    ? liveSlots
+    : (refSlot ? slotsOnDay(refSlot.w, refSlot.day, times) : []);
+  if (!daySlots.length) {
+    box.hidden = true;
+    return;
+  }
+  box.hidden = !owlState.allInOne && owlState.tab !== 'now';
+  const tallies = read(KEYS.tally, {}) || {};
+  const tracker = ensureTrackerState(roster);
+
+  for (let p = 1; p <= 6; p++) {
+    const s = daySlots.find(x => x.p === p);
+    if (!s) continue;
+    const isLive = liveSlots.some(ls => ls.w === s.w && ls.day === s.day && ls.p === s.p && now >= ls.start && now < ls.end);
+    const isSelected = refSlot && refSlot.w === s.w && refSlot.day === s.day && refSlot.p === s.p;
+    const paths = s.path === 'ALL' ? PATHWAYS : [s.path];
+    const allTallied = paths.every(pth => {
+      const grp = roster.groups[pth] || [];
+      return grp.length > 0 && grp.every(n => {
+        const st = tallies[[s.w, s.day, s.p, n].join('|')]?.state;
+        return ['got', 'nearly', 'again', 'absent'].includes(st) || isPupilAbsentInSlot(n, s.w, s.day, s.p, tallies, tracker, roster);
+      });
+    });
+
+    const shortSubj = PREFIX[s.subject] || s.subject.slice(0, 4);
+    const chip = el('button', {
+      type: 'button',
+      class: 'p-chip' + (isLive ? ' is-live' : '') + (allTallied ? ' is-done' : ''),
+      'aria-pressed': String(!!isSelected),
+      'data-period-chip': p,
+      'aria-label': 'Period ' + p + ' · ' + (s.path === 'ALL' ? 'All groups' : s.path) + ' ' + s.subject
+    });
+    chip.append(el('b', {}, 'P' + p), el('span', {}, shortSubj));
+    chip.onclick = () => {
+      if (isLive) previewOverride = null;
+      else previewOverride = { w: s.w, day: s.day, p: s.p };
+      renderAll();
+    };
+    box.append(chip);
+  }
+}
+
+// Invited Questioning Queue (Fair, warm, non-cold-call turn tracker per slot) & Weekly Praise Radar
+function togglePupilAsked(slotKey, n){
+  const cur = Array.isArray(owlState.turns[slotKey]) ? owlState.turns[slotKey].map(Number) : [];
+  owlState.turns[slotKey] = cur.includes(n) ? cur.filter(x => x !== n) : [...cur, n];
+  saveOwlState();
+  renderAll();
+}
+
+function addPupilPraise(n){
+  const k = String(n);
+  owlState.praise[k] = (Number(owlState.praise[k]) || 0) + 1;
+  saveOwlState();
+  renderAll();
+}
+
+$('nextInvitedTurnBtn').onclick = () => {
+  const active = currentActiveSlot(new Date());
+  if (!active.slot) return;
+  const m = buildBriefModel(active.slot);
+  const present = m.rows.filter(r => !r.out).map(r => r.n);
+  if (!present.length) { $('invitedTurnText').textContent = 'No pupils marked present in this group.'; return; }
+  let asked = Array.isArray(owlState.turns[m.slotKey]) ? owlState.turns[m.slotKey].map(Number) : [];
+  let pool = present.filter(n => !asked.includes(n));
+  if (!pool.length) { asked = []; pool = present.slice(); }
+  // Prefer pupils with TA focus or prior tally first so invited check-in feels purposeful and fair
+  const chosen = pool[0];
+  owlState.turns[m.slotKey] = [...asked, chosen];
+  saveOwlState();
+  const tag = pupilTag(chosen, m.roster);
+  $('invitedTurnText').textContent = 'Invite next (give thinking time first): ' + tag + (tag === 'P' + chosen ? '' : ' · P' + chosen) + ' (' + owlState.turns[m.slotKey].filter(x => present.includes(x)).length + '/' + present.length + ' checked in).';
+  renderAll();
+};
+
+$('resetTurnsBtn').onclick = () => {
+  const active = currentActiveSlot(new Date());
+  if (!active.slot) return;
+  const m = buildBriefModel(active.slot);
+  delete owlState.turns[m.slotKey];
+  saveOwlState();
+  $('invitedTurnText').textContent = 'Invited turns reset for this lesson.';
+  renderAll();
+};
+
+$('clearPraiseWeekBtn').onclick = () => {
+  owlState.praise = {};
+  saveOwlState();
+  renderAll();
+};
+
+function decoratePupilCardsAndRadar(now = new Date(), roster = buildRoster()){
+  // 1. Add compact Invited-turn + Praise micro-buttons to each Room brief pupil card
+  const active = currentActiveSlot(now);
+  if (active.slot) {
+    const effPath = active.slot.path === 'ALL' ? sharedPath : active.slot.path;
+    const slotKey = [active.slot.w, active.slot.day, active.slot.p, effPath].join('|');
+    const asked = Array.isArray(owlState.turns[slotKey]) ? owlState.turns[slotKey].map(Number) : [];
+    document.querySelectorAll('#briefPupils .brief-card').forEach(card => {
+      const n = +card.dataset.pupil;
+      if (!n || card.querySelector('.micro-actions')) return;
+      const isAsked = asked.includes(n);
+      const pCount = Number(owlState.praise[String(n)]) || 0;
+      const bar = el('div', { class: 'micro-actions' });
+      const turnB = el('button', {
+        type: 'button',
+        'aria-pressed': String(isAsked),
+        'data-invited-turn': n
+      }, isAsked ? '✓ Checked in' : 'Invite turn');
+      turnB.onclick = () => togglePupilAsked(slotKey, n);
+      const praiseB = el('button', {
+        type: 'button',
+        'data-praise-btn': n
+      }, pCount ? ('★ Praise (' + pCount + ')') : '+ Praise');
+      praiseB.onclick = () => addPupilPraise(n);
+      bar.append(turnB, praiseB);
+      card.append(bar);
+    });
+  }
+
+  // 2. Render Fairness / Quiet-Pupil Radar in Day tab & update Day badge
+  const strip = $('fairnessRadarStrip');
+  if (strip) {
+    strip.replaceChildren();
+    const allNums = PATHWAYS.flatMap(p => roster.groups[p] || []);
+    let unseenCount = 0;
+    allNums.forEach(n => {
+      const cnt = Number(owlState.praise[String(n)]) || 0;
+      if (!cnt) unseenCount++;
+      const tag = pupilTag(n, roster);
+      const b = el('button', {
+        type: 'button',
+        class: 'chip-btn',
+        'aria-pressed': String(cnt > 0),
+        'data-radar-praise': n
+      }, tag + (cnt ? ' · ★' + cnt : ' · Due check-in'));
+      b.onclick = () => addPupilPraise(n);
+      strip.append(b);
+    });
+    $('fairnessHint').textContent = unseenCount
+      ? (unseenCount + ' pupil' + (unseenCount === 1 ? ' has' : 's have') + ' not had a praise tap logged yet this week — tap any chip to log positive recognition.')
+      : 'Every pupil in the class has had positive recognition logged this week.';
+  }
+
+  // 3. Update Day tab notification dot (untallied lessons after 13:00 or open morning catch-ups)
+  const lessons = todayExpandedLessons(now);
+  const tallies = read(KEYS.tally, {}) || {};
+  const tracker = ensureTrackerState(roster);
+  const untalliedPeriods = new Set();
+  lessons.forEach(c => {
+    const grp = roster.groups[c.path] || [];
+    const done = grp.length > 0 && grp.every(n => {
+      const st = tallies[[c.w, c.d, c.p, n].join('|')]?.state;
+      return ['got', 'nearly', 'again', 'absent'].includes(st) || isPupilAbsentInSlot(n, c.w, c.d, c.p, tallies, tracker, roster);
+    });
+    if (!done) untalliedPeriods.add(c.p);
+  });
+  const untallied = untalliedPeriods.size;
+  const dot = $('dayTabBadge');
+  if (dot) {
+    dot.hidden = untallied === 0;
+    dot.textContent = String(untallied);
+  }
+}
+
+// --- Board Scaffolds (Stage Track, 4-Step Chunked Checklist, Key Words & Sentence Stem) ---
+function syncScaffoldInputs(){
+  for (let i = 0; i < 4; i++) {
+    const inp = $('aidChunk' + i);
+    if (inp) inp.value = owlState.chunks[i] || DEFAULT_CHUNKS[i];
+  }
+  if ($('aidKeyWords')) $('aidKeyWords').value = owlState.keyWords;
+  if ($('aidSentenceStem')) $('aidSentenceStem').value = owlState.stem;
+}
+syncScaffoldInputs();
+
+// Strictly strip pupil names AND calendar/term words from projected scaffolds
+const BOARD_DATE_RE = /\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday|january|february|march|april|may|june|july|august|september|october|november|december|autumn|spring|summer|half[-\s]?term|week\s*\d+)\b/gi;
+function sanitizeBoardText(raw, fallback){
+  const roster = buildRoster();
+  let clean = redactPublic(String(raw || '').trim(), roster);
+  clean = clean.replace(/\bPupil\s+\d+\b/gi, '').replace(/\[name\]/gi, '').replace(BOARD_DATE_RE, '').replace(/(?:\s*[,·]\s*){2,}/g, ', ').replace(/\s{2,}/g, ' ').replace(/^[,·\s]+|[,·\s]+$/g, '').trim();
+  return clean || fallback;
+}
+
+function renderBoardScaffolds(){
+  const stBox = $('boardStageTrack');
+  if (stBox) {
+    stBox.replaceChildren();
+    CALM_STAGES.forEach(st => {
+      const b = el('button', {
+        type: 'button',
+        class: 'stage-pill',
+        'aria-pressed': String(owlState.stage === st),
+        'data-calm-stage': st
+      }, st);
+      b.onclick = () => {
+        owlState.stage = st;
+        saveOwlState();
+        renderBoardScaffolds();
+      };
+      stBox.append(b);
+    });
+  }
+  const chBox = $('boardChunkList');
+  if (chBox) {
+    chBox.replaceChildren();
+    owlState.chunks.forEach((rawLine, idx) => {
+      const safeLine = sanitizeBoardText(rawLine, DEFAULT_CHUNKS[idx]);
+      const done = !!owlState.chunkDone[idx];
+      const item = el('button', {
+        type: 'button',
+        class: 'chunk-item',
+        'aria-pressed': String(done),
+        'data-board-chunk': idx
+      }, (done ? '✓ ' : '') + (idx + 1) + '. ' + safeLine);
+      item.onclick = () => {
+        owlState.chunkDone[idx] = !owlState.chunkDone[idx];
+        saveOwlState();
+        renderBoardScaffolds();
+      };
+      chBox.append(item);
+    });
+  }
+  if ($('boardKeyWordsBox')) {
+    $('boardKeyWordsBox').textContent = 'Key words: ' + sanitizeBoardText(owlState.keyWords, 'Ready · Safe · One step at a time');
+  }
+  if ($('boardStemBox')) {
+    $('boardStemBox').textContent = sanitizeBoardText(owlState.stem, 'Check your answer in the same colour, on the same page.');
+  }
+}
+
+$('saveBoardScaffoldsBtn').onclick = () => {
+  owlState.chunks = [0, 1, 2, 3].map(i => ($('aidChunk' + i).value || '').trim() || DEFAULT_CHUNKS[i]);
+  owlState.chunkDone = [false, false, false, false];
+  owlState.keyWords = ($('aidKeyWords').value || '').trim();
+  owlState.stem = ($('aidSentenceStem').value || '').trim();
+  saveOwlState();
+  renderBoardScaffolds();
+  $('aidScaffoldStatus').textContent = '✓ Board checklist, key words and starter saved for projection.';
+};
+
+$('resetBoardScaffoldsBtn').onclick = () => {
+  owlState.chunks = DEFAULT_CHUNKS.slice();
+  owlState.chunkDone = [false, false, false, false];
+  owlState.keyWords = '';
+  owlState.stem = '';
+  saveOwlState();
+  syncScaffoldInputs();
+  renderBoardScaffolds();
+  $('aidScaffoldStatus').textContent = 'Reset to CALM v4 default steps.';
+};
+
+$('boardResetChunksBtn').onclick = () => {
+  owlState.chunkDone = [false, false, false, false];
+  saveOwlState();
+  renderBoardScaffolds();
+};
+
+$('openBoardFromAidBtn').onclick = () => {
+  owlState.chunks = [0, 1, 2, 3].map(i => ($('aidChunk' + i).value || '').trim() || DEFAULT_CHUNKS[i]);
+  owlState.keyWords = ($('aidKeyWords').value || '').trim();
+  owlState.stem = ($('aidSentenceStem').value || '').trim();
+  saveOwlState();
+  renderBoardScaffolds();
+  openBoardDialog();
+};
+
+// --- Printable Card A-E Pupil Desk Cards (Matches CALM v4 'You do' lettered cards!) ---
+const CARD_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+const ROUTE_CUE = { BUILD: '◆ Supported route', GROW: '▲ Independent route', LAUNCH: '★ Aspire route' };
+
+function sanitizeCardFaceText(text, roster){
+  let s = redactPublic(String(text || '').trim(), roster);
+  s = s.replace(/\bPupil\s+\d+\b/gi, 'partner').replace(/\[name\]/gi, 'partner').replace(BOARD_DATE_RE, '').replace(/(?:\s*[,·]\s*){2,}/g, ', ').replace(/\s{2,}/g, ' ').replace(/^[,·\s]+|[,·\s]+$/g, '').trim();
+  return s;
+}
+
+function buildDeskCardsModel(now = new Date(), roster = buildRoster()){
+  const active = currentActiveSlot(now);
+  const slot = active.slot;
+  if (!slot) return [];
+  const m = buildBriefModel(slot, roster);
+  const present = m.rows.filter(r => !r.out);
+  const rows = present.length ? present : m.rows;
+  return rows.slice(0, 8).map((r, idx) => {
+    const letter = CARD_LETTERS[idx] || String(idx + 1);
+    const target = sanitizeCardFaceText(r.firstTarget, roster) || 'Start the first step calmly and tick each part as you finish.';
+    const helps = r.adapts.map(a => sanitizeCardFaceText(a, roster)).filter(Boolean);
+    return {
+      letter,
+      n: r.n,
+      initials: roster.initialsByNum[r.n] || ('P' + r.n),
+      routeLabel: ROUTE_CUE[m.effPath] || '◆ Supported route',
+      subject: slot.subject,
+      target,
+      helps: helps.length ? helps.join(' · ') : 'Use the word bank and ask if unsure.'
+    };
+  });
+}
+
+function renderDeskCardsPreview(){
+  const box = $('deskCardsPreviewBox');
+  if (!box || box.hidden) return;
+  box.replaceChildren();
+  const cards = buildDeskCardsModel(new Date());
+  if (!cards.length) {
+    box.append(el('p', { class: 'hint' }, 'Select or preview a lesson first to build Card A–E desk cards.'));
+    return;
+  }
+  cards.forEach(c => {
+    const card = el('article', { class: 'desk-card' });
+    const head = el('div', { class: 'desk-card-head' });
+    head.append(el('span', {}, 'Card ' + c.letter), el('span', {}, c.routeLabel));
+    card.append(
+      head,
+      el('p', {}, 'Goal: ' + c.target),
+      el('p', {}, 'Setup: ' + c.helps),
+      el('p', { class: 'hint' }, 'Check in the same colour, on the same page.')
+    );
+    box.append(card);
+  });
+}
+
+$('toggleDeskCardsPreviewBtn').onclick = () => {
+  const box = $('deskCardsPreviewBox'), open = box.hidden;
+  box.hidden = !open;
+  $('toggleDeskCardsPreviewBtn').setAttribute('aria-expanded', String(open));
+  if (open) renderDeskCardsPreview();
+};
+
+$('printDeskCardsBtn').onclick = () => {
+  const cards = buildDeskCardsModel(new Date());
+  if (!cards.length) return;
+  let htmlOut = '<div class="print-cards-grid">';
+  cards.forEach(c => {
+    htmlOut += '<div class="print-desk-card">'
+      + '<div class="print-desk-card-top"><span>Card ' + escapeHTML(c.letter) + '</span><span>' + escapeHTML(c.routeLabel) + '</span></div>'
+      + '<div><b>My focus:</b> ' + escapeHTML(c.target) + '</div>'
+      + '<div><b>Helpful setup:</b> ' + escapeHTML(c.helps) + '</div>'
+      + '<div style="font-size:9pt">Check in the same colour, on the same page.</div>'
+      + '</div>';
+  });
+  htmlOut += '</div>';
+  htmlOut += '<div class="print-tear-key"><b>Private adult key (tear off and keep — do not place on desks):</b> '
+    + cards.map(c => 'Card ' + escapeHTML(c.letter) + ' = ' + escapeHTML(c.initials)).join(' · ')
+    + '</div>';
+  $('printDeskCardsSheet').innerHTML = htmlOut;
+  document.body.classList.add('print-desk-cards');
+  window.print();
+};
+
+window.addEventListener('afterprint', () => {
+  document.body.classList.remove('print-desk-cards');
+  $('printDeskCardsSheet').innerHTML = '';
+});
+
+// Move periodTimesDetails cleanly into Tools section too while keeping a quick jump link in Now!
+{
+  const pt = $('periodTimesDetails'), mount = $('toolsPeriodTimesMount');
+  if (pt && mount) {
+    mount.replaceWith(pt);
+    const jumpP = el('p', { class: 'hint', style: 'margin:8px 0 0' });
+    const jumpBtn = el('button', { type: 'button', style: 'min-height:48px;font-size:15px;padding:6px 10px' }, 'Period times, term dates & theme');
+    jumpBtn.onclick = () => {
+      owlState.allInOne = false;
+      applyWorkspaceView('tools');
+      pt.open = true;
+      pt.scrollIntoView();
+    };
+    jumpP.append(jumpBtn);
+    $('nowCard').append(jumpP);
+  }
+}
+
+
+// --- Auto-Loaded CALM v4 Lesson Presets for Classroom Board ---
+const PRESETS_KEY = 'mbm_board_presets_v1';
+function readBoardPresets(){
+  let embedded = {};
+  try {
+    const elData = document.getElementById('mbmBoardPresetsData');
+    if (elData && elData.textContent.trim()) embedded = JSON.parse(elData.textContent);
+  } catch (e) {}
+  const stored = read(PRESETS_KEY, {}) || {};
+  return { ...embedded, ...stored };
+}
+
+function activeSlotLessonCode(now = new Date()){
+  const s = currentActiveSlot(now).slot;
+  if (!s) return '';
+  const effPath = s.path === 'ALL' ? sharedPath : s.path;
+  return activeLessonCode(s, effPath);
+}
+
+function applyPresetForCode(code, quiet = false){
+  const presets = readBoardPresets();
+  const p = presets[code];
+  if (!p) return false;
+  if (Array.isArray(p.chunks) && p.chunks.length === 4) owlState.chunks = p.chunks.map(x => String(x || '').slice(0, 90));
+  owlState.chunkDone = [false, false, false, false];
+  owlState.keyWords = String(p.keyWords || '').slice(0, 120);
+  owlState.stem = String(p.stem || '').slice(0, 140);
+  owlState.loadedPresetCode = code;
+  saveOwlState();
+  syncScaffoldInputs();
+  renderBoardScaffolds();
+  if (!quiet && $('aidScaffoldStatus')) {
+    $('aidScaffoldStatus').textContent = '✓ Loaded CALM v4 scaffolds for ' + code + '.';
+  }
+  return true;
+}
+
+function refreshPresetBanner(now = new Date()){
+  const code = activeSlotLessonCode(now);
+  const presets = readBoardPresets();
+  const btn = $('applyLessonPresetBtn'), txt = $('presetBannerText');
+  if (!btn || !txt) return;
+  const totalCount = Object.keys(presets).length;
+  if (code && presets[code]) {
+    btn.hidden = false;
+    btn.textContent = 'Load ' + code + ' scaffolds';
+    btn.onclick = () => applyPresetForCode(code, false);
+    txt.textContent = 'CALM v4 preset ready for ' + code + ' (' + (presets[code].title || 'lesson scaffolds') + ').';
+    // Auto-apply cleanly if scaffolds are still at untouched defaults
+    const isDefault = owlState.keyWords === '' && owlState.stem === '' && owlState.loadedPresetCode !== code;
+    if (isDefault) applyPresetForCode(code, true);
+  } else {
+    btn.hidden = true;
+    txt.textContent = totalCount
+      ? (totalCount + ' lesson preset(s) saved offline (no preset yet for ' + (code || 'current slot') + ').')
+      : 'Run Run_Daily_Planning_and_Board_Sync.bat (or import board_presets.json) to pre-load lesson vocabulary and steps automatically.';
+  }
+}
+
+$('importBoardPresetsFile').onchange = e => {
+  const f = e.target.files?.[0];
+  e.target.value = '';
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const obj = JSON.parse(String(reader.result || '{}'));
+      if (!obj || typeof obj !== 'object' || Array.isArray(obj)) throw new Error('Invalid JSON');
+      const cur = read(PRESETS_KEY, {}) || {};
+      write(PRESETS_KEY, { ...cur, ...obj });
+      refreshPresetBanner(new Date());
+      $('aidScaffoldStatus').textContent = '✓ Imported ' + Object.keys(obj).length + ' lesson board preset(s).';
+    } catch (err) {
+      $('aidScaffoldStatus').textContent = 'Could not read board_presets.json.';
+    }
+  };
+  reader.readAsText(f);
+};
+
+renderBoardScaffolds();
+refreshPresetBanner(new Date());
+applyWorkspaceView(owlState.tab);
 refreshRows();
 renderAll();
 checkHashTarget();
-setInterval(renderAll, 30000);
+setInterval(() => { if (!document.activeElement?.dataset?.briefNoteInput) renderAll(); }, 30000);
 
 const icon = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="38" fill="#153e64"/><g fill="#fff"><rect x="40" y="40" width="48" height="48" rx="10"/><rect x="104" y="40" width="48" height="48" rx="10"/><rect x="40" y="104" width="48" height="48" rx="10"/><rect x="104" y="104" width="48" height="48" rx="10"/></g></svg>');
 const start = new URL('My_tools.html', location.href).href;
