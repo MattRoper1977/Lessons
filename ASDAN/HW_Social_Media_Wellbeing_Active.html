@@ -4,6 +4,7 @@
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMTYxRDNEIi8+PHBhdGggZD0iTTI2IDc2IEwyNiAzMCBMNTAgNTUgTDc0IDMwIEw3NCA3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThFMkQ0IiBzdHJva2Utd2lkdGg9IjEzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <title>Social Media &amp; Emotional Wellbeing — Active Lesson</title>
 <style>
 :root{
@@ -702,14 +703,15 @@ function loadRoster(){
     return r;
   }catch(e){ return DEFAULT_ROSTER.slice(); }
 }
+function escHtml(v){ return String(v == null ? '' : v).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 function showColdCall(){
   const roster = loadRoster();
   if(!ccPool.length) ccPool = roster.slice().sort(()=>Math.random()-0.5);
   const name = ccPool.pop();
   const q = CC_QUESTIONS[current] || CC_QUESTIONS[0];
   document.getElementById('cc-body').innerHTML =
-    '<div class="cc-name">'+name+'</div>'+
-    '<div class="cc-q">'+q+'</div>'+
+    '<div class="cc-name">'+escHtml(name)+'</div>'+
+    '<div class="cc-q">'+escHtml(q)+'</div>'+
     '<div class="cc-rate">'+
       '<button class="cc-u" onclick="blip()">U</button>'+
       '<button class="cc-f" onclick="blip()">1</button>'+
