@@ -322,7 +322,7 @@ audit purposes**. vA is **not** deleted or modified — the pointer is the fix (
 
 ### R5 · Gate-2 OPERATIONAL consequence (decision, not a patch)
 Running Arts Award **Explore** at BUILD requires the **separate Discover & Explore adviser training** — the Bronze & Silver
-course currently being arranged does **not** cover it. **Owner: Matt / Graham.**
+course currently being arranged does **not** cover it. **Owner: Matt / a colleague.**
 
 ### Register
 - Appended **`REGISTER.md` R-SB01** (RECORD): the **site repo is the environment default**; the "attach the Lessons repo"
