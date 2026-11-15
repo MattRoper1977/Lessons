@@ -3045,6 +3045,22 @@ CATALOGUE_PINS = {
         "kits/class_tools/icon-192.png": "30799ec2a540c07934eafb9505f17218a9b3c9da20a99849c35c3809a4e1a816",
         "kits/class_tools/icon-512.png": "ed8ef2ec50b51ccfede58a8f7695bdabb61969f38c46ced0d37007a2e1c3d7e5",
         "kits/class_tools/icon-maskable-512.png": "62780fd548528cc5949de1687aa55a00672c7a3cce4967afc1fa98b84b790fb7",
+        "kits/class_tools/next/Award_tracker.html": "c8e525aff7209d2641e1ded74ff87bd168b0f175106f7a80c6da4c977eb2bf98",
+        "kits/class_tools/next/Catch_up_Tracker.html": "3762e06710f57c507afd3b6c2f63ceb6650598c621cb15de37356e037e2b142a",
+        "kits/class_tools/next/Class_names.html": "7d75c867e8d97e7b67757331cdc9391ce782f9c87441f246d4629b5c17e41527",
+        "kits/class_tools/next/Coverage_map.html": "4ab9f7b454ef9cdabae8e341d0b2573a558ecc6b39a3fd8c6f2abaa9d9ad6b13",
+        "kits/class_tools/next/Lesson_extras.html": "639ae79e517b6e2e6cc1ce7d87a4c94652e0107e0ec212c61d3890a5733c510e",
+        "kits/class_tools/next/Missed_last_week.html": "0b8e8f1ea3aad3816cdaa365a17f7b52b0a37730d4d335cabc479578fc7b7f23",
+        "kits/class_tools/next/My_tools.html": "665e9daeb54b3ed93baa558d88ff23f6623974e0a9f02eb835be8cf7549bb766",
+        "kits/class_tools/next/My_tools_pocket.html": "3ddf647d5a2eea171c0bda8c91dc65b44d51d816b56e34ccb92f13bf2994a5a0",
+        "kits/class_tools/next/Practical_log.html": "8c90fa9b00f80ee0523de489f51eb1528ccece6c24eaaa4210d532b7dabebe43",
+        "kits/class_tools/next/Quick_capture.html": "ce85020375ec489c332c97add6353fa0d210405efccf45670d47005b2fba1cb7",
+        "kits/class_tools/next/Requests.html": "44c6a9b6c654a14323118ad957f615aa416cbf8b16acca234a425a92b365871b",
+        "kits/class_tools/next/Retrieval_builder.html": "1798dd27c466876235310c3354ab0ce7ead203189803c4484d866a106d45912e",
+        "kits/class_tools/next/icon-192.png": "570b1c6f4fcbabf515381176d8854a054b49f0c4f21905e13c77c70ca048567b",
+        "kits/class_tools/next/icon-512.png": "5606b1555e898eba71b5c36022b444f1a1d0ee8b02d54276f604f0def0fb2a62",
+        "kits/class_tools/next/icon-maskable-512.png": "e90d7ba76a97838089f787c5bee620094cc869a64dad48e18741ff89c033fbe6",
+        "kits/class_tools/next/manifest.webmanifest": "7ce85e97cba77fd30bc9aa3590309289e11a2d658cae025c1a712f4360ae6821",
         "2 Physics 10/L2c_Ohms_Law_PhET_Take2 (1).html": "48e12e89b4377bae06c64543bc687068c9c9fab44aeb8df5ad5492237aa63098",
         "5_6 Local Choice/Rivers/L1b_Your_River_Your_Home.html": "0214768965079f1687ab605f90f41489223201cea3d79b5301ecf99f1641c573",
         "Art/BUILD_BRONZE_W1-W7_2026-27/BUILD_Art_Bronze_W1_What_Getting_Better_Would_Look_Like.html": "b6d37613e4ec6e4f5a763b19a3038624cb704a91f24c444c6a790b83de7230a6",
@@ -3724,7 +3740,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "ebcce6ead55657c4b804b7382a1b2dfb03affdc1e92b7db56055e2685bde7f03",
+    "lessons": "910aa3b9273069c205d473232b693227f77a6dc6c45e80cd6bc755f2233ee814",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.

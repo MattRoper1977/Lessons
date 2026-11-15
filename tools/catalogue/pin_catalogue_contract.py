@@ -5621,6 +5621,8 @@ REVIEWED_PATHS += ('kits/class_tools/Award_tracker.html',)
 REVIEWED_PATHS += ('kits/class_tools/My_CV_builder.html',)
 # 2026-11-13: a home-screen manifest and its three plain icons join the unlisted class pages (no names, no network, no offline cache).
 REVIEWED_PATHS += ('kits/class_tools/manifest.webmanifest', 'kits/class_tools/icon-192.png', 'kits/class_tools/icon-512.png', 'kits/class_tools/icon-maskable-512.png')
+# 2026-11-15: a side-by-side preview of the next class tools build joins the unlisted class pages under next/ (noindex, no names, no network, no offline cache; the current pages do not move).
+REVIEWED_PATHS += ('kits/class_tools/next/Award_tracker.html', 'kits/class_tools/next/Catch_up_Tracker.html', 'kits/class_tools/next/Class_names.html', 'kits/class_tools/next/Coverage_map.html', 'kits/class_tools/next/Lesson_extras.html', 'kits/class_tools/next/Missed_last_week.html', 'kits/class_tools/next/My_tools.html', 'kits/class_tools/next/My_tools_pocket.html', 'kits/class_tools/next/Practical_log.html', 'kits/class_tools/next/Quick_capture.html', 'kits/class_tools/next/Requests.html', 'kits/class_tools/next/Retrieval_builder.html', 'kits/class_tools/next/icon-192.png', 'kits/class_tools/next/icon-512.png', 'kits/class_tools/next/icon-maskable-512.png', 'kits/class_tools/next/manifest.webmanifest')
 
 
 # Pathway labels phase 2 (Lessons #824, owner approval 8 Nov 2026 14:34Z): the relabelled lesson pages and the
