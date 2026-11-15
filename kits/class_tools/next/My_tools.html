@@ -6374,7 +6374,7 @@ function stashStudioNavHandoff(extra = {}){
   openSchoolSetup = function(){ if (window.MbmCms) window.MbmCms.openSchoolSetup(); };
   togglePrivacyShield = function(){ if (window.MbmCms) window.MbmCms.PrivacyShield.toggle(); };
   applyPrivacyShield = function(on){ if (window.MbmCms) window.MbmCms.PrivacyShield.setActive(on, {persist:false}); };
-  window.switchCohort = function(id){ if (window.MbmCms) window.MbmCms.MultiClass.switchClass(id, {reload:false}); };
+  window.switchCohort = function(id){ if (window.MbmCms) window.MbmCms.MultiClass.switchClass(id, {reload:true}); };
   consumeCmsWindowHandoff();
 document.addEventListener('click', e => {
   const link = e.target.closest('a[href="Requests.html"]');
@@ -7212,7 +7212,7 @@ document.addEventListener('click', e => {
         return null;
       }
       this.syncSelector();
-      const switched = this.switchClass(id, { reload: false });
+      const switched = this.switchClass(id, { reload: true });
       if (!switched) {
         try {
           if (window.localStorage) {
@@ -8134,7 +8134,7 @@ document.addEventListener('click', e => {
       this.ensureFooter();
 
       classSel.addEventListener('change', function () {
-        MbmMultiClass.switchClass(classSel.value, { reload: false });
+        MbmMultiClass.switchClass(classSel.value, { reload: true });
       });
     },
     ensureFooter: function () {
