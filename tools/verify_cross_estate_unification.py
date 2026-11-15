@@ -128,11 +128,11 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles.cjs": "ef27c6fabcafd05015ba988ee99b0906cabe1a519c1049635ee92b7e7c361ce1",
         "tools/catalogue/check_display_titles_browser.cjs": "0c193780f901cf4d3b7013819a7488567bf7ce40a75d05dbe43c7a6971877344",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
-        "tools/sw2/check_tokens_inert.cjs": "a8258b89b5dd00147a0c8b18488a2dcf8102bc20d2ddf2fa1aa0863d25454674",
+        "tools/sw2/check_tokens_inert.cjs": "c45f009235c70d84a7e1ee8fc08fb0e6aa5e7efcc162714eff3c844cce68e9f1",
         "assets/catalogue/lesson-order.json": "f6472e1b287ce8d3875d31446c2886f5e7e5e3e66b7103cfe0bfc51a697d2f6d",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
-        "index.html": "d5c71fc47cf00bb42c01d0e7d949224587d2e22405e1ec160404572db83ef396",
+        "index.html": "daf4703a160678b9076ed3bc7487e841327162d237559356a01335a3051e3e3c",
         "Science/index.html": "ea568633299e42a45340143d5eeaab2de179e95a04ed43d5515ae870dbb3344a",
         "Humanities/index.html": "7af3bee2b76bfe3b8e64277252d7f024fe16ca831fc18b25ae50c204bf91b5cd",
         "humanities.html": "bfb8f9383680b9c6d849931652db29289b92d5ed18c5f9616cfc0ede0614fa5c",
@@ -143,9 +143,9 @@ CATALOGUE_PINS = {
         "tools/sw2/pack_notes.py": "a81a187002a69bcecca28c9c3130f546e1aae279d5af92cf750a6f9fb04c8fe6",
         "tools/sw2/stamp_pack_page.py": "7d751c25a0a00a1602388537df236c0f79dee6facd31be15fc6e7bce38512149",
         "tools/sw2/check_pack_page.cjs": "89f6a087381c5a34342dc5738f67ad0a3d9f4bc8cfb684da451125617a606235",
-        "subject.html": "c70ef79bd0090c069167e1a2308baae69f89dc206783befede5baac84561b1d8",
-        "assets/catalogue/hub.js": "cf8a420b8940af1e226d93eefd14e49a37899a99ccf5724137654de3774862da",
-        "assets/catalogue/hub.css": "4bbfa8cb449ee9e022fe70df48b4d15cf1faab7e81bb09e8f6985a65a91fded6",
+        "subject.html": "38d423d526616f32212e124cbfcb5f8c2b71dcabfaace3ba61fb5425be4f1d15",
+        "assets/catalogue/hub.js": "adcc40c3d75a752ed7bc520edc45cd6ab61295a00b7136eff7d965c786c7b8c7",
+        "assets/catalogue/hub.css": "1f9ac46a1d7876963e5d143e18d8375f798a1344d16c806e3b14fb1d8e145d64",
         "data/calendar-spine.json": "d199474b13c9d340add2c87165396d83712b0f1c9f8bd03b7b12e8fdf6af0d61",
         "Humanities/David_Cover_Autumn1_W3-W7/index.html": "4e25eb9ca8f9f93c720d88d945f3d6d79580f3362a88698fe7af75d146f01e96",
         "assets/catalogue/catalogue.css": "59abee137c41a8a015e42cf0b32d20b7f4e5fc8e3d236a1cd735322386bf8569",
@@ -3724,7 +3724,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "ea24130aaf7128d83a323f5e1075198181f011af084176acbadaa3bb1b953ecf",
+    "lessons": "ebcce6ead55657c4b804b7382a1b2dfb03affdc1e92b7db56055e2685bde7f03",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.

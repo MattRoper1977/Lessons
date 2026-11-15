@@ -4,18 +4,18 @@
 <title>Subject — Lessons — Made by Matt</title>
 <meta name="description" content="One subject, one pathway at a time: the lessons and editable packs for BASE, TRACK and SUMMIT, grouped by half-term and unit.">
 <meta name="theme-color" content="#161D3D">
-<link rel="icon" href="https://madebymatt.uk/favicon.svg">
+<link rel="icon" href="/favicon.svg">
 <link rel="stylesheet" href="assets/mbm-platform.css">
 <link rel="stylesheet" href="assets/catalogue/hub.css">
 <style id="mbmTheme">
 /* Made by Matt — reading themes (shared key mbm_reading_theme). One rule per theme the
    canonical engine offers; cream is the default and has none (it removes the attribute).
    The same block sits in index.html and subject.html; tools/ux2/hub_gates.mjs asserts they match. */
-[data-theme="pink"]{--cream:#F9E8EC;--cream-dk:#F3DCE2;--card:#FFF9FA}
-[data-theme="blue"]{--cream:#E7EEF7;--cream-dk:#DCE7F3;--card:#F8FBFF}
-[data-theme="light"]{--cream:#F7F7F4;--cream-dk:#EFEFEC;--card:#FFFFFF;--ink:#1B2140;--mut:#4A5170}
-[data-theme="dark"]{--cream:#121834;--cream-dk:#1B234A;--card:#1E2750;--ink:#EEEAE0;--mut:#C9CFE3;--line:#B9E6CD33;--t-build:#F2B77A;--t-grow:#9BE0B6;--t-launch:#EAD37A;--b-build:#4A3213;--b-grow:#1E3D2E;--b-launch:#4A4014;--mint-deep:#9BE0B6}
-[data-theme="highlumen"]{--cream:#FFFFFF;--cream-dk:#FFFFFF;--card:#FFFFFF;--ink:#000000;--mut:#3A3A3A;--mint:#FFFFFF;--mint-deep:#0F5132;--t-build:#7A4A00;--t-grow:#0F5132;--t-launch:#5C4A00}
+[data-theme="pink"]{--cream:#F9E8EC;--cream-dk:#F3DCE2;--card:#FFF9FA;--mut:#343B57}
+[data-theme="blue"]{--cream:#E7EEF7;--cream-dk:#DCE7F3;--card:#F8FBFF;--mut:#343B57}
+[data-theme="light"]{--cream:#F7F7F4;--cream-dk:#EFEFEC;--card:#FFFFFF;--ink:#161D3D;--mut:#343B57}
+[data-theme="dark"]{--cream:#121834;--cream-dk:#1B234A;--card:#1E2750;--ink:#F3F7FA;--mut:#D2DCE8;--line:#B9E6CD44;--t-build:#FFD099;--t-grow:#B6F2D0;--t-launch:#F5E293;--b-build:#4A3213;--b-grow:#1E3D2E;--b-launch:#4A4014;--mint-deep:#B6F2D0}
+[data-theme="highlumen"]{--cream:#FFFFFF;--cream-dk:#FFFFFF;--card:#FFFFFF;--ink:#000000;--mut:#18223B;--mint:#FFFFFF;--mint-deep:#0F5132;--t-build:#5C3004;--t-grow:#0F5132;--t-launch:#4A3B04}
 </style>
 <script>try{var t=localStorage.getItem('mbm_reading_theme');if(t&&t!=='cream')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <!-- mbm-chrome:tokens --><link rel="stylesheet" href="/assets/mbm-tokens.css"><!-- /mbm-chrome:tokens -->
@@ -36,6 +36,7 @@
 <p class="summary" id="summary" aria-live="polite" aria-atomic="true"></p>
 <p class="status" id="status" aria-live="polite" aria-atomic="true"></p>
 <p class="status" id="lesson-save-status" aria-live="polite" aria-atomic="true"></p>
+<div class="search-rescue" id="search-rescue" hidden></div>
 <nav class="term-nav" id="term-nav" aria-label="Terms"></nav>
 <div id="rows"></div>
 <div class="noscript-slot" data-science-slot><!-- MBM-NOSCRIPT-LESSON-INDEX: generator populates static lesson list from resources.json --></div>
@@ -68,7 +69,7 @@ function segments(){const present=H.pathwaysPresent(ROWS);const unknowable=ROWS.
 function currentPathway(){const segs=segments();const want=H.pathwayKey(params().get('pathway')||'');if(segs.includes(want))return want;return segs[0]||'ALL';}
 function pathwayTab(p,cur){
   const pr=ROWS.filter(r=>r._tier===p),id='tab-'+p;
-  return `<button role="tab" class="${esc(p)} pw-card" id="${esc(id)}" aria-selected="${p===cur}" tabindex="${p===cur?0:-1}" data-pathway="${esc(p)}" aria-controls="rows" aria-labelledby="${esc(id)}-name" aria-describedby="${esc(id)}-detail"><span class="pw-art" aria-hidden="true">${H.pathwayArt(CARD.slug,p)}</span><span class="pw-body"><span class="chip tier ${esc(p)}" id="${esc(id)}-name">${esc(H.pathwayLabel(p))}</span><span class="sr-only"> · </span><span class="pw-detail" id="${esc(id)}-detail"><span class="pw-counts">${H.distinctLessons(pr)} lessons · ${pr.filter(r=>r.kind==='pack').length} ${esc(H.FORMAT_LABEL.packs)}</span><span class="pw-box">${H.pathwayBoxBadges(p,pr)}</span></span></span></button>`;
+  return `<button role="tab" class="${esc(p)} pw-card" id="${esc(id)}" aria-selected="${p===cur}" tabindex="${p===cur?0:-1}" data-pathway="${esc(p)}" aria-controls="rows" aria-labelledby="${esc(id)}-name" aria-describedby="${esc(id)}-detail"><span class="pw-art" aria-hidden="true">${H.pathwayArt(CARD.slug,p)}</span><span class="pw-body"><span class="chip tier ${esc(p)}" id="${esc(id)}-name">${esc(H.pathwayLabel(p))}</span><span class="sr-only"> · </span><span class="pw-detail" id="${esc(id)}-detail"><span class="pw-bridge-cue">Formerly ${esc(p)}</span><span class="pw-counts">${H.distinctLessons(pr)} lessons · ${pr.filter(r=>r.kind==='pack').length} ${esc(H.FORMAT_LABEL.packs)}</span><span class="pw-box">${H.pathwayBoxBadges(p,pr)}</span></span></span></button>`;
 }
 function renderSeg(){
   const segs=segments(),cur=currentPathway();const el=$('#seg');
@@ -145,6 +146,8 @@ function renderRows(){
  $('#term-nav').innerHTML=list.filter(g=>g.halfTerm).map(g=>`<button type="button" data-term-open="${esc(g.id)}" aria-pressed="${OPEN.has(g.id)}">${esc(g.label)}</button>`).join('');
  $('#rows').innerHTML=list.map(g=>accordion(g.id,g.label,groupBody(g),H.distinctLessons(g.rows),'term-group')).join('')||'<p class="status">No matches — try fewer words or clear a filter.</p>';
  $$('.acc-body[hidden] a,.acc-body[hidden] button').forEach(el=>el.setAttribute('tabindex','-1'));
+ const rescueEl=$('#search-rescue'),qClean=(p.get('q')||'').trim();
+ if(rescueEl){if(filtering&&qClean&&rows.length===0){const btns=[];segments().filter(s=>s!==currentPathway()).forEach(seg=>{const hits=H.searchFilter(pathwayRows(seg),qClean);if(hits.length){const pwName=seg==='ALL'?'All resources':((H.PATHWAY_BRIDGE&&H.PATHWAY_BRIDGE[seg])||H.pathwayLabel(seg));btns.push(`<button type="button" class="btn rescue-btn" data-rescue-pathway="${esc(seg)}">Try ${esc(pwName)} (${hits.length})</button>`);}});H.cardsFromRows(H.state.rows).filter(c=>c.slug!==CARD.slug).forEach(c=>{const hits=H.searchFilter(c.rows,qClean);if(hits.length)btns.push(`<button type="button" class="btn rescue-btn" data-rescue-subject="${esc(c.slug)}">Search ${esc(c.name)} (${hits.length})</button>`);});rescueEl.hidden=!btns.length;rescueEl.innerHTML=btns.length?`<p class="rescue-lead">Found matching resources elsewhere:</p><div class="rescue-list">${btns.join('')}</div>`:'';}else{rescueEl.hidden=true;rescueEl.innerHTML='';}}
 }
 function renderSuites(){
   const hubs=ROWS.filter(r=>/^hub$/i.test(r.type));const el=$('#suites');
@@ -152,7 +155,7 @@ function renderSuites(){
 }
 function scienceShell(){
   $('#seg').insertAdjacentHTML('afterend','<div class="recent sci-recent" id="sci-recent" hidden></div>');
-  $('#fchips').insertAdjacentHTML('afterend','<div class="fchips sci-strands" id="sci-strands" hidden></div><div class="fchips sci-weeks" id="sci-weeks" hidden></div>');
+  $('#fchips').insertAdjacentHTML('afterend','<div class="fchips sci-strands" id="sci-strands" hidden></div><div class="fchips sci-weeks snake-track" id="sci-weeks" hidden></div>');
 }
 function renderScience(){
   const rec=$('#sci-recent'),items=H.recentItems(ROWS,3);
@@ -184,7 +187,9 @@ function boot(){
 document.addEventListener('click',e=>{
   const sf=e.target.closest('#sci-weeks button,#sci-strands button');if(sf){const key=sf.hasAttribute('data-week-filter')?'week':'strand',v=sf.getAttribute('data-'+key+'-filter');setParam(key,v);renderScience();renderRows();const again=$$('#sci-'+key+'s button').find(x=>x.getAttribute('data-'+key+'-filter')===v);if(again)again.focus();return;}
   const term=e.target.closest('[data-term-open]');if(term){OPEN.add(term.dataset.termOpen);renderRows();const heading=$$('button[data-toggle]').find(b=>b.dataset.toggle===term.dataset.termOpen);if(heading){heading.focus();heading.scrollIntoView({block:'nearest'});}return;}
-  const tab=e.target.closest('#seg [role="tab"]');if(tab){setParam('week','');setParam('pathway',tab.dataset.pathway==='ALL'?'ALL':tab.dataset.pathway);render();$('#seg [role="tab"][aria-selected="true"]').focus();return;}
+  const tab=e.target.closest('#seg [role="tab"]');if(tab){const nextPw=tab.dataset.pathway==='ALL'?'ALL':tab.dataset.pathway,curWk=params().get('week')||'';if(curWk&&!H.weeksPresent(pathwayRows(nextPw)).includes(curWk))setParam('week','');setParam('pathway',nextPw);render();$('#seg [role="tab"][aria-selected="true"]').focus();return;}
+  const rp=e.target.closest('[data-rescue-pathway]');if(rp){setParam('week','');setParam('strand','');setParam('unit','');setParam('format','');setParam('pathway',rp.dataset.rescuePathway);render();const t=$('#seg [role="tab"][aria-selected="true"]');if(t)t.focus();return;}
+  const rs=e.target.closest('[data-rescue-subject]');if(rs){const qv=params().get('q')||'';location.href='subject.html?subject='+encodeURIComponent(rs.dataset.rescueSubject)+(qv?'&q='+encodeURIComponent(qv):'');return;}
   const fc=e.target.closest('#fchips button');if(fc){setParam('format',fc.dataset.format);render();$(`#fchips button[data-format="${fc.dataset.format}"]`).focus();return;}
   const tg=e.target.closest('button[data-toggle]');if(tg){const id=tg.dataset.toggle;if(OPEN.has(id))OPEN.delete(id);else OPEN.add(id);renderRows();const again=$$('button[data-toggle]').find(b=>b.dataset.toggle===id);if(again)again.focus();return;}
   const mo=e.target.closest('button[data-more]');if(mo){EXPANDED.add(mo.dataset.more);renderRows();const sec=$$('.acc').find(s=>s.dataset.group===mo.dataset.more);const panel=sec&&sec.querySelector('.lrows li:nth-child(4) a');if(panel)panel.focus();return;}
