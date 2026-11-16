@@ -18,7 +18,11 @@ on:
         description: Site publisher commit to build with (the carrier this branch pins)
         required: true
       paths:
-        description: Newline- or comma-separated published paths; blank means every path that differs from origin/main
+        description: Newline- or comma-separated published paths; blank means every path that differs from origin/main. A path that starts with education-site/, education-lessons/ or education-apps/ is read from that tree; any other path is read from the lessons tree.
+        required: false
+        default: ''
+      lessons_ref:
+        description: Lessons commit to build from; blank means the branch this job is run on. Give the carrier pin here to measure what a Site-triggered publication builds.
         required: false
         default: ''
 
@@ -32,6 +36,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.lessons_ref || github.sha }}
           path: .sources/Lessons
           fetch-depth: 0
           persist-credentials: false
@@ -82,7 +87,7 @@ jobs:
           set -euo pipefail
           python .sources/Site/domain-split/education_publication_admission.py --output .sources/Site/domain-split/output > admission_output.txt 2>&1 || true
           grep -E '^(CHANGED|MISSING|UNREVIEWED) ' admission_output.txt || echo 'No path differs from the admission record.'
-          python .sources/Site/domain-split/education_publication_admission.py --output .sources/Site/domain-split/output --proposal census.json --review-source "Served digest census run $GITHUB_RUN_ID: Site $BUILDER_REF, Lessons $GITHUB_SHA, Apps dd908441664339a27dc59f5bd0364024c7a1c231"
+          python .sources/Site/domain-split/education_publication_admission.py --output .sources/Site/domain-split/output --proposal census.json --review-source "Served digest census run $GITHUB_RUN_ID: Site $BUILDER_REF, Lessons $(git -C .sources/Lessons rev-parse HEAD), Apps dd908441664339a27dc59f5bd0364024c7a1c231"
       # The artifact cannot be fetched from every reviewing environment, and the admission check
       # stops at the first tree with a difference, so the complete list is also printed here: every
       # path in any of the three trees whose built digest the admission record does not yet hold,
@@ -138,8 +143,12 @@ jobs:
                   ['git','-C',str(src),'diff','--name-only','FETCH_HEAD...HEAD'], text=True)
               requested = [p for p in out.split('\n') if p.strip()]
           rows = {}
+          trees = ('education-site', 'education-lessons', 'education-apps')
           for rel in requested:
-              f = tree / rel
+              # a tree-qualified path is read from that tree; the three names are the only roots accepted
+              f = tree.parent / rel if rel.split('/', 1)[0] in trees else tree / rel
+              if tree.parent.resolve() not in f.resolve().parents:
+                  raise SystemExit('Path leaves the published trees: ' + rel)
               rows[rel] = hashlib.sha256(f.read_bytes()).hexdigest() if f.is_file() else None
           published = {k: v for k, v in rows.items() if v}
           skipped = sorted(k for k, v in rows.items() if not v)
