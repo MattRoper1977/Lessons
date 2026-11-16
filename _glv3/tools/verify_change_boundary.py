@@ -270,6 +270,11 @@ PATHWAY_LABELS_PHASE_2_REVIEW_BASE = 'a5145d74440a6544cc7c3c52bd95b683c3c147a8'
 # main; blobs read there, written with admit_sx3_release.write(). Every member also carries a
 # CATALOGUE_PINS admission, which replacement_errors cross-checks.
 WEBSITE_EDITIONS_PILOT_REVIEW_BASE = '1d90e38c219a7940ee07121180ef98b5dccb26cd'
+# Website editions phone repair (owner-requested 15 Nov 2026: the redesigned lesson boards replace the earlier pages at their
+# landed paths). Each member keeps its way home, its term and week line and every local link the page
+# it replaces carried; no companion file moves. Base is the merge base with main; blobs read there,
+# written with admit_sx3_release.write(). Every member also carries a CATALOGUE_PINS admission.
+WEBSITE_EDITIONS_PHONE_REPAIR_REVIEW_BASE = 'c21c48a52b29beb9620a9583d593e291dd6508b4'
 # BEGIN DECLARED TRANSACTIONS
 # BEGIN S3 OFFLINE EDITION REPLACEMENTS
 CX2_S3_REPLACEMENTS = {'Science/Teaching_Packs/web-slides.html': {'beforeGitBlob': '6596d65c7a9bd5bb1875c5b46bbc331df8652144', 'afterSha256': 'f31f09d03f5d8c417af1745b38309fa537afb8bb4c6a08f387db3349d9e1cba2', 'bytes': 18607}}
@@ -434,6 +439,9 @@ PATHWAY_LABELS_PHASE_2_REPLACEMENTS = {'Art/BUILD_BRONZE_W1-W7_2026-27/BUILD_Art
 # BEGIN WEBSITE_EDITIONS_PILOT REPLACEMENTS
 WEBSITE_EDITIONS_PILOT_REPLACEMENTS = {'Humanities/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W02/HUM_BUILD_A2_W02.html': {'beforeGitBlob': 'd399daccbda0a567465dcd4e730d0ce9c152292c', 'afterSha256': '391dbf5e5ca02d0461bd63088c3271eac4da5323f5bf8def615f4453f914d357', 'bytes': 353537}, 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1.html': {'beforeGitBlob': '35b0f43de6ac23a5aecb147206b6c10dff738844', 'afterSha256': 'ce76abee69c324370e72806bd0163c6a7bb6a758d06c61fbefc2b30ff96b6046', 'bytes': 350978}}
 # END WEBSITE_EDITIONS_PILOT REPLACEMENTS
+# BEGIN WEBSITE_EDITIONS_PHONE_REPAIR REPLACEMENTS
+WEBSITE_EDITIONS_PHONE_REPAIR_REPLACEMENTS = {'Humanities/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W02/HUM_BUILD_A2_W02.html': {'beforeGitBlob': 'd783db41740cf0c43cbcbcc30ef6b658c3025495', 'afterSha256': 'adabc1faeac1c42b2cb2601613c0f4e2564c91f64e42db06642bcb68f5e1fc22', 'bytes': 357176}, 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1.html': {'beforeGitBlob': '621c2bbee5060e12c21924af26e9a0e61baa132a', 'afterSha256': '2766dd610c5f0a797ea48223342e527bb877d217ef24418358f6c4d0ad7acf7f', 'bytes': 354610}}
+# END WEBSITE_EDITIONS_PHONE_REPAIR REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -590,6 +598,7 @@ REPLACEMENT_TRANSACTIONS = {
     'RE scheme-of-work reviewed download labels': (RE_SOW_LABELS_REVIEW_BASE, RE_SOW_LABELS_REPLACEMENTS),
     'Pathway labels phase 2': (PATHWAY_LABELS_PHASE_2_REVIEW_BASE, PATHWAY_LABELS_PHASE_2_REPLACEMENTS),
     'Website editions pilot': (WEBSITE_EDITIONS_PILOT_REVIEW_BASE, WEBSITE_EDITIONS_PILOT_REPLACEMENTS),
+    'Website editions phone repair': (WEBSITE_EDITIONS_PHONE_REPAIR_REVIEW_BASE, WEBSITE_EDITIONS_PHONE_REPAIR_REPLACEMENTS),
 }
 # RULING um add.5 (24 Oct 2026): the retired member type is admitted only inside a transaction listed here against the
 # lettered ruling that retired it. Today that is um only. Any other transaction that carries a retired member fails
