@@ -83,6 +83,38 @@ jobs:
           python .sources/Site/domain-split/education_publication_admission.py --output .sources/Site/domain-split/output > admission_output.txt 2>&1 || true
           grep -E '^(CHANGED|MISSING|UNREVIEWED) ' admission_output.txt || echo 'No path differs from the admission record.'
           python .sources/Site/domain-split/education_publication_admission.py --output .sources/Site/domain-split/output --proposal census.json --review-source "Served digest census run $GITHUB_RUN_ID: Site $BUILDER_REF, Lessons $GITHUB_SHA, Apps dd908441664339a27dc59f5bd0364024c7a1c231"
+      # The artifact cannot be fetched from every reviewing environment, and the admission check
+      # stops at the first tree with a difference, so the complete list is also printed here: every
+      # path in any of the three trees whose built digest the admission record does not yet hold,
+      # and every recorded path the build did not produce. Read-only; it admits nothing.
+      - name: Print every built digest the admission record does not yet hold
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          sys.path.insert(0, '.sources/Site/domain-split')
+          import education_publication_admission as admission  # the Site's own rules, not a copy
+          census = json.loads(pathlib.Path('census.json').read_text())['trees']
+          registry = admission.load_registry()['trees']
+          pending, unreviewed, missing = {}, [], []
+          for tree, rows in census.items():
+              reviewed = registry[tree]
+              for path, digest in rows.items():
+                  if path not in reviewed:
+                      unreviewed.append(tree + '/' + path)
+                      pending[tree + '/' + path] = digest
+                  elif digest not in admission.admitted(reviewed[path]):
+                      pending[tree + '/' + path] = digest
+              missing += [tree + '/' + path for path in reviewed
+                          if path not in rows and not admission.may_be_absent(reviewed[path])]
+          print('=== DIGESTS NOT YET IN THE ADMISSION RECORD ===')
+          print(json.dumps(pending, indent=2, sort_keys=True))
+          print(f'\n{len(pending)} path(s) built to a digest the record does not hold '
+                f'({len(unreviewed)} of them with no row at all); {len(missing)} recorded path(s) not built')
+          for path in sorted(unreviewed):
+              print('  no row yet:', path)
+          for path in sorted(missing):
+              print('  not built:', path)
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: full-census
