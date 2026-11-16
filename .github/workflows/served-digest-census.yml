@@ -120,6 +120,54 @@ jobs:
           for path in sorted(missing):
               print('  not built:', path)
           PY
+      # Report only. The publisher runs these after the build, and a branch should learn here, not
+      # on main, everything the publisher would refuse (Lessons #861 passed the admission record
+      # and was then refused by the retained usage registry fence). Nothing in this step can fail
+      # the job and nothing in it admits anything. The retained registry digest is measured by
+      # calling the Site's own registry_errors and watching the value it tests, not by a copy.
+      - name: Run the publisher's remaining checks, report only
+        env:
+          REQUESTED: ${{ inputs.paths }}
+        run: |
+          set +e
+          D=.sources/Site/domain-split
+          check() { name="$1"; shift; "$@" > check.log 2>&1; rc=$?; if [ $rc -eq 0 ]; then echo "PUBLISHER CHECK ok: $name"; else echo "PUBLISHER CHECK WOULD REFUSE: $name (exit $rc)"; tail -n 25 check.log; fi; }
+          check 'check_publications' python $D/check_publications.py
+          check 'check_education_separation --self-test' python $D/check_education_separation.py --self-test
+          check 'check_education_separation' python $D/check_education_separation.py
+          check 'verify_education_tree_has_no_games' python $D/verify_education_tree_has_no_games.py --output $D/output
+          check 'check_education_support' python $D/check_education_support.py
+          check 'check_game_saves' node $D/check_game_saves.cjs
+          check 'check_education_publication_admission' python $D/check_education_publication_admission.py --output $D/output --lessons .sources/Lessons --apps .sources/Apps --build-control
+          python - <<'PY'
+          import hashlib, json, os, pathlib, sys
+          sys.path.insert(0, '.sources/Site/domain-split')
+          import check_education_separation as separation
+          seen = {}
+          real = separation.retained_admitted
+          def watched(retained, accepted):
+              held = real(retained, accepted)
+              digest = hashlib.sha256((json.dumps(retained, ensure_ascii=False, indent=2) + '\n').encode()).hexdigest()
+              seen.update(digest=digest, rows=len(retained), held=held, retained=retained)
+              return held
+          separation.retained_admitted = watched
+          errors = separation.registry_errors(pathlib.Path('.sources/Site/domain-split/output'))
+          print('=== RETAINED USAGE REGISTRY ===')
+          if 'digest' not in seen:
+              print('not measured; the registry check stopped earlier with:', errors)
+          else:
+              print('the pinned additions, teaching-pack, pending and retiring files passed (the check reached the registry fence)')
+              print(json.dumps({'digest': seen['digest'], 'rows': seen['rows'],
+                                'held by the Site baselines': seen['held'], 'errors': errors}, indent=2))
+              trees = ('education-site', 'education-lessons', 'education-apps')
+              wanted = [p.strip() for p in os.environ.get('REQUESTED', '').replace(',', '\n').splitlines() if p.strip()]
+              wanted = [p.split('/', 1)[1] if p.split('/', 1)[0] in trees else p for p in wanted]
+              for row in seen['retained']:
+                  text = json.dumps(row, ensure_ascii=False, sort_keys=True)
+                  if any(w in text for w in wanted):
+                      print('  row:', text)
+          PY
+          exit 0
       - uses: actions/upload-artifact@v4
         with:
           name: full-census
