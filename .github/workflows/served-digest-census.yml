@@ -48,7 +48,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: MattRoper1977/Matt-s-Apps-
-          ref: 3ad0a7df958274e5401e8d40d0a94096be0962bc
+          ref: dd908441664339a27dc59f5bd0364024c7a1c231
           path: .sources/Apps
           persist-credentials: false
 
@@ -63,6 +63,26 @@ jobs:
           set -euo pipefail
           python .sources/Site/domain-split/build_publications.py --lessons .sources/Lessons
           python .sources/Site/domain-split/build_education.py --lessons .sources/Lessons --apps .sources/Apps
+
+      # SCRATCH BRANCH ONLY, never merged: the full census of all three trees, written by the
+      # Site's own proposal path. It is a measurement, not an approval, and touches no registry.
+      - name: Check admission as the publisher would (expected to list this branch's changed paths)
+        continue-on-error: true
+        run: |
+          python .sources/Site/domain-split/education_publication_admission.py --output .sources/Site/domain-split/output > admission_output.txt 2>&1 || true
+          tail -n 60 admission_output.txt
+      - name: Write the full three-tree census (proposal only)
+        env:
+          BUILDER_REF: ${{ inputs.builder_ref }}
+        run: |
+          python .sources/Site/domain-split/education_publication_admission.py --output .sources/Site/domain-split/output --proposal census.json --review-source "Served digest census run $GITHUB_RUN_ID: Site $BUILDER_REF, Lessons $GITHUB_SHA, Apps dd908441664339a27dc59f5bd0364024c7a1c231"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: full-census
+          path: |
+            census.json
+            admission_output.txt
+          retention-days: 7
 
       - name: Report the served digest of each requested path
         env:
