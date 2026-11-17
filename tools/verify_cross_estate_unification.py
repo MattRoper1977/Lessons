@@ -3580,6 +3580,8 @@ CATALOGUE_RECORD_PATHS = {
     # tools/catalogue/build_catalogue.py, not a lesson payload.
     "tools/catalogue/manifest_humanities_build_w9-w14_terms.json",
     "tools/catalogue/manifest_aaa_small_subjects_terms.json",
+    # A1-LIST (17 Nov 2026): Autumn 1 term and week of the rebuilt DT lesson pages.
+    "tools/catalogue/manifest_dt_a1_terms.json",
     # A1-LIST (17 Nov 2026): Autumn 1 term and week of the rebuilt Careers lesson pages.
     "tools/catalogue/manifest_careers_a1_terms.json",
     # A1-LIST (17 Nov 2026): Autumn 1 term and week of the rebuilt Vocational lesson pages.
