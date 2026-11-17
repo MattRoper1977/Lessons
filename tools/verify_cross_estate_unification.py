@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "aca82b98743a70d058f92896c85350758f683f56146f82aad094359e31b52c6e"
+    "resources.json": "8e9b09d5f5cb290f98b56715113bb69b09b1c1019a5766e25389baf844754fcf"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -129,12 +129,12 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles_browser.cjs": "0c193780f901cf4d3b7013819a7488567bf7ce40a75d05dbe43c7a6971877344",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
         "tools/sw2/check_tokens_inert.cjs": "c45f009235c70d84a7e1ee8fc08fb0e6aa5e7efcc162714eff3c844cce68e9f1",
-        "assets/catalogue/lesson-order.json": "2e9b0c4a8be7c9ddf1c118f7a5a9e0a766768757ad3f5134a104c8ab149e8821",
+        "assets/catalogue/lesson-order.json": "84e5ea06df7f255a4722882c24a0d7e4823b0065d32df13d11795c3588fc2a82",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "daf4703a160678b9076ed3bc7487e841327162d237559356a01335a3051e3e3c",
         "Science/index.html": "ea568633299e42a45340143d5eeaab2de179e95a04ed43d5515ae870dbb3344a",
-        "Humanities/index.html": "1d3c6b9194b7e6c6e5442f5ee93b333185f19162d07d907ff0f9266f76c210e5",
+        "Humanities/index.html": "db6cbda3dc980608b4304d20fa6ff7bcf295fd0cae5a062bd53ebe94790fbc81",
         "humanities.html": "bfb8f9383680b9c6d849931652db29289b92d5ed18c5f9616cfc0ede0614fa5c",
         "pack.html": "42935782c353525d28b9263a90a8c48e4b5ca764226444edfa68d6f664862be1",
         "assets/catalogue/pack.js": "48396bdf604a2eeb3e63f5ab18988fb2c87d0260586a18dd2f53824af3cd03de",
@@ -153,9 +153,9 @@ CATALOGUE_PINS = {
         "assets/catalogue/lesson-navigation.js": "42e579bbef3940c24ca4360319290820305a777330b8bff79152b2cb6aa077e3",
         "assets/catalogue/science-shelf.css": "b2b1eb328662d841add139ccfff107f985f17373f1ee82b8762475663097ab60",
         "assets/catalogue/science-shelf.js": "a59fe0c988a5de7d614afc6a36d7dacf14c6e3fa92c732740442e4914d00f356",
-        "assets/catalogue/terms-and-styles.json": "4b2f87702528bfd9605c91f430a737cc75b8b8bad9d23f93337a2e116ef58583",
+        "assets/catalogue/terms-and-styles.json": "f337fdccc859567031088aa0c58e65af12e688e1b8d0a587ff492196ba1ff490",
         "assets/catalogue/science-shelf.json": "6bfcac8579a72f8413e158b49460a8b853f284b8dc64bd4da4442c37e92edadf",
-        "assets/catalogue/humanities-shelf.json": "5c348039b31bb8991cd7ac2a43788ec9bd0aa0d75c018d953ad0e09a2d4aa427",
+        "assets/catalogue/humanities-shelf.json": "f0a730012b8ec6c0835b3220e17a9c482c025bd1e05ce469005cca5072d81af2",
         "tools/catalogue/build_catalogue.py": "249e82b795e0fa5f1eaeb7afd00883a963d63742b50b783fa88f808737ab230d",
         "tools/catalogue/build_science_shelf.py": "396b6aeb7cb3cabe037b7af27877ae7a090e5aa1bce284409e400549d5204c24",
         "tools/catalogue/build_humanities_shelf.py": "97e27c8df99ecb101a6f51528ec3139a88199d4ef5796a8a3a3fa9dbbd6af6fb",
@@ -165,16 +165,16 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_catalogue_dom.cjs": "877ab8515ba5cbcbd8be32c52cfed067707b675d239250bdf2a68134382798c8",
         "tools/catalogue/verify_education_navigation.cjs": "0479adfa36d2af88f61e51fc76a3b8b2c863648d3399048f053fd1be38607e55",
         "tools/catalogue/sync_shelf_card_titles.py": "d5e8fd850e5ac6340f0d1550ea2992fc03ef1fff8deeec144c73685042feaf7f",
-        "tools/catalogue/HUMANITIES_STRAND.json": "0c93388460634e82365c7d67e3a32966ed73d37b2c7e3e62398a19bc3cfa5867",
+        "tools/catalogue/HUMANITIES_STRAND.json": "5d5616f3715baa8dc916ffb9c6b91bb6fce3177c998e601a60b05dcf3a90f559",
         "tools/catalogue/hub_sections.py": "3b201e96e05a124d47c6b5b1063c0df25d2b5c5cf4505aad7494663c7e92a90e",
         "assets/catalogue/shelf-base.css": "15d7b64ad06b9b27c5f03e91da30ba35c4ca01c1b12b1208b06bfefe5e6ff4e0",
-        "assets/catalogue/humanities-hub-bindings.json": "0b81d195a6b8af2f526a6b97ea9e635277ce9c00267e8a1ad1dcbfd3c1c770b2",
+        "assets/catalogue/humanities-hub-bindings.json": "2978a2481eed1d45551db91129d7086dbb6103e735170386788a7a70d8800ef4",
         "tools/catalogue/restamp_evidence_sha256.py": "bfa35a1f979746d471d5af08152e20017bb20a1655490340c74ff6209652827a",
         "Science/Build/START_HERE.html": "acac26140f5aeef22292e6ce3831fa61aaf5e62432cc3998b340918c8bfaee7f",
         "Science/Grow/START_HERE.html": "d2bec305dec3212215c6f599cad3925c571f9a34ca6e85268893c8ed142170dd",
         "Science/Launch/START_HERE.html": "10b46e7cf26e3aa4b7f1fb4758a039bcbec7000bc2ec8d30dfe3ce0e0b966353",
-        "tools/catalogue/SHELF_SELECTION.json": "3ce9ab885955d52fc8ceb027f9fb656a4959ff04a52a981fe14a615cd2c8c1e9",
-        "tools/catalogue/HUMANITIES_SELECTION.json": "95b425c88397ef049a67affa467d1d07bc5d9adfefec7a5b42ba88254a3451a3",
+        "tools/catalogue/SHELF_SELECTION.json": "41bb18d0025f45e919747d301bc627d2800f8e1ece41521eacd3d362387669ed",
+        "tools/catalogue/HUMANITIES_SELECTION.json": "2aac459b1d9b113a7b20caa005b050651e73087ed499ce91d4b501ad2c44d7db",
         "tools/easter/science_original_browser.cjs": "aae28a4166d41546cbe5b0acd0866eeaf5e6f47cd5b1949fc48ecb2d4c79a1ec",
         "tools/science_pack/browser_checks.cjs": "058c9bc1f06c876f2994a23d467d83fced683c6355eb92d0ef43986d3e28d72d",
         "tools/prepare_served_publications.py": "c52ffe6cbbc7bb6e056eb3eb27f0bb9a36bb34d2aa86e5d3e02a63aa3653d3a1",
@@ -247,7 +247,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "f0dc48d979ca142d1ef22849e621f009131db351719c725c932236fd4ea8a6db",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "1a297ef028046f9bac5b920b50e591a799cb1f245c46dd31be5eac3b3cab35dc",
         "tools/catalogue/TERM_REVIEW.json": "202e6fb09a1b163114d806f085e4712f9bfde4d1a55a89fcef4392d24a366847",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -1887,6 +1887,20 @@ CATALOGUE_PINS = {
         "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W05/LAUNCH_RE_A1_W05.html": "d3cf7d61fe51d67d6e33dcc737b60eab06b9e554ee213731600fe4803dfdf2a9",
         "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W06/LAUNCH_RE_A1_W06.html": "74d881dcb376f6cded58d9860fb9953661b0fef4e4ac1429b2b991ab0a43dfe1",
         "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W07/LAUNCH_RE_A1_W07.html": "d4fadc3e18da3b7d009c682dbe9e9180959fb2c7b608f2111234b57dd4227fde",
+        "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W01/HUM_GROW_A1_W01.html": "c02ec265c2f72caf998b1cf4f23aea3f72260d595892ad626dd2dcfa3196abb0",
+        "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W02/HUM_GROW_A1_W02.html": "534665e727fd8c3fa6a2c490027c0e2c78ace6531fb2c9d2608a6698db4b71ef",
+        "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W03/HUM_GROW_A1_W03.html": "42d1df62c229d99877995fee702d110b9e453969fa77edc1b7a15863ae36043b",
+        "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W04/HUM_GROW_A1_W04.html": "18698fbc636e7e8b3091d7d76ac173542b3ea32a669c5fcd773eefb516e9491b",
+        "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W05/HUM_GROW_A1_W05.html": "18541c6e51f939c6a9592a376bdee9151b19d8cbad1f7674533bd67dac74922e",
+        "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W06/HUM_GROW_A1_W06.html": "cdc5380e56bb1b355e213be2f727b9e9f2a4dca668fdfe0f8e12b07cf8ab8027",
+        "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W07/HUM_GROW_A1_W07.html": "b3f6913f9d1c12831b96bbabab9ee35c60030bcb3f22a6b83ebc6c955c493db2",
+        "Humanities/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W01/HUM_LAUNCH_A1_W01.html": "ebe839eeef988693530a6c2a97a465e984810a60513ed64c734658ac1962568c",
+        "Humanities/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W02/HUM_LAUNCH_A1_W02.html": "74daeb29d127a7f6933eb242a1e217e4300b6a9e0f2b09a123e75a5ba1a2e630",
+        "Humanities/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W03/HUM_LAUNCH_A1_W03.html": "eadfd7eb09985f12c2d8eb2ace0e7cb5259968a1d287f9f352039740c7e349dd",
+        "Humanities/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W04/HUM_LAUNCH_A1_W04.html": "6a7e196a8dc3f37be866596ffad15e08287423314572e1c0a5fa621e4f9f0df5",
+        "Humanities/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W05/HUM_LAUNCH_A1_W05.html": "2bbb156cd9630ba2c709f60f8053341b9b735a870da6564c8516ef51224b9970",
+        "Humanities/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W06/HUM_LAUNCH_A1_W06.html": "8804647753f4946add1b7b18c98319bf6a445afc19b9431895a8051eb6621805",
+        "Humanities/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W07/HUM_LAUNCH_A1_W07.html": "a4771b7f17c438373b2f25c8cbd4d7ab2f090a229c11bfea7a6fb668accbc953",
         "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W01/BUILD_RE_A2_W01.html": "b571eeaaa57d926d34972806e78d25a6de06de1573827165db0dabf0407f2fef",
         "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W02/BUILD_RE_A2_W02.html": "1bd35ec6547ce6326609c64c8b5cfdea34b44a45930b940f803bb14f5765dc01",
         "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W02/BUILD_RE_A2_W02_Slides.pptx": "f43ece1d91dd5380aaa9d33b22462ee39a13998267720bfdd5fa343e4676415b",
@@ -3469,7 +3483,7 @@ CATALOGUE_ORIGINAL_ROWS_SHA256 = "15150552200dcf96089afd27ec81b5712a63aef929d07e
 # digest below are re-cut by tools/catalogue/pin_catalogue_contract.py from
 # rows it has verified against that derivation; an edit to any appended row,
 # a removed pack row or an extra lesson row still reds here.
-CATALOGUE_SHELF_ROWS = 692
+CATALOGUE_SHELF_ROWS = 706
 # UX2 A1: keys that may be appended to an original row without moving its
 # digest (see catalogue_errors). Nothing else is additive. No original row
 # carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
@@ -3478,7 +3492,8 @@ CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
 # Re-cut 2026-11-17 (ruling thread, ruling A and the Week 8 goal rule): 15 reviewed rows return at their earlier place, same ids as reviewed in 26ec786d (a1aaa-sci-launch-a1-w03-l1-microscopy-and-total-magnification, a1aaa-sci-launch-a1-w03-l2-calculating-magnification-and-unit-conversions, a1aaa-sci-launch-a1-w03-l3-magnification-exam-questions-and-scale-bar-lab, a1aaa-sci-launch-a1-w04-l1-diffusion-net-movement-down-a-concentration-gradient, a1aaa-sci-launch-a1-w04-l2-diffusion-in-the-lungs-alveoli-adaptations-and-testing-breat, a1aaa-sci-launch-a1-w04-l3-explaining-diffusion-in-the-exam-causal-chains-and-command-w, a1aaa-sci-launch-a1-w05-l1-osmosis-net-movement-of-water-across-a-partially-permeable-m, a1aaa-sci-launch-a1-w05-l2-osmosis-core-practical-potato-cylinders-and-percentage-chang, a1aaa-sci-launch-a1-w05-l3-analysing-and-evaluating-the-osmosis-practical-zero-crossing, a1aaa-sci-launch-a1-w06-l1-active-transport-moving-particles-against-a-concentration-gr, a1aaa-sci-launch-a1-w06-l2-active-transport-in-root-hair-cells-and-the-gut-adaptations-, a1aaa-sci-launch-a1-w06-l3-comparing-diffusion-osmosis-and-active-transport-decision-la, a1aaa-sci-launch-a1-w07-l1-topic-1-knowledge-round-up-connecting-microscopy-diffusion-o, a1aaa-sci-launch-a1-w07-l2-decoding-gcse-command-words-across-topic-1-describe-explain-, a1aaa-sci-launch-a1-w07-l3-topic-1-independent-exam-practice-feedback-repair-microscopy), and one appended row, dy4-sci-build-a1-w08-p2-show-what-you-know-about-body-science, one field, its desc, now carries the learning goal its page states word for word; no other row added, removed, reordered or edited (with the 15 dropped and that desc put back the 656 rows digest to cd22ca8f). Previous count 656, previous digest cd22ca8f.
 # Re-cut 2026-11-17 (ruling thread, "R-RAISE for Autumn 1", on the owner's standing word of 2026-11-16): 21 reviewed rows for the RE Autumn 1 pack lessons of weeks 1 to 7 rebuilt on the Week 8 model page are added straight before the Autumn 2 block (a1-re-build-w01-special-things-and-why-they-matter, a1-re-build-w02-special-books-and-places, a1-re-build-w03-a-story-of-belonging, a1-re-build-w04-respecting-special-objects, a1-re-build-w05-similarities-between-beliefs, a1-re-build-w06-belonging-and-peace, a1-re-build-w07-sharing-something-special, a1-re-grow-w01-beliefs-and-worldviews-in-our-community, a1-re-grow-w02-how-beliefs-shape-identity, a1-re-grow-w03-diwali-festival-story-and-meaning, a1-re-grow-w04-hanukkah-and-the-theme-of-light, a1-re-grow-w05-christmas-and-christian-belief, a1-re-grow-w06-comparing-festivals-of-light, a1-re-grow-w07-remembrance-and-shared-values, a1-re-launch-w01-belief-identity-and-belonging-in-adult-life, a1-re-launch-w02-key-beliefs-across-two-worldviews, a1-re-launch-w03-sources-of-authority-and-meaning, a1-re-launch-w04-festivals-shared-values-and-the-day-of-peac, a1-re-launch-w05-a-structured-explain-response, a1-re-launch-w06-remembrance-and-peace-across-beliefs, a1-re-launch-w07-belief-and-identity-assessment); no other row added, removed, reordered or edited (with the 21 dropped the 671 rows digest to ee87b6d2). Previous count 671, previous digest ee87b6d2.
-CATALOGUE_SHELF_ROWS_SHA256 = "3ddb2312b351e5e4107f9c5fb2399a941e9862cf604eef0dda93ff239c5e6764"
+# Re-cut 2026-11-17 (ruling thread, "R-RAISE for Autumn 1", on the owner's standing word of 2026-11-16): 14 reviewed rows for the Humanities Autumn 1 pack lessons of weeks 1 to 7 rebuilt on the Week 8 model page are added straight before the Autumn 2 block (a1-humanities-grow-w01-time-detectives, a1-humanities-grow-w02-source-detectives, a1-humanities-grow-w03-cause-and-consequence, a1-humanities-grow-w04-people-who-shaped-the-country, a1-humanities-grow-w05-how-big-a-deal, a1-humanities-grow-w06-plan-the-account, a1-humanities-grow-w07-write-the-account, a1-humanities-launch-w01-source-investigation, a1-humanities-launch-w02-cause-and-consequence-courtroom, a1-humanities-launch-w03-archive-nature-origin-and-purpose, a1-humanities-launch-w04-century-of-change, a1-humanities-launch-w05-people-and-social-change, a1-humanities-launch-w06-structured-account, a1-humanities-launch-w07-source-assessment); no other row added, removed, reordered or edited (with the 14 dropped the 692 rows digest to 3ddb2312). Previous count 692, previous digest 3ddb2312.
+CATALOGUE_SHELF_ROWS_SHA256 = "a34ff73a829f0f30338d7476dcd784ee449846630968b387a3c04321966df185"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
