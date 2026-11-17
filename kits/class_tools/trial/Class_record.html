@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; manifest-src 'none'; worker-src 'none'">
+<title>Class record</title>
+<style>
+:root{--bg:#f6f4ee;--card:#fff;--ink:#14212b;--soft:#3d4c58;--line:#8a97a1;--accent:#0b4f6c;--accent-ink:#fff;--got:#0f5a2e;--got-bg:#dff3e4;--part:#6b4700;--part-bg:#fff0c7;--not:#8a1c1c;--not-bg:#fde0de;--abs:#3a3f8f;--abs-bg:#e4e6fb;--warn-bg:#fff0c7}
+@media (prefers-color-scheme:dark){:root{--bg:#10171d;--card:#1a242c;--ink:#f1f5f8;--soft:#c5d0d8;--line:#6f7f8a;--accent:#8fd3f0;--accent-ink:#06222e;--got:#a6ecbc;--got-bg:#12351f;--part:#ffd98a;--part-bg:#3d2c05;--not:#ffb3ad;--not-bg:#461614;--abs:#c3c7ff;--abs-bg:#22254f;--warn-bg:#3d2c05}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+header.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--card);border-bottom:2px solid var(--line)}
+header.top h1{font-size:1.35rem;margin:0}
+header.top .brand{font-size:.9rem;color:var(--soft)}
+main{max-width:1400px;margin:0 auto;padding:16px}
+a{color:var(--accent)}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.tabs button{flex:1 1 auto}
+button,.button{font:inherit;min-height:44px;padding:8px 14px;border-radius:10px;border:2px solid var(--accent);background:var(--card);color:var(--accent);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:600}
+button.primary,.tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+button.danger{border-color:var(--not);color:var(--not)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:0 0 16px}
+h2{font-size:1.15rem;margin:0 0 8px}
+h3{font-size:1rem;margin:14px 0 6px}
+.hint{color:var(--soft);margin:4px 0 10px;font-size:.95rem}
+label{display:block;font-weight:600;margin:8px 0 4px}
+input,select,textarea{font:inherit;width:100%;min-height:44px;padding:8px 10px;border-radius:8px;border:2px solid var(--line);background:var(--card);color:var(--ink)}
+textarea{min-height:70px}
+.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.msg{padding:10px 12px;border-radius:10px;border:2px solid var(--line);margin:10px 0;font-weight:600}
+.msg.bad{border-color:var(--not);background:var(--not-bg);color:var(--not)}
+.msg.ok{border-color:var(--got);background:var(--got-bg);color:var(--got)}
+.pupils{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));margin:10px 0}
+.pupil{border:2px solid var(--line);border-radius:10px;padding:6px}
+.pupil b{display:block;margin-bottom:4px}
+.pupil select{min-height:44px}
+.st-got{background:var(--got-bg);color:var(--got);border-color:var(--got)}
+.st-partly{background:var(--part-bg);color:var(--part);border-color:var(--part)}
+.st-notyet{background:var(--not-bg);color:var(--not);border-color:var(--not)}
+.st-absent{background:var(--abs-bg);color:var(--abs);border-color:var(--abs)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:1560px;font-size:.95rem}
+#sheet th:nth-child(1){min-width:150px}#sheet th:nth-child(2){min-width:100px}#sheet th:nth-child(3){min-width:150px}#sheet th:nth-child(4),#sheet th:nth-child(5),#sheet th:nth-child(8),#sheet th:nth-child(10){min-width:190px}#sheet th:nth-child(7){min-width:120px}#sheet th:nth-child(9){min-width:185px}
+#central{min-width:1200px}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+thead th{position:sticky;top:0;background:var(--accent);color:var(--accent-ink);white-space:nowrap}
+td input,td select,td textarea{min-height:40px;padding:4px 6px;border-width:1px}
+td textarea{min-height:40px;height:40px;resize:vertical}
+td.num{font-weight:700;white-space:nowrap}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;border:2px solid;font-weight:700;white-space:nowrap}
+.count{font-weight:700}
+.sr{position:absolute;left:-9999px}
+[hidden]{display:none!important}
+pre.prompt{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;max-height:260px;overflow:auto;font:inherit;font-size:.9rem}
+@media print{header.top .row,.tabs,.noprint,button{display:none!important}body{background:#fff;color:#000;font-size:11pt}section.card{border:0;padding:0}table,#central{min-width:0;font-size:9pt}#sheet th{min-width:0!important}thead th{background:#ddd;color:#000;position:static}td input,td select,td textarea{border:0;padding:0;min-height:0;height:auto;background:transparent;color:#000;appearance:none}.tablewrap{overflow:visible;border:0}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div><h1>Class record</h1><div class="brand">Made by Matt · teacher tools trial · saved on this device only</div></div>
+  <div class="row"><a class="button" href="My_tools.html">← My tools</a></div>
+</header>
+<main>
+<div class="tabs" role="tablist" aria-label="Class record sections">
+  <button role="tab" id="tab-add" aria-controls="p-add" aria-selected="true">1 · Add a lesson</button>
+  <button role="tab" id="tab-sheet" aria-controls="p-sheet" aria-selected="false">2 · My sheet</button>
+  <button role="tab" id="tab-central" aria-controls="p-central" aria-selected="false">3 · Central sheet</button>
+  <button role="tab" id="tab-setup" aria-controls="p-setup" aria-selected="false">Set up</button>
+</div>
+<div id="status" class="msg" role="status" aria-live="polite" hidden></div>
+
+<!-- ADD A LESSON -->
+<section class="card" id="p-add" role="tabpanel" aria-labelledby="tab-add">
+  <h2>Add a lesson</h2>
+  <p class="hint">Type the lesson once, then choose a result for each pupil. Pupils are numbers only. Never type a name.</p>
+  <div class="grid">
+    <div><label for="f-date">Date</label><input id="f-date" type="date"></div>
+    <div><label for="f-class">Class code</label><input id="f-class" maxlength="12" placeholder="Class A" autocomplete="off"></div>
+    <div><label for="f-subject">Subject</label><input id="f-subject" maxlength="40" list="subjects" autocomplete="off"><datalist id="subjects"></datalist></div>
+    <div><label for="f-code">Lesson code (optional)</label><input id="f-code" maxlength="30" autocomplete="off"></div>
+  </div>
+  <div class="grid">
+    <div><label for="f-objective">Lesson objective</label><textarea id="f-objective" maxlength="240" placeholder="I can ..."></textarea></div>
+    <div><label for="f-skill">Skill or content taught</label><textarea id="f-skill" maxlength="240" placeholder="The skill a pupil who was away needs to catch up"></textarea></div>
+  </div>
+  <div class="row noprint">
+    <button id="allGot" type="button">All got it</button>
+    <button id="clearResults" type="button">Clear results</button>
+    <span class="hint">Then change only the pupils who differ.</span>
+  </div>
+  <div class="pupils" id="pupilGrid"></div>
+  <div class="row"><button class="primary" id="saveLesson" type="button">Save lesson to my sheet</button></div>
+  <h3>Or pull results in from Quick capture</h3>
+  <p class="hint">If you tallied the end of a lesson in Quick capture on this device, this copies those results into your sheet. You then add the objective and skill in My sheet.</p>
+  <div class="row"><button id="pullQC" type="button">Pull in Quick capture results</button></div>
+</section>
+
+<!-- MY SHEET -->
+<section class="card" id="p-sheet" role="tabpanel" aria-labelledby="tab-sheet" hidden>
+  <h2>My sheet</h2>
+  <p class="hint">One row per pupil per lesson. Click a cell to change it. Changes save as you go.</p>
+  <div class="grid noprint">
+    <div><label for="q-pupil">Pupil</label><select id="q-pupil"></select></div>
+    <div><label for="q-subject">Subject</label><select id="q-subject"></select></div>
+    <div><label for="q-result">Result</label><select id="q-result"><option value="">All results</option><option value="got">Got it</option><option value="partly">Partly</option><option value="notyet">Not yet</option><option value="absent">Absent</option></select></div>
+    <div><label for="q-need">Show</label><select id="q-need"><option value="">Everything</option><option value="need">Needs catch-up only</option><option value="notes">Rows with a note only</option></select></div>
+  </div>
+  <p class="count" id="sheetCount"></p>
+  <div class="tablewrap"><table id="sheet"><thead><tr>
+    <th>Date</th><th>Class</th><th>Subject</th><th>Lesson objective</th><th>Skill or content</th><th>Pupil</th><th>Result</th><th>Missed (skill or content)</th><th>Catch-up</th><th>Adaptive teaching note</th><th class="noprint">Row</th>
+  </tr></thead><tbody></tbody></table></div>
+  <div class="row noprint">
+    <button class="primary" id="shareFile" type="button">Share: save my share file</button>
+    <button id="csvMine" type="button">Save as spreadsheet (CSV)</button>
+    <button id="printMine" type="button">Print</button>
+    <a class="button" id="openFolder" target="_blank" rel="noopener noreferrer" hidden>Open shared folder</a>
+  </div>
+  <div id="assistantBox" class="noprint" hidden>
+    <h3>Ask your assistant (optional)</h3>
+    <p class="hint">This makes a prompt from the rows showing above. It holds pupil numbers and lesson details only. Read it before you copy it.</p>
+    <div class="row"><button id="makePrompt" type="button">Show the prompt</button><button id="copyPrompt" type="button" hidden>Copy prompt</button><a class="button" id="openAssistant" target="_blank" rel="noopener noreferrer" hidden>Open assistant</a></div>
+    <pre class="prompt" id="promptText" hidden></pre>
+  </div>
+</section>
+
+<!-- CENTRAL -->
+<section class="card" id="p-central" role="tabpanel" aria-labelledby="tab-central" hidden>
+  <h2>Central sheet</h2>
+  <p class="hint">Choose every teacher's share file together (yours and your colleagues'). They are joined into one sheet here. Nothing is sent anywhere. Save the result to your school's own shared drive.</p>
+  <label for="combineFiles">Share files to combine</label>
+  <input id="combineFiles" type="file" accept=".json,application/json" multiple>
+  <div class="row noprint"><label style="margin:0;font-weight:400"><input type="checkbox" id="includeMine" checked style="width:auto;min-height:0"> Include my own sheet from this device</label></div>
+  <p class="count" id="centralCount"></p>
+  <div class="grid noprint">
+    <div><label for="c-pupil">Pupil</label><select id="c-pupil"></select></div>
+    <div><label for="c-teacher">Teacher</label><select id="c-teacher"></select></div>
+    <div><label for="c-need">Show</label><select id="c-need"><option value="">Everything</option><option value="need">Needs catch-up only</option><option value="notes">Rows with a note only</option></select></div>
+  </div>
+  <div class="tablewrap"><table id="central"><thead><tr>
+    <th>Teacher</th><th>Date</th><th>Class</th><th>Subject</th><th>Lesson objective</th><th>Skill or content</th><th>Pupil</th><th>Result</th><th>Missed (skill or content)</th><th>Catch-up</th><th>Adaptive teaching note</th>
+  </tr></thead><tbody></tbody></table></div>
+  <div class="row noprint">
+    <button class="primary" id="csvCentral" type="button">Save central sheet as spreadsheet (CSV)</button>
+    <button id="printCentral" type="button">Print</button>
+  </div>
+</section>
+
+<!-- SET UP -->
+<section class="card" id="p-setup" role="tabpanel" aria-labelledby="tab-setup" hidden>
+  <h2>Set up</h2>
+  <div class="grid">
+    <div><label for="s-teacher">I am</label><select id="s-teacher"></select></div>
+    <div><label for="s-size">Pupils in the class (1 to 35)</label><input id="s-size" type="number" min="1" max="35"></div>
+    <div><label for="s-class">Usual class code</label><input id="s-class" maxlength="12" autocomplete="off"></div>
+  </div>
+  <p class="hint">Every teacher must use the same number for the same pupil, so the central sheet lines up. Keep the list of who is which number private, on paper or in Class names on this device.</p>
+  <h3>Optional extras (both are off until you fill them in)</h3>
+  <div class="grid">
+    <div><label for="s-folder">Shared folder address</label><input id="s-folder" type="url" placeholder="https://" autocomplete="off"><p class="hint">Paste your school's own shared folder address to get an Open shared folder button. Leave blank to keep it off.</p></div>
+    <div><label for="s-assistant">Assistant address</label><input id="s-assistant" type="url" placeholder="https://" autocomplete="off"><p class="hint">Paste the address of an assistant your school allows to get Copy prompt and Open assistant buttons. Leave blank to keep it off.</p></div>
+  </div>
+  <div class="row"><button class="primary" id="saveSetup" type="button">Save set up</button></div>
+  <h3>Words that must never be saved</h3>
+  <p class="hint">Any name saved in Class names on this device is blocked already. Add other names here, one per line. This list stays on this device and is never shared or backed up.</p>
+  <textarea id="s-block" autocomplete="off" spellcheck="false"></textarea>
+  <div class="row"><button id="saveBlock" type="button">Save blocked words</button></div>
+  <h3>Backup and clear</h3>
+  <div class="row">
+    <button id="backup" type="button">Save a backup file</button>
+    <label class="button" for="restoreFile" style="margin:0">Restore from a backup file</label><input class="sr" id="restoreFile" type="file" accept=".json,application/json">
+    <button class="danger" id="wipe" type="button">Clear my Class record on this device</button>
+  </div>
+</section>
+</main>
+<script>
+(function(){
+'use strict';
+var KEY='mbm_class_record_v1', BLOCK_KEY='mbm_class_record_block_v1';
+var RESULTS={got:'Got it',partly:'Partly',notyet:'Not yet',absent:'Absent'};
+var CATCH={'':'Not needed',need:'Needs catch-up',partdone:'Partly done',done:'Done'};
+var $=function(id){return document.getElementById(id);};
+function blank(){return {version:1,teacher:'Teacher 1',size:13,classCode:'Class A',folder:'',assistant:'',lessons:{},rows:{}};}
+function readJSON(k,fb){try{var r=localStorage.getItem(k);return r?JSON.parse(r):fb;}catch(e){return fb;}}
+var S=(function(){var s=readJSON(KEY,null);if(!s||typeof s!=='object'||!s.lessons||!s.rows)s=blank();var b=blank();for(var k in b)if(s[k]===undefined)s[k]=b[k];return s;})();
+(function(){if(localStorage.getItem(KEY))return;var pk=readJSON('mbm_school_pack_v1',null);if(pk&&+pk.classSize>=1&&+pk.classSize<=35)S.size=+pk.classSize;})();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));return true;}catch(e){say('This could not be saved. The device storage may be full or blocked.','bad');return false;}}
+var sayTimer;
+function say(t,kind){var el=$('status');el.textContent=t;el.className='msg '+(kind||'ok');el.hidden=false;clearTimeout(sayTimer);if(kind!=='bad')sayTimer=setTimeout(function(){el.hidden=true;},6000);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function clean(s,max){return String(s==null?'':s).replace(/[\u0000-\u001f\u007f]/g,' ').replace(/\s+/g,' ').trim().slice(0,max||240);}
+
+/* ---------- names guard ---------- */
+var STOP={pupil:1,class:1,group:1,teacher:1,the:1,and:1,not:1,yet:1,got:1,all:1,for:1,with:1};
+function blockedWords(){
+  var out={};
+  function add(v){String(v||'').split(/[^A-Za-zÀ-ÿ'-]+/).forEach(function(w){w=w.replace(/^['-]+|['-]+$/g,'');if(w.length<2)return;if(STOP[w.toLowerCase()])return;out[w]=1;});}
+  var key=readJSON('mbm_pupil_key_v1',{});if(key&&typeof key==='object')Object.keys(key).forEach(function(n){add(key[n]);});
+  var prof=readJSON('mbm_pupil_profile_v1',{});if(prof&&prof.pupils)Object.keys(prof.pupils).forEach(function(n){add(prof.pupils[n]&&prof.pupils[n].label);});
+  ['mbm_names_list_v1','mbm_class_names_v1'].forEach(function(k){var v=readJSON(k,null);(function walk(x){if(typeof x==='string')add(x);else if(Array.isArray(x))x.forEach(walk);else if(x&&typeof x==='object')Object.keys(x).forEach(function(q){if(/name|label|first|last|initial/i.test(q)||Array.isArray(x[q])||typeof x[q]==='object')walk(x[q]);});})(v);});
+  String(localStorage.getItem(BLOCK_KEY)||'').split(/\n/).forEach(add);
+  return Object.keys(out);
+}
+function nameHit(text){
+  text=String(text||'');if(!text)return '';
+  var words=blockedWords();
+  for(var i=0;i<words.length;i++){var w=words[i],re;
+    var safe=w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    if(w.length<=3)re=new RegExp('(^|[^A-Za-zÀ-ÿ])'+safe+'($|[^A-Za-zÀ-ÿ])');      /* short labels and initials: exact case */
+    else re=new RegExp('(^|[^A-Za-zÀ-ÿ])'+safe+'($|[^A-Za-zÀ-ÿ])','i');
+    if(re.test(text))return w;}
+  return '';
+}
+function guard(fields){ /* fields: array of strings; returns true when safe */
+  for(var i=0;i<fields.length;i++){if(nameHit(fields[i])){say('Not saved. That text looks like it holds a name or initials saved on this device. Use the pupil number instead.','bad');return false;}}
+  return true;
+}
+
+/* ---------- tabs ---------- */
+var TABS=['add','sheet','central','setup'];
+function show(t){TABS.forEach(function(x){var on=x===t;$('tab-'+x).setAttribute('aria-selected',on?'true':'false');$('p-'+x).hidden=!on;});if(t==='sheet')renderSheet();if(t==='central')renderCentral();try{sessionStorage.setItem('mbm_cr_tab',t);}catch(e){}}
+TABS.forEach(function(t){$('tab-'+t).addEventListener('click',function(){show(t);});});
+
+/* ---------- add a lesson ---------- */
+function today(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
+function paintSelect(sel){sel.className=sel.value?'st-'+sel.value:'';}
+function resultOptions(v,allowBlank){var h=allowBlank?'<option value="">No result</option>':'';Object.keys(RESULTS).forEach(function(k){h+='<option value="'+k+'"'+(k===v?' selected':'')+'>'+RESULTS[k]+'</option>';});return h;}
+function renderGrid(){
+  var h='';for(var n=1;n<=S.size;n++)h+='<div class="pupil"><b><label for="r-'+n+'" style="margin:0">Pupil '+n+'</label></b><select id="r-'+n+'" data-n="'+n+'">'+resultOptions('',true)+'</select></div>';
+  $('pupilGrid').innerHTML=h;
+  $('pupilGrid').querySelectorAll('select').forEach(function(s){s.addEventListener('change',function(){paintSelect(s);});});
+}
+$('allGot').addEventListener('click',function(){$('pupilGrid').querySelectorAll('select').forEach(function(s){s.value='got';paintSelect(s);});});
+$('clearResults').addEventListener('click',function(){$('pupilGrid').querySelectorAll('select').forEach(function(s){s.value='';paintSelect(s);});});
+function lessonId(){return 'L'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function defaultCatch(result){return result==='absent'||result==='notyet'?'need':result==='partly'?'need':'';}
+$('saveLesson').addEventListener('click',function(){
+  var L={date:$('f-date').value||today(),cls:clean($('f-class').value,12)||S.classCode,subject:clean($('f-subject').value,40),code:clean($('f-code').value,30),objective:clean($('f-objective').value),skill:clean($('f-skill').value)};
+  if(!L.subject){say('Add the subject first.','bad');$('f-subject').focus();return;}
+  if(!L.objective&&!L.skill){say('Add the lesson objective or the skill first.','bad');$('f-objective').focus();return;}
+  if(!guard([L.cls,L.subject,L.code,L.objective,L.skill]))return;
+  var picks=[];$('pupilGrid').querySelectorAll('select').forEach(function(s){if(s.value)picks.push([+s.getAttribute('data-n'),s.value]);});
+  if(!picks.length){say('Choose a result for at least one pupil, or tap All got it.','bad');return;}
+  var id=lessonId();S.lessons[id]=L;
+  picks.forEach(function(p){var r=p[1];S.rows[id+'|'+p[0]]={result:r,missed:(r==='absent'||r==='notyet')?(L.skill||L.objective):'',catchup:defaultCatch(r),note:''};});
+  if(!save())return;
+  say('Saved '+picks.length+' rows to My sheet.');
+  $('f-objective').value='';$('f-skill').value='';$('f-code').value='';renderGrid();fillSubjects();
+});
+
+/* ---------- pull from Quick capture ---------- */
+var QC_MAP={got:'got',nearly:'partly',again:'notyet',absent:'absent'};
+$('pullQC').addEventListener('click',function(){
+  var t=readJSON('mbm_exit_tally_v1',{}),tr=readJSON('mbm_catchup_tracker_v1',{}),marks=(tr&&tr.marks)||{};
+  if(!t||typeof t!=='object'||!Object.keys(t).length){say('No Quick capture results are saved on this device yet.','bad');return;}
+  var added=0,skipped=0,byLesson={};
+  Object.keys(S.lessons).forEach(function(id){if(S.lessons[id].qc)byLesson[S.lessons[id].qc]=id;});
+  Object.keys(t).forEach(function(k){
+    var r=t[k],parts=k.split('|');if(!r||!QC_MAP[r.state]||parts.length<4)return;
+    var n=+parts[3];if(!(n>=1&&n<=35))return;
+    var qc=parts.slice(0,3).join('|'),id=byLesson[qc];
+    if(!id){id=lessonId();byLesson[qc]=id;S.lessons[id]={date:String(r.ts||'').slice(0,10)||today(),cls:S.classCode,subject:clean(r.subj,40),code:clean(r.code,30),objective:'',skill:'',qc:qc};}
+    var rk=id+'|'+n;if(S.rows[rk]){skipped++;return;}
+    var res=QC_MAP[r.state],note=clean(r.note);if(nameHit(note))note='';
+    var cu=defaultCatch(res);if(r.tracker&&r.tracker.key&&marks[r.tracker.key]){var ms=marks[r.tracker.key].state;cu=ms==='done'?'done':ms==='partial'?'partdone':'need';}
+    S.rows[rk]={result:res,missed:'',catchup:cu,note:note};added++;
+  });
+  Object.keys(S.lessons).forEach(function(id){var any=false;for(var k in S.rows)if(k.indexOf(id+'|')===0){any=true;break;}if(!any)delete S.lessons[id];});
+  if(!save())return;
+  say(added?('Pulled in '+added+' new rows'+(skipped?' ('+skipped+' were already there)':'')+'. Open My sheet to add each objective and skill.'):'Nothing new to pull in. Those results are already in My sheet.');
+  fillSubjects();
+});
+
+/* ---------- my sheet ---------- */
+function allRows(){
+  var out=[];Object.keys(S.rows).forEach(function(k){var i=k.lastIndexOf('|'),id=k.slice(0,i),n=+k.slice(i+1),L=S.lessons[id];if(!L)return;out.push({k:k,id:id,n:n,L:L,r:S.rows[k]});});
+  out.sort(function(a,b){return a.L.date<b.L.date?1:a.L.date>b.L.date?-1:a.id<b.id?-1:a.id>b.id?1:a.n-b.n;});return out;
+}
+function needs(r){return r.catchup==='need'||r.catchup==='partdone';}
+function fillSubjects(){
+  var seen={};Object.keys(S.lessons).forEach(function(id){if(S.lessons[id].subject)seen[S.lessons[id].subject]=1;});
+  var pk=readJSON('mbm_school_pack_v1',null);if(pk&&Array.isArray(pk.subjects))pk.subjects.forEach(function(s){s=clean(s,40);if(s)seen[s]=1;});
+  var list=Object.keys(seen).sort();
+  $('subjects').innerHTML=list.map(function(s){return '<option value="'+esc(s)+'">';}).join('');
+  var cur=$('q-subject').value;$('q-subject').innerHTML='<option value="">All subjects</option>'+list.map(function(s){return '<option'+(s===cur?' selected':'')+'>'+esc(s)+'</option>';}).join('');
+  var cp=$('q-pupil').value,h='<option value="">All pupils</option>';for(var n=1;n<=S.size;n++)h+='<option value="'+n+'"'+(String(n)===cp?' selected':'')+'>Pupil '+n+'</option>';$('q-pupil').innerHTML=h;
+}
+function filtered(){
+  var p=$('q-pupil').value,s=$('q-subject').value,r=$('q-result').value,nd=$('q-need').value;
+  return allRows().filter(function(x){return (!p||x.n===+p)&&(!s||x.L.subject===s)&&(!r||x.r.result===r)&&(nd!=='need'||needs(x.r))&&(nd!=='notes'||x.r.note);});
+}
+function catchOptions(v){return Object.keys(CATCH).map(function(k){return '<option value="'+k+'"'+(k===v?' selected':'')+'>'+CATCH[k]+'</option>';}).join('');}
+function renderSheet(){
+  fillSubjects();var rows=filtered(),h='';
+  rows.forEach(function(x){var L=x.L,r=x.r,a=' data-k="'+esc(x.k)+'" data-id="'+esc(x.id)+'"';
+    h+='<tr><td><input type="date" aria-label="Date"'+a+' data-f="L.date" value="'+esc(L.date)+'"></td>'+
+      '<td><input aria-label="Class code" maxlength="12"'+a+' data-f="L.cls" value="'+esc(L.cls)+'"></td>'+
+      '<td><input aria-label="Subject" maxlength="40"'+a+' data-f="L.subject" value="'+esc(L.subject)+'"></td>'+
+      '<td><textarea aria-label="Lesson objective" maxlength="240"'+a+' data-f="L.objective">'+esc(L.objective)+'</textarea></td>'+
+      '<td><textarea aria-label="Skill or content" maxlength="240"'+a+' data-f="L.skill">'+esc(L.skill)+'</textarea></td>'+
+      '<td class="num">Pupil '+x.n+'</td>'+
+      '<td><select aria-label="Result for pupil '+x.n+'" class="st-'+esc(r.result)+'"'+a+' data-f="r.result">'+resultOptions(r.result,false)+'</select></td>'+
+      '<td><textarea aria-label="Missed skill or content" maxlength="240"'+a+' data-f="r.missed">'+esc(r.missed)+'</textarea></td>'+
+      '<td><select aria-label="Catch-up"'+a+' data-f="r.catchup">'+catchOptions(r.catchup)+'</select></td>'+
+      '<td><textarea aria-label="Adaptive teaching note" maxlength="240"'+a+' data-f="r.note">'+esc(r.note)+'</textarea></td>'+
+      '<td class="noprint"><button type="button" class="danger" data-del="'+esc(x.k)+'" aria-label="Delete row for pupil '+x.n+'">Delete</button></td></tr>';});
+  $('sheet').querySelector('tbody').innerHTML=h||'<tr><td colspan="11">No rows yet. Add a lesson in tab 1.</td></tr>';
+  var total=Object.keys(S.rows).length,need=allRows().filter(function(x){return needs(x.r);}).length;
+  $('sheetCount').textContent='Showing '+rows.length+' of '+total+' rows. '+need+' need catch-up.';
+}
+['q-pupil','q-subject','q-result','q-need'].forEach(function(id){$(id).addEventListener('change',renderSheet);});
+$('sheet').addEventListener('change',function(e){
+  var el=e.target,f=el.getAttribute('data-f');if(!f)return;
+  var k=el.getAttribute('data-k'),id=el.getAttribute('data-id'),isL=f.indexOf('L.')===0,name=f.slice(2);
+  var obj=isL?S.lessons[id]:S.rows[k];if(!obj)return;
+  var v=el.tagName==='SELECT'||el.type==='date'?el.value:clean(el.value,name==='cls'?12:name==='subject'?40:240);
+  if(el.tagName!=='SELECT'&&el.type!=='date'&&nameHit(v)){say('Not saved. That text looks like it holds a name or initials saved on this device. Use the pupil number instead.','bad');el.value=obj[name]||'';return;}
+  if(name==='date'&&!v){el.value=obj.date;return;}
+  obj[name]=v;
+  if(name==='result'){var r=S.rows[k];r.catchup=defaultCatch(v);if((v==='absent'||v==='notyet')&&!r.missed)r.missed=S.lessons[id].skill||S.lessons[id].objective||'';if(v==='got')r.missed='';}
+  if(save()){say('Saved.');if(isL||name==='result')renderSheet();}
+});
+$('sheet').addEventListener('click',function(e){var k=e.target.getAttribute&&e.target.getAttribute('data-del');if(!k)return;if(!confirm('Delete this one row?'))return;var id=k.slice(0,k.lastIndexOf('|'));delete S.rows[k];var any=false;for(var q in S.rows)if(q.indexOf(id+'|')===0){any=true;break;}if(!any)delete S.lessons[id];save();renderSheet();});
+
+/* ---------- export ---------- */
+function flat(teacher,x){return {teacher:teacher,date:x.L.date,cls:x.L.cls,subject:x.L.subject,code:x.L.code||'',objective:x.L.objective,skill:x.L.skill,pupil:x.n,result:x.r.result,missed:x.r.missed,catchup:x.r.catchup,note:x.r.note};}
+function download(name,text,type){var b=new Blob([text],{type:type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},2000);}
+function cell(v){v=String(v==null?'':v);if(/^[=+\-@\t\r]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"';}
+function toCSV(rows,withTeacher){
+  var head=(withTeacher?['Teacher']:[]).concat(['Date','Class','Subject','Lesson code','Lesson objective','Skill or content','Pupil','Result','Missed (skill or content)','Catch-up','Adaptive teaching note']);
+  var lines=[head.map(cell).join(',')];
+  rows.forEach(function(r){var a=(withTeacher?[r.teacher]:[]).concat([r.date,r.cls,r.subject,r.code,r.objective,r.skill,'Pupil '+r.pupil,RESULTS[r.result]||'',r.missed,CATCH[r.catchup]||'',r.note]);lines.push(a.map(cell).join(','));});
+  return '﻿'+lines.join('\r\n')+'\r\n';
+}
+function tag(){return S.teacher.replace(/\s+/g,'_')+'_'+today();}
+$('csvMine').addEventListener('click',function(){var rows=filtered().map(function(x){return flat(S.teacher,x);});if(!rows.length){say('There are no rows showing to save.','bad');return;}download('Class_record_'+tag()+'.csv',toCSV(rows,false),'text/csv');say('Saved '+rows.length+' rows as a spreadsheet file.');});
+$('printMine').addEventListener('click',function(){window.print();});
+$('printCentral').addEventListener('click',function(){window.print();});
+$('shareFile').addEventListener('click',function(){
+  var rows=allRows().map(function(x){return flat(S.teacher,x);});if(!rows.length){say('There are no rows to share yet.','bad');return;}
+  download('Class_record_share_'+tag()+'.json',JSON.stringify({kind:'mbm_class_record_share',version:1,teacher:S.teacher,made:today(),rows:rows}),'application/json');
+  say('Share file saved with '+rows.length+' rows. It holds pupil numbers only. Put it in your school shared folder or hand it to whoever keeps the central sheet.');
+});
+
+/* ---------- central ---------- */
+var loaded=[]; /* rows from files */
+function validRow(r){return r&&typeof r==='object'&&+r.pupil>=1&&+r.pupil<=35&&RESULTS[r.result]!==undefined&&/^\d{4}-\d{2}-\d{2}$/.test(String(r.date||''));}
+$('combineFiles').addEventListener('change',function(){
+  var files=[].slice.call(this.files||[]);loaded=[];if(!files.length){renderCentral();return;}
+  var left=files.length,bad=0,blockedCount=0;
+  files.forEach(function(f){var rd=new FileReader();
+    rd.onload=function(){try{var d=JSON.parse(String(rd.result));if(!d||d.kind!=='mbm_class_record_share'||!Array.isArray(d.rows))throw 0;
+        var t=/^Teacher [1-9]\d?$/.test(String(d.teacher))?d.teacher:'Teacher ?';
+        d.rows.forEach(function(r){if(!validRow(r))return;var o={teacher:t,date:r.date,cls:clean(r.cls,12),subject:clean(r.subject,40),code:clean(r.code,30),objective:clean(r.objective),skill:clean(r.skill),pupil:+r.pupil,result:r.result,missed:clean(r.missed),catchup:CATCH[r.catchup]!==undefined?r.catchup:'',note:clean(r.note)};
+          if(nameHit([o.cls,o.subject,o.code,o.objective,o.skill,o.missed,o.note].join(' | '))){blockedCount++;return;}loaded.push(o);});
+      }catch(e){bad++;}done();};
+    rd.onerror=function(){bad++;done();};rd.readAsText(f);});
+  function done(){if(--left)return;renderCentral();
+    if(bad||blockedCount)say((bad?bad+' file'+(bad>1?'s were':' was')+' not a Class record share file and was left out. ':'')+(blockedCount?blockedCount+' rows were left out because they look like they hold a name saved on this device.':''),'bad');
+    else say('Combined '+files.length+' share file'+(files.length>1?'s':'')+'.');}
+});
+function centralRows(){
+  var rows=loaded.slice();
+  if($('includeMine').checked){var mine=allRows().map(function(x){return flat(S.teacher,x);});var has={};rows.forEach(function(r){has[sig(r)]=1;});mine.forEach(function(r){if(!has[sig(r)])rows.push(r);});}
+  var seen={},out=[];rows.forEach(function(r){var s=sig(r);if(seen[s])return;seen[s]=1;out.push(r);});
+  out.sort(function(a,b){return a.cls<b.cls?-1:a.cls>b.cls?1:a.pupil-b.pupil||(a.date<b.date?1:a.date>b.date?-1:0)||(a.teacher<b.teacher?-1:1);});return out;
+}
+function sig(r){return [r.teacher,r.date,r.cls,r.subject,r.code,r.objective,r.skill,r.pupil].join('\u0001');}
+function centralFiltered(){var p=$('c-pupil').value,t=$('c-teacher').value,nd=$('c-need').value;return centralRows().filter(function(r){return (!p||(r.cls+' · '+r.pupil)===p)&&(!t||r.teacher===t)&&(nd!=='need'||needs(r))&&(nd!=='notes'||r.note);});}
+function renderCentral(){
+  var all=centralRows(),ps={},ts={};all.forEach(function(r){ps[r.cls+' · '+r.pupil]=[r.cls,r.pupil];ts[r.teacher]=1;});
+  var cp=$('c-pupil').value,ct=$('c-teacher').value;
+  $('c-pupil').innerHTML='<option value="">All pupils</option>'+Object.keys(ps).sort(function(a,b){return ps[a][0]<ps[b][0]?-1:ps[a][0]>ps[b][0]?1:ps[a][1]-ps[b][1];}).map(function(k){return '<option value="'+esc(k)+'"'+(k===cp?' selected':'')+'>'+esc(ps[k][0])+' · Pupil '+ps[k][1]+'</option>';}).join('');
+  $('c-teacher').innerHTML='<option value="">All teachers</option>'+Object.keys(ts).sort().map(function(k){return '<option'+(k===ct?' selected':'')+'>'+esc(k)+'</option>';}).join('');
+  var rows=centralFiltered(),h='';
+  rows.forEach(function(r){h+='<tr><td>'+esc(r.teacher)+'</td><td>'+esc(r.date)+'</td><td>'+esc(r.cls)+'</td><td>'+esc(r.subject)+'</td><td>'+esc(r.objective)+'</td><td>'+esc(r.skill)+'</td><td class="num">Pupil '+r.pupil+'</td><td><span class="pill st-'+esc(r.result)+'">'+esc(RESULTS[r.result])+'</span></td><td>'+esc(r.missed)+'</td><td>'+esc(CATCH[r.catchup]||'')+'</td><td>'+esc(r.note)+'</td></tr>';});
+  $('central').querySelector('tbody').innerHTML=h||'<tr><td colspan="11">Nothing to show yet. Choose the share files above.</td></tr>';
+  $('centralCount').textContent='Showing '+rows.length+' of '+all.length+' rows from '+Object.keys(ts).length+' teacher'+(Object.keys(ts).length===1?'':'s')+'. '+all.filter(needs).length+' need catch-up.';
+}
+['c-pupil','c-teacher','c-need','includeMine'].forEach(function(id){$(id).addEventListener('change',renderCentral);});
+$('csvCentral').addEventListener('click',function(){var rows=centralFiltered();if(!rows.length){say('There are no rows showing to save.','bad');return;}download('Central_class_record_'+today()+'.csv',toCSV(rows,true),'text/csv');say('Saved '+rows.length+' rows as a spreadsheet file. Keep it on your school shared drive.');});
+
+/* ---------- set up and optional slots ---------- */
+function okURL(v){v=String(v||'').trim();if(!v)return '';try{var u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch(e){return null;}}
+function applySlots(){
+  var f=okURL(S.folder),a=okURL(S.assistant);
+  $('openFolder').hidden=!f;if(f)$('openFolder').href=f;else $('openFolder').removeAttribute('href');
+  $('assistantBox').hidden=!a;$('openAssistant').hidden=true;if(a)$('openAssistant').href=a;else $('openAssistant').removeAttribute('href');
+}
+function fillSetup(){
+  var h='';for(var i=1;i<=12;i++)h+='<option'+(S.teacher==='Teacher '+i?' selected':'')+'>Teacher '+i+'</option>';$('s-teacher').innerHTML=h;
+  $('s-size').value=S.size;$('s-class').value=S.classCode;$('s-folder').value=S.folder;$('s-assistant').value=S.assistant;
+  $('s-block').value=localStorage.getItem(BLOCK_KEY)||'';
+}
+$('saveSetup').addEventListener('click',function(){
+  var size=Math.round(+$('s-size').value);if(!(size>=1&&size<=35)){say('Class size must be from 1 to 35.','bad');return;}
+  var f=okURL($('s-folder').value),a=okURL($('s-assistant').value);
+  if(f===null||a===null){say('An address must start with https:// and hold no password. Leave it blank to keep the extra switched off.','bad');return;}
+  var cls=clean($('s-class').value,12)||'Class A';if(!guard([cls]))return;
+  S.teacher=$('s-teacher').value;S.size=size;S.classCode=cls;S.folder=f;S.assistant=a;
+  if(save()){say('Set up saved.');$('f-class').value=S.classCode;renderGrid();fillSubjects();applySlots();}
+});
+$('saveBlock').addEventListener('click',function(){try{localStorage.setItem(BLOCK_KEY,String($('s-block').value).slice(0,4000));say('Blocked words saved on this device.');}catch(e){say('This could not be saved.','bad');}});
+$('makePrompt').addEventListener('click',function(){
+  var rows=filtered().slice(0,120).map(function(x){return flat(S.teacher,x);});
+  if(!rows.length){say('There are no rows showing to build a prompt from.','bad');return;}
+  var t='You are helping a teacher plan catch-up and adaptive teaching. Pupils are numbers only. Do not ask for names.\n'+
+    'From the class record below: 1) group pupils who need the same skill or content again, 2) suggest one short catch-up task for each group, 3) suggest one adaptive teaching step for the next lesson. Keep it brief and practical.\n\nCLASS RECORD\n';
+  rows.forEach(function(r){t+='- '+r.date+' | '+r.cls+' | '+r.subject+' | objective: '+(r.objective||'not given')+' | skill: '+(r.skill||'not given')+' | Pupil '+r.pupil+' | '+RESULTS[r.result]+(r.missed?' | missed: '+r.missed:'')+(r.catchup?' | catch-up: '+CATCH[r.catchup]:'')+(r.note?' | note: '+r.note:'')+'\n';});
+  if(nameHit(t)){say('The prompt was not made because a row looks like it holds a name. Fix that row first.','bad');return;}
+  $('promptText').textContent=t;$('promptText').hidden=false;$('copyPrompt').hidden=false;
+});
+$('copyPrompt').addEventListener('click',function(){
+  var t=$('promptText').textContent;
+  function ok(){say('Prompt copied. Open your assistant and paste it in.');$('openAssistant').hidden=false;}
+  function fallback(){var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();var done=false;try{done=document.execCommand('copy');}catch(e){}ta.remove();if(done)ok();else say('Copy did not work here. Select the prompt text and copy it yourself.','bad');}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,fallback);else fallback();
+});
+
+/* ---------- backup ---------- */
+$('backup').addEventListener('click',function(){download('Class_record_backup_'+tag()+'.json',JSON.stringify({kind:'mbm_class_record_backup',version:1,data:S}),'application/json');say('Backup saved. Keep it somewhere private at school.');});
+$('restoreFile').addEventListener('change',function(){
+  var f=this.files&&this.files[0];if(!f)return;var rd=new FileReader(),inp=this;
+  rd.onload=function(){try{var d=JSON.parse(String(rd.result));if(!d||d.kind!=='mbm_class_record_backup'||!d.data||typeof d.data.lessons!=='object'||typeof d.data.rows!=='object')throw 0;
+      if(!confirm('Replace the Class record on this device with this backup?'))return;
+      var b=blank(),n=d.data;for(var k in b)if(n[k]===undefined)n[k]=b[k];
+      n.size=Math.min(35,Math.max(1,Math.round(+n.size)||13));n.teacher=/^Teacher ([1-9]|1[0-2])$/.test(n.teacher)?n.teacher:'Teacher 1';n.folder=okURL(n.folder)||'';n.assistant=okURL(n.assistant)||'';
+      S=n;if(save()){say('Backup restored.');init();}
+    }catch(e){say('That file is not a Class record backup.','bad');}inp.value='';};
+  rd.readAsText(f);
+});
+$('wipe').addEventListener('click',function(){if(!confirm('Clear every Class record row on this device? Save a backup first if you need one. This cannot be undone.'))return;var keep={teacher:S.teacher,size:S.size,classCode:S.classCode,folder:S.folder,assistant:S.assistant};S=blank();for(var k in keep)S[k]=keep[k];if(save()){say('Class record cleared on this device.');init();}});
+window.addEventListener('storage',function(e){if(e.key===KEY){var s=readJSON(KEY,null);if(s&&s.lessons&&s.rows){S=s;if(!$('p-sheet').hidden)renderSheet();if(!$('p-central').hidden)renderCentral();}}});
+
+function init(){
+  $('f-date').value=today();$('f-class').value=S.classCode;renderGrid();fillSubjects();fillSetup();applySlots();
+  var t='add';try{t=sessionStorage.getItem('mbm_cr_tab')||'add';}catch(e){}
+  if(location.hash==='#sheet')t='sheet';if(location.hash==='#central')t='central';if(TABS.indexOf(t)<0)t='add';show(t);
+}
+init();
+})();
+</script>
+</body>
+</html>
