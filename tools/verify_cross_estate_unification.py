@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "8e9b09d5f5cb290f98b56715113bb69b09b1c1019a5766e25389baf844754fcf"
+    "resources.json": "a1ccbc15328ec02fd7f296ef9adea0313754e706438c6c6e765d60284cd395a2"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -129,7 +129,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles_browser.cjs": "0c193780f901cf4d3b7013819a7488567bf7ce40a75d05dbe43c7a6971877344",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
         "tools/sw2/check_tokens_inert.cjs": "c45f009235c70d84a7e1ee8fc08fb0e6aa5e7efcc162714eff3c844cce68e9f1",
-        "assets/catalogue/lesson-order.json": "84e5ea06df7f255a4722882c24a0d7e4823b0065d32df13d11795c3588fc2a82",
+        "assets/catalogue/lesson-order.json": "fd335afd08cc376dfc23eb04ce7f9337529783bb38e04b073debcb6fec4c3086",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "daf4703a160678b9076ed3bc7487e841327162d237559356a01335a3051e3e3c",
@@ -153,7 +153,7 @@ CATALOGUE_PINS = {
         "assets/catalogue/lesson-navigation.js": "42e579bbef3940c24ca4360319290820305a777330b8bff79152b2cb6aa077e3",
         "assets/catalogue/science-shelf.css": "b2b1eb328662d841add139ccfff107f985f17373f1ee82b8762475663097ab60",
         "assets/catalogue/science-shelf.js": "a59fe0c988a5de7d614afc6a36d7dacf14c6e3fa92c732740442e4914d00f356",
-        "assets/catalogue/terms-and-styles.json": "f337fdccc859567031088aa0c58e65af12e688e1b8d0a587ff492196ba1ff490",
+        "assets/catalogue/terms-and-styles.json": "edd73ca1798174771b159dfd7f8420f6ee750c53e2136ae6925a00afed8d6c92",
         "assets/catalogue/science-shelf.json": "6bfcac8579a72f8413e158b49460a8b853f284b8dc64bd4da4442c37e92edadf",
         "assets/catalogue/humanities-shelf.json": "f0a730012b8ec6c0835b3220e17a9c482c025bd1e05ce469005cca5072d81af2",
         "tools/catalogue/build_catalogue.py": "249e82b795e0fa5f1eaeb7afd00883a963d63742b50b783fa88f808737ab230d",
@@ -173,7 +173,7 @@ CATALOGUE_PINS = {
         "Science/Build/START_HERE.html": "acac26140f5aeef22292e6ce3831fa61aaf5e62432cc3998b340918c8bfaee7f",
         "Science/Grow/START_HERE.html": "d2bec305dec3212215c6f599cad3925c571f9a34ca6e85268893c8ed142170dd",
         "Science/Launch/START_HERE.html": "10b46e7cf26e3aa4b7f1fb4758a039bcbec7000bc2ec8d30dfe3ce0e0b966353",
-        "tools/catalogue/SHELF_SELECTION.json": "41bb18d0025f45e919747d301bc627d2800f8e1ece41521eacd3d362387669ed",
+        "tools/catalogue/SHELF_SELECTION.json": "333a0edbf7d98219c32ece986ff7686a620abeec88f79b9647cfa17de2324078",
         "tools/catalogue/HUMANITIES_SELECTION.json": "2aac459b1d9b113a7b20caa005b050651e73087ed499ce91d4b501ad2c44d7db",
         "tools/easter/science_original_browser.cjs": "aae28a4166d41546cbe5b0acd0866eeaf5e6f47cd5b1949fc48ecb2d4c79a1ec",
         "tools/science_pack/browser_checks.cjs": "058c9bc1f06c876f2994a23d467d83fced683c6355eb92d0ef43986d3e28d72d",
@@ -247,7 +247,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "1a297ef028046f9bac5b920b50e591a799cb1f245c46dd31be5eac3b3cab35dc",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "29fdf1c9efe28e1310e2e2bfe3ec383120a735a7d15e065cb7d5e4e7f6e3f34f",
         "tools/catalogue/TERM_REVIEW.json": "202e6fb09a1b163114d806f085e4712f9bfde4d1a55a89fcef4392d24a366847",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -1363,7 +1363,7 @@ CATALOGUE_PINS = {
         "Science/Grow/v3_40min/SCI_G_W7A_The_Moon_Explore.html": "2b54a5399c6422873be70b5ab43ea271112f54ae1401d990705b19a2f75030b4",
         "Science/Grow/v3_40min/SCI_G_W7B_The_Moon_Do.html": "85c9c9c7d4a12fa67fe6a098960aef0e880a3b7bf217667e39dad570bac11ebc",
         "Science/Build/W8-W13_2026-27/SHA256SUMS.txt": "28c48fd2644c70cee9e36b95981c25b08f9bd5693c9f43a7f73138f113aecf04",
-        "data/chassis-census.json": "d7736ff1cedd825339a57b5a7b246e8668e1c975b3d5dfbaa41ad2be5ee4a048",
+        "data/chassis-census.json": "d37bf5f8cdcd6a975a0ca9700a94bc695b5790a9abdb1d385b98d7236c89c72d",
         "tools/downloads/definitions/launch-science-aut1-main.json": "b42288f072512eaa9e0e954a6927d1247640dfbf6daac31fcfec4b80b59cb0c6",
         "tools/launch_resources/lesson_acceptance.py": "bbebaeb821f32c04eb1b2e01e819795ffa97cd851f33d7c22fec0b0505a9fe21",
         "tools/easter/refresh_pack_checksums.py": "7248b8424c6435f3637a7e3414e38fbab9f67e6b2a0f6f34fc8a586dc4e9c126",
@@ -2153,6 +2153,20 @@ CATALOGUE_PINS = {
         "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SHA256SUMS.txt": "a93030ccf4007c432cdac237ce9a693ce851507017863695f7dc5ca69653a647",
         "Vocational/Build/Autumn_2_2026-27/SHA256SUMS.txt": "2643ae91aa146e131a03d38eb89b4f452b0fbd169440b9ee501f75428e2647b2",
         "Vocational/Launch/Autumn_2_2026-27/SHA256SUMS.txt": "ed3a712eb6d8e82e342421a4504da23359a1e0a9479591493d80c4ce9d8e0fc4",
+        "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W01/SCI_BUILD_A1_W01_P1.html": "3e5dcdcf156926fc33082f0f050fc0aa4a223ed0c75dad3f41eb34dde647466a",
+        "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W01/SCI_BUILD_A1_W01_P2.html": "0e953237e65f0854f5c5498396456951019dadd3ebbae38c1bce0bd3098d65ab",
+        "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W02/SCI_BUILD_A1_W02_P1.html": "6cdf18b92730470245c39b1b1658f0e9e61496aff52a97f320eca9634f6690cb",
+        "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W02/SCI_BUILD_A1_W02_P2.html": "38596a5f915ba02164fa6bca75ed6841cf2f8d4551f4437b57ca68ac0f3a240c",
+        "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W01/GROW_SCI_A1_W01_P1.html": "1acf933d214b928ef285f043befea5164093e4004afcc2673a4c5d9389e96434",
+        "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W01/GROW_SCI_A1_W01_P2.html": "5c786887fb142c298011f3ffa187adef648ed8b7d7ab33d2fa7262c93f580da7",
+        "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W02/GROW_SCI_A1_W02_P1.html": "d1f1fcb9a959fd0a8e63d4610fafc6910f7da8be856505526ed3c5130f9b6905",
+        "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W02/GROW_SCI_A1_W02_P2.html": "d102e2f25476c037f15df02c2941fcc75eee701c5bcbfa2f59cb4fadac2e5739",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W01/SCI_LAUNCH_A1_W01_L1.html": "d5f38d013021428d3772811a804166207aa34f8319d0a4fa3dc4d47249357423",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W01/SCI_LAUNCH_A1_W01_L2.html": "765286b4a1a0d4de2eb34284d64c0927fdb75201d783bb5ae4e17e81f3d1b04b",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W01/SCI_LAUNCH_A1_W01_L3.html": "432f3cbcab97db6602c5354ca36c6d627a2da041b56e254d1f2a7eba65dfc591",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W02/SCI_LAUNCH_A1_W02_L1.html": "44f9e0ef89d2687a758171b892c15d6128a69544f74f71bdc3021188774cc29e",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W02/SCI_LAUNCH_A1_W02_L2.html": "3371a608131a0ce4edfff69f1277e0481e5070db5b5be4c718211cd9d191e9db",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W02/SCI_LAUNCH_A1_W02_L3.html": "a5b3fd5ba3fcd9c21038e5e777c4033d5b347ed7abdc290d2e0d8fe9f556b9af",
         "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/SCI_BUILD_A1_W03_P1.html": "a1ea735c137394ac47659266f7fef2e7cf8ab5104451cd5fecdbeac49b927ea5",
         "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/SCI_BUILD_A1_W03_P2.html": "1c2ba5c8beeccf78706306f31e1e83f5d49e644c86c08882cd5d9a1f7d2cb7e8",
         "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W04/SCI_BUILD_A1_W04_P1.html": "6f778ecaab90f3fce4f6f4bb79ddff51f90ab8b0d9f0fbe7ba9dddd01285d2ae",
@@ -3499,7 +3513,7 @@ CATALOGUE_ORIGINAL_ROWS_SHA256 = "15150552200dcf96089afd27ec81b5712a63aef929d07e
 # digest below are re-cut by tools/catalogue/pin_catalogue_contract.py from
 # rows it has verified against that derivation; an edit to any appended row,
 # a removed pack row or an extra lesson row still reds here.
-CATALOGUE_SHELF_ROWS = 706
+CATALOGUE_SHELF_ROWS = 720
 # UX2 A1: keys that may be appended to an original row without moving its
 # digest (see catalogue_errors). Nothing else is additive. No original row
 # carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
@@ -3509,7 +3523,8 @@ CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
 # Re-cut 2026-11-17 (ruling thread, ruling A and the Week 8 goal rule): 15 reviewed rows return at their earlier place, same ids as reviewed in 26ec786d (a1aaa-sci-launch-a1-w03-l1-microscopy-and-total-magnification, a1aaa-sci-launch-a1-w03-l2-calculating-magnification-and-unit-conversions, a1aaa-sci-launch-a1-w03-l3-magnification-exam-questions-and-scale-bar-lab, a1aaa-sci-launch-a1-w04-l1-diffusion-net-movement-down-a-concentration-gradient, a1aaa-sci-launch-a1-w04-l2-diffusion-in-the-lungs-alveoli-adaptations-and-testing-breat, a1aaa-sci-launch-a1-w04-l3-explaining-diffusion-in-the-exam-causal-chains-and-command-w, a1aaa-sci-launch-a1-w05-l1-osmosis-net-movement-of-water-across-a-partially-permeable-m, a1aaa-sci-launch-a1-w05-l2-osmosis-core-practical-potato-cylinders-and-percentage-chang, a1aaa-sci-launch-a1-w05-l3-analysing-and-evaluating-the-osmosis-practical-zero-crossing, a1aaa-sci-launch-a1-w06-l1-active-transport-moving-particles-against-a-concentration-gr, a1aaa-sci-launch-a1-w06-l2-active-transport-in-root-hair-cells-and-the-gut-adaptations-, a1aaa-sci-launch-a1-w06-l3-comparing-diffusion-osmosis-and-active-transport-decision-la, a1aaa-sci-launch-a1-w07-l1-topic-1-knowledge-round-up-connecting-microscopy-diffusion-o, a1aaa-sci-launch-a1-w07-l2-decoding-gcse-command-words-across-topic-1-describe-explain-, a1aaa-sci-launch-a1-w07-l3-topic-1-independent-exam-practice-feedback-repair-microscopy), and one appended row, dy4-sci-build-a1-w08-p2-show-what-you-know-about-body-science, one field, its desc, now carries the learning goal its page states word for word; no other row added, removed, reordered or edited (with the 15 dropped and that desc put back the 656 rows digest to cd22ca8f). Previous count 656, previous digest cd22ca8f.
 # Re-cut 2026-11-17 (ruling thread, "R-RAISE for Autumn 1", on the owner's standing word of 2026-11-16): 21 reviewed rows for the RE Autumn 1 pack lessons of weeks 1 to 7 rebuilt on the Week 8 model page are added straight before the Autumn 2 block (a1-re-build-w01-special-things-and-why-they-matter, a1-re-build-w02-special-books-and-places, a1-re-build-w03-a-story-of-belonging, a1-re-build-w04-respecting-special-objects, a1-re-build-w05-similarities-between-beliefs, a1-re-build-w06-belonging-and-peace, a1-re-build-w07-sharing-something-special, a1-re-grow-w01-beliefs-and-worldviews-in-our-community, a1-re-grow-w02-how-beliefs-shape-identity, a1-re-grow-w03-diwali-festival-story-and-meaning, a1-re-grow-w04-hanukkah-and-the-theme-of-light, a1-re-grow-w05-christmas-and-christian-belief, a1-re-grow-w06-comparing-festivals-of-light, a1-re-grow-w07-remembrance-and-shared-values, a1-re-launch-w01-belief-identity-and-belonging-in-adult-life, a1-re-launch-w02-key-beliefs-across-two-worldviews, a1-re-launch-w03-sources-of-authority-and-meaning, a1-re-launch-w04-festivals-shared-values-and-the-day-of-peac, a1-re-launch-w05-a-structured-explain-response, a1-re-launch-w06-remembrance-and-peace-across-beliefs, a1-re-launch-w07-belief-and-identity-assessment); no other row added, removed, reordered or edited (with the 21 dropped the 671 rows digest to ee87b6d2). Previous count 671, previous digest ee87b6d2.
 # Re-cut 2026-11-17 (ruling thread, "R-RAISE for Autumn 1", on the owner's standing word of 2026-11-16): 14 reviewed rows for the Humanities Autumn 1 pack lessons of weeks 1 to 7 rebuilt on the Week 8 model page are added straight before the Autumn 2 block (a1-humanities-grow-w01-time-detectives, a1-humanities-grow-w02-source-detectives, a1-humanities-grow-w03-cause-and-consequence, a1-humanities-grow-w04-people-who-shaped-the-country, a1-humanities-grow-w05-how-big-a-deal, a1-humanities-grow-w06-plan-the-account, a1-humanities-grow-w07-write-the-account, a1-humanities-launch-w01-source-investigation, a1-humanities-launch-w02-cause-and-consequence-courtroom, a1-humanities-launch-w03-archive-nature-origin-and-purpose, a1-humanities-launch-w04-century-of-change, a1-humanities-launch-w05-people-and-social-change, a1-humanities-launch-w06-structured-account, a1-humanities-launch-w07-source-assessment); no other row added, removed, reordered or edited (with the 14 dropped the 692 rows digest to 3ddb2312). Previous count 692, previous digest 3ddb2312.
-CATALOGUE_SHELF_ROWS_SHA256 = "a34ff73a829f0f30338d7476dcd784ee449846630968b387a3c04321966df185"
+# Re-cut 2026-11-17 (ruling thread, group D pilot, on the owner's standing word of 2026-11-16): 14 reviewed rows for the Science Autumn 1 lessons are added as new listed pages (a1list-sci-build-a1-w01-p1-what-can-i-show-about-bones-and-moves-part-1, a1list-sci-build-a1-w01-p2-what-can-i-show-about-food-part-2, a1list-sci-build-a1-w02-p1-what-else-can-i-show-about-bones-and-moves-pa, a1list-sci-build-a1-w02-p2-what-else-can-i-show-about-food-and-feeding-p, a1list-sci-grow-a1-w01-p1-forces-machines-and-fair-tests-part-1, a1list-sci-grow-a1-w01-p2-earth-planets-and-the-moon-part-2, a1list-sci-grow-a1-w02-p1-what-else-can-i-show-about-forces-and-tests-pa, a1list-sci-grow-a1-w02-p2-what-else-can-i-show-about-space-models-part-2, a1list-sci-launch-a1-w01-l1-cells-images-and-scale, a1list-sci-launch-a1-w01-l2-movement-into-and-out-of-cells, a1list-sci-launch-a1-w01-l3-enzymes-investigations-and-evidence, a1list-sci-launch-a1-w02-l1-cells-and-scale-further-baseline-evidence, a1list-sci-launch-a1-w02-l2-cell-transport-further-baseline-evidence, a1list-sci-launch-a1-w02-l3-enzymes-and-results-further-baseline-evidenc); no other row added, removed, reordered or edited (with the 14 dropped the 706 rows digest to a34ff73a). Previous count 706, previous digest a34ff73a.
+CATALOGUE_SHELF_ROWS_SHA256 = "e86b77835ccda33d5c450977881a8ed8d027ed0fc2a57e0e9d524eb634ac81d8"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
