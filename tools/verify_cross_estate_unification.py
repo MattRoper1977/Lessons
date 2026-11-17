@@ -3455,7 +3455,8 @@ CATALOGUE_SHELF_ROWS = 656
 # second set is empty and the allowance cannot launder a pre-existing value.
 CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
-CATALOGUE_SHELF_ROWS_SHA256 = "cd22ca8f715d235513d101e3705336111985fd2f1034a304d0efe2e6df11fe3a"
+# Re-cut 2026-11-17 (ruling thread, Week 8 goal rule): one appended row, dy4-sci-build-a1-w08-p2-show-what-you-know-about-body-science, one field, its desc, now carries the learning goal its page states word for word; no row added, removed or reordered and no other value edited (with that desc put back the rows digest to cd22ca8f). Previous digest cd22ca8f.
+CATALOGUE_SHELF_ROWS_SHA256 = "ef3b4cfe65efb3c7672729ba1803c814e047177458029d5e00f4cc6df7834690"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
