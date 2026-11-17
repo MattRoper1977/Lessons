@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "b06025567c3b70b602ce5cc15af715d3290d7732c88857c1112f359370d716a7"
+    "resources.json": "bbc64019d199f2843644af356232f7605625cde37070f6cb6d0c265265f3a3f3"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -129,7 +129,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles_browser.cjs": "0c193780f901cf4d3b7013819a7488567bf7ce40a75d05dbe43c7a6971877344",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
         "tools/sw2/check_tokens_inert.cjs": "c45f009235c70d84a7e1ee8fc08fb0e6aa5e7efcc162714eff3c844cce68e9f1",
-        "assets/catalogue/lesson-order.json": "8ed4a8f96bf7985acc074abbc02a1f18690f1612cb2da504171bd59385ecd5ba",
+        "assets/catalogue/lesson-order.json": "479c87053b2bc9f2c85a7f2d6cbe48a513eaf94d9ba5620d6d4ffdf92b8ebd66",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "daf4703a160678b9076ed3bc7487e841327162d237559356a01335a3051e3e3c",
@@ -153,7 +153,7 @@ CATALOGUE_PINS = {
         "assets/catalogue/lesson-navigation.js": "42e579bbef3940c24ca4360319290820305a777330b8bff79152b2cb6aa077e3",
         "assets/catalogue/science-shelf.css": "b2b1eb328662d841add139ccfff107f985f17373f1ee82b8762475663097ab60",
         "assets/catalogue/science-shelf.js": "a59fe0c988a5de7d614afc6a36d7dacf14c6e3fa92c732740442e4914d00f356",
-        "assets/catalogue/terms-and-styles.json": "d2d3e3a85eafe14ed8b114f26a19fa19854c33fbddf4fa9aa227bbb8305c14c3",
+        "assets/catalogue/terms-and-styles.json": "eab16b37b97ee394c76fdeb03429e376b7a6d85c21ef9a0764dec3201ec3b6c1",
         "assets/catalogue/science-shelf.json": "6bfcac8579a72f8413e158b49460a8b853f284b8dc64bd4da4442c37e92edadf",
         "assets/catalogue/humanities-shelf.json": "d755c471c2116ebc973f3446e2521e2db658008cdd83d551e753326b71a9039d",
         "tools/catalogue/build_catalogue.py": "249e82b795e0fa5f1eaeb7afd00883a963d63742b50b783fa88f808737ab230d",
@@ -173,7 +173,7 @@ CATALOGUE_PINS = {
         "Science/Build/START_HERE.html": "acac26140f5aeef22292e6ce3831fa61aaf5e62432cc3998b340918c8bfaee7f",
         "Science/Grow/START_HERE.html": "d2bec305dec3212215c6f599cad3925c571f9a34ca6e85268893c8ed142170dd",
         "Science/Launch/START_HERE.html": "10b46e7cf26e3aa4b7f1fb4758a039bcbec7000bc2ec8d30dfe3ce0e0b966353",
-        "tools/catalogue/SHELF_SELECTION.json": "7cd1fde39dcce60d60bb98571e469dd2f1716ab7c8e2254a306c997341f90419",
+        "tools/catalogue/SHELF_SELECTION.json": "5981d890b91d8695ddd257677cca58cf06a0a607ae5cf4501e55268d1b34e245",
         "tools/catalogue/HUMANITIES_SELECTION.json": "8bc58e21f2a3483d97eaf64dbfdc1bbbfeb3599b6bc0693377800a0054fcdf0f",
         "tools/easter/science_original_browser.cjs": "aae28a4166d41546cbe5b0acd0866eeaf5e6f47cd5b1949fc48ecb2d4c79a1ec",
         "tools/science_pack/browser_checks.cjs": "058c9bc1f06c876f2994a23d467d83fced683c6355eb92d0ef43986d3e28d72d",
@@ -235,7 +235,7 @@ CATALOGUE_PINS = {
         "Science/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html": "178c695fe2dc166a80abfd26e41174e28ecfa39d4700db0870d7ee27bbffd6e8",
         "Science/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html": "509f38056bd09e903c70b0426ac55ab7ff73f7da10261a97eec11d49d7b27d1c",
         ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
-        "_glv3/tools/verify_change_boundary.py": "2dab31c173bbac4632babfaf7adf7e3e590d6a964799bada3924035a02184f84",
+        "_glv3/tools/verify_change_boundary.py": "60319493ac21320b45c463998cdb4a87898833fd386646fa7497b816a379dd47",
         "_glv3/tools/browser_verify.mjs": "737ad30f297e061407161743f017614179cc6c56f1c9a3904bbe7c98df38c888",
         "_glv3/tools/chip_gate.mjs": "6e5d07c0c4a4855442c09c4c6ae259acfbbe123c8bbb9e643eb21c980c562a67",
         "_glv3/tools/catalogue_membership.mjs": "4d7ab03e23ee0d3c3fc934f4f0a901afc61169754db099f4f5c24dd9cce058ec",
@@ -247,7 +247,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "484bcae801082b4eae9c6ae554dc7573f81f8ee40cc03c950f951bbac78b12c5",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "d6930666be9bc4971e771e49a7bfb11774b9452fee289f8c30f337f5c23f71f0",
         "tools/catalogue/TERM_REVIEW.json": "202e6fb09a1b163114d806f085e4712f9bfde4d1a55a89fcef4392d24a366847",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -594,7 +594,7 @@ CATALOGUE_PINS = {
         "Science/Launch/Autumn2_W7_2026-27/SHA256SUMS.txt": "c03b36ddb50b9d4e626a13c67c33f7d399f6f8d9e94a94133b1efcb42af9bdd2",
         "Science/Launch/W14-W15_2026-27/SHA256SUMS.txt": "0bb93ca935491473b9df0d0f5605f3ea67057c6a00eb78c4925e154b71c8d5eb",
         "Science/Launch/W8-W13_2026-27/SHA256SUMS.txt": "e8c3db8150760d44c9dbac0472200ac8b4043771db89c92dd5665a0232a5c1e1",
-        "tools/catalogue/SCIENCE_CHASSIS_CENSUS.json": "896e8a11e284d3f6fcd551cff65a6f433314be857c2e3c2c2bd4ae42180a2579",
+        "tools/catalogue/SCIENCE_CHASSIS_CENSUS.json": "d8705906a9bb998d10f31ef9897fc94e0e9e5f071717e4ae0ebd649f45051b0e",
         "tools/rx3_recommended.py": "5f3d591ecc376f43ed82b4f759155df5fdc85ba315bd9e60c11439cf92c564d7",
         "tools/catalogue/check_title_slide.py": "49815bce6b54d97aed864e403d10bd49d19d886bf5a39cbe7583375ee47ab77e",
         "tools/catalogue/title_slide.py": "3e4e7e8dfa590f3e0a8e24f49939edd9be2d59e4f955aea0935caa003f104788",
@@ -1363,7 +1363,7 @@ CATALOGUE_PINS = {
         "Science/Grow/v3_40min/SCI_G_W7A_The_Moon_Explore.html": "2b54a5399c6422873be70b5ab43ea271112f54ae1401d990705b19a2f75030b4",
         "Science/Grow/v3_40min/SCI_G_W7B_The_Moon_Do.html": "85c9c9c7d4a12fa67fe6a098960aef0e880a3b7bf217667e39dad570bac11ebc",
         "Science/Build/W8-W13_2026-27/SHA256SUMS.txt": "28c48fd2644c70cee9e36b95981c25b08f9bd5693c9f43a7f73138f113aecf04",
-        "data/chassis-census.json": "78a1ec2999e5f4af0ad446d30c4b8ee7a58e63416df86e2cf13ff19a27831548",
+        "data/chassis-census.json": "d7736ff1cedd825339a57b5a7b246e8668e1c975b3d5dfbaa41ad2be5ee4a048",
         "tools/downloads/definitions/launch-science-aut1-main.json": "b42288f072512eaa9e0e954a6927d1247640dfbf6daac31fcfec4b80b59cb0c6",
         "tools/launch_resources/lesson_acceptance.py": "bbebaeb821f32c04eb1b2e01e819795ffa97cd851f33d7c22fec0b0505a9fe21",
         "tools/easter/refresh_pack_checksums.py": "7248b8424c6435f3637a7e3414e38fbab9f67e6b2a0f6f34fc8a586dc4e9c126",
@@ -1394,7 +1394,7 @@ CATALOGUE_PINS = {
         "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1_Knowledge_Organiser.pdf": "21267a597ce2579b2850547acf74baba4bfaf554a48c4818d3f2107018232973",
         "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1_Pupil_Resources.pdf": "9d71b77d7521ea2025f43f9ea8213a1a4313015ef4eaa6ecc080308f4f456c13",
         "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1_Word_Page.pdf": "853bb9327e38312513f7e79bc0ed10b6bdecd0ae0cb201d1793bc87a184320a6",
-        "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2.html": "8faa8a56aafff866969f8c3ac448479bf982770914c3b12374a87639fe78837e",
+        "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2.html": "f214e7c79ddd8a404472450684f8ec4ad57fd1175862b6fce783defc5fb9c625",
         "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2_Editable_Pack.docx": "5aaf766e14a746497f3c98307e33613d3a75328a63fdf28ce6e58938b1db5612",
         "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2_Knowledge_Organiser.pdf": "d4df2abc39a9d292d21478ee0c3aeb0455d247810b3117bc1b3cac28c0f22765",
         "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2_Pupil_Resources.pdf": "5092013b135085f18d15969eb71973c4ea13743f30d8cb5cf3311078d10707ab",
@@ -1415,20 +1415,20 @@ CATALOGUE_PINS = {
         "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2_TA_Brief.pdf": "a38d1ff54044ade0b490632902235be875a8054ea7b9389f6f2f5cc0d7f5e99c",
         "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2_Word_Page.pdf": "f607ba492ec7241b4b960c46df721bd016f9db5a41a656769de272c0767f9072",
         "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1.html": "a1aa50aebb1e11abe59435a1b2c552d3a968ea65e59b08c0860a675981b7e084",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1.html": "bbad38953184059cf55a6484eda364d583688b0f747308d6f7e581424c61df8e",
         "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Editable_Pack.docx": "3819492eb5e69f6272c9bdf8d6b67ad505c403ff6d12126c6aa89bcb94353061",
         "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Knowledge_Organiser.pdf": "0be94a336b15aa90ff2d8ad6bd083c50a594b0772b2c34f40e0733210f9c8359",
         "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Pupil_Resources.pdf": "90d96ae7c9db767121ad2bd02b32e9e9a6d0bc27c881a6dd6c251f0f9717ffa5",
         "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_TA_Brief.pdf": "2529ab39a331969e9ce36ef52a7cdfc647c542df3733060a57af63ae8753bad7",
         "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Teacher_Notes.pdf": "72259decc5cb72726fd63678ce1e9fb74f0c4bb2da4102a395e7a3c67ee79757",
         "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1_Word_Page.pdf": "07394707d6fe82e4e615c89edb7ec1ee00291bf673a13a3be9705b5101adead7",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2.html": "51b1e3023d8608535857da9080c9517f5f7f90003e8eb9f939cadd196f87b9f6",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2.html": "f55198e7f9f28e5018c43773f7d3681347e8786ce7b8d72a27b898d9087efaa1",
         "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_Editable_Pack.docx": "1c12f4ad7e2152933c37835dea88b7bb667ec94517711d9ab48298b845c74639",
         "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_Knowledge_Organiser.pdf": "6828774324b31e15096930f9404a0a52332b12ae0145f51d55d60ac0ec252a2d",
         "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_Pupil_Resources.pdf": "0c7803325256e2e7c21537a375b6d01247c61b1948a9b272562a36cf2b020207",
         "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_TA_Brief.pdf": "3f00e2f8c8d16c407ef4f919037cf1819a12fcdf1161b3b17fc0dcf278eb835f",
         "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2_Word_Page.pdf": "5ff5abc72687a32b07926ebde0301cabb4cd9822a12cb2c962ef22cfb149ad5c",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3.html": "398c2c468645987d24ecc8ea825ef87e7fee1e3e273588bda90f6b0259b53adb",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3.html": "ef3b82d30197a79812cfdad8647bea9e854c8797081306b552574b36b528abb4",
         "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_Editable_Pack.docx": "e55f161c21cd21afae8a4144c96a826c11b6ead745e28670113eed616241af3e",
         "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_Knowledge_Organiser.pdf": "187ba3e37c2eba48733072546e10d6efdcd9eac0f72be30c82f905c65b4dddbd",
         "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3_Pupil_Resources.pdf": "5bac2399679393f5675372c714ca52fb0575963d886231477b998c25699eba5c",
@@ -2118,10 +2118,10 @@ CATALOGUE_PINS = {
         "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SHA256SUMS.txt": "a93030ccf4007c432cdac237ce9a693ce851507017863695f7dc5ca69653a647",
         "Vocational/Build/Autumn_2_2026-27/SHA256SUMS.txt": "2643ae91aa146e131a03d38eb89b4f452b0fbd169440b9ee501f75428e2647b2",
         "Vocational/Launch/Autumn_2_2026-27/SHA256SUMS.txt": "ed3a712eb6d8e82e342421a4504da23359a1e0a9479591493d80c4ce9d8e0fc4",
-        "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/SCI_BUILD_A1_W03_P1.html": "8382b7864fdda9e6d396b1a349a07580f86bdd1bbb850644bc33b11d4fc5bea7",
-        "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/SCI_BUILD_A1_W03_P2.html": "525193f04c55c71db0fac8be29db883eeebf3c7584ed334816149aab6daf29e5",
-        "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W04/SCI_BUILD_A1_W04_P1.html": "c0d07c2781dfb04d4fd4db46f6d8961cb1915259c244a00e767c96f6b6f24b0a",
-        "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W04/SCI_BUILD_A1_W04_P2.html": "ab1d5db5f72835e7413cd704b06e50b9dc83afd048b924f152f482c58f21072a",
+        "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/SCI_BUILD_A1_W03_P1.html": "a1ea735c137394ac47659266f7fef2e7cf8ab5104451cd5fecdbeac49b927ea5",
+        "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/SCI_BUILD_A1_W03_P2.html": "1c2ba5c8beeccf78706306f31e1e83f5d49e644c86c08882cd5d9a1f7d2cb7e8",
+        "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W04/SCI_BUILD_A1_W04_P1.html": "6f778ecaab90f3fce4f6f4bb79ddff51f90ab8b0d9f0fbe7ba9dddd01285d2ae",
+        "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W04/SCI_BUILD_A1_W04_P2.html": "d1f0d81bbb82b4cae71a8bcd561ec7860687ebf542cfb16823febe2e29b9cb07",
         "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W05/SCI_BUILD_A1_W05_P1.html": "e34516aeb587fde21768ff65a0bfab23157d28f92dd63a5bf4faede8ad1d4081",
         "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W05/SCI_BUILD_A1_W05_P2.html": "03b8891c8996b08e563f5b4bf23350ccd60bf0f2a9e9f01f8d7e6c84a0b1874f",
         "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W06/SCI_BUILD_A1_W06_P1.html": "8a73396bf3593668f871ea6f71792ed252a24802635012d243b4b41a199dd322",
@@ -2138,21 +2138,21 @@ CATALOGUE_PINS = {
         "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W06/GROW_SCI_A1_W06_P2.html": "d1a5a31598029cce24d4175e662334b8f7a4d68a2e6c0b7e87076bdcca99f476",
         "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W07/GROW_SCI_A1_W07_P1.html": "f8ca2b08e2a9722c2c0134f65c973973936354e1ce17c414e29c32f4fb7a1c80",
         "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W07/GROW_SCI_A1_W07_P2.html": "9ab2b55523d5f81529fe9584461e25ca45cee6e11098ea3b8a9da08af7ab519d",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W03/SCI_LAUNCH_A1_W03_L1.html": "62cef91239e568f6ee59416f74959ee113ed962cd87b98f46b7091d80c951b76",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W03/SCI_LAUNCH_A1_W03_L2.html": "3eb3cc047637bdaaf862fd551c47aff6ed5337763b15c9a6d184984535a1ffe8",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W03/SCI_LAUNCH_A1_W03_L3.html": "52965155e8e1aade87dba568cb5c9df6a06d8e2d895aa4280e23255ac78577b4",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W04/SCI_LAUNCH_A1_W04_L1.html": "030e1330eccda6dd09c977c91133444bec7ea4f3c09d701e2a3b5be186d99950",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W04/SCI_LAUNCH_A1_W04_L2.html": "e4efb4836be78c598ffab14b763481838486e4a753b3e43342a78585f8b3ea58",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W04/SCI_LAUNCH_A1_W04_L3.html": "a18bc24efd92d9e15fcb6957563617fbb5ae894be73b8318d0edfc47012dd8b9",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W05/SCI_LAUNCH_A1_W05_L1.html": "f5887f24c08139760e5e51da70a1fa9d2c46dd734bcba34232fec25636d6906f",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W05/SCI_LAUNCH_A1_W05_L2.html": "3a29379ce54d9abe9c5d20c85d06ee4bb277f1df173e3989b62d4bcfabb615ec",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W05/SCI_LAUNCH_A1_W05_L3.html": "240e637dceda5750e1118c63648016ac30579bbebd341b1f9be563f059466c33",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W06/SCI_LAUNCH_A1_W06_L1.html": "b567e903e3f56acbbbe4dd3ac41691e0c87652f5b57a196fd58a094b13628179",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W06/SCI_LAUNCH_A1_W06_L2.html": "a8c7d4814b2515666c32b9b408044de97b40c97786418f6e0108880e6eef9588",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W06/SCI_LAUNCH_A1_W06_L3.html": "231d6c051d68499780d2da97e1555e36826815ab5773d1bd0529edbc3ba3baa3",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W07/SCI_LAUNCH_A1_W07_L1.html": "0a5dc897e3f95b109503b43a2527bfe5e0e9cbb6ceeccea69d26177e0c483be8",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W07/SCI_LAUNCH_A1_W07_L2.html": "3042487370f645e78941eb7f227b83e1c7cd25dba349766399dff54637f17f90",
-        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W07/SCI_LAUNCH_A1_W07_L3.html": "24d9085b2e9d25bc3b8e53ddcc9bfb618c838693a9b69ac4d7d4ad91445f93e4",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W03/SCI_LAUNCH_A1_W03_L1.html": "c85514d08432f906629e311f7ed0a425a489aaf9e428b413538dbe9e5526dd79",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W03/SCI_LAUNCH_A1_W03_L2.html": "f93828d5a0afc7608d79fb2c4ac31e00a3642686d12dac16a8c7581edc6be11c",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W03/SCI_LAUNCH_A1_W03_L3.html": "9e4bfc7d10a5eff72aa5225fd4694c3c0b48c2dc6b7d6f25f039721c6dff0f4d",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W04/SCI_LAUNCH_A1_W04_L1.html": "8327d6b242ed8c6935b873ca8dab6edfbbb75a5574712b79dd76caefc16b916d",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W04/SCI_LAUNCH_A1_W04_L2.html": "1cf907d5cae7e42acb218e79231d14cc7590d9b97cf2fd4f852821cd5484f949",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W04/SCI_LAUNCH_A1_W04_L3.html": "d24545d97070047307ec39f49b2f25508e0eacf94faf19b09fae520525de941e",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W05/SCI_LAUNCH_A1_W05_L1.html": "7cdc108e3a973edc6fcd1bab707220c1a87748959fee120af10c42b10c916887",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W05/SCI_LAUNCH_A1_W05_L2.html": "f03772b641a6d3ee02755f66278f9044a6c320e81c77bd410bb6b4ee88aa3fc6",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W05/SCI_LAUNCH_A1_W05_L3.html": "9c536650d6a337720a8f160b68061534757e1e679b4266d3a973d3fb3c16fce3",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W06/SCI_LAUNCH_A1_W06_L1.html": "9a9e27501bcf3e6f7de3df9ada703a76ad466ecaf6acc4b2f304cc209291bda9",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W06/SCI_LAUNCH_A1_W06_L2.html": "134e2defeeabc454cdcfd0162587d928d6edfb0b5777c8763317a8fe46a133cc",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W06/SCI_LAUNCH_A1_W06_L3.html": "7c05fadf5d6de0f18445fec82f26cc98d0baa8b10d459bfbb7e8b599253d3bf8",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W07/SCI_LAUNCH_A1_W07_L1.html": "64830b0f2c060410705616fa62146495d219b14962dfda5787f7c4d9ad176ef5",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W07/SCI_LAUNCH_A1_W07_L2.html": "acd8b67db86054e24e1242756a7e9992323ca3e25ef6aa4c00b8b18895729f9d",
+        "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W07/SCI_LAUNCH_A1_W07_L3.html": "256f7170e54778afdcd4066c42971ed4bc47c516f8fce3a7ed95da7f33a55d65",
         "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
         "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W04/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
         "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W05/approved-mark.jpg": "f1095531d88d17f20c7464c62887703321a0872f108d3fb78a4afc0226dac2a7",
@@ -3448,14 +3448,15 @@ CATALOGUE_ORIGINAL_ROWS_SHA256 = "15150552200dcf96089afd27ec81b5712a63aef929d07e
 # digest below are re-cut by tools/catalogue/pin_catalogue_contract.py from
 # rows it has verified against that derivation; an edit to any appended row,
 # a removed pack row or an extra lesson row still reds here.
-CATALOGUE_SHELF_ROWS = 656
+CATALOGUE_SHELF_ROWS = 671
 # UX2 A1: keys that may be appended to an original row without moving its
 # digest (see catalogue_errors). Nothing else is additive. No original row
 # carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
 # second set is empty and the allowance cannot launder a pre-existing value.
 CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
-CATALOGUE_SHELF_ROWS_SHA256 = "cd22ca8f715d235513d101e3705336111985fd2f1034a304d0efe2e6df11fe3a"
+# Re-cut 2026-11-17 (ruling thread, ruling A and the Week 8 goal rule): 15 reviewed rows return at their earlier place, same ids as reviewed in 26ec786d (a1aaa-sci-launch-a1-w03-l1-microscopy-and-total-magnification, a1aaa-sci-launch-a1-w03-l2-calculating-magnification-and-unit-conversions, a1aaa-sci-launch-a1-w03-l3-magnification-exam-questions-and-scale-bar-lab, a1aaa-sci-launch-a1-w04-l1-diffusion-net-movement-down-a-concentration-gradient, a1aaa-sci-launch-a1-w04-l2-diffusion-in-the-lungs-alveoli-adaptations-and-testing-breat, a1aaa-sci-launch-a1-w04-l3-explaining-diffusion-in-the-exam-causal-chains-and-command-w, a1aaa-sci-launch-a1-w05-l1-osmosis-net-movement-of-water-across-a-partially-permeable-m, a1aaa-sci-launch-a1-w05-l2-osmosis-core-practical-potato-cylinders-and-percentage-chang, a1aaa-sci-launch-a1-w05-l3-analysing-and-evaluating-the-osmosis-practical-zero-crossing, a1aaa-sci-launch-a1-w06-l1-active-transport-moving-particles-against-a-concentration-gr, a1aaa-sci-launch-a1-w06-l2-active-transport-in-root-hair-cells-and-the-gut-adaptations-, a1aaa-sci-launch-a1-w06-l3-comparing-diffusion-osmosis-and-active-transport-decision-la, a1aaa-sci-launch-a1-w07-l1-topic-1-knowledge-round-up-connecting-microscopy-diffusion-o, a1aaa-sci-launch-a1-w07-l2-decoding-gcse-command-words-across-topic-1-describe-explain-, a1aaa-sci-launch-a1-w07-l3-topic-1-independent-exam-practice-feedback-repair-microscopy), and one appended row, dy4-sci-build-a1-w08-p2-show-what-you-know-about-body-science, one field, its desc, now carries the learning goal its page states word for word; no other row added, removed, reordered or edited (with the 15 dropped and that desc put back the 656 rows digest to cd22ca8f). Previous count 656, previous digest cd22ca8f.
+CATALOGUE_SHELF_ROWS_SHA256 = "ee87b6d2f3b8ab6472f961649ae1e5b4ec80ed2c1447a064a197f34dc660e9eb"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
@@ -3740,7 +3741,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "693a503dc96f268ab5ed1131e2bb7fa2d501f45a8206d755b82aea2248558707",
+    "lessons": "436d2f9301cffbf5d54ea41b28bcfa610e88a3d6fda8e6bb2f040c26d546c8c9",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
