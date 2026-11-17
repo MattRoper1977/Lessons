@@ -166,6 +166,25 @@ jobs:
                   text = json.dumps(row, ensure_ascii=False, sort_keys=True)
                   if any(w in text for w in wanted):
                       print('  row:', text)
+          # Report only (ruling thread, 17 Nov 2026). A listed page under a reviewed Teaching_Packs prefix adds registry
+          # rows that the Site holds as a reviewed list, not as retained rows, and the check above names the prefix
+          # without the rows. This prints, for each reviewed prefix, the built rows its reviewed list does not hold, in
+          # built order with their place among the built rows of that prefix, so a reviewed diff can be written from
+          # measured rows and never from a transcription. It reads the Site's own files and admits nothing.
+          try:
+              built = json.loads(pathlib.Path('.sources/Site/domain-split/output/usage-registry.json').read_text())
+              reviewed = json.loads(separation.TEACHING_PACK_ADDITIONS.read_text())
+              print('=== BUILT PACK ROWS THE REVIEWED LIST DOES NOT HOLD ===')
+              for prefix, approved in reviewed.items():
+                  inpack = [r for r in built if r['route'].startswith(prefix) and not r['route'].startswith(separation.ICT_A2_PUBLIC_PREFIX)]
+                  extra = [(n, r) for n, r in enumerate(inpack) if r not in approved]
+                  absent = [r for r in approved if r not in inpack]
+                  print(json.dumps({'prefix': prefix, 'built': len(inpack), 'reviewed': len(approved),
+                                    'built and not reviewed': len(extra), 'reviewed and not built': len(absent)}))
+                  for n, r in extra:
+                      print('  pack row %d:' % n, json.dumps(r, ensure_ascii=False))
+          except Exception as error:
+              print('pack rows not measured:', error)
           PY
           exit 0
       - uses: actions/upload-artifact@v4
