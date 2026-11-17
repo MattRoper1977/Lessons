@@ -209,7 +209,10 @@ body.board-open>main{visibility:hidden}
   .sheet-doc th,.sheet-doc td{display:table-cell!important;border:1px solid #000!important;padding:5px 7px!important;color:#000!important;background:#fff!important}
 }
 </style>
-</head>
+<style>.tour-tip,.tour-help{font:600 15px/1.35 system-ui,sans-serif!important}.tour-help,.tour-actions button{background:#fff!important;color:#183c31!important;border:1px solid #365b49!important;min-height:44px!important;padding:.4rem .65rem!important;border-radius:7px!important;cursor:pointer}.tour-tip{position:relative;z-index:1;margin:.4rem 0;max-width:calc(100vw - 12px);width:300px;color:#172e2a!important;background:#fffbea!important;border:2px solid #355944;border-radius:9px;padding:10px 12px;box-sizing:border-box;box-shadow:0 3px 10px #172e2a26}.tour-tip[hidden]{display:none!important}.tour-tip small,.tour-tip p,.tour-tip a{color:#172e2a!important}.tour-tip p{margin:.35rem 0}.tour-actions{display:flex;flex-wrap:wrap;gap:.3rem}.tour-tip a{display:inline-block;margin-top:.4rem;text-decoration:underline}.tour-target{outline:3px dashed #345f43!important;outline-offset:2px}.tour-actions button:disabled{opacity:1;color:#384734!important;background:#eceee4!important}.tour-tip,.tour-tip *,.tour-target{animation:none!important;transition:none!important}@media print{.tour-tip,.tour-help{display:none!important}.tour-target{outline:0!important}}
+</style>
+<style>#dayLauncher{background:#f2f6f3;color:#142d26;border:2px solid #335d50;padding:1rem;border-radius:12px}#dayLauncher h2{margin:0}#dayLauncher button,#dayLauncher summary,#dayLauncher a{color:#123d32}#dayLauncher button{background:white;border-color:#335d50}#dayLauncher #launchStart,.launch-link{display:inline-flex;align-items:center;min-height:48px;padding:.55rem 1rem;background:#153e33!important;color:#fff!important;border-radius:8px;font-weight:700}.launch-card{background:white;border:1px solid #64736b;border-radius:8px;padding:.85rem;margin-top:.65rem}.launch-card.due{border-left:6px solid #234b3c}.launch-bits{display:flex;flex-wrap:wrap;gap:.4rem .9rem;border-block:1px solid #95a79b;padding:.55rem 0;margin:.5rem 0}.launch-code{font:600 .94em ui-monospace,monospace;overflow-wrap:anywhere}#launchClock{font-variant-numeric:tabular-nums}#dayLauncher summary{cursor:pointer}
+</style></head>
 <body>
 <main>
 <header class="app-header noprint">
@@ -237,6 +240,15 @@ body.board-open>main{visibility:hidden}
     <button type="button" role="tab" class="nav-tab" id="tabBtnTools" data-ws-tab="tools" aria-selected="false">All tools</button>
   </nav>
 </header>
+
+<section id="dayLauncher" class="panel" aria-labelledby="launchTitle">
+<h2 id="launchTitle">Start my day</h2><p id="launchClock"></p>
+<button type="button" id="launchStart">Start my day</button> <button type="button" id="launchShow">See today’s periods</button>
+<p id="launchSetup">The built-in timetable uses your saved period times and term dates.</p>
+<p><a href="guide/How_it_all_works.html">How it all works</a></p>
+<details id="launchSample"><summary>See a sample day</summary><p>Example only</p><ol><li>09:30 · Group A · Reading</li><li>10:30 · Group B · Making patterns</li><li>11:30 · Group C · Working together</li></ol></details>
+<div id="launchDetails" hidden><div id="launchList"></div></div>
+</section>
 
 <div id="periodTimeline" class="period-strip noprint" role="group" aria-label="Today's six periods — tap to inspect"></div>
 
@@ -3849,6 +3861,514 @@ applyWorkspaceView(owlState.tab);
 refreshRows();
 renderAll();
 checkHashTarget();
+function initDayLauncher() {
+  const lessonFiles = {
+  "ART_BUILD_A1_W01_P1": "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W01/ART_BUILD_A1_W01_P1.html",
+  "ART_BUILD_A1_W01_P2": "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W01/ART_BUILD_A1_W01_P2.html",
+  "ART_BUILD_A1_W02_P1": "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W02/ART_BUILD_A1_W02_P1.html",
+  "ART_BUILD_A1_W02_P2": "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W02/ART_BUILD_A1_W02_P2.html",
+  "ART_BUILD_A1_W03_P1": "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W03/ART_BUILD_A1_W03_P1.html",
+  "ART_BUILD_A1_W03_P2": "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W03/ART_BUILD_A1_W03_P2.html",
+  "ART_BUILD_A1_W04_P1": "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W04/ART_BUILD_A1_W04_P1.html",
+  "ART_BUILD_A1_W04_P2": "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W04/ART_BUILD_A1_W04_P2.html",
+  "ART_BUILD_A1_W05_P1": "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W05/ART_BUILD_A1_W05_P1.html",
+  "ART_BUILD_A1_W05_P2": "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W05/ART_BUILD_A1_W05_P2.html",
+  "ART_BUILD_A1_W06_P1": "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W06/ART_BUILD_A1_W06_P1.html",
+  "ART_BUILD_A1_W06_P2": "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W06/ART_BUILD_A1_W06_P2.html",
+  "ART_BUILD_A1_W07_P1": "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W07/ART_BUILD_A1_W07_P1.html",
+  "ART_BUILD_A1_W07_P2": "Art/Build/Autumn_1_2026-27/ART_BUILD_A1_W07/ART_BUILD_A1_W07_P2.html",
+  "ART_BUILD_A2_W01_P1": "Art/Build/ART_BUILD_A2_W01_P1.html",
+  "ART_BUILD_A2_W01_P2": "Art/Build/ART_BUILD_A2_W01_P2.html",
+  "ART_BUILD_A2_W02_P1": "Art/Build/CREATIVE_ARTS_A2_W02/Public/ART_BUILD_A2_W02_P1.html",
+  "ART_BUILD_A2_W02_P2": "Art/Build/CREATIVE_ARTS_A2_W02/Public/ART_BUILD_A2_W02_P2.html",
+  "ART_BUILD_A2_W03_P1": "Art/Build/CREATIVE_ARTS_A2_W03/Public/ART_BUILD_A2_W03_P1.html",
+  "ART_BUILD_A2_W03_P2": "Art/Build/CREATIVE_ARTS_A2_W03/Public/ART_BUILD_A2_W03_P2.html",
+  "ART_BUILD_A2_W04_P1": "Art/Build/CREATIVE_ARTS_A2_W04/Public/ART_BUILD_A2_W04_P1.html",
+  "ART_BUILD_A2_W04_P2": "Art/Build/CREATIVE_ARTS_A2_W04/Public/ART_BUILD_A2_W04_P2.html",
+  "ART_BUILD_A2_W05_P1": "Art/Build/ART_BUILD_A2_W05_P1/Public/ART_BUILD_A2_W05_P1.html",
+  "ART_BUILD_A2_W05_P2": "Art/Build/ART_BUILD_A2_W05_P2/Public/ART_BUILD_A2_W05_P2.html",
+  "ART_BUILD_A2_W06_P1": "Art/Build/ART_BUILD_A2_W06_P1/Public/ART_BUILD_A2_W06_P1.html",
+  "ART_BUILD_A2_W06_P2": "Art/Build/ART_BUILD_A2_W06_P2/Public/ART_BUILD_A2_W06_P2.html",
+  "ART_BUILD_A2_W07_P1": "Art/Build/CREATIVE_ARTS_A2_W07/Public/ART_BUILD_A2_W07_P1.html",
+  "ART_BUILD_A2_W07_P2": "Art/Build/CREATIVE_ARTS_A2_W07/Public/ART_BUILD_A2_W07_P2.html",
+  "ART_GROW_A1_W01_P1": "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W01/ART_GROW_A1_W01_P1.html",
+  "ART_GROW_A1_W01_P2": "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W01/ART_GROW_A1_W01_P2.html",
+  "ART_GROW_A1_W02_P1": "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W02/ART_GROW_A1_W02_P1.html",
+  "ART_GROW_A1_W02_P2": "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W02/ART_GROW_A1_W02_P2.html",
+  "ART_GROW_A1_W03_P1": "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W03/ART_GROW_A1_W03_P1.html",
+  "ART_GROW_A1_W03_P2": "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W03/ART_GROW_A1_W03_P2.html",
+  "ART_GROW_A1_W04_P1": "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W04/ART_GROW_A1_W04_P1.html",
+  "ART_GROW_A1_W04_P2": "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W04/ART_GROW_A1_W04_P2.html",
+  "ART_GROW_A1_W05_P1": "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W05/ART_GROW_A1_W05_P1.html",
+  "ART_GROW_A1_W05_P2": "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W05/ART_GROW_A1_W05_P2.html",
+  "ART_GROW_A1_W06_P1": "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W06/ART_GROW_A1_W06_P1.html",
+  "ART_GROW_A1_W06_P2": "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W06/ART_GROW_A1_W06_P2.html",
+  "ART_GROW_A1_W07_P1": "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W07/ART_GROW_A1_W07_P1.html",
+  "ART_GROW_A1_W07_P2": "Art/Grow/Autumn_1_2026-27/ART_GROW_A1_W07/ART_GROW_A1_W07_P2.html",
+  "ART_GROW_A2_W01_P1": "Art/Grow/ART_GROW_A2_W01_P1.html",
+  "ART_GROW_A2_W01_P2": "Art/Grow/ART_GROW_A2_W01_P2.html",
+  "ART_GROW_A2_W02_P1": "Art/Grow/CREATIVE_ARTS_A2_W02/Public/ART_GROW_A2_W02_P1.html",
+  "ART_GROW_A2_W02_P2": "Art/Grow/CREATIVE_ARTS_A2_W02/Public/ART_GROW_A2_W02_P2.html",
+  "ART_GROW_A2_W03_P1": "Art/Grow/CREATIVE_ARTS_A2_W03/Public/ART_GROW_A2_W03_P1.html",
+  "ART_GROW_A2_W03_P2": "Art/Grow/CREATIVE_ARTS_A2_W03/Public/ART_GROW_A2_W03_P2.html",
+  "ART_GROW_A2_W04_P1": "Art/Grow/CREATIVE_ARTS_A2_W04/Public/ART_GROW_A2_W04_P1.html",
+  "ART_GROW_A2_W04_P2": "Art/Grow/CREATIVE_ARTS_A2_W04/Public/ART_GROW_A2_W04_P2.html",
+  "ART_GROW_A2_W05_P1": "Art/Grow/ART_GROW_A2_W05_P1/Public/ART_GROW_A2_W05_P1.html",
+  "ART_GROW_A2_W05_P2": "Art/Grow/ART_GROW_A2_W05_P2/Public/ART_GROW_A2_W05_P2.html",
+  "ART_GROW_A2_W06_P1": "Art/Grow/ART_GROW_A2_W06_P1/Public/ART_GROW_A2_W06_P1.html",
+  "ART_GROW_A2_W06_P2": "Art/Grow/ART_GROW_A2_W06_P2/Public/ART_GROW_A2_W06_P2.html",
+  "ART_GROW_A2_W07_P1": "Art/Grow/ART_GROW_A2_W07_P1/Public/ART_GROW_A2_W07_P1.html",
+  "ART_GROW_A2_W07_P2": "Art/Grow/ART_GROW_A2_W07_P2/Public/ART_GROW_A2_W07_P2.html",
+  "ART_LAUNCH_A1_W01_P1": "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W01/ART_LAUNCH_A1_W01_P1.html",
+  "ART_LAUNCH_A1_W01_P2": "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W01/ART_LAUNCH_A1_W01_P2.html",
+  "ART_LAUNCH_A1_W02_P1": "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W02/ART_LAUNCH_A1_W02_P1.html",
+  "ART_LAUNCH_A1_W02_P2": "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W02/ART_LAUNCH_A1_W02_P2.html",
+  "ART_LAUNCH_A1_W03_P1": "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W03/ART_LAUNCH_A1_W03_P1.html",
+  "ART_LAUNCH_A1_W03_P2": "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W03/ART_LAUNCH_A1_W03_P2.html",
+  "ART_LAUNCH_A1_W04_P1": "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W04/ART_LAUNCH_A1_W04_P1.html",
+  "ART_LAUNCH_A1_W04_P2": "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W04/ART_LAUNCH_A1_W04_P2.html",
+  "ART_LAUNCH_A1_W05_P1": "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W05/ART_LAUNCH_A1_W05_P1.html",
+  "ART_LAUNCH_A1_W05_P2": "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W05/ART_LAUNCH_A1_W05_P2.html",
+  "ART_LAUNCH_A1_W06_P1": "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W06/ART_LAUNCH_A1_W06_P1.html",
+  "ART_LAUNCH_A1_W06_P2": "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W06/ART_LAUNCH_A1_W06_P2.html",
+  "ART_LAUNCH_A1_W07_P1": "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W07/ART_LAUNCH_A1_W07_P1.html",
+  "ART_LAUNCH_A1_W07_P2": "Art/Launch/Autumn_1_2026-27/ART_LAUNCH_A1_W07/ART_LAUNCH_A1_W07_P2.html",
+  "ART_LAUNCH_A2_W01": "Art/Launch/ART_LAUNCH_A2_W01.html",
+  "BUILD_RE_A1_W01": "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W01/BUILD_RE_A1_W01.html",
+  "BUILD_RE_A1_W02": "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W02/BUILD_RE_A1_W02.html",
+  "BUILD_RE_A1_W03": "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W03/BUILD_RE_A1_W03.html",
+  "BUILD_RE_A1_W04": "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W04/BUILD_RE_A1_W04.html",
+  "BUILD_RE_A1_W05": "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W05/BUILD_RE_A1_W05.html",
+  "BUILD_RE_A1_W06": "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W06/BUILD_RE_A1_W06.html",
+  "BUILD_RE_A1_W07": "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W07/BUILD_RE_A1_W07.html",
+  "BUILD_RE_A2_W01": "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W01/BUILD_RE_A2_W01.html",
+  "BUILD_RE_A2_W02": "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W02/BUILD_RE_A2_W02.html",
+  "BUILD_RE_A2_W03": "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W03/BUILD_RE_A2_W03.html",
+  "BUILD_RE_A2_W04": "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W04/BUILD_RE_A2_W04.html",
+  "BUILD_RE_A2_W05": "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W05/BUILD_RE_A2_W05.html",
+  "BUILD_RE_A2_W06": "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W06/BUILD_RE_A2_W06.html",
+  "BUILD_RE_A2_W07": "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_2/W07/BUILD_RE_A2_W07.html",
+  "CAREERS_BUILD_A1_W01_P1": "Careers/Build/Autumn_1_2026-27/CAREERS_BUILD_A1_W01_P1/CAREERS_BUILD_A1_W01_P1.html",
+  "CAREERS_BUILD_A1_W01_P2": "Careers/Build/Autumn_1_2026-27/CAREERS_BUILD_A1_W01_P2/CAREERS_BUILD_A1_W01_P2.html",
+  "CAREERS_BUILD_A1_W02_P1": "Careers/Build/Autumn_1_2026-27/CAREERS_BUILD_A1_W02_P1/CAREERS_BUILD_A1_W02_P1.html",
+  "CAREERS_BUILD_A1_W02_P2": "Careers/Build/Autumn_1_2026-27/CAREERS_BUILD_A1_W02_P2/CAREERS_BUILD_A1_W02_P2.html",
+  "CAREERS_BUILD_A1_W03_P1": "Careers/Build/Autumn_1_2026-27/CAREERS_BUILD_A1_W03_P1/CAREERS_BUILD_A1_W03_P1.html",
+  "CAREERS_BUILD_A1_W03_P2": "Careers/Build/Autumn_1_2026-27/CAREERS_BUILD_A1_W03_P2/CAREERS_BUILD_A1_W03_P2.html",
+  "CAREERS_BUILD_A1_W04_P1": "Careers/Build/Autumn_1_2026-27/CAREERS_BUILD_A1_W04_P1/CAREERS_BUILD_A1_W04_P1.html",
+  "CAREERS_BUILD_A1_W04_P2": "Careers/Build/Autumn_1_2026-27/CAREERS_BUILD_A1_W04_P2/CAREERS_BUILD_A1_W04_P2.html",
+  "CAREERS_BUILD_A1_W05_P1": "Careers/Build/Autumn_1_2026-27/CAREERS_BUILD_A1_W05_P1/CAREERS_BUILD_A1_W05_P1.html",
+  "CAREERS_BUILD_A1_W05_P2": "Careers/Build/Autumn_1_2026-27/CAREERS_BUILD_A1_W05_P2/CAREERS_BUILD_A1_W05_P2.html",
+  "CAREERS_BUILD_A1_W06_P1": "Careers/Build/Autumn_1_2026-27/CAREERS_BUILD_A1_W06_P1/CAREERS_BUILD_A1_W06_P1.html",
+  "CAREERS_BUILD_A1_W06_P2": "Careers/Build/Autumn_1_2026-27/CAREERS_BUILD_A1_W06_P2/CAREERS_BUILD_A1_W06_P2.html",
+  "CAREERS_BUILD_A1_W07_P1": "Careers/Build/Autumn_1_2026-27/CAREERS_BUILD_A1_W07_P1/CAREERS_BUILD_A1_W07_P1.html",
+  "CAREERS_BUILD_A1_W07_P2": "Careers/Build/Autumn_1_2026-27/CAREERS_BUILD_A1_W07_P2/CAREERS_BUILD_A1_W07_P2.html",
+  "CAREERS_BUILD_A2_W02": "Careers/Build/Autumn_2_2026-27/CAREERS_BUILD_A2_W02/CAREERS_BUILD_A2_W02.html",
+  "CAREERS_BUILD_A2_W03": "Careers/Build/Autumn_2_2026-27/CAREERS_BUILD_A2_W03/CAREERS_BUILD_A2_W03.html",
+  "CAREERS_BUILD_A2_W04": "Careers/Build/Autumn_2_2026-27/CAREERS_BUILD_A2_W04/CAREERS_BUILD_A2_W04.html",
+  "CAREERS_BUILD_A2_W05": "Careers/Build/Autumn_2_2026-27/CAREERS_BUILD_A2_W05/CAREERS_BUILD_A2_W05.html",
+  "CAREERS_BUILD_A2_W06": "Careers/Build/Autumn_2_2026-27/CAREERS_BUILD_A2_W06/CAREERS_BUILD_A2_W06.html",
+  "CAREERS_BUILD_A2_W07": "Careers/Build/Autumn_2_2026-27/CAREERS_BUILD_A2_W07/CAREERS_BUILD_A2_W07.html",
+  "CAREERS_BUILD_A2_W08": "Careers/Build/Autumn_2_2026-27/CAREERS_BUILD_A2_W08/CAREERS_BUILD_A2_W08.html",
+  "CAREERS_LAUNCH_A1_W01_P1": "Careers/Launch/Autumn_1_2026-27/CAREERS_LAUNCH_A1_W01_P1/CAREERS_LAUNCH_A1_W01_P1.html",
+  "CAREERS_LAUNCH_A1_W02_P1": "Careers/Launch/Autumn_1_2026-27/CAREERS_LAUNCH_A1_W02_P1/CAREERS_LAUNCH_A1_W02_P1.html",
+  "CAREERS_LAUNCH_A1_W03_P1": "Careers/Launch/Autumn_1_2026-27/CAREERS_LAUNCH_A1_W03_P1/CAREERS_LAUNCH_A1_W03_P1.html",
+  "CAREERS_LAUNCH_A1_W04_P1": "Careers/Launch/Autumn_1_2026-27/CAREERS_LAUNCH_A1_W04_P1/CAREERS_LAUNCH_A1_W04_P1.html",
+  "CAREERS_LAUNCH_A1_W05_P1": "Careers/Launch/Autumn_1_2026-27/CAREERS_LAUNCH_A1_W05_P1/CAREERS_LAUNCH_A1_W05_P1.html",
+  "CAREERS_LAUNCH_A1_W06_P1": "Careers/Launch/Autumn_1_2026-27/CAREERS_LAUNCH_A1_W06_P1/CAREERS_LAUNCH_A1_W06_P1.html",
+  "CAREERS_LAUNCH_A2_W01": "Careers/Launch/Autumn_2_2026-27/CAREERS_LAUNCH_A2_W01/CAREERS_LAUNCH_A2_W01.html",
+  "CAREERS_LAUNCH_A2_W02": "Careers/Launch/Autumn_2_2026-27/CAREERS_LAUNCH_A2_W02/CAREERS_LAUNCH_A2_W02.html",
+  "CAREERS_LAUNCH_A2_W03": "Careers/Launch/Autumn_2_2026-27/CAREERS_LAUNCH_A2_W03/CAREERS_LAUNCH_A2_W03.html",
+  "CAREERS_LAUNCH_A2_W04": "Careers/Launch/Autumn_2_2026-27/CAREERS_LAUNCH_A2_W04/CAREERS_LAUNCH_A2_W04.html",
+  "CAREERS_LAUNCH_A2_W05": "Careers/Launch/Autumn_2_2026-27/CAREERS_LAUNCH_A2_W05/CAREERS_LAUNCH_A2_W05.html",
+  "CAREERS_LAUNCH_A2_W06": "Careers/Launch/Autumn_2_2026-27/CAREERS_LAUNCH_A2_W06/CAREERS_LAUNCH_A2_W06.html",
+  "CAREERS_LAUNCH_A2_W07": "Careers/Launch/Autumn_2_2026-27/CAREERS_LAUNCH_A2_W07/CAREERS_LAUNCH_A2_W07.html",
+  "CAREERS_LAUNCH_A2_W08": "Careers/Launch/Autumn_2_2026-27/CAREERS_LAUNCH_A2_W08/CAREERS_LAUNCH_A2_W08.html",
+  "COMMUNITY_A2_W01": "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W01/COMMUNITY_A2_W01.html",
+  "COMMUNITY_A2_W03": "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W03/COMMUNITY_A2_W03.html",
+  "COMMUNITY_A2_W04": "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W04/COMMUNITY_A2_W04.html",
+  "COMMUNITY_A2_W05": "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W05/COMMUNITY_A2_W05.html",
+  "COMMUNITY_A2_W06": "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W06/COMMUNITY_A2_W06.html",
+  "COMMUNITY_A2_W07": "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W07/COMMUNITY_A2_W07.html",
+  "COMMUNITY_A2_W08": "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W08/COMMUNITY_A2_W08.html",
+  "DT_LAUNCH_A2_W01": "DT/Launch/Autumn_2_2026-27/DT_LAUNCH_A2_W01/DT_LAUNCH_A2_W01.html",
+  "DT_LAUNCH_A2_W02": "DT/Launch/Autumn_2_2026-27/DT_LAUNCH_A2_W02/DT_LAUNCH_A2_W02.html",
+  "DT_LAUNCH_A2_W03": "DT/Launch/Autumn_2_2026-27/DT_LAUNCH_A2_W03/DT_LAUNCH_A2_W03.html",
+  "DT_LAUNCH_A2_W04": "DT/Launch/Autumn_2_2026-27/DT_LAUNCH_A2_W04/DT_LAUNCH_A2_W04.html",
+  "DT_LAUNCH_A2_W05": "DT/Launch/Autumn_2_2026-27/DT_LAUNCH_A2_W05/DT_LAUNCH_A2_W05.html",
+  "DT_LAUNCH_A2_W06": "DT/Launch/Autumn_2_2026-27/DT_LAUNCH_A2_W06/DT_LAUNCH_A2_W06.html",
+  "DT_LAUNCH_A2_W07": "DT/Launch/Autumn_2_2026-27/DT_LAUNCH_A2_W07/DT_LAUNCH_A2_W07.html",
+  "DT_LAUNCH_A2_W08": "DT/Launch/Autumn_2_2026-27/DT_LAUNCH_A2_W08/DT_LAUNCH_A2_W08.html",
+  "GROW_RE_A1_W01": "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W01/GROW_RE_A1_W01.html",
+  "GROW_RE_A1_W02": "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W02/GROW_RE_A1_W02.html",
+  "GROW_RE_A1_W03": "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W03/GROW_RE_A1_W03.html",
+  "GROW_RE_A1_W04": "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W04/GROW_RE_A1_W04.html",
+  "GROW_RE_A1_W05": "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W05/GROW_RE_A1_W05.html",
+  "GROW_RE_A1_W06": "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W06/GROW_RE_A1_W06.html",
+  "GROW_RE_A1_W07": "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_1/W07/GROW_RE_A1_W07.html",
+  "GROW_RE_A2_W01": "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W01/GROW_RE_A2_W01.html",
+  "GROW_RE_A2_W02": "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W02/GROW_RE_A2_W02.html",
+  "GROW_RE_A2_W03": "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W03/GROW_RE_A2_W03.html",
+  "GROW_RE_A2_W04": "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W04/GROW_RE_A2_W04.html",
+  "GROW_RE_A2_W05": "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W05/GROW_RE_A2_W05.html",
+  "GROW_RE_A2_W06": "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W06/GROW_RE_A2_W06.html",
+  "GROW_RE_A2_W07": "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W07/GROW_RE_A2_W07.html",
+  "GROW_SCI_A1_W01_P1": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W01/GROW_SCI_A1_W01_P1.html",
+  "GROW_SCI_A1_W01_P2": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W01/GROW_SCI_A1_W01_P2.html",
+  "GROW_SCI_A1_W02_P1": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W02/GROW_SCI_A1_W02_P1.html",
+  "GROW_SCI_A1_W02_P2": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W02/GROW_SCI_A1_W02_P2.html",
+  "GROW_SCI_A1_W03_P1": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W03/GROW_SCI_A1_W03_P1.html",
+  "GROW_SCI_A1_W03_P2": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W03/GROW_SCI_A1_W03_P2.html",
+  "GROW_SCI_A1_W04_P1": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W04/GROW_SCI_A1_W04_P1.html",
+  "GROW_SCI_A1_W04_P2": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W04/GROW_SCI_A1_W04_P2.html",
+  "GROW_SCI_A1_W05_P1": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W05/GROW_SCI_A1_W05_P1.html",
+  "GROW_SCI_A1_W05_P2": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W05/GROW_SCI_A1_W05_P2.html",
+  "GROW_SCI_A1_W06_P1": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W06/GROW_SCI_A1_W06_P1.html",
+  "GROW_SCI_A1_W06_P2": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W06/GROW_SCI_A1_W06_P2.html",
+  "GROW_SCI_A1_W07_P1": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W07/GROW_SCI_A1_W07_P1.html",
+  "GROW_SCI_A1_W07_P2": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W07/GROW_SCI_A1_W07_P2.html",
+  "GROW_SCI_A1_W08_P1": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P1.html",
+  "GROW_SCI_A1_W08_P2": "Science/Grow/Autumn_1_2026-27/GROW_SCI_A1_W08/GROW_SCI_A1_W08_P2.html",
+  "GROW_SCI_A2_W01": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W01/GROW_SCI_A2_W01.html",
+  "GROW_SCI_A2_W01_P1": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W01/GROW_SCI_A2_W01_P1.html",
+  "GROW_SCI_A2_W01_P2": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W01/GROW_SCI_A2_W01_P2.html",
+  "GROW_SCI_A2_W02": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W02/GROW_SCI_A2_W02.html",
+  "GROW_SCI_A2_W02_P1": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W02/GROW_SCI_A2_W02_P1.html",
+  "GROW_SCI_A2_W02_P2": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W02/GROW_SCI_A2_W02_P2.html",
+  "GROW_SCI_A2_W03": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03.html",
+  "GROW_SCI_A2_W03_P1": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P1.html",
+  "GROW_SCI_A2_W03_P2": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W03/GROW_SCI_A2_W03_P2.html",
+  "GROW_SCI_A2_W04": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04.html",
+  "GROW_SCI_A2_W04_P1": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P1.html",
+  "GROW_SCI_A2_W04_P2": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2.html",
+  "GROW_SCI_A2_W05": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05.html",
+  "GROW_SCI_A2_W05_P1": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P1.html",
+  "GROW_SCI_A2_W05_P2": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W05/GROW_SCI_A2_W05_P2.html",
+  "GROW_SCI_A2_W06": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06.html",
+  "GROW_SCI_A2_W06_P1": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P1.html",
+  "GROW_SCI_A2_W06_P2": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W06/GROW_SCI_A2_W06_P2.html",
+  "GROW_SCI_A2_W07": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07.html",
+  "GROW_SCI_A2_W07_P1": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P1.html",
+  "GROW_SCI_A2_W07_P2": "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2.html",
+  "HUM_BUILD_A2_W01": "Humanities/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W01/HUM_BUILD_A2_W01.html",
+  "HUM_BUILD_A2_W02": "Humanities/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W02/HUM_BUILD_A2_W02.html",
+  "HUM_BUILD_A2_W03": "Humanities/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W03/HUM_BUILD_A2_W03.html",
+  "HUM_BUILD_A2_W04": "Humanities/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W04/HUM_BUILD_A2_W04.html",
+  "HUM_BUILD_A2_W05": "Humanities/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W05/HUM_BUILD_A2_W05.html",
+  "HUM_BUILD_A2_W06": "Humanities/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W06/HUM_BUILD_A2_W06.html",
+  "HUM_BUILD_A2_W07": "Humanities/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W07/HUM_BUILD_A2_W07.html",
+  "HUM_GROW_A1_W01": "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W01/HUM_GROW_A1_W01.html",
+  "HUM_GROW_A1_W02": "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W02/HUM_GROW_A1_W02.html",
+  "HUM_GROW_A1_W03": "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W03/HUM_GROW_A1_W03.html",
+  "HUM_GROW_A1_W04": "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W04/HUM_GROW_A1_W04.html",
+  "HUM_GROW_A1_W05": "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W05/HUM_GROW_A1_W05.html",
+  "HUM_GROW_A1_W06": "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W06/HUM_GROW_A1_W06.html",
+  "HUM_GROW_A1_W07": "Humanities/Teaching_Packs/HUM_Autumn_1_BUILD_GROW_Fallback/GROW/Autumn_1/W07/HUM_GROW_A1_W07.html",
+  "HUM_GROW_A2_W01": "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W01/HUM_GROW_A2_W01.html",
+  "HUM_GROW_A2_W02": "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W02/HUM_GROW_A2_W02.html",
+  "HUM_GROW_A2_W03": "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W03/HUM_GROW_A2_W03.html",
+  "HUM_GROW_A2_W04": "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W04/HUM_GROW_A2_W04.html",
+  "HUM_GROW_A2_W05": "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W05/HUM_GROW_A2_W05.html",
+  "HUM_GROW_A2_W06": "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W06/HUM_GROW_A2_W06.html",
+  "HUM_GROW_A2_W07": "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W07/HUM_GROW_A2_W07.html",
+  "HUM_LAUNCH_A1_W01": "Humanities/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W01/HUM_LAUNCH_A1_W01.html",
+  "HUM_LAUNCH_A1_W02": "Humanities/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W02/HUM_LAUNCH_A1_W02.html",
+  "HUM_LAUNCH_A1_W03": "Humanities/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W03/HUM_LAUNCH_A1_W03.html",
+  "HUM_LAUNCH_A1_W04": "Humanities/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W04/HUM_LAUNCH_A1_W04.html",
+  "HUM_LAUNCH_A1_W05": "Humanities/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W05/HUM_LAUNCH_A1_W05.html",
+  "HUM_LAUNCH_A1_W06": "Humanities/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W06/HUM_LAUNCH_A1_W06.html",
+  "HUM_LAUNCH_A1_W07": "Humanities/Teaching_Packs/HUM_Autumn_1_LAUNCH_Reviewed/LAUNCH/Autumn_1/W07/HUM_LAUNCH_A1_W07.html",
+  "HUM_LAUNCH_A2_W01": "Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W01/HUM_LAUNCH_A2_W01.html",
+  "HUM_LAUNCH_A2_W02": "Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W02/HUM_LAUNCH_A2_W02.html",
+  "HUM_LAUNCH_A2_W03": "Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W03/HUM_LAUNCH_A2_W03.html",
+  "HUM_LAUNCH_A2_W04": "Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W04/HUM_LAUNCH_A2_W04.html",
+  "HUM_LAUNCH_A2_W05": "Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W05/HUM_LAUNCH_A2_W05.html",
+  "HUM_LAUNCH_A2_W06": "Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W06/HUM_LAUNCH_A2_W06.html",
+  "HUM_LAUNCH_A2_W07": "Humanities/Teaching_Packs/HUM_Autumn_2_LAUNCH_Reviewed/LAUNCH/Autumn_2/W07/HUM_LAUNCH_A2_W07.html",
+  "ICT_GROW_A2_W01": "ICT/Teaching_Packs/GROW_Computing_Autumn2/GROW_ICT_A2_W01/Public/ICT_GROW_A2_W01.html",
+  "ICT_GROW_A2_W02": "ICT/Teaching_Packs/GROW_Computing_Autumn2/GROW_ICT_A2_W02/Public/ICT_GROW_A2_W02.html",
+  "ICT_LAUNCH_A2_W02": "LAUNCH_ASDAN/W7-W12_2026-27/lessons/ICT/LAUNCH_ICT_A2_W02/Public/ICT_LAUNCH_A2_W02.html",
+  "ICT_LAUNCH_A2_W03": "LAUNCH_ASDAN/W7-W12_2026-27/lessons/ICT/LAUNCH_ICT_A2_W03/Public/ICT_LAUNCH_A2_W03.html",
+  "ICT_LAUNCH_A2_W04": "LAUNCH_ASDAN/W7-W12_2026-27/lessons/ICT/LAUNCH_ICT_A2_W04/Public/ICT_LAUNCH_A2_W04.html",
+  "ICT_LAUNCH_A2_W05": "LAUNCH_ASDAN/W7-W12_2026-27/lessons/ICT/LAUNCH_ICT_A2_W05/Public/ICT_LAUNCH_A2_W05.html",
+  "ICT_LAUNCH_A2_W06": "LAUNCH_ASDAN/W7-W12_2026-27/lessons/ICT/LAUNCH_ICT_A2_W06/Public/ICT_LAUNCH_A2_W06.html",
+  "ICT_LAUNCH_A2_W07": "LAUNCH_ASDAN/W7-W12_2026-27/lessons/ICT/LAUNCH_ICT_A2_W07/Public/ICT_LAUNCH_A2_W07.html",
+  "ICT_LAUNCH_A2_W08": "LAUNCH_ASDAN/W7-W12_2026-27/lessons/ICT/LAUNCH_ICT_A2_W08/Public/ICT_LAUNCH_A2_W08.html",
+  "LAUNCH_RE_A1_W01": "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W01/LAUNCH_RE_A1_W01.html",
+  "LAUNCH_RE_A1_W02": "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W02/LAUNCH_RE_A1_W02.html",
+  "LAUNCH_RE_A1_W03": "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W03/LAUNCH_RE_A1_W03.html",
+  "LAUNCH_RE_A1_W04": "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W04/LAUNCH_RE_A1_W04.html",
+  "LAUNCH_RE_A1_W05": "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W05/LAUNCH_RE_A1_W05.html",
+  "LAUNCH_RE_A1_W06": "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W06/LAUNCH_RE_A1_W06.html",
+  "LAUNCH_RE_A1_W07": "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_1/W07/LAUNCH_RE_A1_W07.html",
+  "LAUNCH_RE_A2_W01": "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W01/LAUNCH_RE_A2_W01.html",
+  "LAUNCH_RE_A2_W02": "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W02/LAUNCH_RE_A2_W02.html",
+  "LAUNCH_RE_A2_W03": "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W03/LAUNCH_RE_A2_W03.html",
+  "LAUNCH_RE_A2_W04": "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W04/LAUNCH_RE_A2_W04.html",
+  "LAUNCH_RE_A2_W05": "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W05/LAUNCH_RE_A2_W05.html",
+  "LAUNCH_RE_A2_W06": "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W06/LAUNCH_RE_A2_W06.html",
+  "LAUNCH_RE_A2_W07": "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/LAUNCH/Autumn_2/W07/LAUNCH_RE_A2_W07.html",
+  "PSHE_GROW_A2_W01": "PSHE/Grow/Autumn_2_2026-27/PSHE_GROW_A2_W01/PSHE_GROW_A2_W01.html",
+  "PSHE_GROW_A2_W02": "PSHE/Grow/Autumn_2_2026-27/PSHE_GROW_A2_W02/PSHE_GROW_A2_W02.html",
+  "PSHE_GROW_A2_W03": "PSHE/Grow/Autumn_2_2026-27/PSHE_GROW_A2_W03/PSHE_GROW_A2_W03.html",
+  "PSHE_GROW_A2_W04": "PSHE/Grow/Autumn_2_2026-27/PSHE_GROW_A2_W04/PSHE_GROW_A2_W04.html",
+  "PSHE_GROW_A2_W05": "PSHE/Grow/Autumn_2_2026-27/PSHE_GROW_A2_W05/PSHE_GROW_A2_W05.html",
+  "PSHE_GROW_A2_W06": "PSHE/Grow/Autumn_2_2026-27/PSHE_GROW_A2_W06/PSHE_GROW_A2_W06.html",
+  "PSHE_GROW_A2_W07": "PSHE/Grow/Autumn_2_2026-27/PSHE_GROW_A2_W07/PSHE_GROW_A2_W07.html",
+  "PSHE_GROW_A2_W08": "PSHE/Grow/Autumn_2_2026-27/PSHE_GROW_A2_W08/PSHE_GROW_A2_W08.html",
+  "RSE_LAUNCH_A2_W01": "RSE/Launch/Autumn_2_2026-27/RSE_LAUNCH_A2_W01/RSE_LAUNCH_A2_W01.html",
+  "RSE_LAUNCH_A2_W02": "RSE/Launch/Autumn_2_2026-27/RSE_LAUNCH_A2_W02/RSE_LAUNCH_A2_W02.html",
+  "RSE_LAUNCH_A2_W03": "RSE/Launch/Autumn_2_2026-27/RSE_LAUNCH_A2_W03/RSE_LAUNCH_A2_W03.html",
+  "RSE_LAUNCH_A2_W04": "RSE/Launch/Autumn_2_2026-27/RSE_LAUNCH_A2_W04/RSE_LAUNCH_A2_W04.html",
+  "RSE_LAUNCH_A2_W05": "RSE/Launch/Autumn_2_2026-27/RSE_LAUNCH_A2_W05/RSE_LAUNCH_A2_W05.html",
+  "RSE_LAUNCH_A2_W06": "RSE/Launch/Autumn_2_2026-27/RSE_LAUNCH_A2_W06/RSE_LAUNCH_A2_W06.html",
+  "RSE_LAUNCH_A2_W07": "RSE/Launch/Autumn_2_2026-27/RSE_LAUNCH_A2_W07/RSE_LAUNCH_A2_W07.html",
+  "RSE_LAUNCH_A2_W08": "RSE/Launch/Autumn_2_2026-27/RSE_LAUNCH_A2_W08/RSE_LAUNCH_A2_W08.html",
+  "RSHE_BUILD_A2_W01": "RSHE/Build/Autumn_2_2026-27/RSHE_BUILD_A2_W01/RSHE_BUILD_A2_W01.html",
+  "RSHE_BUILD_A2_W02": "RSHE/Build/Autumn_2_2026-27/RSHE_BUILD_A2_W02/RSHE_BUILD_A2_W02.html",
+  "RSHE_BUILD_A2_W03": "RSHE/Build/Autumn_2_2026-27/RSHE_BUILD_A2_W03/RSHE_BUILD_A2_W03.html",
+  "RSHE_BUILD_A2_W04": "RSHE/Build/Autumn_2_2026-27/RSHE_BUILD_A2_W04/RSHE_BUILD_A2_W04.html",
+  "RSHE_BUILD_A2_W05": "RSHE/Build/Autumn_2_2026-27/RSHE_BUILD_A2_W05/RSHE_BUILD_A2_W05.html",
+  "RSHE_BUILD_A2_W06": "RSHE/Build/Autumn_2_2026-27/RSHE_BUILD_A2_W06/RSHE_BUILD_A2_W06.html",
+  "RSHE_BUILD_A2_W07": "RSHE/Build/Autumn_2_2026-27/RSHE_BUILD_A2_W07/RSHE_BUILD_A2_W07.html",
+  "RSHE_BUILD_A2_W08": "RSHE/Build/Autumn_2_2026-27/RSHE_BUILD_A2_W08/RSHE_BUILD_A2_W08.html",
+  "SCI_BUILD_A1_W01_P1": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W01/SCI_BUILD_A1_W01_P1.html",
+  "SCI_BUILD_A1_W01_P2": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W01/SCI_BUILD_A1_W01_P2.html",
+  "SCI_BUILD_A1_W02_P1": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W02/SCI_BUILD_A1_W02_P1.html",
+  "SCI_BUILD_A1_W02_P2": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W02/SCI_BUILD_A1_W02_P2.html",
+  "SCI_BUILD_A1_W03_P1": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/SCI_BUILD_A1_W03_P1.html",
+  "SCI_BUILD_A1_W03_P2": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W03/SCI_BUILD_A1_W03_P2.html",
+  "SCI_BUILD_A1_W04_P1": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W04/SCI_BUILD_A1_W04_P1.html",
+  "SCI_BUILD_A1_W04_P2": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W04/SCI_BUILD_A1_W04_P2.html",
+  "SCI_BUILD_A1_W05_P1": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W05/SCI_BUILD_A1_W05_P1.html",
+  "SCI_BUILD_A1_W05_P2": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W05/SCI_BUILD_A1_W05_P2.html",
+  "SCI_BUILD_A1_W06_P1": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W06/SCI_BUILD_A1_W06_P1.html",
+  "SCI_BUILD_A1_W06_P2": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W06/SCI_BUILD_A1_W06_P2.html",
+  "SCI_BUILD_A1_W07_P1": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W07/SCI_BUILD_A1_W07_P1.html",
+  "SCI_BUILD_A1_W07_P2": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W07/SCI_BUILD_A1_W07_P2.html",
+  "SCI_BUILD_A1_W08_P1": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P1.html",
+  "SCI_BUILD_A1_W08_P2": "Science/Build/Autumn_1_2026-27/SCI_BUILD_A1_W08/SCI_BUILD_A1_W08_P2.html",
+  "SCI_BUILD_A2_W01": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W01/SCI_BUILD_A2_W01.html",
+  "SCI_BUILD_A2_W01_L1": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W01/SCI_BUILD_A2_W01_L1.html",
+  "SCI_BUILD_A2_W02": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W02/SCI_BUILD_A2_W02.html",
+  "SCI_BUILD_A2_W02_L1": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W02/SCI_BUILD_A2_W02_L1.html",
+  "SCI_BUILD_A2_W02_L2": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W02/SCI_BUILD_A2_W02_L2.html",
+  "SCI_BUILD_A2_W03": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03.html",
+  "SCI_BUILD_A2_W03_L1": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1.html",
+  "SCI_BUILD_A2_W03_L2": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L2.html",
+  "SCI_BUILD_A2_W04": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04.html",
+  "SCI_BUILD_A2_W04_L1": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1.html",
+  "SCI_BUILD_A2_W04_L2": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L2.html",
+  "SCI_BUILD_A2_W05": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05.html",
+  "SCI_BUILD_A2_W05_L1": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1.html",
+  "SCI_BUILD_A2_W05_L2": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L2.html",
+  "SCI_BUILD_A2_W06": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06.html",
+  "SCI_BUILD_A2_W06_L1": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1.html",
+  "SCI_BUILD_A2_W06_L2": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L2.html",
+  "SCI_BUILD_A2_W07": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07.html",
+  "SCI_BUILD_A2_W07_L1": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1.html",
+  "SCI_BUILD_A2_W07_L2": "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L2.html",
+  "SCI_LAUNCH_A1_W01_L1": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W01/SCI_LAUNCH_A1_W01_L1.html",
+  "SCI_LAUNCH_A1_W01_L2": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W01/SCI_LAUNCH_A1_W01_L2.html",
+  "SCI_LAUNCH_A1_W01_L3": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W01/SCI_LAUNCH_A1_W01_L3.html",
+  "SCI_LAUNCH_A1_W02_L1": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W02/SCI_LAUNCH_A1_W02_L1.html",
+  "SCI_LAUNCH_A1_W02_L2": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W02/SCI_LAUNCH_A1_W02_L2.html",
+  "SCI_LAUNCH_A1_W02_L3": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W02/SCI_LAUNCH_A1_W02_L3.html",
+  "SCI_LAUNCH_A1_W03_L1": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W03/SCI_LAUNCH_A1_W03_L1.html",
+  "SCI_LAUNCH_A1_W03_L2": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W03/SCI_LAUNCH_A1_W03_L2.html",
+  "SCI_LAUNCH_A1_W03_L3": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W03/SCI_LAUNCH_A1_W03_L3.html",
+  "SCI_LAUNCH_A1_W04_L1": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W04/SCI_LAUNCH_A1_W04_L1.html",
+  "SCI_LAUNCH_A1_W04_L2": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W04/SCI_LAUNCH_A1_W04_L2.html",
+  "SCI_LAUNCH_A1_W04_L3": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W04/SCI_LAUNCH_A1_W04_L3.html",
+  "SCI_LAUNCH_A1_W05_L1": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W05/SCI_LAUNCH_A1_W05_L1.html",
+  "SCI_LAUNCH_A1_W05_L2": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W05/SCI_LAUNCH_A1_W05_L2.html",
+  "SCI_LAUNCH_A1_W05_L3": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W05/SCI_LAUNCH_A1_W05_L3.html",
+  "SCI_LAUNCH_A1_W06_L1": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W06/SCI_LAUNCH_A1_W06_L1.html",
+  "SCI_LAUNCH_A1_W06_L2": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W06/SCI_LAUNCH_A1_W06_L2.html",
+  "SCI_LAUNCH_A1_W06_L3": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W06/SCI_LAUNCH_A1_W06_L3.html",
+  "SCI_LAUNCH_A1_W07_L1": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W07/SCI_LAUNCH_A1_W07_L1.html",
+  "SCI_LAUNCH_A1_W07_L2": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W07/SCI_LAUNCH_A1_W07_L2.html",
+  "SCI_LAUNCH_A1_W07_L3": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W07/SCI_LAUNCH_A1_W07_L3.html",
+  "SCI_LAUNCH_A1_W08_L1": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L1.html",
+  "SCI_LAUNCH_A1_W08_L2": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L2.html",
+  "SCI_LAUNCH_A1_W08_L3": "Science/Launch/Autumn_1_2026-27/SCI_LAUNCH_A1_W08/SCI_LAUNCH_A1_W08_L3.html",
+  "SCI_LAUNCH_A2_W01": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W01/SCI_LAUNCH_A2_W01.html",
+  "SCI_LAUNCH_A2_W01_L1": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W01/SCI_LAUNCH_A2_W01_L1.html",
+  "SCI_LAUNCH_A2_W01_L2": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W01/SCI_LAUNCH_A2_W01_L2.html",
+  "SCI_LAUNCH_A2_W01_L3": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W01/SCI_LAUNCH_A2_W01_L3.html",
+  "SCI_LAUNCH_A2_W02": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W02/SCI_LAUNCH_A2_W02.html",
+  "SCI_LAUNCH_A2_W02_L1": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W02/SCI_LAUNCH_A2_W02_L1.html",
+  "SCI_LAUNCH_A2_W02_L2": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W02/SCI_LAUNCH_A2_W02_L2.html",
+  "SCI_LAUNCH_A2_W02_L3": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W02/SCI_LAUNCH_A2_W02_L3.html",
+  "SCI_LAUNCH_A2_W03": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03.html",
+  "SCI_LAUNCH_A2_W03_L1": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03_L1.html",
+  "SCI_LAUNCH_A2_W03_L2": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03_L2.html",
+  "SCI_LAUNCH_A2_W03_L3": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03_L3.html",
+  "SCI_LAUNCH_A2_W04": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04.html",
+  "SCI_LAUNCH_A2_W04_L1": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L1.html",
+  "SCI_LAUNCH_A2_W04_L2": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L2.html",
+  "SCI_LAUNCH_A2_W04_L3": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L3.html",
+  "SCI_LAUNCH_A2_W05": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05.html",
+  "SCI_LAUNCH_A2_W05_L1": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_L1.html",
+  "SCI_LAUNCH_A2_W05_L2": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_L2.html",
+  "SCI_LAUNCH_A2_W05_L3": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_L3.html",
+  "SCI_LAUNCH_A2_W06": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06.html",
+  "SCI_LAUNCH_A2_W06_L1": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06_L1.html",
+  "SCI_LAUNCH_A2_W06_L2": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06_L2.html",
+  "SCI_LAUNCH_A2_W06_L3": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W06/SCI_LAUNCH_A2_W06_L3.html",
+  "SCI_LAUNCH_A2_W07": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07.html",
+  "SCI_LAUNCH_A2_W07_L1": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_L1.html",
+  "SCI_LAUNCH_A2_W07_L2": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_L2.html",
+  "SCI_LAUNCH_A2_W07_L3": "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_L3.html",
+  "VOC_BUILD_A1_W01_P1": "Vocational/Build/Autumn_1_2026-27/VOC_BUILD_A1_W01_P1/VOC_BUILD_A1_W01_P1.html",
+  "VOC_BUILD_A1_W02_P1": "Vocational/Build/Autumn_1_2026-27/VOC_BUILD_A1_W02_P1/VOC_BUILD_A1_W02_P1.html",
+  "VOC_BUILD_A1_W03_P1": "Vocational/Build/Autumn_1_2026-27/VOC_BUILD_A1_W03_P1/VOC_BUILD_A1_W03_P1.html",
+  "VOC_BUILD_A1_W04_P1": "Vocational/Build/Autumn_1_2026-27/VOC_BUILD_A1_W04_P1/VOC_BUILD_A1_W04_P1.html",
+  "VOC_BUILD_A1_W05_P1": "Vocational/Build/Autumn_1_2026-27/VOC_BUILD_A1_W05_P1/VOC_BUILD_A1_W05_P1.html",
+  "VOC_BUILD_A1_W06_P1": "Vocational/Build/Autumn_1_2026-27/VOC_BUILD_A1_W06_P1/VOC_BUILD_A1_W06_P1.html",
+  "VOC_BUILD_A1_W07_P1": "Vocational/Build/Autumn_1_2026-27/VOC_BUILD_A1_W07_P1/VOC_BUILD_A1_W07_P1.html",
+  "VOC_BUILD_A2_W01": "Vocational/Build/Autumn_2_2026-27/VOC_BUILD_A2_W01/VOC_BUILD_A2_W01.html",
+  "VOC_BUILD_A2_W02": "Vocational/Build/Autumn_2_2026-27/VOC_BUILD_A2_W02/VOC_BUILD_A2_W02.html",
+  "VOC_BUILD_A2_W03": "Vocational/Build/Autumn_2_2026-27/VOC_BUILD_A2_W03/VOC_BUILD_A2_W03.html",
+  "VOC_BUILD_A2_W04": "Vocational/Build/Autumn_2_2026-27/VOC_BUILD_A2_W04/VOC_BUILD_A2_W04.html",
+  "VOC_BUILD_A2_W05": "Vocational/Build/Autumn_2_2026-27/VOC_BUILD_A2_W05/VOC_BUILD_A2_W05.html",
+  "VOC_BUILD_A2_W06": "Vocational/Build/Autumn_2_2026-27/VOC_BUILD_A2_W06/VOC_BUILD_A2_W06.html",
+  "VOC_BUILD_A2_W07": "Vocational/Build/Autumn_2_2026-27/VOC_BUILD_A2_W07/VOC_BUILD_A2_W07.html",
+  "VOC_BUILD_A2_W08": "Vocational/Build/Autumn_2_2026-27/VOC_BUILD_A2_W08/VOC_BUILD_A2_W08.html",
+  "VOC_LAUNCH_A1_W01_P1": "Vocational/Launch/Autumn_1_2026-27/VOC_LAUNCH_A1_W01_P1/VOC_LAUNCH_A1_W01_P1.html",
+  "VOC_LAUNCH_A1_W02_P1": "Vocational/Launch/Autumn_1_2026-27/VOC_LAUNCH_A1_W02_P1/VOC_LAUNCH_A1_W02_P1.html",
+  "VOC_LAUNCH_A1_W03_P1": "Vocational/Launch/Autumn_1_2026-27/VOC_LAUNCH_A1_W03_P1/VOC_LAUNCH_A1_W03_P1.html",
+  "VOC_LAUNCH_A1_W04_P1": "Vocational/Launch/Autumn_1_2026-27/VOC_LAUNCH_A1_W04_P1/VOC_LAUNCH_A1_W04_P1.html",
+  "VOC_LAUNCH_A1_W05_P1": "Vocational/Launch/Autumn_1_2026-27/VOC_LAUNCH_A1_W05_P1/VOC_LAUNCH_A1_W05_P1.html",
+  "VOC_LAUNCH_A1_W06_P1": "Vocational/Launch/Autumn_1_2026-27/VOC_LAUNCH_A1_W06_P1/VOC_LAUNCH_A1_W06_P1.html",
+  "VOC_LAUNCH_A2_W01": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W01/VOC_LAUNCH_A2_W01.html",
+  "VOC_LAUNCH_A2_W02": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W02/VOC_LAUNCH_A2_W02.html",
+  "VOC_LAUNCH_A2_W03": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W03/VOC_LAUNCH_A2_W03.html",
+  "VOC_LAUNCH_A2_W04": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W04/VOC_LAUNCH_A2_W04.html",
+  "VOC_LAUNCH_A2_W05": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W05/VOC_LAUNCH_A2_W05.html",
+  "VOC_LAUNCH_A2_W06": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W06/VOC_LAUNCH_A2_W06.html",
+  "VOC_LAUNCH_A2_W07": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W07/VOC_LAUNCH_A2_W07.html",
+  "VOC_LAUNCH_A2_W08_L1": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L1/VOC_LAUNCH_A2_W08_L1.html",
+  "VOC_LAUNCH_A2_W08_L2": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L2/VOC_LAUNCH_A2_W08_L2.html"
+};
+  const panel = $('dayLauncher'), list = $('launchList'), details = $('launchDetails');
+  let openHref = '', signature = '';
+  // The school clock and lesson code are shared with the Now card.
+  function previousLesson(slot, group) {
+    for (let offset = 0; offset <= 14; offset++) {
+      const date = new Date(slot.start);
+      date.setDate(date.getDate() - offset);
+      const prior = schoolSlots(date, times).filter(row => row.start < slot.start &&
+        row.subject === slot.subject && (row.path === group || row.path === 'ALL'));
+      if (prior.length) return prior.sort((a,b) => b.start - a.start)[0];
+    }
+    return null;
+  }
+  function boardTag(n, roster) {
+    const number = 'P' + n, raw = String(roster.keyByNum[n] || '').trim();
+    if (!raw || roster.show !== 'initials' || document.documentElement.dataset.privacyShield === 'on') return number;
+    const initials = raw.split(/\s+/).map(word => word.match(/\p{L}/u)?.[0] || '').slice(0,3).join('').toUpperCase();
+    if (!initials || initials === raw.toUpperCase()) return number;
+    return roster.initialsByNum[n] === initials ? initials : initials + ' (' + number + ')';
+  }
+  function dayTracker(saved) {
+    const marks = {};
+    for (const [key, entry] of Object.entries(saved?.marks || {})) {
+      if (!entry || typeof entry !== 'object') continue;
+      const parts = key.split('|');
+      if (parts.length !== 4 && parts.length !== 6) continue;
+      const [week,day,period] = parts, who = parts.at(-1);
+      const path = parts.length === 6 ? parts[3] : entry.path;
+      const subj = parts.length === 6 ? parts[4] : entry.subj;
+      marks[[week,day,period,who].join('|')] = {...entry,path,subj,
+        state:entry.st || entry.state || 'missed',done:entry.done || entry.cst==='done' || entry.st==='done' || entry.state==='done'};
+    }
+    return {...saved,marks};
+  }
+  function renderDay() {
+    const now = new Date();
+    const configured = true;
+    const slots = configured ? schoolSlots(now,times).sort((a,b)=>a.start-b.start) : [];
+    const live = configured ? schoolContext(now,times) : {slot:null, current:false};
+    const next = live.slot;
+    const later = next && !slots.some(slot=>+slot.start===+next.start);
+    const roster = buildRoster(), tallies = read(KEYS.tally, {}) || {};
+    const tracker = dayTracker(roster.tracker), coverage = read(KEYS.covAbs, {}) || {};
+    const fragment = document.createDocumentFragment();
+    openHref = '';
+    (later ? [...slots,next] : slots).forEach(slot => {
+      const path = slot.path === 'ALL' ? sharedPath : slot.path;
+      const code = activeLessonCode(slot, path);
+      const file = lessonFiles[fileCode(code)];
+      const href = file ? '../../' + file.split('/').map(encodeURIComponent).join('/') : '';
+      const isNext = next && +slot.start === +next.start;
+      if (isNext) openHref = href;
+      if (later && isNext) fragment.append(el('h3',{},'Next lesson · '+slot.start.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'})));
+      const card = el('article',{class:'launch-card'+(isNext ? ' due' : '')});
+      const state = isNext ? (live.current ? 'Now' : 'Next') : '';
+      const time = times.starts[slot.p-1]+'–'+times.ends[slot.p-1];
+      card.append(el('h3',{},'Period '+slot.p+' · '+time+(state ? ' · '+state : '')),
+        el('p',{},slot.subject+' · '+(slot.path === 'ALL' ? 'All groups' : path)),
+        el('p',{class:'launch-code'},code));
+      const strip = el('div',{class:'launch-bits'});
+      const groups = slot.path === 'ALL' ? Object.keys(roster.groups) : [path];
+      const adapted = [], missed = [], owed = [];
+      for (const group of groups) {
+        const last = previousLesson(slot,group);
+        for (const n of roster.groups[group] || []) {
+          const tag = boardTag(n,roster);
+          if (pupilAdapt(n,roster).length || roster.profile?.pupils?.[n]?.tags?.length) adapted.push(tag);
+          if (last) {
+            const absence = isPupilAbsentInSlot(n,last.w,last.day,last.p,tallies,tracker,roster);
+            const entry = coverage[n]?.[activeLessonCode(last,group)];
+            const wasMissed = entry ? (!entry.cleared || (entry.source==='tracker_sync' && absence)) : absence;
+            if (wasMissed) missed.push(tag);
+          }
+          const items = openCatchupsForPupil(n,tracker,roster).filter(item =>
+            item.subj === slot.subject && (item.path === group || item.path === 'ALL'));
+          if (items.length) owed.push(tag+' ('+items.length+') · '+items.map(item=>'W'+item.w+' '+item.d.slice(0,3)+' P'+item.p).join(', '));
+        }
+      }
+      for (const [label, values] of [['Adaptations',adapted],['Missed last lesson',missed],['Open catch-up',owed]]) {
+        const row = el('span',{}); row.append(el('b',{},label+' '),values.join(', ') || 'None'); strip.append(row);
+      }
+      const params = new URLSearchParams({week:slot.w,day:slot.day,period:slot.p,path,part:commPart});
+      strip.append(el('a',{href:'Quick_capture.html?'+params},'Quick capture'));
+      card.append(strip);
+      if (href) card.append(el('a',{class:'launch-link',href,target:'_blank',rel:'noopener'},'Open lesson'));
+      else card.append(el('strong',{},'No linked lesson'),el('p',{},'Check the pathway code for this group in Class names.'));
+      fragment.append(card);
+    });
+    const clock = now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    $('launchClock').textContent = now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})+' · '+clock;
+    if (!slots.length) fragment.prepend(el('p',{},'There are no periods today.'));
+    else if (!next || later) fragment.prepend(el('p',{},"Today's lessons have finished."));
+    // Keep links, keyboard focus and an open tour intact across unchanged clock ticks.
+    const newSignature = Array.from(fragment.children).map(node=>node.outerHTML).join('');
+    if (signature !== newSignature) {
+      const focused = list.contains(document.activeElement) && document.activeElement.getAttribute('href');
+      list.replaceChildren(fragment); signature = newSignature;
+      if (focused) Array.from(list.querySelectorAll('a')).find(a=>a.getAttribute('href')===focused)?.focus({preventScroll:true});
+    }
+    $('launchSetup').hidden = false;
+  }
+  $('launchStart').addEventListener('click', () => {
+    details.hidden = false; renderDay();
+    if (openHref) window.open(openHref,'_blank','noopener');
+    panel.dispatchEvent(new Event('launcheropened'));
+  });
+  $('launchShow').addEventListener('click', () => {
+    details.hidden = false; renderDay(); panel.dispatchEvent(new Event('launcheropened'));
+  });
+  renderDay();
+  setInterval(renderDay,60000);
+  window.addEventListener('pageshow',renderDay);
+  window.addEventListener('storage',renderDay);
+  window.addEventListener('focus',renderDay);
+  document.addEventListener('change',() => { if (!details.hidden) renderDay(); });
+  $('timesForm').addEventListener('submit',renderDay);
+}
+initDayLauncher();
+
 setInterval(() => { if (!document.activeElement?.dataset?.briefNoteInput) renderAll(); }, 30000);
 
 const icon = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="38" fill="#153e64"/><g fill="#fff"><rect x="40" y="40" width="48" height="48" rx="10"/><rect x="104" y="40" width="48" height="48" rx="10"/><rect x="40" y="104" width="48" height="48" rx="10"/><rect x="104" y="104" width="48" height="48" rx="10"/></g></svg>');
@@ -3892,6 +4412,118 @@ document.addEventListener('click', e => {
 </script>
 <script>
 (function(){'use strict';const KEY='mbm_tomorrow_folder_v1',tile=document.getElementById('tomorrowTile'),drawerLink=document.getElementById('tomorrowDrawerFolderLink'),input=document.getElementById('tomorrowUrl'),hint=document.getElementById('tomorrowHint'),message=document.getElementById('folderStatus');function valid(value){try{const u=new URL(value);return u.protocol==='https:'&&u.hostname==='drive.google.com'&&/^\/drive\/(?:u\/\d+\/)?folders\/[A-Za-z0-9_-]+\/?$/.test(u.pathname);}catch(e){return false;}}function apply(value){if(!valid(value))return;tile.href=value;if(drawerLink)drawerLink.href=value;input.value=value;hint.textContent='_OUTBOX / Tomorrow · Open the print pack folder.';refreshRows();}try{apply(localStorage.getItem(KEY)||'');}catch(e){message.textContent='Browser storage is unavailable. The Drive search link still works.';}document.getElementById('tomorrowForm').onsubmit=function(e){e.preventDefault();const value=input.value.trim();if(!valid(value)){message.textContent='Paste a full HTTPS Drive folder link.';return;}apply(value);try{localStorage.setItem(KEY,value);message.textContent='Folder link saved on this device.';}catch(err){message.textContent='Folder link works for this visit. Browser storage could not save it.';}};})();
+</script>
+<script>
+function initToolTour(config) {
+  const find = selector => document.querySelector(selector);
+  const help = document.createElement('button');
+  help.type='button';help.className='tour-help';help.textContent='? Help';help.id='pageTourHelp';
+  help.setAttribute('aria-label','? Help · Show me round');
+  const top = find(config.bar) || find('header') || find('h1').parentElement;
+  if (top.tagName==='H1') top.after(help); else top.append(help);
+  const tip=document.createElement('aside');
+  tip.hidden=true;tip.className='tour-tip';tip.setAttribute('aria-label','Show me round');
+  const count=document.createElement('small'), words=document.createElement('p'), actions=document.createElement('div');
+  words.setAttribute('aria-live','polite');actions.className='tour-actions';
+  function button(label,action){
+    const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=action;actions.append(b);return b;
+  }
+  const back=button('Back',()=>step(index-1,true)), next=button('Next',()=>{if(index===steps.length-1)close();else step(index+1,true);});
+  button('Skip the tour',()=>close());
+  const guide=document.createElement('a');guide.textContent='How it all works';guide.href=config.guide;
+  tip.append(count,words,actions,guide);document.body.append(tip);
+  let index=0,steps=[],target=null,returnTo=help,sessionSeen=new Set();
+  function seen(id,mark=false){
+    let state={};
+    try {
+      const data=JSON.parse(localStorage.getItem(config.key)||'{}');
+      if(data && typeof data==='object' && !Array.isArray(data))state=data;
+      if(mark){state[id]=true;localStorage.setItem(config.key,JSON.stringify(state));}
+    } catch { /* A device with storage turned off can run the tour for this visit. */ }
+    if(mark)sessionSeen.add(id);
+    return sessionSeen.has(id)||state[id]===true;
+  }
+  function close(){
+    const restore=tip.contains(document.activeElement);tip.hidden=true;target?.classList.remove('tour-target');
+    target=null;if(restore)returnTo.focus({preventScroll:true});
+  }
+  function place(){
+    const anchor=target.closest('header') || target.closest('.picker,.opts,.row,.tabs,fieldset,details') || target;
+    anchor.after(tip);
+  }
+  function step(i,move){
+    target?.classList.remove('tour-target');index=i;
+    const [selector,label,after,before]=steps[index];target=find(selector);
+    if(!target){close();return;}
+    const bold=document.createElement('b');bold.textContent=label;
+    words.replaceChildren(before||'Use ',bold,after);
+    count.textContent='Show me round · '+(index+1)+' of '+steps.length;
+    back.disabled=index===0;next.textContent=index===steps.length-1?'Done':'Next';
+    target.classList.add('tour-target');tip.hidden=false;
+    place();
+    if(move)target.scrollIntoView({block:'center',behavior:'instant'});if(move)next.focus({preventScroll:true});
+  }
+  function start(list,id,manual,opener){
+    if(!manual&&seen(id))return;
+    close();returnTo=opener||help;steps=list;seen(id,true);step(0,manual);
+  }
+  help.onclick=()=>start(config.steps,config.id,true,help);
+  if(config.panel){
+    const panel=find('#dayLauncher'), launchHelp=document.createElement('button');
+    launchHelp.type='button';launchHelp.textContent='? Help';launchHelp.className='tour-help';
+    launchHelp.setAttribute('aria-label','? Help for Start my day');find('#launchDetails').prepend(launchHelp);
+    launchHelp.onclick=()=>start(config.panel,config.id+'/day',true,launchHelp);
+    panel.addEventListener('launcheropened',()=>start(config.panel,config.id+'/day',false,launchHelp));
+  }
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!tip.hidden)close();});
+  function firstVisit(){
+    const dialog=document.querySelector('dialog[open]');
+    if(dialog){dialog.addEventListener('close',firstVisit,{once:true});return;}
+    start(config.steps,config.id,false,help);
+  }
+  firstVisit();
+}
+initToolTour({
+  "bar": "header",
+  "steps": [
+    [
+      "#tabBtnNow",
+      "Now",
+      " to see the next lesson."
+    ],
+    [
+      "#launchStart",
+      "Start my day",
+      " to open the lesson that is due."
+    ],
+    [
+      "#tabBtnTools",
+      "All tools",
+      " to find the class tools."
+    ]
+  ],
+  "panel": [
+    [
+      "#launchStart",
+      "Start my day",
+      " to open one lesson."
+    ],
+    [
+      "#launchShow",
+      "See today’s periods",
+      " to check the cards."
+    ],
+    [
+      "#launchSample summary",
+      "See a sample day",
+      " to look at an example."
+    ]
+  ],
+  "id": "personal/My_tools",
+  "guide": "guide/How_it_all_works.html",
+  "key": "mbm_tour_seen_v1"
+});
+
 </script>
 </body>
 </html>

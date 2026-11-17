@@ -73,6 +73,8 @@ details{margin:8px 0}summary{cursor:pointer;font-weight:700;min-height:44px;disp
 @media print{header.top .row,.tabs,.noprint,button,#status{display:none!important}body{background:#fff;color:#000;font-size:11pt}section.card{border:0;padding:0}table,#sheet,#central{min-width:0!important;font-size:9pt}#sheet th{min-width:0!important}thead th{background:#ddd;color:#000;position:static}td input,td select,td textarea{border:0;padding:0;min-height:0;height:auto;background:transparent;color:#000;appearance:none}.tablewrap{overflow:visible;border:0}
 body.slips main>*,body.slips header.top{display:none!important}body.slips #slips{display:block!important}}
 </style>
+<style>.tour-tip,.tour-help{font:600 15px/1.35 system-ui,sans-serif!important}.tour-help,.tour-actions button{background:#fff!important;color:#183c31!important;border:1px solid #365b49!important;min-height:44px!important;padding:.4rem .65rem!important;border-radius:7px!important;cursor:pointer}.tour-tip{position:relative;z-index:1;margin:.4rem 0;max-width:calc(100vw - 12px);width:300px;color:#172e2a!important;background:#fffbea!important;border:2px solid #355944;border-radius:9px;padding:10px 12px;box-sizing:border-box;box-shadow:0 3px 10px #172e2a26}.tour-tip[hidden]{display:none!important}.tour-tip small,.tour-tip p,.tour-tip a{color:#172e2a!important}.tour-tip p{margin:.35rem 0}.tour-actions{display:flex;flex-wrap:wrap;gap:.3rem}.tour-tip a{display:inline-block;margin-top:.4rem;text-decoration:underline}.tour-target{outline:3px dashed #345f43!important;outline-offset:2px}.tour-actions button:disabled{opacity:1;color:#384734!important;background:#eceee4!important}.tour-tip,.tour-tip *,.tour-target{animation:none!important;transition:none!important}@media print{.tour-tip,.tour-help{display:none!important}.tour-target{outline:0!important}}
+</style>
 </head>
 <body>
 <header class="top">
@@ -3112,6 +3114,101 @@ S=loadS(readJSON(KEY,null));
 fromHash();init(false);
 window.addEventListener('hashchange',function(){fromHash();init(false);});
 })();
+</script>
+<script>
+function initToolTour(config) {
+  const find = selector => document.querySelector(selector);
+  const help = document.createElement('button');
+  help.type='button';help.className='tour-help';help.textContent='? Help';help.id='pageTourHelp';
+  help.setAttribute('aria-label','? Help · Show me round');
+  const top = find(config.bar) || find('header') || find('h1').parentElement;
+  if (top.tagName==='H1') top.after(help); else top.append(help);
+  const tip=document.createElement('aside');
+  tip.hidden=true;tip.className='tour-tip';tip.setAttribute('aria-label','Show me round');
+  const count=document.createElement('small'), words=document.createElement('p'), actions=document.createElement('div');
+  words.setAttribute('aria-live','polite');actions.className='tour-actions';
+  function button(label,action){
+    const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=action;actions.append(b);return b;
+  }
+  const back=button('Back',()=>step(index-1,true)), next=button('Next',()=>{if(index===steps.length-1)close();else step(index+1,true);});
+  button('Skip the tour',()=>close());
+  const guide=document.createElement('a');guide.textContent='How it all works';guide.href=config.guide;
+  tip.append(count,words,actions,guide);document.body.append(tip);
+  let index=0,steps=[],target=null,returnTo=help,sessionSeen=new Set();
+  function seen(id,mark=false){
+    let state={};
+    try {
+      const data=JSON.parse(localStorage.getItem(config.key)||'{}');
+      if(data && typeof data==='object' && !Array.isArray(data))state=data;
+      if(mark){state[id]=true;localStorage.setItem(config.key,JSON.stringify(state));}
+    } catch { /* A device with storage turned off can run the tour for this visit. */ }
+    if(mark)sessionSeen.add(id);
+    return sessionSeen.has(id)||state[id]===true;
+  }
+  function close(){
+    const restore=tip.contains(document.activeElement);tip.hidden=true;target?.classList.remove('tour-target');
+    target=null;if(restore)returnTo.focus({preventScroll:true});
+  }
+  function place(){
+    const anchor=target.closest('header') || target.closest('.picker,.opts,.row,.tabs,fieldset,details') || target;
+    anchor.after(tip);
+  }
+  function step(i,move){
+    target?.classList.remove('tour-target');index=i;
+    const [selector,label,after,before]=steps[index];target=find(selector);
+    if(!target){close();return;}
+    const bold=document.createElement('b');bold.textContent=label;
+    words.replaceChildren(before||'Use ',bold,after);
+    count.textContent='Show me round · '+(index+1)+' of '+steps.length;
+    back.disabled=index===0;next.textContent=index===steps.length-1?'Done':'Next';
+    target.classList.add('tour-target');tip.hidden=false;
+    place();
+    if(move)target.scrollIntoView({block:'center',behavior:'instant'});if(move)next.focus({preventScroll:true});
+  }
+  function start(list,id,manual,opener){
+    if(!manual&&seen(id))return;
+    close();returnTo=opener||help;steps=list;seen(id,true);step(0,manual);
+  }
+  help.onclick=()=>start(config.steps,config.id,true,help);
+  if(config.panel){
+    const panel=find('#dayLauncher'), launchHelp=document.createElement('button');
+    launchHelp.type='button';launchHelp.textContent='? Help';launchHelp.className='tour-help';
+    launchHelp.setAttribute('aria-label','? Help for Start my day');find('#launchDetails').prepend(launchHelp);
+    launchHelp.onclick=()=>start(config.panel,config.id+'/day',true,launchHelp);
+    panel.addEventListener('launcheropened',()=>start(config.panel,config.id+'/day',false,launchHelp));
+  }
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!tip.hidden)close();});
+  function firstVisit(){
+    const dialog=document.querySelector('dialog[open]');
+    if(dialog){dialog.addEventListener('close',firstVisit,{once:true});return;}
+    start(config.steps,config.id,false,help);
+  }
+  firstVisit();
+}
+initToolTour({
+  "bar": "header",
+  "steps": [
+    [
+      "#tab-add",
+      "Add a lesson",
+      " to record your class work."
+    ],
+    [
+      "#tab-sheet",
+      "My sheet",
+      " to see your saved lessons."
+    ],
+    [
+      "#tab-setup",
+      "Set up",
+      " to add your timetable."
+    ]
+  ],
+  "id": "personal/Class_record",
+  "guide": "guide/How_it_all_works.html",
+  "key": "mbm_tour_seen_v1"
+});
+
 </script>
 </body>
 </html>
