@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "9f893d79eeb695aef41b95ae098c55ea336394f4d26e7b89b22c25a96668435b"
+    "resources.json": "bbc64019d199f2843644af356232f7605625cde37070f6cb6d0c265265f3a3f3"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -129,7 +129,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles_browser.cjs": "0c193780f901cf4d3b7013819a7488567bf7ce40a75d05dbe43c7a6971877344",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
         "tools/sw2/check_tokens_inert.cjs": "c45f009235c70d84a7e1ee8fc08fb0e6aa5e7efcc162714eff3c844cce68e9f1",
-        "assets/catalogue/lesson-order.json": "85f5913d98115364364d83ef77ad2187f3178560ca7d811608c2e86749b9a382",
+        "assets/catalogue/lesson-order.json": "479c87053b2bc9f2c85a7f2d6cbe48a513eaf94d9ba5620d6d4ffdf92b8ebd66",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "daf4703a160678b9076ed3bc7487e841327162d237559356a01335a3051e3e3c",
@@ -3448,14 +3448,15 @@ CATALOGUE_ORIGINAL_ROWS_SHA256 = "15150552200dcf96089afd27ec81b5712a63aef929d07e
 # digest below are re-cut by tools/catalogue/pin_catalogue_contract.py from
 # rows it has verified against that derivation; an edit to any appended row,
 # a removed pack row or an extra lesson row still reds here.
-CATALOGUE_SHELF_ROWS = 656
+CATALOGUE_SHELF_ROWS = 671
 # UX2 A1: keys that may be appended to an original row without moving its
 # digest (see catalogue_errors). Nothing else is additive. No original row
 # carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
 # second set is empty and the allowance cannot launder a pre-existing value.
 CATALOGUE_ADDITIVE_TAG_KEYS = frozenset({"halfTerm", "unit"})
 CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
-CATALOGUE_SHELF_ROWS_SHA256 = "cd22ca8f715d235513d101e3705336111985fd2f1034a304d0efe2e6df11fe3a"
+# Re-cut 2026-11-17 (ruling thread, ruling A and the Week 8 goal rule): 15 reviewed rows return at their earlier place, same ids as reviewed in 26ec786d (a1aaa-sci-launch-a1-w03-l1-microscopy-and-total-magnification, a1aaa-sci-launch-a1-w03-l2-calculating-magnification-and-unit-conversions, a1aaa-sci-launch-a1-w03-l3-magnification-exam-questions-and-scale-bar-lab, a1aaa-sci-launch-a1-w04-l1-diffusion-net-movement-down-a-concentration-gradient, a1aaa-sci-launch-a1-w04-l2-diffusion-in-the-lungs-alveoli-adaptations-and-testing-breat, a1aaa-sci-launch-a1-w04-l3-explaining-diffusion-in-the-exam-causal-chains-and-command-w, a1aaa-sci-launch-a1-w05-l1-osmosis-net-movement-of-water-across-a-partially-permeable-m, a1aaa-sci-launch-a1-w05-l2-osmosis-core-practical-potato-cylinders-and-percentage-chang, a1aaa-sci-launch-a1-w05-l3-analysing-and-evaluating-the-osmosis-practical-zero-crossing, a1aaa-sci-launch-a1-w06-l1-active-transport-moving-particles-against-a-concentration-gr, a1aaa-sci-launch-a1-w06-l2-active-transport-in-root-hair-cells-and-the-gut-adaptations-, a1aaa-sci-launch-a1-w06-l3-comparing-diffusion-osmosis-and-active-transport-decision-la, a1aaa-sci-launch-a1-w07-l1-topic-1-knowledge-round-up-connecting-microscopy-diffusion-o, a1aaa-sci-launch-a1-w07-l2-decoding-gcse-command-words-across-topic-1-describe-explain-, a1aaa-sci-launch-a1-w07-l3-topic-1-independent-exam-practice-feedback-repair-microscopy), and one appended row, dy4-sci-build-a1-w08-p2-show-what-you-know-about-body-science, one field, its desc, now carries the learning goal its page states word for word; no other row added, removed, reordered or edited (with the 15 dropped and that desc put back the 656 rows digest to cd22ca8f). Previous count 656, previous digest cd22ca8f.
+CATALOGUE_SHELF_ROWS_SHA256 = "ee87b6d2f3b8ab6472f961649ae1e5b4ec80ed2c1447a064a197f34dc660e9eb"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
