@@ -1519,7 +1519,7 @@ CATALOGUE_PINS = {
         "Science/Launch/W17-W26_2026-27/SCI_L_W25_Plant_Transport_Follow_The_Water_And_Sugar.html": "769d31103271220bb6aedc6cf67539974de7111300a166a9407c36db54572478",
         "Science/Launch/W17-W26_2026-27/SCI_L_W26_Greenhouse_Challenge_Grow_More_With_A_Water_Budget.html": "b5c0548451e26c321cd92f2d5ba39325dc43e284841bc6242f2b6532b3085269",
         "art.html": "066d4bdd3107ae7105d2930352b48e8b848f53a402874e3ed432ac7eb0db41bf",
-        "tools/downloads/SOURCE_PLACEMENT.json": "a4ad22abede7e69dcbd434781ea385c613662121f38417c71e658378fe229b9e",
+        "tools/downloads/SOURCE_PLACEMENT.json": "d88fa54138d15c03ac2b72df957f472571a7946d04f06b62592a23608ae5514f",
         "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/BUILD_RE_A1_W08_Captioned_Model.mp4": "3ab4e04878f4f32431990301f4efcd6d13622f00b4c8d8614a55ccd7d5da6f5f",
         "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/BUILD_RE_A1_W08_Knowledge_Organiser.html": "a66d638003a6a58250154c3744099d04780e20051c7e5455e3c3a98144bb1391",
         "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/BUILD/Autumn_1/W08/BUILD_RE_A1_W08_Lesson.html": "e8807a28357d2bc0c4fc8d1a104b1ddc7ed138a4bb2ea08608218a038dfa28af",
