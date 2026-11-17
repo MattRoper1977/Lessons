@@ -3065,7 +3065,9 @@ CATALOGUE_PINS = {
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L2/VOC_LAUNCH_A2_W08_L2.html": "a75a50b647563adb992d86017284ba4999be3d2f3452661f57a6a27b182e0dc8",
         "kits/class_tools/Catch_up_Tracker.html": "3b4cac07245fd807c860525dd35bb81ef987157ada609b71b5263f7b66651f22",
         "kits/class_tools/Class_names.html": "cb9b8032dcc74a3ffdf40bbfe39147b88a629e0344f6b6d11b1543f7664c57cd",
-        "kits/class_tools/My_tools.html": "929086636ee84a49d4f945642236b46688ab7e9f9a431f8e950ff513b81c21f6",
+        "kits/class_tools/Class_record.html": "19c585bf410bf6b9f0ba156e9ecd41da3311f499cb4400b3d4e66a0051626fe9",
+        "kits/class_tools/How_to_use.html": "0eb6033c3cc108950d6ec2cf731bd041ba1006cfc6f648b1fc763017b6637c10",
+        "kits/class_tools/My_tools.html": "50039a2405f090c5e71c9fb3e44f2d703f09d86b0549307b0e1f05f70429bb88",
         "kits/class_tools/Practical_log.html": "6fded535b36c2768955ae9a9486fb6cb5fe24ed6109d3502208026ae01193f26",
         "kits/class_tools/Requests.html": "6a26d977647960ebb20d03fd2e32185739a91ee9e1dce30ed3d7bde6ea819ca3",
         "kits/class_tools/Missed_last_week.html": "b33ff12ee8364ad6b9d387d6c79fd620ef62088b2580f17c9d0a9bc7a053f9bf",
@@ -3099,9 +3101,9 @@ CATALOGUE_PINS = {
         "kits/class_tools/trial/Award_tracker.html": "f6e8bfd235416720fdb1303829c1729e1d631687a742ce82314c13881438a8e7",
         "kits/class_tools/trial/Catch_up_Tracker.html": "4a58904cceaacff232d7f0295d90f4174125813fcd9473c97670081e13192074",
         "kits/class_tools/trial/Class_names.html": "08afa1fe1312e00c08a0305c7289015a9e49a6c775b80f75a74cc7724ad07505",
-        "kits/class_tools/trial/Class_record.html": "bedc8828ae85356c956ee638d06258e9da3c67d5a99664362cc50530fc061c83",
+        "kits/class_tools/trial/Class_record.html": "19c585bf410bf6b9f0ba156e9ecd41da3311f499cb4400b3d4e66a0051626fe9",
         "kits/class_tools/trial/Coverage_map.html": "08b12ddaa084075c2da6a951627d5bc251aef548c449cfd300a30f365a7d061d",
-        "kits/class_tools/trial/How_to_use.html": "4a7140588bff395bb13fa011dc73d73d40174ec2268ebbc4ed4eeb461c0d49a6",
+        "kits/class_tools/trial/How_to_use.html": "0eb6033c3cc108950d6ec2cf731bd041ba1006cfc6f648b1fc763017b6637c10",
         "kits/class_tools/trial/Lesson_extras.html": "c778fe2430353bf6e51a8a903daca4afec5b0a826c46efc56dbc2ee1e84e0f6d",
         "kits/class_tools/trial/Missed_last_week.html": "99d7410e4847c7b7dead5432a74a9ee42ff20be8188c40ebd681cd25eb571e46",
         "kits/class_tools/trial/My_tools.html": "08850edd522d9961201538d7e9604768154891001d748c8d6b320a4c19f53dad",
@@ -3792,7 +3794,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "78ba0ac57136fa618fa248ad6dd3c0ed7d51f3f41e2859fac5a0bca5a7e334bb",
+    "lessons": "5eb7796c9a27bd61237e36ec09f345b5656ed62c4ed175b9082d1f0de42ff917",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
