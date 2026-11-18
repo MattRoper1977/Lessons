@@ -5712,6 +5712,8 @@ REVIEWED_PATHS += ('kits/class_tools/next/Award_tracker.html', 'kits/class_tools
 REVIEWED_PATHS += ('kits/class_tools/trial/Award_tracker.html', 'kits/class_tools/trial/Catch_up_Tracker.html', 'kits/class_tools/trial/Class_names.html', 'kits/class_tools/trial/Class_record.html', 'kits/class_tools/trial/Coverage_map.html', 'kits/class_tools/trial/How_to_use.html', 'kits/class_tools/trial/Lesson_extras.html', 'kits/class_tools/trial/Missed_last_week.html', 'kits/class_tools/trial/My_tools.html', 'kits/class_tools/trial/My_tools_pocket.html', 'kits/class_tools/trial/Practical_log.html', 'kits/class_tools/trial/Quick_capture.html', 'kits/class_tools/trial/Requests.html', 'kits/class_tools/trial/Retrieval_builder.html',)
 # 2026-11-17: the trial's class record and how-to pages also sit beside the owner's own tools page, which gains one tile to the class record (same bytes as the trial copies; noindex, no names, no network).
 REVIEWED_PATHS += ('kits/class_tools/Class_record.html', 'kits/class_tools/How_to_use.html')
+# 2026-11-17: the class tools launcher return adds a public try page and a guide page beside the class pages (no names, no network; the changed class pages keep their paths).
+REVIEWED_PATHS += ('kits/class_tools/guide/How_it_all_works.html', 'kits/class_tools/try/index.html')
 
 
 # Pathway labels phase 2 (Lessons #824, owner approval 8 Nov 2026 14:34Z): the relabelled lesson pages and the

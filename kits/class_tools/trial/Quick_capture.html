@@ -1812,7 +1812,9 @@ dialog.cms-dialog::backdrop {
 }
 
 </style>
-<style id="trial-hide">#licenceNoticeBanner{display:none!important}</style></head>
+<style id="trial-hide">#licenceNoticeBanner{display:none!important}</style><style>.tour-tip,.tour-help{font:600 15px/1.35 system-ui,sans-serif!important}.tour-help,.tour-actions button{background:#fff!important;color:#183c31!important;border:1px solid #365b49!important;min-height:44px!important;padding:.4rem .65rem!important;border-radius:7px!important;cursor:pointer}.tour-tip{position:relative;z-index:1;margin:.4rem 0;max-width:calc(100vw - 12px);width:300px;color:#172e2a!important;background:#fffbea!important;border:2px solid #355944;border-radius:9px;padding:10px 12px;box-sizing:border-box;box-shadow:0 3px 10px #172e2a26}.tour-tip[hidden]{display:none!important}.tour-tip small,.tour-tip p,.tour-tip a{color:#172e2a!important}.tour-tip p{margin:.35rem 0}.tour-actions{display:flex;flex-wrap:wrap;gap:.3rem}.tour-tip a{display:inline-block;margin-top:.4rem;text-decoration:underline}.tour-target{outline:3px dashed #345f43!important;outline-offset:2px}.tour-actions button:disabled{opacity:1;color:#384734!important;background:#eceee4!important}.tour-tip,.tour-tip *,.tour-target{animation:none!important;transition:none!important}@media print{.tour-tip,.tour-help{display:none!important}.tour-target{outline:0!important}}
+</style>
+</head>
 <body data-capture-tab="tally">
 <div id="pageContent"><header><div class="head"><h1>Quick capture <svg class="privacy-lock" role="img" aria-label="Names stay on this phone. Files say Pupil N." viewBox="0 0 24 24" width="18" height="20"><path d="M7 10V7a5 5 0 0 1 10 0v3M5 10h14v11H5z" fill="none" stroke="currentColor" stroke-width="2"/></svg></h1><button type="button" id="openOmniBtn" aria-keyshortcuts="Control+K /">Search</button><button id="openKey">Pupil key</button><button id="openSettings">Settings</button></div><div class="lesson-line"><strong id="lessonSummary"></strong><a class="button" id="openPromptStudio" href="Requests.html">Prompt studio</a><button id="changeLesson">Change</button></div></header>
 <noscript>This staff tool needs JavaScript enabled. It runs entirely on this device.</noscript>
@@ -1881,9 +1883,12 @@ dialog.cms-dialog::backdrop {
 (function(){
 'use strict';
 const GROUPS={"Group A":[1,4,7,10,13],"Group B":[2,5,8,11],"Group C":[3,6,9,12]};
+const capturePack = window.__mbmGetPack();
+const captureGroups = capturePack.groups;
+for (const group of captureGroups) if (!Object.hasOwn(GROUPS,group)) GROUPS[group]=[];
 function normalLabel(value){return String(value||'').trim().replace(/\s+/g,' ').toLocaleLowerCase('en-GB');}
 function numberedPupils(groups,key){
- var all=['Group A','Group B','Group C'].flatMap(function(path){return (groups[path]||[]).map(function(label){return {path:path,label:label};});});
+ var all=captureGroups.flatMap(function(path){return (groups[path]||[]).map(function(label){return {path:path,label:label};});});
  return all.map(function(row,i){
   var value=normalLabel(row.label),explicit=value.match(/^(?:pupil\s*|p)?(\d+)$/i),full=Object.keys(key).filter(function(n){return normalLabel(key[n])===value;}),first=Object.keys(key).filter(function(n){return normalLabel(key[n]).split(' ')[0]===value;});
   row.n=explicit?+explicit[1]:(full.length===1?+full[0]:(first.length===1?+first[0]:i+1));return row;
@@ -1900,10 +1905,10 @@ function pupilMatchNumber(value,groups,key){
 function applyPupilCapacity(){
  let saved={},labels={},profile={};try{saved=JSON.parse(localStorage.getItem('mbm_catchup_tracker_v1')||'{}');labels=JSON.parse(localStorage.getItem('mbm_pupil_key_v1')||'{}');profile=JSON.parse(localStorage.getItem('mbm_pupil_profile_v1')||'{}');}catch (e) { if (window.__mbmRecordSoftError) window.__mbmRecordSoftError(e); }
  const entries=numberedPupils(saved.pupils||{},labels),assigned=new Set(),labelNumbers=Object.keys(labels).filter(n=>+n>=1&&+n<=20&&String(labels[n]||'').trim());
- const candidates=[...new Set([...labelNumbers,...Object.keys(profile.pupils||{}).filter(n=>+n>=1&&+n<=20&&['Group A','Group B','Group C'].includes(profile.pupils[n]?.group))])];
+ const candidates=[...new Set([...labelNumbers,...Object.keys(profile.pupils||{}).filter(n=>+n>=1&&+n<=20&&captureGroups.includes(profile.pupils[n]?.group))])];
  if(entries.length||candidates.length){Object.keys(GROUPS).forEach(path=>GROUPS[path]=[]);entries.forEach(row=>{if(row.n>=1&&row.n<=20&&!assigned.has(row.n)){GROUPS[row.path].push(row.n);assigned.add(row.n);}});}
  else{GROUPS['Group A']=[4,7,9,12];GROUPS['Group B']=[1,3,5,8,11];GROUPS['Group C']=[2,6,10];}
- const ungrouped=[];candidates.forEach(id=>{const n=+id;if(assigned.has(n))return;const path=profile.pupils?.[id]?.group;if(['Group A','Group B','Group C'].includes(path)){GROUPS[path].push(n);assigned.add(n);}else ungrouped.push(n);});
+ const ungrouped=[];candidates.forEach(id=>{const n=+id;if(assigned.has(n))return;const path=profile.pupils?.[id]?.group;if(captureGroups.includes(path)){GROUPS[path].push(n);assigned.add(n);}else ungrouped.push(n);});
  const prompt=document.getElementById('ungroupedPrompt');if(prompt){prompt.hidden=!ungrouped.length;prompt.textContent='Some pupils have no group. Set groups in Class names.';}
 }
 function trackerPupilLabel(s,n,path){
@@ -1919,7 +1924,23 @@ function tallyPupils(c){
  if(!tallyMemberIndex||indexedTallies!==tallies){tallyMemberIndex=new Map();indexedTallies=tallies;Object.entries(tallies).forEach(([key,record])=>{const bits=key.split('|'),n=+bits[3];if(!record||!Number.isInteger(n)||n<1||n>20)return;const context=bits.slice(0,3).join('|')+'|'+record.path;if(!tallyMemberIndex.has(context))tallyMemberIndex.set(context,new Set());tallyMemberIndex.get(context).add(n);});}
  return [...new Set([...(GROUPS[c.path]||[]),...(tallyMemberIndex.get([c.w,c.d,c.p,c.path].join('|'))||[])])];
 }
-function availableDaysForWeek(w){return +w===1?DAYS.slice(1):DAYS;}
+function readTermConfig(){
+  try {
+    const raw = JSON.parse(localStorage.getItem('mbm_term_config_v1') || 'null');
+    if (raw && typeof raw.w1Monday === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.w1Monday)) {
+      const [y, m, d] = raw.w1Monday.split('-').map(Number);
+      const dt = new Date(y, m - 1, d, 12);
+      if (!Number.isNaN(dt.getTime())) return { w1Monday: raw.w1Monday, y, m, d, skipW1Mon: raw.skipW1Mon !== false };
+    }
+  } catch (e) { if (window.__mbmRecordSoftError) window.__mbmRecordSoftError(e); }
+  const __pk = window.__mbmGetPack ? window.__mbmGetPack() : null;
+  const __w1 = (__pk && typeof __pk.termStartMonday === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(__pk.termStartMonday)) ? __pk.termStartMonday : '2026-01-05';
+  const [__y, __m, __d] = __w1.split('-').map(Number);
+  return { w1Monday: __w1, y: __y || 2026, m: __m || 11, d: __d || 2, skipW1Mon: (__pk && typeof __pk.skipFirstDay === 'boolean') ? __pk.skipFirstDay : true, weeks: (__pk && __pk.termWeeks) || 7 };
+}
+const termCfg = readTermConfig();
+
+function availableDaysForWeek(w){return DAYS.filter(d => TT[d].length && !(+w===1 && d==='Monday' && termCfg.skipW1Mon));}
 function selectDays(preferred){const select=$('day');select.replaceChildren();availableDaysForWeek(+$('week').value).forEach(day=>select.append(el('option',{value:day},day)));select.value=preferred;if(!select.value)select.selectedIndex=0;}
 
 const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday'];
@@ -1959,9 +1980,9 @@ function validSchoolTimes(value){
  const format=t=>typeof t==='string'&&/^([01]\d|2[0-3]):[0-5]\d$/.test(t);
  return !!value&&value.v===2&&Array.isArray(value.starts)&&Array.isArray(value.ends)&&value.starts.length>=1&&value.starts.length<=12&&value.ends.length===value.starts.length&&value.starts.every((start,i)=>format(start)&&format(value.ends[i])&&value.ends[i]>start&&(!i||start>=value.ends[i-1]));
 }
-function schoolWeek(date){var st=String((window.__mbmGetPack&&window.__mbmGetPack().termStartMonday)||"2026-01-05").split("-");var base=Date.UTC(+st[0]||2026,(+st[1]||11)-1,+st[2]||2);return 1+Math.round((Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()-(date.getDay()+6)%7)-base)/604800000);}
+function schoolWeek(date){ return 1 + Math.round((Date.UTC(date.getFullYear(), date.getMonth(), date.getDate() - (date.getDay() + 6) % 7) - Date.UTC(termCfg.y, termCfg.m - 1, termCfg.d)) / 604800000); }
 function schoolSlots(date,times){
- var pk=window.__mbmGetPack?window.__mbmGetPack():null;var maxW=Math.max(1,Math.min(52,(pk&&pk.termWeeks)||7));var skipFirst=pk&&typeof pk.skipFirstDay==='boolean'?pk.skipFirstDay:true;const w=schoolWeek(date),day=['Monday','Tuesday','Wednesday','Thursday','Friday'][date.getDay()-1];if(w<1||w>maxW||!day||(skipFirst&&w===1&&day==='Monday'))return [];
+ var pk=window.__mbmGetPack?window.__mbmGetPack():null;var maxW=Math.max(1,Math.min(52,(pk&&pk.termWeeks)||7));var skipFirst=termCfg.skipW1Mon;const w=schoolWeek(date),day=['Monday','Tuesday','Wednesday','Thursday','Friday'][date.getDay()-1];if(w<1||w>maxW||!day||(skipFirst&&w===1&&day==='Monday'))return [];
  const clock=text=>{const [h,m]=text.split(':').map(Number);return new Date(date.getFullYear(),date.getMonth(),date.getDate(),h,m);};
  return TT[day].map(row=>({w,day,p:row[0],path:row[1],subject:row[2],lesson:LN[day+'|'+row[0]],start:clock(times.starts[row[0]-1]),end:clock(times.ends[row[0]-1])}));
 }
@@ -2019,13 +2040,18 @@ function pad(n){return String(n).padStart(2,'0');}
 function dateISO(d=new Date()){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
 function dateStamp(d=new Date()){return dateISO(d).replace(/-/g,'');}
 function timeStamp(d=new Date()){return pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds());}
-function lessonDate(w,d){var st=String((window.__mbmGetPack&&window.__mbmGetPack().termStartMonday)||"2026-01-05").split("-");return new Date(+st[0]||2026,(+st[1]||11)-1,(+st[2]||2)+(+w-1)*7+DAYS.indexOf(d),12);}
-function lessonCode(w, path, subj, n){
-  var pfx = (typeof PREFIX !== 'undefined' && PREFIX[subj]) ? PREFIX[subj] : 'CORE';
-  var gp = String(path || 'ALL').toUpperCase().replace(/[^A-Z0-9]+/g, '_');
-  var tc = (window.__mbmGetPack && window.__mbmGetPack().termCode) ? String(window.__mbmGetPack().termCode).toUpperCase().replace(/[^A-Z0-9]+/g, '') : 'T1';
-  var wk = tc + '_W' + String(Math.max(1, +w || 1)).padStart(2, '0');
-  return pfx + '_' + gp + '_' + wk + '_L' + (n || 1);
+function lessonDate(w,d){return new Date(termCfg.y,termCfg.m-1,termCfg.d+(+w-1)*7+DAYS.indexOf(d),12);}
+function taughtWeek(w, path, subj) {
+  const lag = Number(window.__mbmGetPack().lessonLag?.[path+'|'+subj]);
+  return Math.max(1, (+w || 1) - (Number.isInteger(lag) ? lag : 0));
+}
+function lessonCode(w, path, subj, n) {
+  const pack = window.__mbmGetPack();
+  const prefix = pack.subjectPrefixes?.[subj] || PREFIX[subj] || 'CORE';
+  const group = String(path || 'ALL').toUpperCase().replace(/[^A-Z0-9]+/g, '_');
+  const term = String(pack.termCode || 'T1').toUpperCase().replace(/[^A-Z0-9]+/g, '');
+  const week = String(taughtWeek(w, path, subj)).padStart(2,'0');
+  return [prefix, group, term, 'W'+week, 'L'+(n || 1)].join('_');
 }
 
 function fileCode(code){return code.replace(/ /g,'_');}
@@ -2108,13 +2134,13 @@ function renderTallies(){
 
 function renderWeekCounts(){const c=context(),box=$('weekCounts');box.replaceChildren();GROUPS[c.path].forEach(n=>{const sum={got:0,nearly:0,again:0};Object.entries(tallies).forEach(([k,r])=>{const bits=k.split('|');if(r&&+bits[0]===c.w&&+bits[3]===n&&Object.hasOwn(sum,r.state))sum[r.state]++;});const item=el('div',{class:'count'});item.append(el('b',{'data-pupil-label':'1',...tagAttrs(n)},pupilTag(n)),el('span',{},sum.got+' got it · '+sum.nearly+' partly · '+sum.again+' not yet'));box.append(item);});}
 function selectPeriods(preferred){const box=$('period');box.replaceChildren();TT[$('day').value].forEach(l=>box.append(el('option',{value:l[0]},'P'+l[0])));box.value=String(preferred||TT[$('day').value][0][0]);if(!box.value)box.selectedIndex=box.options.length-1;}
-function allSlots(){const a=[];for(let w=1;w<=7;w++)availableDaysForWeek(w).forEach(d=>TT[d].forEach(l=>a.push({w,d,p:l[0]})));return a;}
+function allSlots(){const a=[];for(let w=1;w<=capturePack.termWeeks;w++)availableDaysForWeek(w).forEach(d=>TT[d].forEach(l=>a.push({w,d,p:l[0]})));return a;}
 function renderLesson(){const c=context();status('');$('lessonPanel').className='panel lesson '+c.path;$('sharedOptions').hidden=c.subj!=='Community Time';$('communityPartField').hidden=c.subj!=='Community Time'||c.w!==4;$('pathTag').textContent=c.path;$('lessonName').textContent=c.subj+(c.subj==='Community Time'?'':' · Lesson '+c.lesson);$('lessonCode').textContent=c.code;$('lessonDate').textContent=c.d+' · '+times.starts[c.p-1]+' to '+times.ends[c.p-1];const slots=allSlots(),i=slots.findIndex(x=>x.w===c.w&&x.d===c.d&&x.p===c.p);$('prevPeriod').disabled=i===0;$('nextPeriod').disabled=i===slots.length-1;if(!GROUPS[c.path].includes(evidencePupil))evidencePupil=GROUPS[c.path][0];renderTallies();renderEvidence();if(typeof renderBooksPass==='function')renderBooksPass();$('lessonSummary').textContent=c.d+' P'+c.p+' · '+c.path+' · '+c.subj;renderSendQueue();syncPracticalLink(c);$('finishResult').hidden=true;}
 function movePeriod(delta,c=context()){const slots=allSlots(),i=slots.findIndex(x=>x.w===c.w&&x.d===c.d&&x.p===c.p),next=slots[i+delta];if(!next)return false;$('week').value=next.w;selectDays(next.d);selectPeriods(next.p);$('communityPart').value='1';renderLesson();return true;}
 function today(now=new Date()){
  const chosen=schoolContext(now,times),slot=chosen.slot;
  if(slot){$('week').value=String(slot.w);selectDays(slot.day);selectPeriods(slot.p);$('clockHint').textContent=schoolNowText(chosen,times,now)+(timesMigrated?' · Period times set to your school day':'');renderLesson();}
- else{const week=Math.max(1,Math.min(7,schoolWeek(now)));$('week').value=String(week);selectDays(DAYS[Math.max(0,Math.min(4,now.getDay()-1))]);selectPeriods(1);$('clockHint').textContent='Choose the week and lesson. This date is outside the saved timetable.';renderLesson();const stored=read('mbm_qc_lesson_v1',{});if(new URLSearchParams(location.search).get('now')!=='1'&&stored.date===dateISO(now)&&stored.confirmed&&stored.w>=1&&stored.w<=7&&availableDaysForWeek(stored.w).includes(stored.d)&&TT[stored.d].some(l=>l[0]===stored.p)){$('week').value=stored.w;selectDays(stored.d);selectPeriods(stored.p);$('pathway').value=stored.path||'Group A';$('communityPart').value=stored.part||'1';renderLesson();}else if(!$('lessonDialog').open){$('lessonDialog').showModal();status('Check this lesson once, then tap Done.');}}
+ else{const week=Math.max(1,Math.min(capturePack.termWeeks,schoolWeek(now)));$('week').value=String(week);selectDays(DAYS[Math.max(0,Math.min(4,now.getDay()-1))]);selectPeriods(1);$('clockHint').textContent='Choose the week and lesson. This date is outside the saved timetable.';renderLesson();const stored=read('mbm_qc_lesson_v1',{});if(new URLSearchParams(location.search).get('now')!=='1'&&stored.date===dateISO(now)&&stored.confirmed&&stored.w>=1&&stored.w<=capturePack.termWeeks&&availableDaysForWeek(stored.w).includes(stored.d)&&TT[stored.d].some(l=>l[0]===stored.p)){$('week').value=stored.w;selectDays(stored.d);selectPeriods(stored.p);$('pathway').value=stored.path||'Group A';$('communityPart').value=stored.part||'1';renderLesson();}else if(!$('lessonDialog').open){$('lessonDialog').showModal();status('Check this lesson once, then tap Done.');}}
  renderHelp();
 }
 
@@ -2266,7 +2292,7 @@ async function handlePhoto(e){const f=e.target.files?.[0];e.target.value='';if(!
 function commitPhoto(){if(activePhoto){activePhoto.tags=[...$('evidenceTags').querySelectorAll('[aria-pressed=true]')].map(b=>b.dataset.tag);activePhoto.note=$('evidenceNote').value;prefs.lastTags=activePhoto.tags;write(V2.prefs,prefs);activePhoto=null;renderQueue();}}
 function openSettings(){const box=$('noteSettings');box.replaceChildren();noteChips().forEach((text,i)=>{const label=el('label',{},'Note '+(i+1)),input=el('input',{type:'text',maxlength:'80','data-note-chip':i});input.value=text;input.onchange=()=>{prefs.notes=[...box.querySelectorAll('input')].map(n=>n.value.trim()).map((s,i)=>s||noteChips()[i]);write(V2.prefs,prefs);renderTallies();};label.append(input);box.append(label);});$('showAs').value=currentMode();$('vibration').checked=prefs.vibration!==false;$('settingsDialog').showModal();}
 
-for(let w=1;w<=7;w++)$('week').append(el('option',{value:w},'Week '+w));DAYS.forEach(d=>$('day').append(el('option',{value:d},d)));
+for(let w=1;w<=capturePack.termWeeks;w++)$('week').append(el('option',{value:w},'Week '+w));DAYS.forEach(d=>$('day').append(el('option',{value:d},d)));
 Object.entries(GROUPS).forEach(([path,ns])=>{const set=el('fieldset');set.append(el('legend',{},path));ns.forEach(n=>{const l=el('label'),i=el('input',{id:'key-'+n,type:'text',maxlength:'100',autocomplete:'off'});i.value=String(pupilKey[n]||'');l.append(el('span',{},'Pupil '+n),i);set.append(l);});$('keyGroups').append(set);});
 
 {const more=el('fieldset');more.append(el('legend',{},'More pupils, up to 20'));for(let n=1;n<=20;n++)if(!$('key-'+n)){const label=el('label',{},'Pupil '+n),input=el('input',{id:'key-'+n,type:'text',maxlength:'100',autocomplete:'off'});input.value=String(pupilKey[n]||'');label.append(input);more.append(label);}if(more.children.length>1)$('keyGroups').append(more);}
@@ -2506,9 +2532,20 @@ $('openPromptStudio').onclick=()=>{
  try{window.name=JSON.stringify({mbmStudioNav:1,from:'Quick_capture.html',w:c.w,day:c.d,p:c.p,path:c.path,commPart:+($('communityPart').value||1),tier,time:studioTime});}catch (e) { if (window.__mbmRecordSoftError) window.__mbmRecordSoftError(e); }
 };
 window.PhoneTools=Object.freeze({TT,LN,GROUPS,PREFIX,lessonCode,fileCode,redaction,redact,uncertainWords,context,tallyCSV,evidenceFiles,jpeg,zip,crc32,dateISO,dateStamp,timeStamp,lessonDate,today,setTally,keyFile});
+$('pathway').replaceChildren(...captureGroups.map(group=>el('option',{value:group},group)));
 selectDays('Monday');selectPeriods(1);
-for(let w=1;w<=7;w++)$('absence-week').append(el('option',{value:w},'Week '+w));
-refreshLabels();renderTargets();today();$('absence-week').value=context().w;renderQueue();
+for(let w=1;w<=capturePack.termWeeks;w++)$('absence-week').append(el('option',{value:w},'Week '+w));
+function openRequestedPeriod() {
+  const q = new URLSearchParams(location.search), week = q.get('week'), day = q.get('day'), p = +q.get('period');
+  if (!Array.from($('week').options).some(o=>o.value===week) || !availableDaysForWeek(+week).includes(day) ||
+      !(TT[day] || []).some(row=>row[0]===p)) return false;
+  $('week').value=week; selectDays(day); selectPeriods(p);
+  if (Array.from($('pathway').options).some(o=>o.value===q.get('path'))) $('pathway').value=q.get('path');
+  $('communityPart').value=q.get('part')==='2'?'2':'1';
+  $('clockHint').textContent='Period chosen in Start my day.';
+  renderLesson(); return true;
+}
+refreshLabels();renderTargets();if (!openRequestedPeriod()) today();$('absence-week').value=context().w;renderQueue();
 Object.entries(tallies).forEach(([key,r])=>{const [w,d,p,n]=key.split('|');if(!r?.state||!DAYS.includes(d)||!TT[d].some(l=>l[0]===+p)||!GROUPS[r.path]||!validCode(r.code))return;const c={w:+w,d,p:+p,path:r.path,subj:r.subj,lesson:LN[d+'|'+p],code:r.code,date:lessonDate(w,d)};if(!sendQueue[queueID(c)])sendQueue[queueID(c)]={c:storedContext(c)};});if(Object.keys(sendQueue).length>0||localStorage.getItem(V2.queue)!==null)write(V2.queue,sendQueue);
 const requested=location.hash.slice(1),last=view.date===dateISO()?view.tab:'tally',initial=requested==='key'?'tally':requested==='absence-panel'?'absent':requested||last;const rememberedScroll=clone(view.scroll||{});showTab(initial);view.scroll=rememberedScroll;requestAnimationFrame(()=>$('pageContent').scrollTo(0,view.scroll?.[initial]||0));if(requested==='key')$('keyDialog').showModal();
 renderHelp();renderAbsence();renderSendQueue();
@@ -5911,5 +5948,100 @@ function closeQCOmni(){if(window.MbmCms)window.MbmCms.OmniSearch.close();}
 
 </script>
 <!--CMS_SHARED_SCRIPT_END-->
+<script>
+function initToolTour(config) {
+  const find = selector => document.querySelector(selector);
+  const help = document.createElement('button');
+  help.type='button';help.className='tour-help';help.textContent='? Help';help.id='pageTourHelp';
+  help.setAttribute('aria-label','? Help · Show me round');
+  const top = find(config.bar) || find('header') || find('h1').parentElement;
+  if (top.tagName==='H1') top.after(help); else top.append(help);
+  const tip=document.createElement('aside');
+  tip.hidden=true;tip.className='tour-tip';tip.setAttribute('aria-label','Show me round');
+  const count=document.createElement('small'), words=document.createElement('p'), actions=document.createElement('div');
+  words.setAttribute('aria-live','polite');actions.className='tour-actions';
+  function button(label,action){
+    const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=action;actions.append(b);return b;
+  }
+  const back=button('Back',()=>step(index-1,true)), next=button('Next',()=>{if(index===steps.length-1)close();else step(index+1,true);});
+  button('Skip the tour',()=>close());
+  const guide=document.createElement('a');guide.textContent='How it all works';guide.href=config.guide;
+  tip.append(count,words,actions,guide);document.body.append(tip);
+  let index=0,steps=[],target=null,returnTo=help,sessionSeen=new Set();
+  function seen(id,mark=false){
+    let state={};
+    try {
+      const data=JSON.parse(localStorage.getItem(config.key)||'{}');
+      if(data && typeof data==='object' && !Array.isArray(data))state=data;
+      if(mark){state[id]=true;localStorage.setItem(config.key,JSON.stringify(state));}
+    } catch { /* A device with storage turned off can run the tour for this visit. */ }
+    if(mark)sessionSeen.add(id);
+    return sessionSeen.has(id)||state[id]===true;
+  }
+  function close(){
+    const restore=tip.contains(document.activeElement);tip.hidden=true;target?.classList.remove('tour-target');
+    target=null;if(restore)returnTo.focus({preventScroll:true});
+  }
+  function place(){
+    const anchor=target.closest('header') || target.closest('.picker,.opts,.row,.tabs,fieldset,details') || target;
+    anchor.after(tip);
+  }
+  function step(i,move){
+    target?.classList.remove('tour-target');index=i;
+    const [selector,label,after,before]=steps[index];target=find(selector);
+    if(!target){close();return;}
+    const bold=document.createElement('b');bold.textContent=label;
+    words.replaceChildren(before||'Use ',bold,after);
+    count.textContent='Show me round · '+(index+1)+' of '+steps.length;
+    back.disabled=index===0;next.textContent=index===steps.length-1?'Done':'Next';
+    target.classList.add('tour-target');tip.hidden=false;
+    place();
+    if(move)target.scrollIntoView({block:'center',behavior:'instant'});if(move)next.focus({preventScroll:true});
+  }
+  function start(list,id,manual,opener){
+    if(!manual&&seen(id))return;
+    close();returnTo=opener||help;steps=list;seen(id,true);step(0,manual);
+  }
+  help.onclick=()=>start(config.steps,config.id,true,help);
+  if(config.panel){
+    const panel=find('#dayLauncher'), launchHelp=document.createElement('button');
+    launchHelp.type='button';launchHelp.textContent='? Help';launchHelp.className='tour-help';
+    launchHelp.setAttribute('aria-label','? Help for Start my day');find('#launchDetails').prepend(launchHelp);
+    launchHelp.onclick=()=>start(config.panel,config.id+'/day',true,launchHelp);
+    panel.addEventListener('launcheropened',()=>start(config.panel,config.id+'/day',false,launchHelp));
+  }
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!tip.hidden)close();});
+  function firstVisit(){
+    const dialog=document.querySelector('dialog[open]');
+    if(dialog){dialog.addEventListener('close',firstVisit,{once:true});return;}
+    start(config.steps,config.id,false,help);
+  }
+  firstVisit();
+}
+initToolTour({
+  "bar": "header .head",
+  "steps": [
+    [
+      "#changeLesson",
+      "Change",
+      " to pick a period."
+    ],
+    [
+      "#tab-tally",
+      "Tally",
+      " to record a result."
+    ],
+    [
+      "#tab-absent",
+      "Absent",
+      " to record a missed lesson."
+    ]
+  ],
+  "id": "trial/Quick_capture",
+  "guide": "../guide/How_it_all_works.html",
+  "key": "mbm_tour_seen_v1"
+});
+
+</script>
 </body>
 </html>
