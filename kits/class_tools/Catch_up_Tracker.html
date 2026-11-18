@@ -1049,7 +1049,21 @@ $("backup").onclick=function(){
  S.lastBackup=todayIso();S.dirtySinceBackup=false;save(true);
  download("catch_up_tracker_"+todayIso()+".json",JSON.stringify(publicBackup(),null,2),"application/json");
 };
-$("restore").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var s=JSON.parse(r.result);if(!s.pupils||!s.marks)throw 0;if(confirm("Replace what is on this computer with the backup?")){localStorage.setItem(KEY,JSON.stringify(s));S=load();syncBadge();show("today");showToast("Backup restored");}}catch(x){alert("That file is not a tracker backup.");}};r.readAsText(f);};
+// A backup made for carrying about says Pupil N. If this computer holds real labels for the same class
+// layout, keep them (and the adaptation notes, which that file never carries) and file the marks under them.
+function keepOwnLabelsOnRestore(inc,cur){
+ var numbered=/^(?:Pupil\s*|P)?\d{1,2}$/i,swap={},same=!!(cur&&cur.pupils),paths=Object.keys(inc.pupils||{});
+ if(same)Object.keys(cur.pupils).concat(paths).forEach(function(p){var a=inc.pupils[p],b=cur.pupils[p];if((Array.isArray(a)?a.length:0)!==(Array.isArray(b)?b.length:0))same=false;});
+ if(same)paths.forEach(function(p){(Array.isArray(inc.pupils[p])?inc.pupils[p]:[]).forEach(function(label,i){var mine=String(cur.pupils[p][i]||"").trim();label=String(label||"").trim();if(numbered.test(label)&&mine&&!numbered.test(mine))swap[label]=mine;else if(label!==mine)same=false;});});
+ var own=cur&&cur.adapt&&Object.keys(cur.adapt).length,none=!inc.adapt||!Object.keys(inc.adapt).length;
+ if(!same||!Object.keys(swap).length){if(own&&none&&same)inc.adapt=cur.adapt;return inc;}
+ function rekey(map,lead){if(!map||typeof map!=="object")return map;var next={};Object.keys(map).forEach(function(k){var parts=k.split("|"),who=parts.slice(lead).join("|"),key=parts.length>lead&&swap[who]?parts.slice(0,lead).concat(swap[who]).join("|"):k;next[key in next?k:key]=map[k];});return next;}
+ paths.forEach(function(p){if(Array.isArray(inc.pupils[p]))inc.pupils[p]=inc.pupils[p].map(function(label){return swap[String(label||"").trim()]||label;});});
+ inc.marks=rekey(inc.marks,3);inc.assessMarks=rekey(inc.assessMarks,2);
+ if(own&&none)inc.adapt=cur.adapt;
+ return inc;
+}
+$("restore").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var s=JSON.parse(r.result);if(!s.pupils||!s.marks)throw 0;if(confirm("Replace what is on this computer with the backup?")){localStorage.setItem(KEY,JSON.stringify(keepOwnLabelsOnRestore(s,S)));S=load();syncBadge();show("today");showToast("Backup restored");}}catch(x){alert("That file is not a tracker backup.");}};r.readAsText(f);};
 $("wipe").onclick=function(){if(confirm("Clear every missed mark and assessment tick? Pupils and links stay.")){S.marks={};S.assessMarks={};clearTrackerSyncedCoverage();save();showToast("All marks cleared");}};
 
 function owedRows(pupil){return rows().filter(function(r){return r.state!=="done"&&(pupil==null||samePupil(r.pupil,pupil));});}

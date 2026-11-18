@@ -3431,6 +3431,50 @@ function markLessonSafeAllGotIt(c, undoTarget = 'eod'){
   renderAll();
 }
 
+// Restoring a safe backup: the file says Pupil N, this device may hold real labels in its tracker.
+// Same class layout: keep the device's own pupil lists and file the restored marks under its own labels.
+// Different layout: take the file's numbered lists, and move the device's labels into the pupil key so no name is lost.
+// Either way keep the device's adaptation notes, which the file never carries.
+function keepLocalNamesOnRestore(incoming, roster, current){
+  const numbered = /^(?:Pupil\s*|P)?(\d{1,2})$/i;
+  const refs = (roster && roster.trackerRefByNum) || {};
+  const own = n => (refs[n] && !numbered.test(refs[n]) ? refs[n] : '');
+  const numberOf = label => { const m = String(label || '').trim().match(numbered); return m ? +m[1] : 0; };
+  const out = { ...incoming };
+  const lists = o => (o && o.pupils && typeof o.pupils === 'object' && !Array.isArray(o.pupils) ? o.pupils : null);
+  const inc = lists(incoming), cur = lists(current);
+  const filled = o => Object.keys(o).filter(k => Array.isArray(o[k]) && o[k].length).sort().join('|');
+  const sameLayout = !!inc && !!cur && filled(inc) === filled(cur) && Object.keys(inc).every(path => !Array.isArray(inc[path]) ||
+    (Array.isArray(cur[path]) && inc[path].length === cur[path].length && inc[path].every((label, i) => {
+      const n = numberOf(label), mine = String(cur[path][i] || '').trim();
+      return n > 0 && (refs[n] === mine || numberOf(mine) === n);
+    })));
+  if (sameLayout) {
+    out.pupils = cur;
+    const swap = label => own(numberOf(label)) || label;
+    const rekey = (map, lead) => {
+      if (!map || typeof map !== 'object' || Array.isArray(map)) return map;
+      const next = {};
+      Object.entries(map).forEach(([k, v]) => {
+        const parts = k.split('|');
+        const key = parts.length > lead ? parts.slice(0, lead).concat(swap(parts.slice(lead).join('|'))).join('|') : k;
+        next[key in next ? k : key] = v;
+      });
+      return next;
+    };
+    out.marks = rekey(incoming.marks, 3);
+    out.assessMarks = rekey(incoming.assessMarks, 2);
+  } else {
+    const key = read(KEYS.pupilKey, {}) || {};
+    let moved = false;
+    for (let n = 1; n <= 20; n++) if (own(n) && !String(key[n] || '').trim()) { key[n] = own(n); moved = true; }
+    if (moved) write(KEYS.pupilKey, key);
+  }
+  const hasOwnAdapt = current && current.adapt && typeof current.adapt === 'object' && Object.keys(current.adapt).length;
+  if (hasOwnAdapt && !(incoming.adapt && typeof incoming.adapt === 'object' && Object.keys(incoming.adapt).length)) out.adapt = current.adapt;
+  return out;
+}
+
 function buildPublicTrackerBackupObject(tracker, roster){
   const b = JSON.parse(JSON.stringify(tracker || {}));
   b.pupils = {
@@ -4435,6 +4479,8 @@ $('importSafeBackupFile').onchange = e => {
         return;
       }
       saveUndoSnapshot('hub', 'Restored safe device backup');
+      // A safe backup holds Pupil N only. Read this device's own names and notes first, so the restore cannot write over them.
+      const localRoster = buildRoster(), localTracker = read(KEYS.tracker, null);
       const d = parsed.data;
       if (validTimes(d.times)) { times = d.times; write(TIMES, times); }
       if (d.term?.w1Monday) { write(KEYS.term, { w1Monday: d.term.w1Monday, skipW1Mon: d.term.skipW1Mon !== false }); termCfg = readTermConfig(); }
@@ -4446,7 +4492,7 @@ $('importSafeBackupFile').onchange = e => {
       if (d.brief && typeof d.brief === 'object') write(KEYS.brief, d.brief);
       if (d.board && typeof d.board === 'object') write(KEYS.board, d.board);
       if (d.tally && typeof d.tally === 'object') write(KEYS.tally, d.tally);
-      if (d.tracker && typeof d.tracker === 'object') write(KEYS.tracker, d.tracker);
+      if (d.tracker && typeof d.tracker === 'object') write(KEYS.tracker, keepLocalNamesOnRestore(d.tracker, localRoster, localTracker));
       if (d.covAbs && typeof d.covAbs === 'object') write(KEYS.covAbs, d.covAbs);
       if (d.targets && typeof d.targets === 'object') write(KEYS.targets, d.targets);
       if (Array.isArray(d.practical)) write(KEYS.practical, d.practical);
@@ -4467,7 +4513,7 @@ $('importSafeBackupFile').onchange = e => {
       populatePickPeriods($('pickPeriod').value);
       refreshRows();
       renderAll();
-      $('backupStatus').textContent = '✓ Safe backup restored on this device (local private names preserved).';
+      $('backupStatus').textContent = '✓ Safe backup restored. The names and adaptation notes on this device were kept. Press Undo above to put back what was here before.';
     } catch (err) {
       $('backupStatus').textContent = 'Could not read that JSON file.';
     }
@@ -6333,6 +6379,14 @@ refreshPresetBanner(new Date());
 applyWorkspaceView(owlState.tab, false);
 refreshRows();
 renderAll();
+// Pupil names live only in this browser, and a browser clean-up can wipe them. Say so while no private copy holds the latest names.
+function namesCopyReminder(){
+  const key = read(KEYS.pupilKey, {}) || {};
+  const hasNames = Object.values(key).some(v => String(v || '').trim());
+  const changed = +read('mbm_names_changed_v1', 0) || 0, copied = +read('mbm_names_copy_saved_v1', 0) || 0;
+  if (hasNames && (!copied || changed > copied)) notice('Your pupil names are saved only in this browser. Open Class names and press Save private copy, so a browser clean-up cannot lose them.');
+}
+namesCopyReminder();
 checkHashTarget();
 setInterval(() => { if (!document.activeElement?.dataset?.briefNoteInput) renderAll(); }, 30000);
 
