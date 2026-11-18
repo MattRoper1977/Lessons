@@ -1134,7 +1134,7 @@ CATALOGUE_PINS = {
         "Humanities/Teaching_Packs/RE_Autumn_BUILD_Reviewed/SHA256SUMS.txt": "ccc10683c49aaaf9fc3e57b34f6e1a90d77ef3eeb72c9bd716fcc40a8cf00cd9",
         "Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/SHA256SUMS.txt": "871fa30a1d1355372c39218f3794a082a8823a5003fcde28c2683ccf5ce3c343",
         "Humanities/Teaching_Packs/RE_Autumn_LAUNCH_Reviewed/SHA256SUMS.txt": "1aef26713d7bb00458ed20e3b76c5ccecdf3ba703786cfef073b7893c3a1d913",
-        ".github/workflows/cross-estate-on-content.yml": "e323c85b033b82455fa950e2be395868c279a929ccb6b94981fcb8f3258ae72c",
+        ".github/workflows/cross-estate-on-content.yml": "26382d228e96508d8a6c268b74a57fe9590541ea46571550703a4714763969fa",
         "tools/humanities_resources/PUBLIC_LABEL_CHANGES.json": "1054940b3c20ab2c084965a4ae11c8827867267e119df6d8e65f717d7e22adf5",
         "Humanities/David_Cover_Autumn1_W3-W7/BH_W3.html": "3cb06cdadc3af0b852e54192a10203295be12c6139601e98e86c9496478a79f0",
         "Humanities/David_Cover_Autumn1_W3-W7/BH_W4.html": "ad5f0adbe53b57189e3c9958ec5e79d3f9b91018e6fc85001140141284e5c387",
