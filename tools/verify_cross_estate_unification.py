@@ -3641,6 +3641,8 @@ CATALOGUE_RECORD_PATHS = {
     # tools/catalogue/build_catalogue.py, not a lesson payload.
     "tools/catalogue/manifest_humanities_build_w9-w14_terms.json",
     "tools/catalogue/manifest_aaa_small_subjects_terms.json",
+    # A1-LIST (17 Nov 2026): Autumn 1 term and week of the rebuilt Food lesson pages.
+    "tools/catalogue/manifest_food_a1_terms.json",
     # A1-LIST (17 Nov 2026): Autumn 1 term and week of the rebuilt Vocational lesson pages.
     "tools/catalogue/manifest_voc_strands_a1_terms.json",
     # A1-LIST (17 Nov 2026): Autumn 1 term and week of the rebuilt Community Projects lesson pages.
