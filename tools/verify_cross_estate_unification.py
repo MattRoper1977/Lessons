@@ -3202,6 +3202,10 @@ CATALOGUE_PINS = {
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W07/VOC_LAUNCH_A2_W07.html": "55d8cb0f8116c810d8426fedb6a43b91ce15d1aef683a6a38b6c736024314d63",
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L1/VOC_LAUNCH_A2_W08_L1.html": "f36d7fb4e5819639767cd627a1779709d3d7f00152c668d39c6462e44788065a",
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L2/VOC_LAUNCH_A2_W08_L2.html": "a75a50b647563adb992d86017284ba4999be3d2f3452661f57a6a27b182e0dc8",
+        "kits/help/answer.html": "ae4fffd059ffe4a2629e804afcc6d5ebf61fcbabd33420e79365a522687d5b01",
+        "kits/help/bridge.html": "dd964c3c957901f2f0499866d6bdd86a41d0a04517c81a1280df4968f913e3c2",
+        "kits/help/kitchen.html": "b2a7424c0bbdd7b11b702258fb92841bbe6d1c66bc8723d8d855d24ca04e8a10",
+        "kits/help/safer.html": "19fcdcc84232cf863a8ac4fa803208692664d1196ac1789f9f2b45cdc72e9ba0",
         "kits/class_tools/Catch_up_Tracker.html": "1518e7226071beb7fb3b6eb67220bb381df633f4c84b9cb81e82029dd4b8f251",
         "kits/class_tools/Class_names.html": "7465659a2aabfb2ba9afce1fe4ec48f6781e0c4dcbc1b7d177b7687b2a8eecb5",
         "kits/class_tools/Class_record.html": "047396e5aca97cfcc195be3972ab44c9389327578d83a1e94d1f508a93c3f845",
@@ -3960,7 +3964,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "b8c2032831fcc8cf7eeb31e397ef180bad4269af7a5b56ccd4965fde4b003fd3",
+    "lessons": "9dc65ab263420a25d2c43211fe5a749eb77fd1a6d71114566795c68bcbcc0e10",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
