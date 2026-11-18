@@ -23,7 +23,9 @@
 @media(max-width:390px){.head h1{font-size:19px}.head button{padding-inline:4px}}
 @media print{body{overflow:visible}#pageContent{display:none!important}}
 
-</style></head>
+</style><style>.tour-tip,.tour-help{font:600 15px/1.35 system-ui,sans-serif!important}.tour-help,.tour-actions button{background:#fff!important;color:#183c31!important;border:1px solid #365b49!important;min-height:44px!important;padding:.4rem .65rem!important;border-radius:7px!important;cursor:pointer}.tour-tip{position:relative;z-index:1;margin:.4rem 0;max-width:calc(100vw - 12px);width:300px;color:#172e2a!important;background:#fffbea!important;border:2px solid #355944;border-radius:9px;padding:10px 12px;box-sizing:border-box;box-shadow:0 3px 10px #172e2a26}.tour-tip[hidden]{display:none!important}.tour-tip small,.tour-tip p,.tour-tip a{color:#172e2a!important}.tour-tip p{margin:.35rem 0}.tour-actions{display:flex;flex-wrap:wrap;gap:.3rem}.tour-tip a{display:inline-block;margin-top:.4rem;text-decoration:underline}.tour-target{outline:3px dashed #345f43!important;outline-offset:2px}.tour-actions button:disabled{opacity:1;color:#384734!important;background:#eceee4!important}.tour-tip,.tour-tip *,.tour-target{animation:none!important;transition:none!important}@media print{.tour-tip,.tour-help{display:none!important}.tour-target{outline:0!important}}
+</style>
+</head>
 <body data-capture-tab="tally">
 <div id="pageContent"><header><div class="head"><h1>Quick capture <svg class="privacy-lock" role="img" aria-label="Names stay on this phone. Files say Pupil N." viewBox="0 0 24 24" width="18" height="20"><path d="M7 10V7a5 5 0 0 1 10 0v3M5 10h14v11H5z" fill="none" stroke="currentColor" stroke-width="2"/></svg></h1><button id="openKey">Pupil key</button><button id="openSettings">Settings</button></div><div class="lesson-line"><strong id="lessonSummary"></strong><a class="button" id="openPromptStudio" href="Requests.html">Prompt studio</a><button id="changeLesson">Change</button></div></header>
 <noscript>This staff tool needs JavaScript enabled. It runs entirely on this device.</noscript>
@@ -130,7 +132,20 @@ function tallyPupils(c){
  if(!tallyMemberIndex||indexedTallies!==tallies){tallyMemberIndex=new Map();indexedTallies=tallies;Object.entries(tallies).forEach(([key,record])=>{const bits=key.split('|'),n=+bits[3];if(!record||!Number.isInteger(n)||n<1||n>20)return;const context=bits.slice(0,3).join('|')+'|'+record.path;if(!tallyMemberIndex.has(context))tallyMemberIndex.set(context,new Set());tallyMemberIndex.get(context).add(n);});}
  return [...new Set([...(GROUPS[c.path]||[]),...(tallyMemberIndex.get([c.w,c.d,c.p,c.path].join('|'))||[])])];
 }
-function availableDaysForWeek(w){return +w===1?DAYS.slice(1):DAYS;}
+function readTermConfig(){
+  try {
+    const raw = JSON.parse(localStorage.getItem('mbm_term_config_v1') || 'null');
+    if (raw && typeof raw.w1Monday === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.w1Monday)) {
+      const [y, m, d] = raw.w1Monday.split('-').map(Number);
+      const dt = new Date(y, m - 1, d, 12);
+      if (!Number.isNaN(dt.getTime())) return { w1Monday: raw.w1Monday, y, m, d, skipW1Mon: raw.skipW1Mon !== false };
+    }
+  } catch (e) {}
+  return { w1Monday: '2026-11-02', y: 2026, m: 11, d: 2, skipW1Mon: true };
+}
+const termCfg = readTermConfig();
+
+function availableDaysForWeek(w){return termCfg.skipW1Mon && +w===1?DAYS.slice(1):DAYS;}
 function selectDays(preferred){const select=$('day');select.replaceChildren();availableDaysForWeek(+$('week').value).forEach(day=>select.append(el('option',{value:day},day)));select.value=preferred;if(!select.value)select.selectedIndex=0;}
 
 const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday'];
@@ -174,9 +189,9 @@ function validSchoolTimes(value){
  const format=t=>typeof t==='string'&&/^([01]\d|2[0-3]):[0-5]\d$/.test(t);
  return !!value&&value.v===2&&Array.isArray(value.starts)&&Array.isArray(value.ends)&&value.starts.length===6&&value.ends.length===6&&value.starts.every((start,i)=>format(start)&&format(value.ends[i])&&value.ends[i]>start&&(!i||start>=value.ends[i-1]));
 }
-function schoolWeek(date){return 1+Math.round((Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()-(date.getDay()+6)%7)-Date.UTC(2026,10,2))/604800000);}
+function schoolWeek(date){ return 1 + Math.round((Date.UTC(date.getFullYear(), date.getMonth(), date.getDate() - (date.getDay() + 6) % 7) - Date.UTC(termCfg.y, termCfg.m - 1, termCfg.d)) / 604800000); }
 function schoolSlots(date,times){
- const w=schoolWeek(date),day=['Monday','Tuesday','Wednesday','Thursday','Friday'][date.getDay()-1];if(w<1||w>7||!day||(w===1&&day==='Monday'))return [];
+ const w=schoolWeek(date),day=['Monday','Tuesday','Wednesday','Thursday','Friday'][date.getDay()-1];if(w<1||w>7||!day||(termCfg.skipW1Mon&&w===1&&day==='Monday'))return [];
  const clock=text=>{const [h,m]=text.split(':').map(Number);return new Date(date.getFullYear(),date.getMonth(),date.getDate(),h,m);};
  return TT[day].map(row=>({w,day,p:row[0],path:row[1],subject:row[2],lesson:LN[day+'|'+row[0]],start:clock(times.starts[row[0]-1]),end:clock(times.ends[row[0]-1])}));
 }
@@ -233,7 +248,7 @@ function pad(n){return String(n).padStart(2,'0');}
 function dateISO(d=new Date()){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
 function dateStamp(d=new Date()){return dateISO(d).replace(/-/g,'');}
 function timeStamp(d=new Date()){return pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds());}
-function lessonDate(w,d){return new Date(2026,10,2+(+w-1)*7+DAYS.indexOf(d),12);}
+function lessonDate(w,d){return new Date(termCfg.y,termCfg.m-1,termCfg.d+(+w-1)*7+DAYS.indexOf(d),12);}
 function lessonCode(w,path,subj,n,part=1){
  /* Sticker table (school week w is two digits):
     Science GROW: GROW_SCI_A2_Wnn_Pn; BUILD/LAUNCH: SCI_PATH_A2_Wnn_Ln.
@@ -731,11 +746,116 @@ $('openPromptStudio').onclick=()=>{
 window.PhoneTools=Object.freeze({TT,LN,GROUPS,PREFIX,lessonCode,fileCode,redaction,redact,uncertainWords,context,tallyCSV,evidenceFiles,jpeg,zip,crc32,dateISO,dateStamp,timeStamp,lessonDate,today,setTally,keyFile});
 selectDays('Monday');selectPeriods(1);
 for(let w=1;w<=7;w++)$('absence-week').append(el('option',{value:w},'Week '+w));
-refreshLabels();renderTargets();today();$('absence-week').value=context().w;renderQueue();
+function openRequestedPeriod() {
+  const q = new URLSearchParams(location.search), week = q.get('week'), day = q.get('day'), p = +q.get('period');
+  if (!Array.from($('week').options).some(o=>o.value===week) || !availableDaysForWeek(+week).includes(day) ||
+      !(TT[day] || []).some(row=>row[0]===p)) return false;
+  $('week').value=week; selectDays(day); selectPeriods(p);
+  if (Array.from($('pathway').options).some(o=>o.value===q.get('path'))) $('pathway').value=q.get('path');
+  $('communityPart').value=q.get('part')==='2'?'2':'1';
+  $('clockHint').textContent='Period chosen in Start my day.';
+  renderLesson(); return true;
+}
+refreshLabels();renderTargets();if (!openRequestedPeriod()) today();$('absence-week').value=context().w;renderQueue();
 Object.entries(tallies).forEach(([key,r])=>{const [w,d,p,n]=key.split('|');if(!r?.state||!DAYS.includes(d)||!TT[d].some(l=>l[0]===+p)||!GROUPS[r.path]||!validCode(r.code))return;const c={w:+w,d,p:+p,path:r.path,subj:r.subj,lesson:LN[d+'|'+p],code:r.code,date:lessonDate(w,d)};if(!sendQueue[queueID(c)])sendQueue[queueID(c)]={c:storedContext(c)};});write(V2.queue,sendQueue);
 const requested=location.hash.slice(1),last=view.date===dateISO()?view.tab:'tally',initial=requested==='key'?'tally':requested==='absence-panel'?'absent':requested||last;const rememberedScroll=clone(view.scroll||{});showTab(initial);view.scroll=rememberedScroll;requestAnimationFrame(()=>$('pageContent').scrollTo(0,view.scroll?.[initial]||0));if(requested==='key')$('keyDialog').showModal();
 renderHelp();renderAbsence();renderSendQueue();
 
 })();
-</script></body>
+</script><script>
+function initToolTour(config) {
+  const find = selector => document.querySelector(selector);
+  const help = document.createElement('button');
+  help.type='button';help.className='tour-help';help.textContent='? Help';help.id='pageTourHelp';
+  help.setAttribute('aria-label','? Help · Show me round');
+  const top = find(config.bar) || find('header') || find('h1').parentElement;
+  if (top.tagName==='H1') top.after(help); else top.append(help);
+  const tip=document.createElement('aside');
+  tip.hidden=true;tip.className='tour-tip';tip.setAttribute('aria-label','Show me round');
+  const count=document.createElement('small'), words=document.createElement('p'), actions=document.createElement('div');
+  words.setAttribute('aria-live','polite');actions.className='tour-actions';
+  function button(label,action){
+    const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=action;actions.append(b);return b;
+  }
+  const back=button('Back',()=>step(index-1,true)), next=button('Next',()=>{if(index===steps.length-1)close();else step(index+1,true);});
+  button('Skip the tour',()=>close());
+  const guide=document.createElement('a');guide.textContent='How it all works';guide.href=config.guide;
+  tip.append(count,words,actions,guide);document.body.append(tip);
+  let index=0,steps=[],target=null,returnTo=help,sessionSeen=new Set();
+  function seen(id,mark=false){
+    let state={};
+    try {
+      const data=JSON.parse(localStorage.getItem(config.key)||'{}');
+      if(data && typeof data==='object' && !Array.isArray(data))state=data;
+      if(mark){state[id]=true;localStorage.setItem(config.key,JSON.stringify(state));}
+    } catch { /* A device with storage turned off can run the tour for this visit. */ }
+    if(mark)sessionSeen.add(id);
+    return sessionSeen.has(id)||state[id]===true;
+  }
+  function close(){
+    const restore=tip.contains(document.activeElement);tip.hidden=true;target?.classList.remove('tour-target');
+    target=null;if(restore)returnTo.focus({preventScroll:true});
+  }
+  function place(){
+    const anchor=target.closest('header') || target.closest('.picker,.opts,.row,.tabs,fieldset,details') || target;
+    anchor.after(tip);
+  }
+  function step(i,move){
+    target?.classList.remove('tour-target');index=i;
+    const [selector,label,after,before]=steps[index];target=find(selector);
+    if(!target){close();return;}
+    const bold=document.createElement('b');bold.textContent=label;
+    words.replaceChildren(before||'Use ',bold,after);
+    count.textContent='Show me round · '+(index+1)+' of '+steps.length;
+    back.disabled=index===0;next.textContent=index===steps.length-1?'Done':'Next';
+    target.classList.add('tour-target');tip.hidden=false;
+    place();
+    if(move)target.scrollIntoView({block:'center',behavior:'instant'});if(move)next.focus({preventScroll:true});
+  }
+  function start(list,id,manual,opener){
+    if(!manual&&seen(id))return;
+    close();returnTo=opener||help;steps=list;seen(id,true);step(0,manual);
+  }
+  help.onclick=()=>start(config.steps,config.id,true,help);
+  if(config.panel){
+    const panel=find('#dayLauncher'), launchHelp=document.createElement('button');
+    launchHelp.type='button';launchHelp.textContent='? Help';launchHelp.className='tour-help';
+    launchHelp.setAttribute('aria-label','? Help for Start my day');find('#launchDetails').prepend(launchHelp);
+    launchHelp.onclick=()=>start(config.panel,config.id+'/day',true,launchHelp);
+    panel.addEventListener('launcheropened',()=>start(config.panel,config.id+'/day',false,launchHelp));
+  }
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!tip.hidden)close();});
+  function firstVisit(){
+    const dialog=document.querySelector('dialog[open]');
+    if(dialog){dialog.addEventListener('close',firstVisit,{once:true});return;}
+    start(config.steps,config.id,false,help);
+  }
+  firstVisit();
+}
+initToolTour({
+  "bar": "header .head",
+  "steps": [
+    [
+      "#changeLesson",
+      "Change",
+      " to pick a period."
+    ],
+    [
+      "#tab-tally",
+      "Tally",
+      " to record a result."
+    ],
+    [
+      "#tab-absent",
+      "Absent",
+      " to record a missed lesson."
+    ]
+  ],
+  "id": "personal/Quick_capture",
+  "guide": "guide/How_it_all_works.html",
+  "key": "mbm_tour_seen_v1"
+});
+
+</script>
+</body>
 </html>
