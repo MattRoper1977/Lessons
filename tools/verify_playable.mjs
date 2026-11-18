@@ -70,7 +70,7 @@ const CENSUS = {
     'win: a contract scored (state.mode SCORE) · lose: the site survives the charge budget · first gate: state.mode leaves TITLE for BOARD and reaches BOOM',
   'Grid_Chase.html':
     'win: no terminal win — an endless chase; the run ends at gameOver() · lose: caught · first gate: state leaves MENU for RUN and a score is banked at OVER',
-  'voxelcraft.html':
+  'Block_Builder.html':
     'win: no terminal win in sandbox; the arcade leg ends on its own 60 s clock · lose: none · first gate: arcade-end opens with a banked score',
   'Neon_Snake_Overdrive.html':
     'win: no terminal win — an endless run · lose: endGame(reason) · first gate: a run ends and a score is offered to the board',
@@ -97,9 +97,9 @@ const CENSUS = {
   'Orbital.html': 'NOT MEASURED — owned by open Lessons PR #93',
   'KidsVsStaff_Showdown (3).html':
     'win: finishShow() with a side ahead · lose: the other side · first gate: the show reaches "done"',
-  'WorldCup_ThreeLions_Final.html': 'win: completeMission() per mission · lose: none · first gate: mission 1 completed',
-  'WorldCup_v3_MatchDirector.html': 'win: missionsComplete() · lose: none · first gate: mission 1 completed',
-  'WorldCup_v5_Showdown.html': 'win: missionsComplete()/codesComplete() · lose: none · first gate: mission 1 completed',
+  'Cup_Final.html': 'win: completeMission() per mission · lose: none · first gate: mission 1 completed',
+  'Match_Director.html': 'win: missionsComplete() · lose: none · first gate: mission 1 completed',
+  'Cup_Showdown.html': 'win: missionsComplete()/codesComplete() · lose: none · first gate: mission 1 completed',
 };
 
 /* ------------------------------------------------------------------ *
@@ -403,9 +403,9 @@ const PLANS = {
     blockedBy: '#b-begin',
   },
 
-  'voxelcraft.html': {
+  'Block_Builder.html': {
     rule:
-      'Voxelcraft\'s arcade leg ends on its own 60 s clock (ARCADE_DURATION). The route is the ' +
+      'Block Builder\'s arcade leg ends on its own 60 s clock (ARCADE_DURATION). The route is the ' +
       'shipped arcade menu entry and its START control; progress is the arcade record gaining a ' +
       'high score in localStorage — the game\'s own record.',
     approaches: [
@@ -415,7 +415,7 @@ const PLANS = {
       const modal = document.getElementById('arcade-end');
       const open = modal && getComputedStyle(modal).display !== 'none' && modal.getBoundingClientRect().width > 0;
       let high = null;
-      try { high = localStorage.getItem('voxelcraft:arcadeHigh'); } catch (_) { /* blocked storage is not progress */ }
+      try { high = localStorage.getItem('block_builder:arcadeHigh'); } catch (_) { /* blocked storage is not progress */ }
       return { reached: !!open, completed: !!open, arcadeHigh: high };
     },
     blockedBy: '#m-arcade',
@@ -485,7 +485,7 @@ const EVIDENCE_CLASS = {
   'Static.html': 'banked-at-end',
   'The_Last_Lighthouse_v1_1_The_Archipelago_Update_FINAL.html': 'banked-at-end',
   'Vortex.html': 'banked-at-end',
-  'voxelcraft.html': 'banked-at-end',
+  'Block_Builder.html': 'banked-at-end',
   // Trekkers reads three legacy keys on boot and writes none of them until a
   // trek ends; a probe that played it for a minute left localStorage empty.
   'Trekkers_Trail_Runner_Tees_Coast.html': 'banked-at-end',

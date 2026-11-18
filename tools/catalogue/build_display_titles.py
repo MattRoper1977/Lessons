@@ -26,10 +26,13 @@ def build():
         # This is a guard for the reviewed pairs (116 at EDU-D2, 118 after CX2 §5.3), not filename inference.
         if title not in host['title']:
             raise ValueError('Review changed lesson title: ' + path)
-        for row in (host, companion):
+        # A2-LIST (8 Nov 2026, owner ask): the host lesson keeps its full
+        # pathway-and-arc title on the cards; only the companion pack takes
+        # the bare reviewed topic title (it sits under the lesson's downloads).
+        for row, shown in ((host, host['title'].strip()), (companion, title)):
             entries[row['file']] = {
                 'id': row.get('id', ''), 'originalTitle': row['title'],
-                'displayTitle': title, 'reference': pack['wtoken'],
+                'displayTitle': shown, 'reference': pack['wtoken'],
             }
     return {'schema': 1, 'basis': 'EDU-D2 reviewed companion titles; data/companion-packs.json and exact current catalogue/lesson-order titles', 'entries': entries}
 

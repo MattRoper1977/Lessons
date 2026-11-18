@@ -1,0 +1,1311 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Lesson resource">
+<meta name="creator" content="Lesson resource">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'self' data:; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; manifest-src 'self' data:; worker-src 'self'">
+<title>Catch-up tracker</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{
+  --bg:#f7f7f4;--card:#fff;--ink:#14171a;--muted:#3d4650;--line:#c9ced3;
+  --build:#2f5d7c;--grow:#2a6355;--launch:#5f4585;
+  --miss:#8a1c1c;--missbg:#fbe9e9;
+  --part:#1e466e;--partbg:#e6f0fa;
+  --more:#7c3a0a;--morebg:#fff1e0;
+  --done:#1d5a2e;--donebg:#e6f3e8;
+  --focus:#0b57d0
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#121416;--card:#1c1f22;--ink:#f1f3f5;--muted:#c3cad1;--line:#3a4148;
+    --build:#9cc3e0;--grow:#93d1bd;--launch:#cdb6ef;
+    --miss:#ffb4b4;--missbg:#3a1717;
+    --part:#9cd0ff;--partbg:#152c44;
+    --more:#ffc999;--morebg:#3d220a;
+    --done:#a6e3b5;--donebg:#16301c;
+    --focus:#8ab4f8
+  }
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--bg)}
+body{margin:0;font:20px/1.45 "Segoe UI",system-ui,sans-serif;color:var(--ink);background:var(--bg);padding-bottom:70px}
+header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:2px solid var(--line);padding:10px 16px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+h1{font:700 24px/1.2 Georgia,serif;margin:0 auto 0 0}
+main{max-width:1180px;margin:0 auto;padding:16px}
+button,select,textarea,input,.btnlink{font:inherit;color:inherit}
+button,select,.btnlink{min-height:44px;padding:6px 14px;border:2px solid var(--line);border-radius:10px;background:var(--card);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+button:hover,.btnlink:hover{border-color:var(--ink)}
+.smbtn{min-height:48px;padding:4px 10px;font-size:17px;border-radius:8px}
+.xsbtn{min-height:32px;padding:2px 8px;font-size:15px;border-radius:6px;border-width:1px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.tabs button[aria-pressed="true"],.pillbar button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.badge{display:inline-block;padding:0 7px;border-radius:999px;font-size:15px;font-weight:700;background:var(--missbg);color:var(--miss);border:1px solid var(--miss)}
+.tabs button[aria-pressed="true"] .badge{background:var(--bg);color:var(--ink);border-color:var(--bg)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.lesson{background:var(--card);border:2px solid var(--line);border-left-width:10px;border-radius:12px;padding:12px 14px;margin:0 0 14px}
+.lesson.BUILD{border-left-color:var(--build)}.lesson.GROW{border-left-color:var(--grow)}.lesson.LAUNCH{border-left-color:var(--launch)}.lesson.ALL{border-left-color:var(--muted)}
+.lesson-head{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-bottom:4px}
+.lesson h2{font-size:21px;margin:0}
+.tag{display:inline-block;font-size:17px;font-weight:700;padding:1px 8px;border-radius:6px;border:2px solid currentColor;margin-right:6px}
+.tag.BUILD{color:var(--build)}.tag.GROW{color:var(--grow)}.tag.LAUNCH{color:var(--launch)}.tag.ALL{color:var(--muted)}
+.hint{color:var(--muted);font-size:18px;margin:2px 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-width:44px}
+.chip.st-missed{background:var(--missbg);color:var(--miss);border-color:var(--miss);font-weight:700}
+.chip.st-missed::before{content:"✗ "}
+.chip.st-partial{background:var(--partbg);color:var(--part);border-color:var(--part);font-weight:700}
+.chip.st-partial::before{content:"◐ "}
+.chip.st-more{background:var(--morebg);color:var(--more);border-color:var(--more);font-weight:700}
+.chip.st-more::before{content:"↻ "}
+.chip.st-done{background:var(--donebg);color:var(--done);border-color:var(--done);font-weight:700}
+.chip.st-done::before{content:"✓ "}
+.statebtn{font-weight:700}
+.statebtn.st-missed{background:var(--missbg);color:var(--miss);border-color:var(--miss)}
+.statebtn.st-partial{background:var(--partbg);color:var(--part);border-color:var(--part)}
+.statebtn.st-more{background:var(--morebg);color:var(--more);border-color:var(--more)}
+.statebtn.st-done{background:var(--donebg);color:var(--done);border-color:var(--done)}
+#table,#atable{overflow-x:auto}
+table{width:100%;border-collapse:collapse;background:var(--card)}
+td{overflow-wrap:anywhere}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--bg)}
+@media (max-width:650px){thead{display:none}table,tbody,tr,td{display:block}tr{border:2px solid var(--line);border-radius:10px;margin:0 0 10px;padding:4px}td{border:0;padding:4px 8px}}
+tr.st-done td{background:var(--donebg);color:var(--done)}
+tr.st-partial td{background:var(--partbg);color:var(--part)}
+tr.st-more td{background:var(--morebg);color:var(--more)}
+tr.just-done{opacity:0.72}
+.chipwrap{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center}
+textarea{width:100%;min-height:130px;border:2px solid var(--line);border-radius:10px;padding:8px;background:var(--card)}
+.noteinput{width:100%;min-width:160px;min-height:42px;padding:6px 8px;font-size:17px;border:2px solid var(--line);border-radius:8px;background:var(--card)}
+.textin{min-height:44px;padding:6px 10px;border:2px solid var(--line);border-radius:10px;background:var(--card);min-width:240px}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
+.note{font-size:18px;color:var(--muted)}
+.acct-pill{font-size:15px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
+.acct-pill.warn{background:var(--morebg);color:var(--more);border-color:var(--more);font-weight:700}
+.toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:20;background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:12px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(0,0,0,.35);font-size:18px}
+.toast button{background:var(--bg);color:var(--ink);min-height:36px;padding:2px 10px;font-weight:700}
+.modal-bg{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:16px;max-width:560px;width:100%;padding:18px;max-height:92vh;overflow-y:auto}
+.qr-stage{background:#fff;padding:16px;border-radius:12px;border:2px solid var(--line);display:flex;justify-content:center;align-items:center;margin:12px 0}
+.qr-stage svg{width:min(300px,72vw);height:min(300px,72vw);display:block}
+.print-only{display:none}
+.print-qr svg{width:96px;height:96px;display:block;background:#fff;padding:3px;border:1px solid #000}
+footer{max-width:1180px;margin:0 auto;padding:8px 16px 24px;color:var(--muted);font-size:18px}
+@media (max-width:600px){header{position:static}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+#labelSheet{display:none}
+.adapt-row{border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:8px 0}
+.adapt-row b{display:block;margin-bottom:4px}
+.adapt-row label{display:inline-flex;align-items:center;gap:6px;margin:3px 12px 3px 0;font-size:16px}
+.adapt-row input[type=checkbox]{width:22px;height:22px}
+.adapt-row input[type=text]{width:100%;margin-top:4px}
+@media print{
+  body.printing-labels > *:not(#labelSheet){display:none!important}
+  body.printing-labels #labelSheet{display:block!important}
+  .plabel{border:3px solid #000;border-radius:10px;padding:10px 14px;margin:0 0 10mm;page-break-inside:avoid;break-inside:avoid;display:flex;gap:14px;font-size:14pt;color:#000}
+  .plabel .lq svg{width:110px;height:110px;display:block}
+  .plabel .lt{flex:1}
+  .plabel .brand{font-weight:700;font-size:11pt;letter-spacing:.05em}
+  .plabel h2{margin:2px 0 4px;font-size:22pt}
+  .plabel ul{margin:4px 0 0;padding-left:20px}
+  .plabel li{margin:2px 0}
+  .plabel .sign{margin-top:6px;font-size:12pt}
+}
+@media print{
+  header,.noprint,.toast,.modal-bg,footer{display:none!important}
+  body{background:#fff;color:#000;font-size:13pt;padding:0}
+  main{max-width:100%;padding:0}
+  .print-only{display:block!important}
+  .print-banner{border-bottom:2px solid #000;padding-bottom:6px;margin-bottom:10px}
+  thead{display:table-header-group!important}
+  table{display:table!important;width:100%!important;border-collapse:collapse!important}
+  tbody{display:table-row-group!important}
+  tr{display:table-row!important;border:1px solid #000!important;page-break-inside:avoid}
+  th,td{display:table-cell!important;border:1px solid #000!important;padding:6px 8px!important;color:#000!important;background:#fff!important}
+}
+
+/* Round-two touch and reading layout. */
+:root{--build:#21465f;--grow:#174d3d;--launch:#50336f;--accent:#163e70;--ok:#174d2b;--warn:#703600;--focus:#073d83}
+@media(prefers-color-scheme:dark){:root{--build:#b9dcf5;--grow:#a8e4ce;--launch:#e0cafa;--accent:#bedaff;--ok:#a9e9bf;--warn:#ffdaaa;--focus:#bedaff}}
+html,body{overflow-wrap:anywhere}main,section,div,header,nav,.row>*{min-width:0}button,select,input,.btnlink,a.btn,label.btn,summary{min-height:48px;min-width:48px;max-width:100%;font-size:17px}button,.btnlink,a.btn{white-space:normal;overflow-wrap:anywhere}.xsbtn,.badge,.acct-pill,.meta,.field label,.tile span,.adapt-row label,table,.note{font-size:17px}.xsbtn,.toast button,.noteinput,.textin{min-height:48px}.textin{min-width:0;width:100%}label:has(input[type=checkbox]){min-height:48px;display:inline-flex;align-items:center}input[type=checkbox]{flex:none;width:26px;height:26px;min-width:26px;min-height:26px}input[type=file]{width:100%}a{color:var(--accent,#163e70)}a:not(.btnlink):not(.btn){display:inline-flex;align-items:center;min-height:48px}button:hover{filter:none}:focus-visible{outline:3px solid var(--focus);outline-offset:3px}details>summary{cursor:pointer;font-weight:700;padding:10px 12px;border:2px solid var(--line);border-radius:10px;width:fit-content}details>.row{padding-top:12px}.today-strip{border:2px solid var(--ink);border-radius:12px;padding:14px;margin-bottom:16px;background:var(--card,var(--soft))}.today-strip h2{margin:0 0 4px;font-size:23px}.today-item{border-top:1px solid var(--line);padding:10px 0}.today-item p{margin:4px 0}.adapt-chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.adapt-chip{font-size:17px;border:1px solid currentColor;border-radius:8px;padding:4px 8px;background:var(--card,var(--bg));color:var(--ink)}.pupil-label{font-size:18px}.pupil-label strong{font-size:21px}.profilebar{margin:0 0 12px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}.private-note{font-size:17px;color:var(--muted,var(--ink))}.chipwrap:has(.adapt-chips){align-items:flex-start;max-width:100%}.adapt-chips{width:100%}button:disabled{cursor:default}.tick{min-height:48px}a.btn{color:white;background:#163e70}.card.done{opacity:1}.card.done::before{content:"✓ Class caught up";display:block;font-weight:700}.ok{color:var(--ok)}.warn{color:var(--warn)}
+.just-done{opacity:1!important}.missed-page button:not(.ghost){background:#163e70;color:#fff}.missed-page .ghost{color:var(--accent)}
+@media(max-width:650px){.textin{width:100%}.lesson,.panel{padding:12px}header{padding:12px}.modal{padding:12px}.row label{max-width:100%}select{width:100%}.qr-stage svg{width:100%;height:auto}.toast{width:calc(100% - 24px);flex-wrap:wrap}.noteinput{min-width:0}#table,#atable{overflow:visible}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@media print{.private-tag,.adapt-chips,.noprint,#setup{display:none!important}a{color:#000}.pupil-label{font-size:13pt}}
+
+#catchupPreview[hidden]{display:none!important}#catchupPreview{padding:16px;max-width:1180px;margin:auto}#catchupPages{display:grid;gap:16px}.catch-sheet{display:flow-root;background:white;color:#101820;padding:12px;border:2px solid #4b5661;overflow-wrap:anywhere}.catch-sheet h1{font:700 28px/1.2 system-ui,sans-serif;margin:6px 0}.catch-sheet h2{font-size:19px;margin:10px 0 4px}.catch-sheet p{margin:4px 0}.sheet-adapt{padding-left:22px;margin:4px 0}.sheet-lessons{display:grid;grid-template-columns:repeat(var(--sheet-cols,2),minmax(0,1fr));gap:10px}.sheet-lesson{border:1px solid #34404c;padding:8px;break-inside:avoid}.sheet-lesson h3{font-size:18px;margin:0 0 4px}.sheet-lesson code{font:700 17px/1.3 system-ui,sans-serif}.sheet-link{display:flex;gap:8px;align-items:flex-start}.sheet-link svg{width:64px;height:64px;flex:none;background:white}.sheet-link a{font-size:17px;color:#101820;min-height:48px;word-break:normal}.sheet-check{font-size:17px}.private-stamp{font-weight:700;border:2px solid #101820;padding:4px 8px;display:inline-block}.sheet-inner{display:flow-root;font:17px/1.3 system-ui,sans-serif}.sheet-meta{font-size:17px}.sheet-tools{padding-bottom:12px}.sheet-tools h2{margin:0}.sheet-dense{font-weight:700}
+@media(max-width:650px){.sheet-lessons{grid-template-columns:1fr}.sheet-link{flex-wrap:wrap}}
+@page{size:A4;margin:10mm}
+@media print{body.printing-catchup>*:not(#catchupPreview){display:none!important}body.printing-catchup #catchupPreview{display:block!important;margin:0;padding:0;max-width:none}#catchupPreview .sheet-tools{display:none!important}#catchupPages{display:block}.catch-sheet{width:190mm;height:276mm;border:0;padding:0;margin:0;break-after:page;page-break-after:always;overflow:visible}.catch-sheet:last-child{break-after:auto;page-break-after:auto}.sheet-inner{transform-origin:top left;transform:none;zoom:var(--sheet-scale,1);width:190mm}.sheet-lessons{grid-template-columns:repeat(var(--sheet-cols,2),minmax(0,1fr))}.sheet-link a{display:block;min-width:0;min-height:0}.sheet-link svg{width:64px;height:64px}.catch-sheet h1{font-size:28px}.catch-sheet h2{font-size:19px}.sheet-lesson{break-inside:avoid}.sheet-private-adapt{display:block!important}body:not(.printing-catchup) #catchupPreview{display:none!important}body{color:#000}body:not(.printing-catchup) .pupil-label{color:#000}}
+/* Correction: slim common controls, separate tabs and readable table columns. */
+.profilebar{align-items:center;gap:8px;margin-bottom:10px}.profilebar label{display:inline-flex;align-items:center;gap:6px}.profilebar select{width:auto;max-width:155px}.profilebar .btnlink{padding:6px 10px}.tab-heading{font-size:24px;margin:8px 0 12px;scroll-margin-top:190px}.numbered-lines{list-style:none;margin:4px 0 16px;padding:0;font-size:17px}.numbered-lines li{padding:2px 0}#numberWarning{font-weight:700;width:100%}.today-strip{padding:10px;margin-bottom:10px}.today-strip h3{margin:0;font-size:21px}.today-strip>.note{margin:2px 0;font-size:17px}.today-item{padding:6px 0}.today-line{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.today-line .owed-count{flex:1;font-size:17px}.today-line .smbtn{margin-left:auto}.today-item .adapt-chips{margin:0}.help-fold summary{padding:2px 8px;font-size:17px;border-width:1px}.help-chip-list{display:flex;gap:6px;flex-wrap:wrap;max-width:100%;max-height:106px;overflow:hidden}.adapt-chips{display:block}.adapt-chip{min-height:48px;font-size:17px;max-width:100%;padding:4px 8px;overflow-wrap:normal;word-break:normal}.help-fold .adapt-chip,.more-help .adapt-chip{margin:4px}.more-help summary{padding:4px 8px;border-width:1px}.help-choice{min-height:48px}.adapt-row>summary{width:100%}.adapt-row input[type=text]{min-width:0}.lesson-links{display:flex;flex-flow:row wrap;gap:6px}.lesson-links .btnlink,.lesson-links button{width:auto;flex:0 0 auto}.statebtn{white-space:nowrap;overflow-wrap:normal;word-break:normal}.chip.st-missed::before,.chip.st-partial::before,.chip.st-more::before,.chip.st-done::before{flex:none}#table table{table-layout:fixed}#table th:nth-child(1){width:17%}#table th:nth-child(2){width:17%}#table th:nth-child(3){width:30%}#table th:nth-child(4){width:20%}#table th:nth-child(5){width:16%}#table td:nth-child(2){min-width:170px;overflow-wrap:normal;word-break:normal}#table td:nth-child(5){min-width:170px;overflow-wrap:normal;word-break:normal}#table .noteinput{min-width:0}#table .xsbtn{font-size:17px}.chip:has(.pupil-label){flex-wrap:wrap}.chip .pupil-label{font-size:17px}.chip .pupil-label strong{font-size:21px}.tabs{margin:0}input[type=file]{min-height:48px}
+.help-chip-list>.adapt-chip{display:block;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:100%}
+.next-slot{font-size:16px;font-weight:650;color:var(--accent,#163e70);margin-top:4px}
+@media(max-width:650px){#table table{table-layout:auto}#table td{width:100%;min-width:0!important}#table .lesson-links{display:flex}.today-line .owed-count{flex-basis:45%}.today-line .smbtn{margin-left:0}.tab-heading{scroll-margin-top:12px}.profilebar{flex-wrap:nowrap}.profilebar label{flex:1;min-width:0}.profilebar select{max-width:100%;min-width:0}.profilebar .btnlink{flex:none}.statebtn{max-width:100%}}
+@media print{.help-fold,.more-help,.numbered-lines{display:none!important}#table table{table-layout:fixed}#table th:nth-child(1){width:14%}#table th:nth-child(2){width:18%}#table th:nth-child(3){width:25%}#table th:nth-child(4){width:16%}#table th:nth-child(5){width:17%}#table th:nth-child(6){width:10%}#table th,#table td{overflow-wrap:normal;word-break:normal;min-width:0}#table .statebtn{font-size:13pt;white-space:normal;overflow-wrap:normal;border:0;background:none;padding:0;min-height:0;min-width:0;text-align:left}.tab-heading{display:none}}
+
+</style>
+<style>.tour-tip,.tour-help{font:600 15px/1.35 system-ui,sans-serif!important}.tour-help,.tour-actions button{background:#fff!important;color:#183c31!important;border:1px solid #365b49!important;min-height:44px!important;padding:.4rem .65rem!important;border-radius:7px!important;cursor:pointer}.tour-tip{position:relative;z-index:1;margin:.4rem 0;max-width:calc(100vw - 12px);width:300px;color:#172e2a!important;background:#fffbea!important;border:2px solid #355944;border-radius:9px;padding:10px 12px;box-sizing:border-box;box-shadow:0 3px 10px #172e2a26}.tour-tip[hidden]{display:none!important}.tour-tip small,.tour-tip p,.tour-tip a{color:#172e2a!important}.tour-tip p{margin:.35rem 0}.tour-actions{display:flex;flex-wrap:wrap;gap:.3rem}.tour-tip a{display:inline-block;margin-top:.4rem;text-decoration:underline}.tour-target{outline:3px dashed #345f43!important;outline-offset:2px}.tour-actions button:disabled{opacity:1;color:#384734!important;background:#eceee4!important}.tour-tip,.tour-tip *,.tour-target{animation:none!important;transition:none!important}@media print{.tour-tip,.tour-help{display:none!important}.tour-target{outline:0!important}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Catch-up Tracker</h1>
+  <span class="acct-pill noprint" id="acctBadge" hidden></span>
+  <span class="acct-pill noprint" id="backupBadge" hidden></span>
+  <button type="button" class="smbtn noprint" id="openCustomQr">📱 QR Board</button>
+  <nav class="tabs row" aria-label="Views" style="margin:0">
+    <button data-view="today" aria-pressed="true">Mark a lesson</button>
+    <button data-view="list" aria-pressed="false">Who needs catch-up <span id="openCountBadge" class="badge" hidden>0</span></button>
+    <button data-view="assess" aria-pressed="false">Ready for assessment</button>
+    <button data-view="setup" aria-pressed="false">Set up</button>
+  </nav>
+</header>
+<main>
+  <div class="profilebar noprint"><a class="btnlink" href="My_tools.html">My tools</a><label>Show: <select id="showTags"><option value="initials">Initials</option><option value="first">First name</option><option value="number">Number</option></select></label></div>
+  <section id="today">
+    <h2 id="heading-today" class="tab-heading" tabindex="-1">Mark a lesson</h2>
+    <section id="todayStrip" class="today-strip noprint" aria-labelledby="todayTitle"></section>
+    <div class="row noprint"><button id="printAllOwed" type="button">Print all owed</button></div>
+    <details class="noprint"><summary>Filter</summary><div class="row">
+      <label>Week <select id="week"></select></label>
+      <label>Day <select id="day"></select></label>
+      <button type="button" class="smbtn" id="jumpToday">📅 Today</button>
+      <div class="row pillbar" id="pathFilter" role="group" aria-label="Filter group" style="margin:0">
+        <button type="button" class="smbtn" data-path="" aria-pressed="true">All groups</button>
+        <button type="button" class="smbtn" data-path="BUILD" aria-pressed="false">BUILD</button>
+        <button type="button" class="smbtn" data-path="GROW" aria-pressed="false">GROW</button>
+        <button type="button" class="smbtn" data-path="LAUNCH" aria-pressed="false">LAUNCH</button>
+      </div>
+    </div>
+    </details>
+    <div class="panel noprint" id="dayAbsentBox" style="padding:10px 14px">
+      <div class="row" style="margin:0;justify-content:space-between">
+        <strong>Absent all day (1-tap mark across every lesson today):</strong>
+        <span class="note" id="daySummaryText"></span>
+      </div>
+      <div class="chips" id="dayAbsentChips" style="margin-top:8px"></div>
+    </div>
+    <p class="hint">Tap a pupil who was not in. Then tap their status to move it on: <strong>Needs catch-up → Partly done → More needed → Done</strong>.</p>
+    <div id="lessons"></div>
+  </section>
+
+  <section id="list" hidden>
+    <h2 id="heading-list" class="tab-heading" tabindex="-1">Who needs catch-up</h2>
+    <details class="noprint"><summary>Filter</summary><div class="row">
+      <label>Show <select id="filter">
+        <option value="open">Still open (needs, partly, more)</option>
+        <option value="missed">Needs catch-up (not started)</option>
+        <option value="partial">Partly done</option>
+        <option value="more">More needed</option>
+        <option value="done">Done</option>
+        <option value="all">Everything</option>
+      </select></label>
+      <label>Group <select id="lpath">
+        <option value="">All groups</option><option value="BUILD">BUILD</option><option value="GROW">GROW</option><option value="LAUNCH">LAUNCH</option>
+      </select></label>
+      <label>Pupil <select id="pfilter"><option value="">Everyone</option></select></label>
+    </div></details><div class="row noprint">
+      <button type="button" id="print">🖨️ Print list / QR sheet</button>
+      <button type="button" id="printLabels">Print labels (number only)</button>
+      <button type="button" id="csv">💾 Save CSV</button>
+      <button type="button" id="copyListTsv">📋 Copy for Sheets</button>
+    </div>
+    <div id="printHeaderList" class="print-only print-banner"></div>
+    <p class="hint noprint">Each row names the catch-up sheet (<strong>Pathway › Week beginning › Subject › Catch-up</strong>). Notes save automatically as you type.</p>
+    <div id="table"></div>
+  </section>
+
+  <section id="assess" hidden>
+    <h2 id="heading-assess" class="tab-heading" tabindex="-1">Ready for assessment</h2>
+    <details class="noprint"><summary>Filter</summary><div class="row">
+      <label>Pathway <select id="apath">
+        <option value="">All pathways</option><option value="BUILD">BUILD</option><option value="GROW">GROW</option><option value="LAUNCH">LAUNCH</option>
+      </select></label>
+      <label>Subject <select id="asubj"><option value="">All subjects</option></select></label>
+      <label>Show <select id="aready">
+        <option value="all">Everyone</option><option value="ready">Ready</option><option value="hold">On hold (catch-up open)</option><option value="passed">Assessment done</option>
+      </select></label>
+    </div></details><div class="row noprint">
+      <button type="button" id="assessMatrixBtn" aria-pressed="false">📊 Matrix grid</button>
+      <button type="button" id="printAssess">🖨️ Print</button>
+      <button type="button" id="csvAssess">💾 Save CSV</button>
+      <button type="button" id="copyAssessTsv">📋 Copy for Sheets</button>
+    </div>
+    <div id="printHeaderAssess" class="print-only print-banner"></div>
+    <p class="hint noprint">A pupil is <strong>Ready</strong> for a subject's check when none of its catch-ups are still open. Use <em>Ready anyway</em> if you covered the gap another way.</p>
+    <div id="atable"></div>
+  </section>
+
+  <section id="setup" hidden>
+    <h2 id="heading-setup" class="tab-heading" tabindex="-1">Set up</h2>
+    <div class="panel">
+      <h2 style="margin-top:0">Pupils in each group</h2>
+      <p class="note">One pupil per line, up to 20 pupils. Use names or Pupil N. The list below each box shows each pupil number. Group moves keep saved marks.</p>
+      <label for="pBUILD"><span class="tag BUILD">BUILD</span> group</label><textarea id="pBUILD"></textarea><ol class="numbered-lines" id="numbersBUILD" aria-label="Pupil numbers in BUILD"></ol>
+      <label for="pGROW"><span class="tag GROW">GROW</span> group</label><textarea id="pGROW"></textarea><ol class="numbered-lines" id="numbersGROW" aria-label="Pupil numbers in GROW"></ol>
+      <label for="pLAUNCH"><span class="tag LAUNCH">LAUNCH</span> group</label><textarea id="pLAUNCH"></textarea><ol class="numbered-lines" id="numbersLAUNCH" aria-label="Pupil numbers in LAUNCH"></ol>
+      <div class="row" style="margin-top:10px"><button type="button" id="savep">Save pupils</button><button type="button" id="linkNames">Use these names in all my tools</button><span id="numberWarning" role="alert"></span><span id="saved" class="note" role="status"></span></div>
+    </div>
+    <div class="panel">
+      <h2 style="margin-top:0">Adaptations for each pupil (private)</h2>
+      <p class="note">These help lines are shared with Class names. Choose up to four for each pupil. Private notes stay in Class names.</p>
+      <p id="helpMoved" role="status"></p><div id="adaptList"></div>
+    </div>
+    <div class="panel">
+      <h2 style="margin-top:0">Drive &amp; Pinned QR Links</h2>
+      <p class="note">If you sign in to more than one Google account, type the one that holds your lessons. You can also save pinned links (like a shared Drive folder or custom activity link) for quick classroom QR projection.</p>
+      <div class="row">
+        <label>Google account <input type="email" id="driveEmail" class="textin" placeholder="name@example.com" autocomplete="off"></label>
+        <button type="button" id="saveDrive">Save account</button>
+        <a id="openDriveHome" class="btnlink" target="_blank" rel="noopener" href="https://drive.google.com/drive/my-drive">Open my Drive</a>
+      </div>
+      <hr style="border:0;border-top:1px solid var(--line);margin:12px 0">
+      <div class="row">
+        <input type="text" id="pinTitle" class="textin" placeholder="Link label (e.g. Science Folder)" style="min-width:200px">
+        <input type="url" id="pinUrl" class="textin" placeholder="https://drive.google.com/..." style="flex:1">
+        <button type="button" id="addPinBtn">➕ Pin QR link</button>
+      </div>
+      <div id="pinnedLinksList" class="chips"></div>
+    </div>
+    <div class="panel">
+      <h2 style="margin-top:0">Back up or move to another computer</h2>
+      <p class="note">Backups use Pupil N and keep marks, cleaned notes, links and assessment ticks. Private labels and help notes stay on this device.</p>
+      <div class="row">
+        <button type="button" id="backup">💾 Save dated backup (.json)</button>
+        <label class="row" style="margin:0">Load backup <input type="file" id="restore" accept=".json"></label>
+      </div>
+      <div class="row"><button type="button" id="wipe">Clear all marks (keeps pupils and links)</button></div>
+    </div>
+  </section>
+</main>
+
+<div id="qrModal" class="modal-bg noprint" hidden role="dialog" aria-modal="true" aria-labelledby="qrModalTitle">
+  <div class="modal">
+    <div class="row" style="justify-content:space-between;margin-top:0">
+      <h2 id="qrModalTitle" style="margin:0;font-size:22px">Scan QR Code</h2>
+      <button type="button" class="smbtn" id="qrCloseBtn">✕ Close</button>
+    </div>
+    <p id="qrSubTitle" class="note" style="margin:4px 0 8px"></p>
+    <div class="row" id="qrCustomRow">
+      <input type="url" id="qrCustomInput" class="textin" style="flex:1" placeholder="Paste any Drive or web link (https://...)">
+      <select id="qrPinSelect" style="max-width:210px"><option value="">📌 Pinned links…</option></select>
+    </div>
+    <div class="qr-stage" id="qrSvgBox"></div>
+    <div class="row" style="justify-content:space-between;margin:8px 0 0">
+      <label class="note" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="qrIncludeAcct"> Include Google account hint</label>
+      <div class="chipwrap">
+        <button type="button" class="smbtn" id="qrCopyUrlBtn">📋 Copy link</button>
+        <a id="qrOpenUrlBtn" class="btnlink smbtn" target="_blank" rel="noopener" href="#">🔗 Open link</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast noprint" hidden role="status" aria-live="polite">
+  <span id="toastMsg"></span>
+  <button type="button" id="toastUndoBtn" hidden>Undo</button>
+  <button type="button" id="toastCloseBtn" aria-label="Dismiss">✕</button>
+</div>
+
+<footer>Works offline. Saved on this device. Shared files and prints use Pupil N.</footer>
+<section id="catchupPreview" hidden aria-labelledby="sheetPreviewTitle"><div class="sheet-tools noprint"><h2 id="sheetPreviewTitle" tabindex="-1">Catch-up sheets</h2><p id="sheetHelp">Private: keep this copy. Initials and help notes are on the private sheet. Use number only for copies that leave the room.</p><label>Copy type <select id="sheetMode"><option value="private">Private: initials and help notes</option><option value="number">Number only (Pupil N, no adaptations)</option></select></label><div class="row"><button id="printAndGo" type="button">Print and go</button><button id="closeSheets" type="button">Back to tracker</button></div><p id="sheetFit" role="status"></p></div><div id="catchupPages"></div></section>
+<script>
+(function(){
+"use strict";
+// Shared on-device pupil profile. Keep this block identical on both pages.
+function pupilKey(){try{var v=JSON.parse(localStorage.getItem("mbm_pupil_key_v1")||"{}");return v&&typeof v==="object"?v:{};}catch(e){return {};}}
+function pupilProfile(){try{var v=JSON.parse(localStorage.getItem("mbm_pupil_profile_v1")||"{}");return v&&v.version===1?v:{version:1,show:"initials",pupils:{}};}catch(e){return {version:1,show:"initials",pupils:{}};}}
+function normalLabel(value){return String(value||'').trim().replace(/\s+/g,' ').toLocaleLowerCase('en-GB');}
+function numberedPupils(groups,key){
+ var all=['BUILD','GROW','LAUNCH'].flatMap(function(path){return (groups[path]||[]).map(function(label){return {path:path,label:label};});});
+ return all.map(function(row,i){
+  var value=normalLabel(row.label),explicit=value.match(/^(?:pupil\s*|p)?(\d+)$/i),full=Object.keys(key).filter(function(n){return normalLabel(key[n])===value;}),first=Object.keys(key).filter(function(n){return normalLabel(key[n]).split(' ')[0]===value;});
+  row.n=explicit?+explicit[1]:(full.length===1?+full[0]:(first.length===1?+first[0]:i+1));return row;
+ });
+}
+function trackerEntries(){return numberedPupils(S&&S.pupils||{},pupilKey());}
+function pupilMatchNumber(value,groups,key){
+ const text=normalLabel(value),number=text.match(/^(?:pupil\s*|p)?(\d+)$/i);
+ if(number&&+number[1]>=1&&+number[1]<=20)return +number[1];
+ const full=Object.keys(key).filter(n=>normalLabel(key[n])===text);if(full.length===1)return +full[0];
+ const first=Object.keys(key).filter(n=>normalLabel(key[n]).split(' ')[0]===text);if(first.length===1)return +first[0];
+ const entries=numberedPupils(groups,key).filter(row=>normalLabel(row.label)===text);return entries.length===1?entries[0].n:0;
+}
+
+function displayKey(){
+ var key=Object.assign({},pupilKey());trackerEntries().forEach(function(row){if(!String(key[row.n]||'').trim()&&!/^(?:pupil\s*|p)?\d+$/i.test(normalLabel(row.label)))key[row.n]=row.label;});return key;
+}
+function pupilTag(n,form){
+ var key=displayKey(),mode=form||pupilProfile().show||'initials',label=String(key[n]||'').trim();if(!label||mode==='number')return 'P'+n;if(mode==='first')return label.split(/\s+/)[0];
+ var words=function(s){return String(s).trim().split(/\s+/).map(function(w){return Array.from(w.replace(/[^\p{L}\p{M}]/gu,'').toLocaleUpperCase('en-GB'));}).filter(function(w){return w.length;});};
+ var rows=Object.keys(key).map(function(id){var w=words(key[id]);return {id:id,tag:w.slice(0,3).map(function(a){return a[0];}).join(''),last:w.at(-1)||[],at:1};}).filter(function(r){return r.tag;});
+ for(var step=0;step<102;step++){var counts={};rows.forEach(function(r){counts[r.tag]=(counts[r.tag]||0)+1;});var coll=rows.filter(function(r){return counts[r.tag]>1;});if(!coll.length)break;coll.forEach(function(r){r.tag+=r.at<r.last.length?r.last[r.at++]:r.id;});}
+ return (rows.find(function(r){return r.id===String(n);})||{}).tag||'P'+n;
+}
+var SAFE_CLEAN_WORDS={BUILD:1,GROW:1,LAUNCH:1,ALL:1,SCIENCE:1,HUMANITIES:1,CAREERS:1,VOCATIONAL:1,RE:1,ICT:1,DT:1,RSHE:1,PSHE:1,RSE:1,CREATIVE:1,ARTS:1,COMMUNITY:1,PROJECTS:1,MONDAY:1,TUESDAY:1,WEDNESDAY:1,THURSDAY:1,FRIDAY:1,PUPIL:1,WEEK:1,LESSON:1};
+function cleanPupilText(text,privateCopy){
+ var pairs=[],casePairs=[],key=displayKey();Object.keys(key).forEach(function(n){var label=String(key[n]||'').trim(),replacement=privateCopy?pupilTag(n,'initials'):'Pupil '+n;
+  [label].concat(label.split(/\s+/)).forEach(function(raw){var word=String(raw||'').replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu,'');if(word&&word.length>=2&&!SAFE_CLEAN_WORDS[word.toUpperCase()]&&!/^[A-Z]{1,3}$/.test(word))pairs.push([word,replacement]);});
+  if(!privateCopy){var ini=pupilTag(n,'initials');if(ini&&ini.length>=2&&!/^P\d+$/i.test(ini)&&!SAFE_CLEAN_WORDS[ini.toUpperCase()])casePairs.push([ini,'Pupil '+n]);}
+ });
+ try{var nl=JSON.parse(localStorage.getItem('mbm_names_list_v1')||'[]');if(Array.isArray(nl))nl.forEach(function(w){var cw=String(w||'').trim();if(cw.length>=2&&!SAFE_CLEAN_WORDS[cw.toUpperCase()]&&!pairs.some(function(p){return normalLabel(p[0])===normalLabel(cw);}))pairs.push([cw,'[name]']);});}catch(e){}
+ pairs.sort(function(a,b){return b[0].length-a[0].length;});var result=String(text==null?'':text),slots=[];
+ pairs.forEach(function(pair){[pair[0],encodeURIComponent(pair[0])].forEach(function(label){var lower=result.toLocaleLowerCase('en-GB'),needle=label.toLocaleLowerCase('en-GB'),from=0,at,parts=[];while((at=lower.indexOf(needle,from))>=0){var end=at+needle.length,word=/[\p{L}\p{N}_]/u;if((at&&word.test(result[at-1]))||(end<result.length&&word.test(result[end]))){parts.push(result.slice(from,end));from=end;continue;}parts.push(result.slice(from,at),'\u0001'+slots.length+'\u0002');slots.push(pair[1]);from=end;}parts.push(result.slice(from));result=parts.join('');});});
+ casePairs.sort(function(a,b){return b[0].length-a[0].length;}).forEach(function(pair){var needle=pair[0],from=0,at,parts=[];while((at=result.indexOf(needle,from))>=0){var end=at+needle.length,word=/[\p{L}\p{N}_]/u;if((at&&word.test(result[at-1]))||(end<result.length&&word.test(result[end]))){parts.push(result.slice(from,end));from=end;continue;}parts.push(result.slice(from,at),'\u0001'+slots.length+'\u0002');slots.push(pair[1]);from=end;}parts.push(result.slice(from));result=parts.join('');});
+ return result.replace(/\u0001(\d+)\u0002/g,function(_,n){return slots[+n];});
+}
+function redacted(text){return cleanPupilText(text,false);}
+function initialsPupilNumber(value){
+ var token=String(value||'').trim();if(!/^[A-Z]{2,3}$/.test(token))return 0;
+ var matches=Object.keys(displayKey()).filter(function(n){return pupilTag(n,'initials')===token;});return matches.length===1?+matches[0]:0;
+}
+function pupilNumber(value){return pupilMatchNumber(value,S&&S.pupils||{},pupilKey())||initialsPupilNumber(value)||1;}
+function samePupil(a,b){var x=pupilMatchNumber(a,S.pupils,pupilKey())||initialsPupilNumber(a),y=pupilMatchNumber(b,S.pupils,pupilKey())||initialsPupilNumber(b);return x&&y?x===y:normalLabel(a)===normalLabel(b);}
+function markKeyFor(w,day,period,pupil){
+ var prefix=[w,day,period].join('|')+'|',number=pupilNumber(pupil),keys=Object.keys(S.marks).filter(function(k){return k.startsWith(prefix)&&samePupil(k.slice(prefix.length),pupil);});
+ return keys.find(function(k){return /^(?:Pupil\s*|P)?\d+$/i.test(k.slice(prefix.length))&&pupilNumber(k.slice(prefix.length))===number;})||keys[0]||mkey(w,day,period,pupil);
+}
+function assessKeyFor(path,subject,pupil){
+ var prefix=path+'|'+subject+'|',keys=Object.keys(S.assessMarks).filter(function(k){return k.startsWith(prefix)&&samePupil(k.slice(prefix.length),pupil);});
+ return keys.find(function(k){return /^(?:Pupil\s*|P)?\d+$/i.test(k.slice(prefix.length));})||keys[0]||prefix+pupil;
+}
+function numberedKeysLast(keys,index){return keys.sort(function(a,b){var numeric=function(k){return /^(?:Pupil\s*|P)?\d+$/i.test(k.split('|')[index]);};return Number(numeric(a))-Number(numeric(b));});}
+
+function pupilAdapt(n){var p=pupilProfile(),r=p.pupils&&p.pupils[n];return r&&Array.isArray(r.adapt)?r.adapt.filter(function(s){return typeof s==="string"&&s.trim();}).slice(0,4):[];}
+function publicPupil(value){return "Pupil "+pupilNumber(value);}
+function pupilCaption(value){var n=pupilNumber(value);return "Pupil "+n+" · "+pupilTag(n);}
+function pupilNode(value){var n=pupilNumber(value),s=document.createElement("span");s.className="pupil-label";s.title=s.getAttribute("aria-label")||pupilCaption(value);s.setAttribute("aria-label",pupilCaption(value));var a=document.createElement("span");a.textContent="Pupil "+n;s.appendChild(a);var b=document.createElement("strong");b.className="private-tag noprint";b.textContent=" · "+pupilTag(n);s.appendChild(b);return s;}
+function tagControl(node,value){node.title=pupilCaption(value);node.setAttribute("aria-label",pupilCaption(value));return node;}
+function setShow(mode){var p=pupilProfile();p.show=mode;try{localStorage.setItem("mbm_pupil_profile_v1",JSON.stringify(p));return true;}catch(e){return false;}}
+function lastSchoolDay(){var d=new Date();d.setHours(12,0,0,0);do{d.setDate(d.getDate()-1);}while(d.getDay()===0||d.getDay()===6);return d;}
+function markDate(r){return new Date(2026,10,2+(+r.w-1)*7+["Monday","Tuesday","Wednesday","Thursday","Friday"].indexOf(r.d),12);}
+
+
+var KEY="mbm_catchup_tracker_v1";
+var WEEKS=[["1","02 Nov"],["2","09 Nov"],["3","16 Nov"],["4","23 Nov"],["5","30 Nov"],["6","07 Dec"],["7","14 Dec"]];
+var DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday"];
+var TT={
+ Monday:[[1,"LAUNCH","Vocational"],[2,"GROW","Science"],[3,"BUILD","Science"],[4,"LAUNCH","Science"],[5,"BUILD","Creative Arts"],[6,"GROW","Creative Arts"]],
+ Tuesday:[[1,"BUILD","Creative Arts"],[2,"LAUNCH","Humanities"],[3,"BUILD","Careers"],[4,"GROW","Science"],[5,"BUILD","RE"],[6,"LAUNCH","ICT"]],
+ Wednesday:[[1,"BUILD","RSHE"],[2,"LAUNCH","Science"],[3,"GROW","PSHE"],[4,"BUILD","Science"],[5,"GROW","Creative Arts"],[6,"LAUNCH","Vocational"]],
+ Thursday:[[1,"LAUNCH","DT"],[2,"GROW","RE"],[3,"BUILD","Humanities"],[4,"LAUNCH","RSE"],[5,"ALL","Community Projects"]],
+ Friday:[[1,"LAUNCH","Careers"],[2,"GROW","Humanities"],[3,"BUILD","Vocational"],[4,"LAUNCH","Science"]]
+};
+// Ready-made catch-up links, filled in as the sheets are filed: "week|PATHWAY|Subject|lesson" -> link
+var PRELOAD={"1|BUILD|Careers|1":"https://drive.google.com/file/d/1PiNei2czWTcaMhM0jOqaJUI7XGf8DfGW/view","1|BUILD|Community Projects|1":"https://drive.google.com/file/d/1jH389gTFiATAgd9GRrzpENyCSPG8J-pI/view","1|BUILD|Creative Arts|2":"https://drive.google.com/file/d/1SydDviWTGOAkK3c-_HuA1alFqNm8PArK/view","1|BUILD|Humanities|1":"https://drive.google.com/file/d/15bvXThlsAkCuGr4c6Z8J6c7Ihn5gyqsp/view","1|BUILD|RE|1":"https://drive.google.com/file/d/1o-RQgyGvEolPu3KJdLsGOewy4BucTCqf/view","1|BUILD|RSHE|1":"https://drive.google.com/file/d/15Rpe_xUsZyglfHzNYvJ9YrgPWE9CP8Hb/view","1|BUILD|Science|2":"https://drive.google.com/file/d/1IrfEAe0DokvhMc2oZCf-hKtTbLVy_kBU/view","1|BUILD|Vocational|1":"https://drive.google.com/file/d/1MJwu6OO7Kxa-yxqOHOKoIMBpBqb8Td6M/view","1|GROW|Community Projects|1":"https://drive.google.com/file/d/1ueUBqf1zdTcMKVgUvvmlxhs-Bc8M0pqf/view","1|GROW|Creative Arts|2":"https://drive.google.com/file/d/1Aj-9poE1MjGBVQ-aQAt9OkG0qzZC8pAs/view","1|GROW|Humanities|1":"https://drive.google.com/file/d/1FPRP8b5HM1Z5C8uCC_ldiYO-yDhWzBkr/view","1|GROW|PSHE|1":"https://drive.google.com/file/d/11EqNfTC3hPiqG7I3NtncdjxLst9J5Rra/view","1|GROW|RE|1":"https://drive.google.com/file/d/1fSGUrPIda1kK1A-rVU9p7o7cScDyBzRN/view","1|GROW|Science|2":"https://drive.google.com/file/d/1eQVazxvzRYI2-0bCkz4nZYfI9apwJHb1/view","1|LAUNCH|Careers|1":"https://drive.google.com/file/d/1-ZqmACOU53jw5aNfX1Uv2XOuoi5oSVJS/view","1|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/1-lvMPvju6JVDYfgYS8iHqgvhHukBDQjZ/view","1|LAUNCH|DT|1":"https://drive.google.com/file/d/1n2_3ZkWSgZc0Xl4gNG0xuoazPjzWDsWp/view","1|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1Bmot9RHihW9fWVoxtl7XKeUlXDSqLKKf/view","1|LAUNCH|ICT|1":"https://drive.google.com/file/d/1fOhmMuQSKrhMyUnVqmvSbv8hMCxeDi18/view","1|LAUNCH|RSE|1":"https://drive.google.com/file/d/1Gv1FOjKQIqzCJ0t2zyRWlKndesqmBrdi/view","1|LAUNCH|Science|2":"https://drive.google.com/file/d/1Jw6Jv_4szTJjhSgfz39g5i3PUDNqaew1/view","1|LAUNCH|Science|3":"https://drive.google.com/file/d/1uhbYMLdeaXqJ0_E9U55e7I5Ab6VmL_eu/view","1|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1vrOSGvIGwkKVy0vFHEAmf6jC_s4QLyhu/view","2|BUILD|Careers|1":"https://drive.google.com/file/d/1i5wgQhVwnvdjWk8TO-5Kb1kOV2OtuZ_i/view","2|BUILD|Community Projects|1":"https://drive.google.com/file/d/1jH389gTFiATAgd9GRrzpENyCSPG8J-pI/view","2|BUILD|Creative Arts|1":"https://drive.google.com/file/d/14BMvx44YdSE9EmQn3B8K4hSXy-iKBRKo/view","2|BUILD|Creative Arts|2":"https://drive.google.com/file/d/1TIS-zVU5Q1F6GneuDIUoyjjpAyyHFxsy/view","2|BUILD|Humanities|1":"https://drive.google.com/file/d/1Eee5jltgbbQOfT3tG9PU6rc7R7A9PKnG/view","2|BUILD|RE|1":"https://drive.google.com/file/d/1BgGKYchb5Xj4nEBgUW-hLiGpgRUE7tst/view","2|BUILD|RSHE|1":"https://drive.google.com/file/d/1H5chTYaGGxTD8ZLvU5WrCt5BnEkmG9Xn/view","2|BUILD|Science|1":"https://drive.google.com/file/d/1dXKlXq2r6bXtYg8bhhj3Xgjd3_-thhRR/view","2|BUILD|Science|2":"https://drive.google.com/file/d/1mKY53oX6OfvQRQuZUaRBt6I-IxV1J8Oy/view","2|BUILD|Vocational|1":"https://drive.google.com/file/d/1aVBzN8Xu3H3PVomzlqDnbdSuPQiIEbVy/view","2|GROW|Community Projects|1":"https://drive.google.com/file/d/1ueUBqf1zdTcMKVgUvvmlxhs-Bc8M0pqf/view","2|GROW|Creative Arts|1":"https://drive.google.com/file/d/1MiytfhVwSmcYqh1fHNlThA8VJjeRiNrF/view","2|GROW|Creative Arts|2":"https://drive.google.com/file/d/19pJIlJKJxwht2-dZUpGVa-68hlsviS6V/view","2|GROW|Humanities|1":"https://drive.google.com/file/d/1hRh3k2_gXnPxcsrfFGm4IoqRywMHQvMw/view","2|GROW|PSHE|1":"https://drive.google.com/file/d/1I3CvaArxSJU3obuOzRtj1fkroqLGqzss/view","2|GROW|RE|1":"https://drive.google.com/file/d/1k2ja_KYCFYhD6WleOhMGNNsvAgZ1sGww/view","2|GROW|Science|1":"https://drive.google.com/file/d/1EGimJLoQD04qe4K04gsv3JTNVz9pnRVf/view","2|GROW|Science|2":"https://drive.google.com/file/d/1jMbdQakiSxJOjcz6o23vAFLNzNUcik-4/view","2|LAUNCH|Careers|1":"https://drive.google.com/file/d/13uE_HpLe_PcRHNmqokRjzo_J2v5ozfdK/view","2|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/1-lvMPvju6JVDYfgYS8iHqgvhHukBDQjZ/view","2|LAUNCH|DT|1":"https://drive.google.com/file/d/1Qsx__vhqUTilRZw-CiDBUfSCz1G9P3RI/view","2|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1tE3xvUa3LHHGxdkv2brH9PEL0BpLxgAe/view","2|LAUNCH|ICT|1":"https://drive.google.com/file/d/1nmbBdsVfO10KDki9Jq0roQeUFbepa1RV/view","2|LAUNCH|RSE|1":"https://drive.google.com/file/d/1pV4g8yeQpVJft8t513yXacq-42CgpfTC/view","2|LAUNCH|Science|1":"https://drive.google.com/file/d/1cC8Vtc5lHn1qwY0APKJo6EvDZqMiXJgC/view","2|LAUNCH|Science|2":"https://drive.google.com/file/d/19QTxa5bsEFz2ovGJGFbboBdVY27sOdHW/view","2|LAUNCH|Science|3":"https://drive.google.com/file/d/18ZVhD-0NsvTwbPWl15pdp3gPWYr42lMK/view","2|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1ZMcel1bK45gX_D-f8KZv5FhhPMZWWD75/view","2|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1Go5lqbnnqgJCxpu0WL9H6qQ4jQvq8bzK/view","3|BUILD|Careers|1":"https://drive.google.com/file/d/1maFx9I3WKu_wktlq7Vn3SBnqCYvzhoQT/view","3|BUILD|Community Projects|1":"https://drive.google.com/file/d/1o1rouS4PRuVRLttVabPtXweQfbWL-YNi/view","3|BUILD|Creative Arts|1":"https://drive.google.com/file/d/1qD2m0tUW3h3Zfwb8DZw74YgtLUT8MG_k/view","3|BUILD|Creative Arts|2":"https://drive.google.com/file/d/1dZ2oscq2hWOdGvA0j8W_Pf9xwrAY1j0U/view","3|BUILD|Humanities|1":"https://drive.google.com/file/d/1b5VE3LOa_Fm05ctyNhqqeJfEWwCk7_86/view","3|BUILD|RE|1":"https://drive.google.com/file/d/1OMdt_QcZNnjjqpkb9lYDvZqH5NwtLSCp/view","3|BUILD|RSHE|1":"https://drive.google.com/file/d/1L3Eq0rhWGm6joDV3oacf6iYTP_TrVeX7/view","3|BUILD|Science|1":"https://drive.google.com/file/d/1bxBg0u7oay9ivlM6FRk6USUpbK1Qinh9/view","3|BUILD|Science|2":"https://drive.google.com/file/d/1Jc8Fl5jAM42i6-Xf6-QPHTiov3vIIvgF/view","3|BUILD|Vocational|1":"https://drive.google.com/file/d/1uaw79HK7Qoa3Wm5hwW4vG0TTlFKgOt0Q/view","3|GROW|Community Projects|1":"https://drive.google.com/file/d/1aCN7oGCrnILLh84NdcMyxpkKnnRTLtbn/view","3|GROW|Creative Arts|1":"https://drive.google.com/file/d/1k96N7A07GpCANKmvOwFRI_LqF0_UKehO/view","3|GROW|Creative Arts|2":"https://drive.google.com/file/d/1rqIU6y-CF7FSkzINAMt9QmczFgzUad4w/view","3|GROW|Humanities|1":"https://drive.google.com/file/d/17z6ZUP2c8gzAnhIKHx_ZhvKT5EEd8T1_/view","3|GROW|PSHE|1":"https://drive.google.com/file/d/1XiJFOCVW4yA-LrmsdO2YkBdoiyKVKXgB/view","3|GROW|RE|1":"https://drive.google.com/file/d/1LpbbUNeMq43g4KaSuCs_KstsJvenQOXn/view","3|GROW|Science|1":"https://drive.google.com/file/d/1qA2W5RRysbRmRb7JqUXBfqhxrHs68HRA/view","3|GROW|Science|2":"https://drive.google.com/file/d/1rw9TakLPtLbs_-5ccPUjmTCqUHT6GSIp/view","3|LAUNCH|Careers|1":"https://drive.google.com/file/d/1z6ql-4drvMZ88xfh-Vr3bgvxnZlXXF8r/view","3|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/148UMdq_tfJ4xi3W2faprgfpJqIXLjJyN/view","3|LAUNCH|DT|1":"https://drive.google.com/file/d/1tt6MZRjQA24L6nghlSPgF1p0tkIJhO6b/view","3|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1OFG75pGK9q_T4km-Xv2Bneu7Up8c1ER2/view","3|LAUNCH|ICT|1":"https://drive.google.com/file/d/1oCTdhhF0a3pDP7nxIxxfVo0r97jIg0Xi/view","3|LAUNCH|RSE|1":"https://drive.google.com/file/d/1Lu-Bbfz-93cgEJaUbrSOhDA0ub9JHlnD/view","3|LAUNCH|Science|1":"https://drive.google.com/file/d/1mVxlthB-6lCleILLrp6awjHA4P-JKev5/view","3|LAUNCH|Science|2":"https://drive.google.com/file/d/11FaMGPcDa582nK8T4nlwk6fLSxLxr2rI/view","3|LAUNCH|Science|3":"https://drive.google.com/file/d/1tATZeeWt_5DzempHqwJ6COfIn3hZqmrA/view","3|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1Y0BVgCyt7AKQErd0k4FQruXWE2_UB8ho/view","3|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1J5a4NQozc0Yx_tCH6PQ-8s-nORzztAA9/view","4|BUILD|Careers|1":"https://drive.google.com/file/d/1UdcU-1i7nKXY8POk4Jg01PGAEbOWRcF0/view","4|BUILD|Community Projects|2":"https://drive.google.com/file/d/1nGGjjuA3kFMsCtYmoLFdlaM8JpWAhLD0/view","4|GROW|Community Projects|2":"https://drive.google.com/file/d/1LB8WpJW7z26EjR7Gacb3sIaEBvXv3fJ-/view","4|LAUNCH|Community Projects|2":"https://drive.google.com/file/d/1gsHvwzz2LRugSb0sb4zKggemJ9RNE4jO/view","4|BUILD|Community Projects|1":"https://drive.google.com/file/d/1KJYfYLD74GlHJLXmn-WuCiKSzM8Pg2R2/view","4|BUILD|Creative Arts|1":"https://drive.google.com/file/d/1fI4hCJhP5Wts_3XhpE7NI2bKW1b0Idml/view","4|BUILD|Creative Arts|2":"https://drive.google.com/file/d/1fw5oStGx9XXHlM_Ii6Cbp5J-yhrXxjE_/view","4|BUILD|Humanities|1":"https://drive.google.com/file/d/1viBOfYQTwSJ00FLazDd39nPPAuOn4leU/view","4|BUILD|RE|1":"https://drive.google.com/file/d/1xPy6sX3vStQKDv3XLyL4ZcrMgWe6FRlr/view","4|BUILD|RSHE|1":"https://drive.google.com/file/d/1B54U-744ddd5BtQTcgBOBy7c3n7TOuas/view","4|BUILD|Science|1":"https://drive.google.com/file/d/1Lm7AGAtELkQHgrccw2an2gOqJb27k5yY/view","4|BUILD|Science|2":"https://drive.google.com/file/d/107NmvDp_uTQ_4sLwsaCzi27T7W7BNGID/view","4|BUILD|Vocational|1":"https://drive.google.com/file/d/1b-N34Kj5RhyV-H-BLE7AoFN3JlTEmtAt/view","4|GROW|Community Projects|1":"https://drive.google.com/file/d/14k_VpZ9sjRZGwUyhTod_DqF08i0qSCss/view","4|GROW|Creative Arts|1":"https://drive.google.com/file/d/1pyJcrCiYmi8H_N6FDat1_1RDe09MRsBm/view","4|GROW|Creative Arts|2":"https://drive.google.com/file/d/1H8iF_6dIdHQ3FJhkzTdsW5QRBtjMzYB1/view","4|GROW|Humanities|1":"https://drive.google.com/file/d/1SXRtMo0h3oh_8ezAsEucWPM3WSxPHWbY/view","4|GROW|PSHE|1":"https://drive.google.com/file/d/1iar_GQ2fLsEELEfiCdyb3T3_pB76KfCo/view","4|GROW|RE|1":"https://drive.google.com/file/d/1TMxpPrAec8QyflDPPm96IGxClD4eftlX/view","4|GROW|Science|1":"https://drive.google.com/file/d/1uYTcnrR7Xd_DC3XeiWYRoZkwqtv6Mgad/view","4|GROW|Science|2":"https://drive.google.com/file/d/1muJ8gbWpjmOof3JMIidOsk6l7QyMlBMf/view","4|LAUNCH|Careers|1":"https://drive.google.com/file/d/1UdFsAbq8RfWGcviwDtDAJvT3yaeZYJKa/view","4|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/13UCD5qFb8LiY70ReeuU8jar0ykLjz9ma/view","4|LAUNCH|DT|1":"https://drive.google.com/file/d/1lDTY9ajkCCqmhYWmn-EmwGpPhIjRDlHh/view","4|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1uLjrSGxGELWZjMmxQZG2anp9c5C3k3Kc/view","4|LAUNCH|ICT|1":"https://drive.google.com/file/d/1QeJTdc9kV4_A32xRbQkj9TLzqtrIKfrS/view","4|LAUNCH|RSE|1":"https://drive.google.com/file/d/1Evsijt6z21KJkuavL_Ri_GVIR4Aw4LFc/view","4|LAUNCH|Science|1":"https://drive.google.com/file/d/1Q-LTuSHxvu2NP3Y55gKI24ixhocO5ezV/view","4|LAUNCH|Science|2":"https://drive.google.com/file/d/1rO1DUUMeDWeJ4E3hLFz-NhPjhLRDEy1t/view","4|LAUNCH|Science|3":"https://drive.google.com/file/d/1Bhpu4nX2ewYzG8bB0T5Uk--kvMWC8T5v/view","4|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1pbd7-_ItqNf7-1L7QlpAMq7PUAa5xgej/view","4|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1rw4kaImUCwHuFNu4IEjiU-sHfWjWsZST/view","5|BUILD|Careers|1":"https://drive.google.com/file/d/1157g_qetY4SjvEJWNeLSsHsJRlOhygbj/view","5|BUILD|Community Projects|1":"https://drive.google.com/file/d/1GIgDVaUPPV2UIjCVRqedrtjhGotfRIVf/view","5|BUILD|Creative Arts|1":"https://drive.google.com/file/d/1PG6_8oaCJhCSgYptg7oA9rmNU4Dvspfq/view","5|BUILD|Creative Arts|2":"https://drive.google.com/file/d/1JQLskjdbcF2AuM9wdk3XA8Oe7eF02SWO/view","5|BUILD|Humanities|1":"https://drive.google.com/file/d/1Ymw2zmTKqQZsMNK5UzEFqOn1XWztA6pb/view","5|BUILD|RE|1":"https://drive.google.com/file/d/16dOFDp4Mz0G9yBuBunQn0Ww7EwJUOlll/view","5|BUILD|RSHE|1":"https://drive.google.com/file/d/16jkeWgZKLRHVHsEPx2rvC9hZDVZ32dDc/view","5|BUILD|Science|1":"https://drive.google.com/file/d/1Zypxn0Z85zBLqsQhnzpn7yjv0XBsbpXy/view","5|BUILD|Science|2":"https://drive.google.com/file/d/1ntonGiXWkHDfYlqbW4ZLZBxn1tiyouw_/view","5|BUILD|Vocational|1":"https://drive.google.com/file/d/1X2-ET7S1GPW0LbZF73jDEdpGzhXdxxiO/view","5|GROW|Community Projects|1":"https://drive.google.com/file/d/1UJqjlxVFPKDUB6eSHSvot3Vx-7NaLhPF/view","5|GROW|Creative Arts|1":"https://drive.google.com/file/d/1jsBT4bSNSXuWIGz2k53U2INLOZxthV-y/view","5|GROW|Creative Arts|2":"https://drive.google.com/file/d/14BiKcesNnxWSEBwhTe3PGk_n4cyzlKFQ/view","5|GROW|Humanities|1":"https://drive.google.com/file/d/1GJBkdxLrBbZu6Rl1yWqOFDowURtEZXko/view","5|GROW|PSHE|1":"https://drive.google.com/file/d/14NKjhXHeoQyINzo9OWrEjayk9waZ8QtK/view","5|GROW|RE|1":"https://drive.google.com/file/d/1H4Ald_LpYUdQRLHpE3_r60naAMwEyAho/view","5|GROW|Science|1":"https://drive.google.com/file/d/1f9TS4YWRkMaP2bpHrteyvyOYdcZZf2Fm/view","5|GROW|Science|2":"https://drive.google.com/file/d/1Z9mtzQ-blz2oyZyqgGOWhsSh6nZJx4MV/view","5|LAUNCH|Careers|1":"https://drive.google.com/file/d/1LjvkvAadA0zOPvDbHj3jBbi8CEmV5fY0/view","5|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/1_58jEIVTUaqFLVLpK2oMJNcQKBMual1H/view","5|LAUNCH|DT|1":"https://drive.google.com/file/d/17do7dzKylvdWZKkVQBn4bOCReYd7n1_M/view","5|LAUNCH|Humanities|1":"https://drive.google.com/file/d/17GvVj3wiElIey7ILDIbS7DtHk386PAvx/view","5|LAUNCH|ICT|1":"https://drive.google.com/file/d/12ODlBsxAo33uSqD6e8otx1PFhAsGpT0d/view","5|LAUNCH|RSE|1":"https://drive.google.com/file/d/19XzDcClO03YnhVTPFL_1_luJgz0jeSwq/view","5|LAUNCH|Science|1":"https://drive.google.com/file/d/1BQnE1XwA57wf_n7Rhczmg-HLcanGjT4O/view","5|LAUNCH|Science|2":"https://drive.google.com/file/d/11AAar565LQvzN0B4jixQdghiee9mZhYp/view","5|LAUNCH|Science|3":"https://drive.google.com/file/d/1XAp_ZWwpDcI2xVjix60Hsfw5p8914Gg6/view","5|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1QX-6qF8NnT1N3Mlq-V8Ht7j9w193HbyI/view","5|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1Xcfo2g4yq8inwmlg3fAFZRT9vl_ujMEV/view","6|BUILD|Careers|1":"https://drive.google.com/file/d/10-OtNKIO4xI_mhLES3pPl9tebIDIkiIL/view","6|BUILD|Community Projects|1":"https://drive.google.com/file/d/10r-PuofzP8ZnlkvWsERBTjqJKK5_jLcT/view","6|BUILD|Creative Arts|1":"https://drive.google.com/file/d/1K-Z7UXW3PR1ZvyGQbLSXHxVugcgbjUlG/view","6|BUILD|Creative Arts|2":"https://drive.google.com/file/d/15kkVDAYt7cDBHbaWTZAs1bhx_oQGHQ-I/view","6|BUILD|Humanities|1":"https://drive.google.com/file/d/1FQCrGNKuvbzLmSjDBOh5BDxnCKF6OwMW/view","6|BUILD|RE|1":"https://drive.google.com/file/d/1bO4idiZOnZzsDgvhUBwkOL7_aQ1mb0PP/view","6|BUILD|RSHE|1":"https://drive.google.com/file/d/1BWlxxA3Zp9cCnMtilbsfg2iJMbeocugF/view","6|BUILD|Science|1":"https://drive.google.com/file/d/169y8M1yU37Sy61mMetc1nr93c7Gy7UK2/view","6|BUILD|Science|2":"https://drive.google.com/file/d/1z_5dTsOQRVhJpUUHGZKDN_CxholcNLYj/view","6|BUILD|Vocational|1":"https://drive.google.com/file/d/1KSPk5lBSQMCOBmKFDyqBiNbjkVpuyX2A/view","6|GROW|Community Projects|1":"https://drive.google.com/file/d/16QAk-1oq2nzG1Y56ErukKUGndmWduJTl/view","6|GROW|Creative Arts|1":"https://drive.google.com/file/d/1JdofsttnxiRCoWtuA3-I0v97Z0A1e2KR/view","6|GROW|Creative Arts|2":"https://drive.google.com/file/d/1pnn1bC0-Y4JZ9frSO__zmEs1n7saGZ4D/view","6|GROW|Humanities|1":"https://drive.google.com/file/d/1c32yZiOAQqRHexZcHtDrtwP3Uu_56R4Q/view","6|GROW|PSHE|1":"https://drive.google.com/file/d/1rqYE2mNefjNRz6FeXGKiO9dJdgZOca9k/view","6|GROW|RE|1":"https://drive.google.com/file/d/1UUp0cvp7vzt2Mo09VkXrS5NPf3WDA3vB/view","6|GROW|Science|1":"https://drive.google.com/file/d/18MnYCbo02xndcfwKKbQcFj1nj8KUMRs_/view","6|GROW|Science|2":"https://drive.google.com/file/d/1FHD4B23HPfl0QVtzXufL-wmrEchXkhL9/view","6|LAUNCH|Careers|1":"https://drive.google.com/file/d/10NOX2vrD67rOO9k2nmF-PVVnnDue2JKD/view","6|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/1BFkREe-I3YejKQEgOo6oNkfewC4jOQRJ/view","6|LAUNCH|DT|1":"https://drive.google.com/file/d/1uLywnPcBQyc_rM7rP_7RVAXfuPyGxZ8o/view","6|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1yhKGtH8XLLQKp9QcDmhRke4FC3qSJWUN/view","6|LAUNCH|ICT|1":"https://drive.google.com/file/d/1k7-MGbC_j6tN8mMeLHltnNVJX3cvOSBG/view","6|LAUNCH|RSE|1":"https://drive.google.com/file/d/1EgYOJZRzkdo13lmIwVZmrQQjlRusd9rg/view","6|LAUNCH|Science|1":"https://drive.google.com/file/d/19512FOpgp7elLuz6z6ZLFzqX0uxId-lI/view","6|LAUNCH|Science|2":"https://drive.google.com/file/d/17E27IlWQUH84HDOxC1JMRHV4eSZizzoy/view","6|LAUNCH|Science|3":"https://drive.google.com/file/d/1k-1QaSS6zO7f8X8YqSQXAhF2sAQqvRO5/view","6|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1rg3FZ0wnmeVB3wQKksMXHmUIxXNexpb0/view","6|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1KjIE4gZ3BGRI6V4AFEWIzcSNUSCzBJjG/view","7|BUILD|Careers|1":"https://drive.google.com/file/d/14raKHWeWcAs8B4Pl3IdqVINPoRujWaM6/view","7|BUILD|Community Projects|1":"https://drive.google.com/file/d/1wtoWcSE93tktDA9opCBFz1GD77prelyt/view","7|BUILD|Creative Arts|1":"https://drive.google.com/file/d/14MuFFCeoHPbKb7PyxBW-5TQ7HUcCZP55/view","7|BUILD|Creative Arts|2":"https://drive.google.com/file/d/13jIjuev5nxA-VCJ0mqsiWn_EaFC0DjRz/view","7|BUILD|Humanities|1":"https://drive.google.com/file/d/1c-J899-8stRTaq4kUrwuPFUSXcxZG4KB/view","7|BUILD|RE|1":"https://drive.google.com/file/d/1Gvdur0QIKgw1ADhbJd4ipr4mVGCYrtOx/view","7|BUILD|RSHE|1":"https://drive.google.com/file/d/1UAL573vfL03LcXGZ8kR3ccMv8-LEsEGd/view","7|BUILD|Science|1":"https://drive.google.com/file/d/1r33yFsj4CvC3OAncVSqhOZVG--K9jd0z/view","7|BUILD|Science|2":"https://drive.google.com/file/d/1c9BcBQSStnR43zLJ0vF4XRVusKp3LS7O/view","7|BUILD|Vocational|1":"https://drive.google.com/file/d/1E1yI8b0ANOgUCQHyeZhhGL0xk0yrV2_Z/view","7|GROW|Community Projects|1":"https://drive.google.com/file/d/1QDyILKTT-MR0UqQ5SSc0lR7rlCpC5aVT/view","7|GROW|Creative Arts|1":"https://drive.google.com/file/d/141Y6-HGdUD2ITmSxSQmBX5-e77n8RwzA/view","7|GROW|Creative Arts|2":"https://drive.google.com/file/d/1ZXduvQDU90tGv9StSVM5o8_Nl5a-e6qD/view","7|GROW|Humanities|1":"https://drive.google.com/file/d/1D_pL3aKG77h0DNwSvR8RbUmpuX0y-h2X/view","7|GROW|PSHE|1":"https://drive.google.com/file/d/18cLgx8euQHfl_qkrIPjvfBM0tx1OJHe-/view","7|GROW|RE|1":"https://drive.google.com/file/d/1_I1H2STAg9mTAeHjnKYVs7ie3ep37uDw/view","7|GROW|Science|1":"https://drive.google.com/file/d/1f-yUIEg4Fges72VqAJKg812uDqBSASRQ/view","7|GROW|Science|2":"https://drive.google.com/file/d/1WH1bIckQb9OO5P0bNn75wjXl8sA8gy-5/view","7|LAUNCH|Careers|1":"https://drive.google.com/file/d/1r-8bJprMQI_ZWlYHTpgg-yMv1f9nEvhA/view","7|LAUNCH|Community Projects|1":"https://drive.google.com/file/d/1RmxvrSMx6t9I1Jjxek5zx36iPmr1KRlB/view","7|LAUNCH|DT|1":"https://drive.google.com/file/d/1CO-UjHierAjcSjU99B3yvOFd6VpC2i3p/view","7|LAUNCH|Humanities|1":"https://drive.google.com/file/d/1A6gn1z4hL5qzkizXLxOe2sdJSgCP2u3G/view","7|LAUNCH|ICT|1":"https://drive.google.com/file/d/1exUfNEGsm53X344LnmWxraxeejJlvavO/view","7|LAUNCH|RSE|1":"https://drive.google.com/file/d/12zNn0UQbn94-Fw6UebSfohlYYvgNkrEe/view","7|LAUNCH|Science|1":"https://drive.google.com/file/d/1LxjpMYd-pFLVqwllg2HR4w05ImUx-2zr/view","7|LAUNCH|Science|2":"https://drive.google.com/file/d/1Z-tu5gK4aNLl7HfjgHK8vkCQNXnyKDM2/view","7|LAUNCH|Science|3":"https://drive.google.com/file/d/1CfJSJTBXh6HJBGfTzX8D-0mJT9xKb3OQ/view","7|LAUNCH|Vocational|1":"https://drive.google.com/file/d/1eVZxTIIj1rF7wPmtk2yt5UDqlPT56uHT/view","7|LAUNCH|Vocational|2":"https://drive.google.com/file/d/1IDnMcG85qiNmWKdzuMKZXYmQI5movvKc/view"};
+var LN={};(function(){var c={};DAYS.forEach(function(d){TT[d].forEach(function(l){var k=l[1]+"|"+l[2];c[k]=(c[k]||0)+1;LN[d+"|"+l[0]]=c[k];});});})();
+var STATES=["missed","partial","more","done"];
+var LABEL={missed:"Needs catch-up",partial:"Partly done",more:"More needed",done:"Done"};
+
+// --- Zero-Dependency SVG QR Code Generator (ISO 18004 V1-V9 Level L) ---
+var QR=(function(){
+ var EXP=new Uint8Array(512),LOG=new Uint8Array(256),p=1;
+ for(var i=0;i<255;i++){EXP[i]=EXP[i+255]=p;LOG[p]=i;p=(p<<1)^(p&128?285:0);}
+ function rs(data,ecLen){
+  var g=[1];for(var i=0;i<ecLen;i++){var ng=new Array(g.length+1).fill(0);for(var j=0;j<g.length;j++){ng[j]^=g[j];ng[j+1]^=g[j]?EXP[LOG[g[j]]+i]:0;}g=ng;}
+  var rem=new Array(ecLen).fill(0);
+  for(var i=0;i<data.length;i++){var f=data[i]^rem.shift();rem.push(0);if(f)for(var j=0;j<ecLen;j++)rem[j]^=g[j+1]?EXP[LOG[g[j+1]]+LOG[f]]:0;}
+  return rem;
+ }
+ var VCFG=[[0],[19,7,1,[]],[34,10,1,[6,18]],[55,15,1,[6,22]],[80,20,1,[6,26]],[108,26,1,[6,30]],[136,18,2,[6,34]],[156,20,2,[6,22,38],0x07C94],[194,24,2,[6,24,42],0x085BC],[232,30,2,[6,26,46],0x09A99]];
+ return function(text){
+  var bytes=new TextEncoder().encode(String(text||"")),ver=1;
+  while(ver<=9&&bytes.length>VCFG[ver][0]-2)ver++;
+  if(ver>9)return null;
+  var cfg=VCFG[ver],dc=cfg[0],ec=cfg[1],blks=cfg[2],al=cfg[3],sz=ver*4+17;
+  var bits=[];function push(v,n){for(var i=n-1;i>=0;i--)bits.push((v>>i)&1);}
+  push(4,4);push(bytes.length,8);for(var i=0;i<bytes.length;i++)push(bytes[i],8);
+  for(var i=0;i<4&&bits.length<dc*8;i++)bits.push(0);
+  while(bits.length%8)bits.push(0);
+  var cw=[];for(var i=0;i<bits.length;i+=8){var b=0;for(var j=0;j<8;j++)b=(b<<1)|bits[i+j];cw.push(b);}
+  for(var p=0;cw.length<dc;p++)cw.push(p&1?17:236);
+  var dBlks=[],eBlks=[],bLen=dc/blks;
+  for(var b=0;b<blks;b++){var sl=cw.slice(b*bLen,(b+1)*bLen);dBlks.push(sl);eBlks.push(rs(sl,ec));}
+  var out=[];for(var i=0;i<bLen;i++)for(var b=0;b<blks;b++)out.push(dBlks[b][i]);
+  for(var i=0;i<ec;i++)for(var b=0;b<blks;b++)out.push(eBlks[b][i]);
+  var M=Array.from({length:sz},function(){return new Array(sz).fill(null);});
+  function finder(r,c){for(var y=-1;y<=7;y++)for(var x=-1;x<=7;x++)if(r+y>=0&&r+y<sz&&c+x>=0&&c+x<sz)M[r+y][c+x]=(y>=0&&y<=6&&(x===0||x===6))||(x>=0&&x<=6&&(y===0||y===6))||(y>=2&&y<=4&&x>=2&&x<=4)?1:0;}
+  finder(0,0);finder(0,sz-7);finder(sz-7,0);
+  for(var i=8;i<sz-8;i++)M[6][i]=M[i][6]=(i%2===0)?1:0;
+  var aL=al[al.length-1];al.forEach(function(r){al.forEach(function(c){if((r===6&&c===6)||(r===6&&c===aL)||(r===aL&&c===6))return;for(var y=-2;y<=2;y++)for(var x=-2;x<=2;x++)M[r+y][c+x]=(Math.abs(y)===2||Math.abs(x)===2||(y===0&&x===0))?1:0;});});
+  for(var i=0;i<9;i++){if(M[8][i]===null)M[8][i]=0;if(M[i][8]===null)M[i][8]=0;}
+  for(var i=0;i<8;i++){if(M[8][sz-1-i]===null)M[8][sz-1-i]=0;if(M[sz-1-i][8]===null)M[sz-1-i][8]=0;}
+  M[sz-8][8]=1;
+  if(cfg[4]){for(var i=0;i<18;i++){var bit=(cfg[4]>>i)&1,r=Math.floor(i/3),c=sz-11+i%3;M[r][c]=M[c][r]=bit;}}
+  var bi=0,up=true;
+  for(var c=sz-1;c>0;c-=2){if(c===6)c--;for(var s=0;s<sz;s++){var r=up?sz-1-s:s;for(var dx=0;dx<2;dx++){var x=c-dx;if(M[r][x]===null){var v=bi<out.length*8?((out[bi>>3]>>(7-(bi&7)))&1):0;bi++;if((r+x)%2===0)v^=1;M[r][x]=v;}}}up=!up;}
+  var fmt=0x77C4;
+  for(var i=0;i<15;i++){var bit=(fmt>>i)&1;if(i<6)M[i][8]=bit;else if(i<8)M[i+1][8]=bit;else M[sz-15+i][8]=bit;if(i<8)M[8][sz-1-i]=bit;else if(i<9)M[8][15-i]=bit;else M[8][14-i]=bit;}
+  var d="";for(var r=0;r<sz;r++)for(var c=0;c<sz;c++)if(M[r][c])d+="M"+(c+2)+","+(r+2)+"h1v1h-1z";
+  var svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+  svg.setAttribute("viewBox","0 0 "+(sz+4)+" "+(sz+4));svg.setAttribute("aria-hidden","true");
+  var bg=document.createElementNS("http://www.w3.org/2000/svg","rect");bg.setAttribute("width",sz+4);bg.setAttribute("height",sz+4);bg.setAttribute("fill","#fff");svg.appendChild(bg);
+  var path=document.createElementNS("http://www.w3.org/2000/svg","path");path.setAttribute("d",d);path.setAttribute("fill","#000");svg.appendChild(path);
+  return svg;
+ };
+})();
+
+var S=load(),pathView="",assessMatrix=false,justDoneKeys={},toastTimer=null,lastQrRawUrl="";
+function load(){
+ var s=null;try{s=JSON.parse(localStorage.getItem(KEY));}catch(e){}
+ if(!s||!s.pupils||!s.marks)s={pupils:{BUILD:[],GROW:[],LAUNCH:[]},marks:{}};
+ if(s.driveEmail==null)s.driveEmail="";
+ s.links=s.links||{};s.assessMarks=s.assessMarks||{};s.pins=s.pins||[];s.adapt=s.adapt||{};
+ s.dirtySinceBackup=!!s.dirtySinceBackup;s.lastBackup=s.lastBackup||"";
+ for(var k in s.marks){var m=s.marks[k];if(!m.state)m.state=m.done?"done":"missed";m.done=m.state==="done";if(m.note==null)m.note="";}
+ return s;
+}
+function save(cleanBackup){
+ if(!cleanBackup)S.dirtySinceBackup=true;
+ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){alert("This browser would not save. Use Save backup file in Set up.");}
+ syncBadge();if(typeof renderTodayStrip==="function")renderTodayStrip();
+}
+function $(id){return document.getElementById(id);}
+function el(t,a,txt){var e=document.createElement(t);if(a)for(var k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+function mkey(w,d,p,pupil){return w+"|"+d+"|"+p+"|"+pupil;}
+function lkey(w,path,subj,lesson){return w+"|"+path+"|"+subj+"|"+lesson;}
+function wb(w){return WEEKS[+w-1][1];}
+function groupPupilList(path){
+ var base=(S.pupils&&Array.isArray(S.pupils[path]))?S.pupils[path].slice():[],entries=trackerEntries(),assigned={};
+ entries.forEach(function(r){if(r.n>=1&&r.n<=20)assigned[r.n]=1;});
+ var prof=pupilProfile();
+ if(prof&&prof.pupils){
+  Object.keys(prof.pupils).sort(function(a,b){return +a - +b;}).forEach(function(id){
+   var n=+id;
+   if(n>=1&&n<=20&&!assigned[n]&&prof.pupils[id]&&prof.pupils[id].group===path){
+    base.push("Pupil "+n);assigned[n]=1;
+   }
+  });
+ }
+ return base;
+}
+function pupilsFor(path){return path==="ALL"?[].concat(groupPupilList("BUILD").map(function(n){return [n,"BUILD"]}),groupPupilList("GROW").map(function(n){return [n,"GROW"]}),groupPupilList("LAUNCH").map(function(n){return [n,"LAUNCH"]})):groupPupilList(path).map(function(n){return [n,path]});}
+function periodStarts(){
+ var def=["09:30","10:10","11:00","11:40","12:50","13:30"];
+ try{
+  var raw=JSON.parse(localStorage.getItem("mbm_period_times_v1")||"{}");
+  if(raw&&raw.v===2&&Array.isArray(raw.starts)&&raw.starts.length===6)return raw.starts;
+  if(Array.isArray(raw)&&raw.length===6)return raw;
+ }catch(e){}
+ return def;
+}
+function schoolWeekNum(date){
+ return 1+Math.round((Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()-(date.getDay()+6)%7)-Date.UTC(2026,10,2))/604800000);
+}
+function nextSlotFor(path,subj,now){
+ var t=now||new Date(),starts=periodStarts(),normPath=path==="SUMMIT"?"LAUNCH":path;
+ function findMatch(matchSubj){
+  for(var offset=0;offset<=14;offset++){
+   var cand=new Date(t.getFullYear(),t.getMonth(),t.getDate()+offset),dow=cand.getDay();
+   if(dow<1||dow>5)continue;
+   var dName=DAYS[dow-1],wk=schoolWeekNum(cand);
+   if(wk===1&&dName==="Monday")continue;
+   var list=TT[dName]||[];
+   for(var i=0;i<list.length;i++){
+    var per=list[i][0],sPath=list[i][1],sSubj=list[i][2];
+    if(sPath!==normPath&&sPath!=="ALL")continue;
+    if(matchSubj&&sSubj!==subj)continue;
+    var st=starts[per-1]||"09:30",hm=st.split(":"),slotTime=new Date(cand.getFullYear(),cand.getMonth(),cand.getDate(),+hm[0]||9,+hm[1]||30);
+    if(offset===0&&slotTime<=t)continue;
+    var when=offset===0?("Today P"+per+" ("+st+")"):(dName.slice(0,3)+" P"+per+" ("+st+")");
+    return "Next "+normPath+" "+(matchSubj?subj:sSubj)+": "+when;
+   }
+  }
+  return "";
+ }
+ return findMatch(true)||findMatch(false);
+}
+function coverageCodeForRow(w,d,per,path,subj,lesson){
+ var normPath=path==="SUMMIT"?"LAUNCH":path;
+ if(normPath!=="LAUNCH"||String(subj||"").toLowerCase()!=="science")return "";
+ var wNum=+w;if(wNum<1||wNum>7)return "";
+ var lnum=(d==="Monday"&&+per===4)?1:((d==="Wednesday"&&+per===2)?2:((d==="Friday"&&+per===4)?3:(+lesson>=1&&+lesson<=3?+lesson:0)));
+ if(!lnum)return "";
+ return "SCI_LAUNCH_A2_W"+String(wNum).padStart(2,"0")+"_L"+lnum;
+}
+function readCovAbsences(){try{var v=JSON.parse(localStorage.getItem("mbm_coverage_absences_v1")||"{}");return v&&typeof v==="object"?v:{};}catch(e){return {};}}
+function writeCovAbsences(v){try{localStorage.setItem("mbm_coverage_absences_v1",JSON.stringify(v));}catch(e){}}
+function clearTrackerSyncedCoverage(){
+ var cov=readCovAbsences(),changed=false;
+ Object.keys(cov).forEach(function(p){
+  var map=cov[p];if(!map||typeof map!=="object")return;
+  Object.keys(map).forEach(function(c){if(map[c]&&map[c].source==="tracker_sync"){delete map[c];changed=true;}});
+  if(!Object.keys(map).length)delete cov[p];
+ });
+ if(changed)writeCovAbsences(cov);
+}
+function cycleMarkStatus(k,pupil,w,d,per,path,subj,lesson,rerender){
+ if(!S.marks[k])return;
+ var prevMark=JSON.parse(JSON.stringify(S.marks[k])),prevState=prevMark.state||"missed",nx=next(prevState);
+ var pNum=String(pupilNumber(pupil)),covCode=coverageCodeForRow(w,d,per,path,subj,lesson);
+ var cov=readCovAbsences(),hadPrevCov=!!(covCode&&cov[pNum]&&Object.prototype.hasOwnProperty.call(cov[pNum],covCode));
+ var prevCovVal=hadPrevCov?JSON.parse(JSON.stringify(cov[pNum][covCode])):null;
+ S.marks[k].state=nx;S.marks[k].done=nx==="done";
+ if(nx==="done")justDoneKeys[k]=1;else delete justDoneKeys[k];
+ var syncedNow=false;
+ if(covCode){
+  if(nx==="done"){
+   if(!cov[pNum])cov[pNum]={};
+   cov[pNum][covCode]={cleared:true,source:"tracker_sync"};
+   writeCovAbsences(cov);syncedNow=true;
+  }else if(prevState==="done"&&cov[pNum]&&cov[pNum][covCode]&&cov[pNum][covCode].source==="tracker_sync"){
+   delete cov[pNum][covCode];if(!Object.keys(cov[pNum]).length)delete cov[pNum];
+   writeCovAbsences(cov);
+  }
+ }
+ save();rerender();
+ showToast("Marked "+LABEL[nx]+" for "+pupilCaption(pupil)+(syncedNow?" · Synced to coverage map":""),function(){
+  S.marks[k]=prevMark;
+  if(prevState==="done")justDoneKeys[k]=1;else delete justDoneKeys[k];
+  if(covCode){
+   var cur=readCovAbsences();
+   if(hadPrevCov){if(!cur[pNum])cur[pNum]={};cur[pNum][covCode]=prevCovVal;}
+   else if(cur[pNum]){delete cur[pNum][covCode];if(!Object.keys(cur[pNum]).length)delete cur[pNum];}
+   writeCovAbsences(cur);
+  }
+  save();rerender();
+ });
+}
+function linkFor(lk){var a=lk.split("|");var all=a[2]==="Community Projects"?a[0]+"|ALL|"+a[2]+"|1":"";return S.links[lk]||PRELOAD[lk]||(all&&S.links[all])||"";}
+function withAccount(url,forceClean){
+ if(!url||forceClean||!S.driveEmail||!/^https:\/\/(drive|docs)\.google\.com\//.test(url)||/authuser=/.test(url))return url;
+ return url+(url.indexOf("?")<0?"?":"&")+"authuser="+encodeURIComponent(S.driveEmail);
+}
+function searchUrl(q){return withAccount("https://drive.google.com/drive/search?q="+encodeURIComponent(q));}
+function syncBadge(){
+ var b=$("acctBadge");b.hidden=!S.driveEmail;b.textContent="Drive: "+S.driveEmail;
+ $("openDriveHome").href=withAccount("https://drive.google.com/drive/my-drive");
+ var openCnt=rows().filter(function(r){return r.state!=="done";}).length;
+ var ob=$("openCountBadge");ob.hidden=openCnt===0;ob.textContent=String(openCnt);
+ var bb=$("backupBadge");
+ if(S.dirtySinceBackup&&Object.keys(S.marks).length){bb.hidden=false;bb.className="acct-pill warn noprint";bb.textContent="Unsaved backup changes";}
+ else if(S.lastBackup){bb.hidden=false;bb.className="acct-pill noprint";bb.textContent="Backed up on this device";}
+ else bb.hidden=true;
+}
+function next(st){return STATES[(STATES.indexOf(st)+1)%STATES.length];}
+function showToast(msg,undoFn){
+ if(toastTimer)clearTimeout(toastTimer);
+ $("toastMsg").textContent=msg;
+ var ub=$("toastUndoBtn");ub.hidden=!undoFn;
+ ub.onclick=function(){if(undoFn)undoFn();$("toast").hidden=true;};
+ $("toast").hidden=false;
+ toastTimer=setTimeout(function(){$("toast").hidden=true;},5500);
+}
+$("toastCloseBtn").onclick=function(){$("toast").hidden=true;};
+
+function openQrModal(title,rawUrl,customMode){
+ lastQrRawUrl=rawUrl||"";
+ $("qrModalTitle").textContent=customMode?"Classroom QR Board":"Catch-up Sheet QR";
+ $("qrSubTitle").textContent=title||"Scan with a camera or tablet to open";
+ $("qrCustomRow").hidden=!customMode;
+ if(customMode)$("qrCustomInput").value=lastQrRawUrl;
+ $("qrIncludeAcct").checked=false;
+ renderQrStage();
+ $("qrModal").hidden=false;
+}
+function renderQrStage(){
+ var box=$("qrSvgBox");box.textContent="";
+ var u=withAccount(lastQrRawUrl,!$("qrIncludeAcct").checked);
+ $("qrOpenUrlBtn").href=u||"#";
+ if(!u){box.appendChild(el("p",{"class":"note"},"Paste or choose a link above to generate a QR code."));return;}
+ var svg=QR(u);
+ if(!svg){box.appendChild(el("p",{"class":"note"},"Link is too long for an offline QR code. Use a shorter Drive link."));return;}
+ box.appendChild(svg);
+}
+$("qrCloseBtn").onclick=function(){$("qrModal").hidden=true;};
+$("qrIncludeAcct").onchange=renderQrStage;
+$("qrCustomInput").oninput=function(){lastQrRawUrl=$("qrCustomInput").value.trim();renderQrStage();};
+$("qrPinSelect").onchange=function(){if($("qrPinSelect").value){lastQrRawUrl=$("qrPinSelect").value;$("qrCustomInput").value=lastQrRawUrl;renderQrStage();}};
+$("qrCopyUrlBtn").onclick=function(){
+ var u=withAccount(lastQrRawUrl,!$("qrIncludeAcct").checked);
+ if(u)copyOutput(redacted(u),"Link copied to clipboard");
+};
+$("openCustomQr").onclick=function(){
+ syncPinDropdown();
+ var def=S.pins.length?S.pins[0].url:"https://drive.google.com/drive/my-drive";
+ openQrModal("Paste any link or pick a pinned classroom link",def,true);
+};
+
+function setLink(title,lk,after){var v=prompt("Paste the Drive link for "+title+" (leave empty to clear):",S.links[lk]||"");if(v===null)return;v=v.trim();if(v&&!/^https:\/\//.test(v)){alert("Please paste a full link starting https://");return;}if(v)S.links[lk]=v;else delete S.links[lk];save();after();}
+
+// Fixes Thursday P5 "ALL" Community Projects by exposing BUILD/GROW/LAUNCH sheets directly
+function driveButtons(title,lk,query,after){
+ var wrap=el("div",{"class":"chipwrap lesson-links noprint"}),a=lk.split("|");
+ ["visitor","cover"].forEach(function(view){
+  var q=new URLSearchParams({week:a[0],path:a[1],subject:a[2],lesson:a[3],view:view});
+  wrap.appendChild(el("a",{
+   "class":"btnlink noprint",href:"Lesson_extras.html#"+q.toString(),
+   target:"_blank",rel:"noopener",style:"min-height:48px;min-width:48px"
+  },view==="visitor"?"Visitor sheet":"Cover pack"));
+ });
+ if(a[1]==="ALL"&&!S.links[lk]){
+  ["BUILD","GROW","LAUNCH"].forEach(function(p){
+   if(pathView&&pathView!==p)return;
+   var plk=lkey(a[0],p,a[2],a[3]),u=linkFor(plk);
+   if(u){
+    wrap.appendChild(el("a",{"class":"btnlink smbtn",href:withAccount(u),target:"_blank",rel:"noopener"},"📄 "+p));
+    var qb=el("button",{"class":"smbtn",type:"button","aria-label":"QR code for "+p+" "+a[2]},"📱");
+    qb.onclick=function(){openQrModal(p+" › week "+a[0]+" › "+a[2]+" (Lesson "+a[3]+")",u,false);};
+    wrap.appendChild(qb);
+   }
+   // Merged sessions (Week 4 Community = Part 1 + Part 2): show the Part 2 sheet too
+   var u2=a[3]==="1"?linkFor(lkey(a[0],p,a[2],"2")):"";
+   if(u2){
+    wrap.appendChild(el("a",{"class":"btnlink smbtn",href:withAccount(u2),target:"_blank",rel:"noopener"},"📄 "+p+" Part 2"));
+    var qb3=el("button",{"class":"smbtn",type:"button","aria-label":"QR code for "+p+" "+a[2]+" Part 2"},"📱");
+    qb3.onclick=function(){openQrModal(p+" › week "+a[0]+" › "+a[2]+" (Part 2)",u2,false);};
+    wrap.appendChild(qb3);
+   }
+  });
+ }else{
+  var saved=linkFor(lk);
+  if(saved){
+   wrap.appendChild(el("a",{"class":"btnlink smbtn",href:withAccount(saved),target:"_blank",rel:"noopener"},"📄 Open catch-up"));
+   var qb2=el("button",{"class":"smbtn",type:"button"}, "📱 QR");
+   qb2.onclick=function(){openQrModal(title,saved,false);};
+   wrap.appendChild(qb2);
+  }
+ }
+ wrap.appendChild(el("a",{"class":"btnlink smbtn",href:searchUrl(query),target:"_blank",rel:"noopener"},"🔍 Drive"));
+ var b=el("button",{"class":"smbtn",type:"button"},S.links[lk]?"🔗 Edit link":"🔗 Custom link");
+ b.onclick=function(){setLink(title,lk,after);};wrap.appendChild(b);return wrap;
+}
+
+function jumpToToday(){
+ var t=new Date(),dn=t.getDay();if(dn>=1&&dn<=5)$("day").value=DAYS[dn-1];
+ var starts=[[2026,10,2],[2026,10,9],[2026,10,16],[2026,10,23],[2026,10,30],[2026,11,7],[2026,11,14]];
+ for(var i=starts.length-1;i>=0;i--){if(t>=new Date(starts[i][0],starts[i][1],starts[i][2])){$("week").value=String(i+1);break;}}
+}
+WEEKS.forEach(function(w){$("week").appendChild(el("option",{value:w[0]},"Week "+w[0]));});
+DAYS.forEach(function(d){$("day").appendChild(el("option",{value:d},d));});
+(function(){
+ var subjs={};DAYS.forEach(function(d){TT[d].forEach(function(l){subjs[l[2]]=1;});});
+ Object.keys(subjs).sort().forEach(function(s){$("asubj").appendChild(el("option",{value:s},s));});
+ jumpToToday();
+ try{var v=JSON.parse(sessionStorage.getItem(KEY+"_view"));if(v){$("week").value=v.w;$("day").value=v.d;}}catch(e){}
+})();
+syncBadge();
+
+$("jumpToday").onclick=function(){jumpToToday();renderToday();};
+Array.prototype.forEach.call(document.querySelectorAll("#pathFilter button"),function(b){
+ b.onclick=function(){
+  pathView=b.getAttribute("data-path")||"";
+  Array.prototype.forEach.call(document.querySelectorAll("#pathFilter button"),function(x){x.setAttribute("aria-pressed",x===b?"true":"false");});
+  renderToday();
+ };
+});
+
+function renderToday(){
+ var w=$("week").value,d=$("day").value,box=$("lessons"),absBox=$("dayAbsentBox"),absChips=$("dayAbsentChips");
+ box.textContent="";absChips.textContent="";
+ try{sessionStorage.setItem(KEY+"_view",JSON.stringify({w:w,d:d}));}catch(e){}
+ if(w==="1"&&d==="Monday"){absBox.hidden=true;box.appendChild(el("p",{"class":"panel"},"Training day: no lessons."));return;}
+ var totalPupils=pupilsFor("ALL").length;
+ if(!totalPupils){absBox.hidden=true;var p=el("p",{"class":"panel"},"Add your pupils first in ");var b=el("button",{},"Set up");b.onclick=function(){show("setup");};p.appendChild(b);box.appendChild(p);return;}
+ absBox.hidden=false;
+
+ // Build 1-tap "Absent all day" chips
+ var allP=pathView?pupilsFor(pathView):pupilsFor("ALL"),dayMissCount=0;
+ allP.forEach(function(pp){
+  var name=pp[0],pgrp=pp[1],relLessons=[];
+  TT[d].forEach(function(l){if(l[1]===pgrp||l[1]==="ALL")relLessons.push(l);});
+  if(!relLessons.length)return;
+  var markedAll=relLessons.every(function(l){return !!S.marks[markKeyFor(w,d,l[0],name)];});
+  if(markedAll)dayMissCount++;
+  var ab=el("button",{"class":"chip smbtn"+(markedAll?" st-missed":""),"aria-pressed":markedAll?"true":"false"},"");ab.appendChild(pupilNode(name));ab.appendChild(document.createTextNode(" · "+pgrp));tagControl(ab,name);
+  ab.onclick=function(){
+   var snap={};
+   relLessons.forEach(function(l){
+    var k=markKeyFor(w,d,l[0],name),les=l[1]==="ALL"?1:LN[d+"|"+l[0]];
+    snap[k]=S.marks[k]?JSON.parse(JSON.stringify(S.marks[k])):null;
+    if(markedAll)delete S.marks[k];
+    else if(!S.marks[k])S.marks[k]={path:pgrp,subj:l[2],lesson:les,state:"missed",done:false,note:""};
+   });
+   save();renderToday();
+   showToast(markedAll?"Cleared "+pupilCaption(name)+" for "+d:"Marked "+pupilCaption(name)+" absent for all "+relLessons.length+" lessons on "+d,function(){
+    for(var k in snap){if(snap[k])S.marks[k]=snap[k];else delete S.marks[k];}save();renderToday();
+   });
+  };
+  absChips.appendChild(ab);
+ });
+ $("daySummaryText").textContent=dayMissCount?dayMissCount+" marked absent all day":"Tap a pupil to mark all their lessons today";
+
+ TT[d].forEach(function(l){
+  var per=l[0],path=l[1],subj=l[2],les=path==="ALL"?1:LN[d+"|"+per],lk=lkey(w,path,subj,les);
+  if(pathView&&path!=="ALL"&&path!==pathView)return;
+  var card=el("article",{"class":"lesson "+path,"aria-labelledby":"h"+per}),head=el("div",{"class":"lesson-head"}),h=el("h2",{id:"h"+per});
+  h.appendChild(el("span",{"class":"tag "+path},path==="ALL"?"ALL GROUPS":path));
+  h.appendChild(document.createTextNode("P"+per+" · "+subj+(path==="ALL"?" (double)":" · Lesson "+les)));
+  head.appendChild(h);
+  head.appendChild(driveButtons((path==="ALL"?"":path+" ")+subj+", week "+w+", lesson "+les,lk,"Catch up "+subj+" "+(path==="ALL"?"":path),renderToday));
+  card.appendChild(head);
+  var chips=el("div",{"class":"chips",role:"group","aria-label":"Pupils who missed "+subj}),c={missed:0,partial:0,more:0,done:0},n=0;
+  var pList=(path==="ALL"&&pathView)?pupilsFor(pathView):pupilsFor(path);
+  pList.forEach(function(pp){
+   var k=markKeyFor(w,d,per,pp[0]),m=S.marks[k],st=m?m.state:"";if(m){c[st]++;n++;}
+   var wrap=el("span",{"class":"chipwrap"});
+   var b=el("button",{"class":"chip"+(m?" st-"+st:""),"aria-pressed":m?"true":"false","aria-label":pp[0]+(m?", missed: "+LABEL[st]+". Press to remove the mark":", in. Press if missed")},"");b.appendChild(pupilNode(pp[0]));tagControl(b,pp[0]);
+   b.onclick=function(){
+    if(S.marks[k]){
+     var old=JSON.parse(JSON.stringify(S.marks[k])),pNum=String(pupilNumber(pp[0])),covCode=coverageCodeForRow(w,d,per,pp[1],subj,les);
+     var cov=readCovAbsences(),wasSynced=!!(covCode&&cov[pNum]&&cov[pNum][covCode]&&cov[pNum][covCode].source==="tracker_sync");
+     if(wasSynced){delete cov[pNum][covCode];if(!Object.keys(cov[pNum]).length)delete cov[pNum];writeCovAbsences(cov);}
+     delete S.marks[k];save();renderToday();
+     showToast("Removed mark for "+pupilCaption(pp[0])+" ("+subj+")",function(){
+      S.marks[k]=old;
+      if(wasSynced){var cur=readCovAbsences();if(!cur[pNum])cur[pNum]={};cur[pNum][covCode]={cleared:true,source:"tracker_sync"};writeCovAbsences(cur);}
+      save();renderToday();
+     });
+    }else{
+     S.marks[k]={path:pp[1],subj:subj,lesson:les,state:"missed",done:false,note:""};save();renderToday();
+    }
+   };
+   wrap.appendChild(b);
+   if(m){var sb=el("button",{"class":"statebtn st-"+st,"aria-label":"Status for "+pupilCaption(pp[0])+": "+LABEL[st]+". Press to move on"},LABEL[st]);
+    sb.onclick=function(){cycleMarkStatus(k,pp[0],w,d,per,pp[1],subj,les,renderToday);};wrap.appendChild(sb);
+    wrap.appendChild(labelBtn({pupil:pp[0],path:pp[1],subj:subj,w:w,d:d,per:per,lesson:les,url:linkFor(lkey(w,pp[1],subj,les))}));}
+   if(m&&st!=="done")addAdaptChips(wrap,pp[0]);
+   chips.appendChild(wrap);
+  });
+  card.appendChild(el("p",{"class":"hint"},n?n+" missed: "+c.missed+" need catch-up · "+c.partial+" partly · "+c.more+" more needed · "+c.done+" done":"Everyone in (tap anyone who was not)"));
+  card.appendChild(chips);box.appendChild(card);
+ });
+}
+
+function rows(){
+ var chosen=new Map(),key=pupilKey();
+ Object.keys(S.marks).forEach(function(k){var bits=k.split('|'),pupil=bits[3],number=pupilMatchNumber(pupil,S.pupils,key)||initialsPupilNumber(pupil),id=bits.slice(0,3).join('|')+'|'+(number?'#'+number:'@'+normalLabel(pupil)),old=chosen.get(id),numeric=/^(?:Pupil\s*|P)?\d+$/i;
+  if(!old||numeric.test(pupil)&&!numeric.test(old.split('|')[3]))chosen.set(id,k);
+ });
+ var out=[];chosen.forEach(function(k){var p=k.split('|'),m=S.marks[k];out.push({w:p[0],d:p[1],per:+p[2],pupil:p[3],path:m.path,subj:m.subj,lesson:m.lesson,state:m.state,note:m.note||'',k:k});});
+ out.sort(function(a,b){return pupilNumber(a.pupil)-pupilNumber(b.pupil)||a.w-b.w||DAYS.indexOf(a.d)-DAYS.indexOf(b.d)||a.per-b.per;});return out;
+}
+
+function lessonPath(r){return r.path;}
+function todayIso(){return new Date().toISOString().slice(0,10);}
+
+function getFilteredList(){
+ var f=$("filter").value,lp=$("lpath").value,all=rows(),names={};
+ all.forEach(function(r){if(!lp||r.path===lp)names[publicPupil(r.pupil)]=1;});
+ var sel=$("pfilter"),cur=sel.value?publicPupil(sel.value):"";sel.textContent="";sel.appendChild(el("option",{value:""},"Everyone"));
+ Object.keys(names).sort(function(a,b){return pupilNumber(a)-pupilNumber(b);}).forEach(function(n){sel.appendChild(tagControl(el("option",{value:n},pupilCaption(n)),n));});
+ sel.value=names[cur]?cur:"";var pf=sel.value;
+ return all.filter(function(r){
+  if(lp&&r.path!==lp)return false;
+  if(pf&&!samePupil(r.pupil,pf))return false;
+  if(f==="all")return true;
+  if(f==="open")return r.state!=="done";
+  return r.state===f;
+ });
+}
+
+var NOTE_PRESETS=["1:1 done","Printed","Sent home","Verbal check"];
+function renderList(){
+ var box=$("table");box.textContent="";
+ var list=getFilteredList(),f=$("filter").value,pf=$("pfilter").value,lp=$("lpath").value;var open=list.filter(function(r){return r.state!=="done";}).length;$("openCountBadge").textContent=String(open);$("openCountBadge").hidden=open===0;
+ $("printHeaderList").textContent=(pf?"Catch-up Passport: "+publicPupil(pf):"Catch-up Tracker List")+""+(lp?" · Group: "+lp:"")+" · "+list.length+" item(s)";
+ if(!list.length){box.appendChild(el("p",{"class":"panel"},f==="open"?"No catch-up work is owed. You are up to date.":"No lessons match. Try a different filter."));return;}
+ var t=el("table"),hd=el("tr");
+ ["Pupil","Missed","Catch-up sheet & QR","Note","Status"].forEach(function(x){hd.appendChild(el("th",{scope:"col"},x));});
+ hd.appendChild(el("th",{scope:"col","class":"print-only"},"Sign / Date"));
+ var th=el("thead");th.appendChild(hd);t.appendChild(th);var tb=el("tbody");
+ list.forEach(function(r){
+  var tr=el("tr",{"class":"st-"+r.state+(justDoneKeys[r.k]?" just-done":"")});
+  var tdp=el("td");tdp.appendChild(pupilNode(r.pupil));tdp.appendChild(document.createTextNode(" ("+r.path+")"));if(r.state!=="done")addAdaptChips(tdp,r.pupil);tdp.appendChild(el("br"));tdp.appendChild(labelBtn(labelItem(r)));tr.appendChild(tdp);
+  var tdm=el("td");tdm.appendChild(el("div",{},r.subj+", Wk "+r.w+" "+r.d+" P"+r.per));
+  if(r.state!=="done"){var ns=nextSlotFor(r.path,r.subj);if(ns)tdm.appendChild(el("div",{"class":"next-slot"},ns));}
+  tr.appendChild(tdm);
+  var td=el("td"),folder=r.path+" › week "+r.w+" › "+r.subj+" › Catch-up (Lesson "+r.lesson+")",lk=lkey(r.w,lessonPath(r),r.subj,r.lesson),u=linkFor(lk);
+  td.appendChild(el("div",{},folder));
+  td.appendChild(driveButtons(folder,lk,"Catch up "+r.subj+" "+r.path,renderList));
+  if(u){var qwrap=el("div",{"class":"print-only print-qr"}),qsvg=QR(redacted(u));if(qsvg){qwrap.appendChild(qsvg);td.appendChild(qwrap);}}
+  tr.appendChild(td);
+  var tn=el("td"),inp=el("input",{"class":"noteinput noprint",type:"text","aria-label":"Note for "+pupilCaption(r.pupil)+", "+r.subj,placeholder:"e.g. Q1–3 done"}),pnote=el("div",{"class":"print-only"},redacted(r.note));
+  inp.value=r.note;
+  inp.oninput=function(){S.marks[r.k].note=inp.value;pnote.textContent=redacted(inp.value);save();};
+  tn.appendChild(inp);tn.appendChild(pnote);
+  var pchip=el("div",{"class":"chipwrap noprint",style:"margin-top:4px"});
+  NOTE_PRESETS.forEach(function(pr){
+   var pb=el("button",{"class":"xsbtn",type:"button"},"+ "+pr);
+   pb.onclick=function(){var cur=inp.value.trim();inp.value=cur?(cur+" · "+pr):pr;inp.oninput();};
+   pchip.appendChild(pb);
+  });
+  tn.appendChild(pchip);tr.appendChild(tn);
+  var ts=el("td"),b=el("button",{"class":"statebtn st-"+r.state,"aria-label":"Status: "+LABEL[r.state]+". Press to move on"},LABEL[r.state]);
+  b.onclick=function(){cycleMarkStatus(r.k,r.pupil,r.w,r.d,r.per,r.path,r.subj,r.lesson,renderList);};
+  ts.appendChild(b);tr.appendChild(ts);
+  tr.appendChild(el("td",{"class":"print-only"},"⬜ __________"));
+  tb.appendChild(tr);
+ });
+ t.appendChild(tb);box.appendChild(t);
+}
+
+function subjectsFor(path){var s={};DAYS.forEach(function(d){TT[d].forEach(function(l){if(l[1]===path||l[1]==="ALL")s[l[2]]=1;});});return Object.keys(s).sort();}
+function getAssessRecs(){
+ var pf=$("apath").value,sf=$("asubj").value,rf=$("aready").value,all=rows(),recs=[];
+ ["BUILD","GROW","LAUNCH"].forEach(function(path){
+  if(pf&&path!==pf)return;
+  groupPupilList(path).forEach(function(pupil){
+   subjectsFor(path).forEach(function(subj){
+    if(sf&&subj!==sf)return;
+    var c={missed:0,partial:0,more:0,done:0};
+    all.forEach(function(m){if(samePupil(m.pupil,pupil)&&m.subj===subj&&m.path===path)c[m.state]++;});
+    var open=c.missed+c.partial+c.more,ak=assessKeyFor(path,subj,pupil),am=S.assessMarks[ak]||{},ready=!!(am.passed||am.override||open===0);
+    var key=am.passed?"passed":(ready?"ready":"hold");if(rf!=="all"&&key!==rf)return;
+    recs.push({pupil:pupil,path:path,subj:subj,c:c,open:open,ready:ready,am:am,ak:ak});
+   });
+  });
+ });
+ return recs;
+}
+
+function renderAssess(){
+ var box=$("atable");box.textContent="";
+ var recs=getAssessRecs();
+ $("printHeaderAssess").textContent="Assessment Readiness · "+recs.length+" record(s)";
+ if(!recs.length){box.appendChild(el("p",{"class":"panel"},"Nothing to show. Add pupils in Set up."));return;}
+ if(assessMatrix){
+  var subjs={},pMap={},pOrder=[];
+  recs.forEach(function(r){subjs[r.subj]=1;var pk=r.path+"|"+r.pupil;if(!pMap[pk]){pMap[pk]={pupil:r.pupil,path:r.path,cells:{}};pOrder.push(pk);}pMap[pk].cells[r.subj]=r;});
+  var sCols=Object.keys(subjs).sort(),mt=el("table"),mhd=el("tr");
+  mhd.appendChild(el("th",{scope:"col"},"Pupil"));
+  sCols.forEach(function(s){mhd.appendChild(el("th",{scope:"col"},s));});
+  var mth=el("thead");mth.appendChild(mhd);mt.appendChild(mth);var mtb=el("tbody");
+  pOrder.forEach(function(pk){
+   var row=pMap[pk],tr=el("tr");
+   var tp=el("td");tp.appendChild(el("span",{"class":"tag "+row.path},row.path));tp.appendChild(pupilNode(row.pupil));tr.appendChild(tp);
+   sCols.forEach(function(s){
+    var r=row.cells[s];if(!r){tr.appendChild(el("td",{},"—"));return;}
+    var statusTxt=r.am.passed?"✓ Passed":(r.ready?(r.open?"★ Ready ("+r.open+")":"✓ Ready"):"⏳ Hold ("+r.open+")");
+    var td=el("td",{"class":r.am.passed?"st-done":(r.ready?"":"st-more")});
+    var btn=el("button",{"class":"xsbtn",type:"button"},statusTxt);
+    btn.onclick=function(){var a=S.assessMarks[r.ak]||{};a.passed=!a.passed;S.assessMarks[r.ak]=a;save();renderAssess();};
+    td.appendChild(btn);tr.appendChild(td);
+   });
+   mtb.appendChild(tr);
+  });
+  mt.appendChild(mtb);box.appendChild(mt);return;
+ }
+ var t=el("table"),hd=el("tr");["Pupil","Subject","Catch-ups","Assessment"].forEach(function(x){hd.appendChild(el("th",{scope:"col"},x));});
+ var th=el("thead");th.appendChild(hd);t.appendChild(th);var tb=el("tbody");
+ recs.forEach(function(r){
+  var tr=el("tr",{"class":r.am.passed?"st-done":(r.ready?"":"st-more")});
+  var pc=el("td");pc.appendChild(pupilNode(r.pupil));tr.appendChild(pc);
+  var ts=el("td");ts.appendChild(el("span",{"class":"tag "+r.path},r.path));ts.appendChild(document.createTextNode(r.subj));tr.appendChild(ts);
+  var tot=r.open+r.c.done;
+  tr.appendChild(el("td",{},tot===0?"Missed nothing":(r.open===0?"All "+r.c.done+" caught up":r.open+" still open ("+r.c.missed+" not started · "+r.c.partial+" partly · "+r.c.more+" more needed)")));
+  var ta=el("td");
+  ta.appendChild(el("div",{style:"font-weight:700;margin-bottom:6px"},r.am.passed?"✓ Assessment done":(r.ready?(r.am.override&&r.open?"★ Ready (your call)":"✓ Ready"):"⏳ On hold: "+r.open+" catch-up"+(r.open>1?"s":"")+" open")));
+  var cw=el("div",{"class":"chipwrap noprint"});
+  if(!r.am.passed&&r.open>0){var ob=el("button",{"class":"smbtn",type:"button"},r.am.override?"Undo ready anyway":"Ready anyway");ob.onclick=function(){var a=S.assessMarks[r.ak]||{};a.override=!a.override;S.assessMarks[r.ak]=a;save();renderAssess();};cw.appendChild(ob);}
+  var pb=el("button",{"class":"smbtn",type:"button"},r.am.passed?"Undo done":"Mark assessment done");pb.onclick=function(){var a=S.assessMarks[r.ak]||{};a.passed=!a.passed;S.assessMarks[r.ak]=a;save();renderAssess();};cw.appendChild(pb);
+  ta.appendChild(cw);tr.appendChild(ta);tb.appendChild(tr);
+ });
+ t.appendChild(tb);box.appendChild(t);
+}
+
+$("assessMatrixBtn").onclick=function(){assessMatrix=!assessMatrix;$("assessMatrixBtn").setAttribute("aria-pressed",assessMatrix?"true":"false");renderAssess();};
+
+function show(v){
+ justDoneKeys={};document.body.classList.remove("printing-labels");
+ ["today","list","assess","setup"].forEach(function(x){$(x).hidden=x!==v;});
+ Array.prototype.forEach.call(document.querySelectorAll(".tabs button"),function(b){b.setAttribute("aria-pressed",b.dataset.view===v?"true":"false");});
+ syncBadge();if(v==="today")renderToday();if(v==="list")renderList();if(v==="assess")renderAssess();if(v==="setup"){fillSetup();renderAdapt();}
+ var heading=$("heading-"+v);heading.focus({preventScroll:true});window.scrollTo({top:0,behavior:"instant"});
+}
+Array.prototype.forEach.call(document.querySelectorAll(".tabs button"),function(b){b.onclick=function(){show(b.dataset.view);};});
+$("week").onchange=renderToday;$("day").onchange=renderToday;
+$("filter").onchange=function(){justDoneKeys={};renderList();};$("lpath").onchange=function(){justDoneKeys={};renderList();};$("pfilter").onchange=function(){justDoneKeys={};renderList();};
+$("apath").onchange=renderAssess;$("asubj").onchange=renderAssess;$("aready").onchange=renderAssess;
+
+// ---- Pupil catch-up labels (name + adaptations), printed in the browser only ----
+var ADAPT=[["large_print","Large print","Print the sheet bigger (A3) or zoom it on screen."],
+ ["chunked","One task at a time","Fold or cover the sheet so only one task shows."],
+ ["sentence_starters","Sentence starters","Give the starter: I think… because…"],
+ ["word_bank","Word bank","Point out the key words before they start."],
+ ["fewer_questions","Fewer questions","Tasks 1 to 3 and the Show me question only."],
+ ["read_aloud","Read aloud","Read each task aloud. Let them say the answer before writing."],
+ ["extra_space","Extra time and space","Allow extra time. Lined paper for longer answers."],
+ ["visual_steps","Visual steps","Number the steps and tick each one when done."]];
+
+S.adapt=S.adapt||{};
+function labelItem(r){return {pupil:r.pupil,path:r.path,subj:r.subj,w:r.w,d:r.d,per:r.per,lesson:r.lesson,url:linkFor(lkey(r.w,r.path,r.subj,r.lesson))};}
+function printLabels(items){
+ if(!items.length){showToast("No catch-up sheets to label");return;}
+ var box=$("labelSheet");box.textContent="";
+ items.forEach(function(it){
+  var a=S.adapt[it.pupil]||{t:[],note:""},card=el("section",{"class":"plabel"}),t=el("div",{"class":"lt"});
+  t.appendChild(el("div",{"class":"brand"},"CATCH-UP"));
+  t.appendChild(el("h2",{},publicPupil(it.pupil)));
+  t.appendChild(el("div",{},it.path+" · "+it.subj+" · missed "+it.d+" P"+it.per+" (week "+it.w+")"));
+  var ul=el("ul"),n=0;
+  ul.appendChild(el("li",{},"Number-only copy. Ask for help if you need it."));
+  t.appendChild(ul);
+  t.appendChild(el("div",{"class":"sign"},"Done: ⬜   Checked by: __________   Date: ________"));
+  card.appendChild(t);
+  if(it.url){var q=QR(redacted(it.url));if(q){var qd=el("div",{"class":"lq"});qd.appendChild(q);card.appendChild(qd);}}
+  box.appendChild(card);
+ });
+ document.body.classList.add("printing-labels");
+ var done=function(){document.body.classList.remove("printing-labels");window.removeEventListener("afterprint",done);};
+ window.addEventListener("afterprint",done);
+ window.print();
+}
+function labelBtn(it){var b=el("button",{"class":"xsbtn noprint",type:"button","aria-label":"Print catch-up label for "+it.pupil+", "+it.subj},"Catch-up sheet");b.onclick=function(){openSheets(it.pupil,false);};tagControl(b,it.pupil);return b;}
+$("printLabels").onclick=function(){printLabels(getFilteredList().filter(function(r){return r.state!=="done";}).map(labelItem));};
+function plainPrint(){document.body.classList.remove("printing-labels","printing-catchup");window.print();}
+$("print").onclick=plainPrint;$("printAssess").onclick=plainPrint;
+
+function syncPinDropdown(){
+ var sel=$("qrPinSelect");sel.textContent="";sel.appendChild(el("option",{value:""},"📌 Pinned links…"));
+ S.pins.forEach(function(p){sel.appendChild(el("option",{value:p.url},p.title));});
+}
+function renderPins(){
+ var box=$("pinnedLinksList");box.textContent="";
+ S.pins.forEach(function(p,idx){
+  var wrap=el("span",{"class":"chipwrap"});
+  var qb=el("button",{"class":"smbtn",type:"button"},"📱 "+p.title);
+  qb.onclick=function(){syncPinDropdown();openQrModal(p.title,p.url,false);};
+  var db=el("button",{"class":"xsbtn",type:"button","aria-label":"Remove "+p.title},"✕");
+  db.onclick=function(){S.pins.splice(idx,1);save();renderPins();};
+  wrap.appendChild(qb);wrap.appendChild(db);box.appendChild(wrap);
+ });
+}
+$("addPinBtn").onclick=function(){
+ var t=$("pinTitle").value.trim(),u=$("pinUrl").value.trim();
+ if(!t||!/^https:\/\//.test(u)){alert("Enter a label and a full link starting https://");return;}
+ S.pins.push({title:t,url:u});$("pinTitle").value="";$("pinUrl").value="";save();renderPins();
+};
+
+function fillSetup(){["BUILD","GROW","LAUNCH"].forEach(function(g){$("p"+g).value=S.pupils[g].join("\n");});$("driveEmail").value=S.driveEmail;$("saved").textContent="";renderPins();renderPupilNumbers();}
+$("savep").onclick=function(){
+ if(!renderPupilNumbers()){showToast("Check the pupil numbers first.");return;}
+ var oldP=JSON.parse(JSON.stringify(S.pupils)),newP={},renames={},groupMoves={};
+ ["BUILD","GROW","LAUNCH"].forEach(function(g){
+  var seen={};newP[g]=$("p"+g).value.split(/\r?\n/).map(function(s){return s.trim();}).filter(function(s){if(!s||seen[s])return false;seen[s]=1;return true;});
+  // Safer rename: only when exactly ONE name in the group changed in place, and the teacher confirms.
+  if(oldP[g]&&oldP[g].length===newP[g].length){
+   var diff=[];oldP[g].forEach(function(oname,i){var nname=newP[g][i];if(oname!==nname&&newP[g].indexOf(oname)<0&&oldP[g].indexOf(nname)<0)diff.push([oname,nname]);});
+   var changed=oldP[g].filter(function(n,i){return n!==newP[g][i];}).length;
+   if(diff.length===1&&changed===1&&confirm(g+": rename \u201c"+diff[0][0]+"\u201d to \u201c"+diff[0][1]+"\u201d and keep their marks?\n\nChoose Cancel if this is a different pupil."))renames[g+"|"+diff[0][0]]=diff[0][1];
+  }
+ });
+ ["BUILD","GROW","LAUNCH"].forEach(function(og){
+  (oldP[og]||[]).forEach(function(oname){
+   if(newP[og].indexOf(oname)<0){
+    ["BUILD","GROW","LAUNCH"].forEach(function(ng){if(ng!==og&&newP[ng].indexOf(oname)>=0)groupMoves[oname]={from:og,to:ng};});
+   }
+  });
+ });
+ var migrated=0,nextMarks={},nextAssess={};
+ for(var k in S.marks){
+  var p=k.split("|"),m=S.marks[k],pup=p[3],rn=renames[m.path+"|"+pup];
+  if(rn){pup=rn;migrated++;}
+  if(groupMoves[pup]&&m.path===groupMoves[pup].from){m.path=groupMoves[pup].to;migrated++;}
+  nextMarks[mkey(p[0],p[1],p[2],pup)]=m;
+ }
+ for(var ak in S.assessMarks){
+  var ap=ak.split("|"),apath=ap[0],asubj=ap[1],apup=ap[2],rn2=renames[apath+"|"+apup];
+  if(rn2){apup=rn2;migrated++;}
+  if(groupMoves[apup]&&apath===groupMoves[apup].from){apath=groupMoves[apup].to;migrated++;}
+  nextAssess[apath+"|"+asubj+"|"+apup]=S.assessMarks[ak];
+ }
+ S.adapt=S.adapt||{};for(var rk in renames){var on=rk.split("|").slice(1).join("|");if(S.adapt[on]&&!S.adapt[renames[rk]]){S.adapt[renames[rk]]=S.adapt[on];delete S.adapt[on];}}
+ S.pupils=newP;S.marks=nextMarks;S.assessMarks=nextAssess;save();supplyTrackerGroups();renderPupilNumbers();if(typeof renderAdapt==="function")renderAdapt();
+ $("saved").textContent=migrated?"Saved (migrated "+migrated+" mark record(s)).":"Saved.";
+};
+$("saveDrive").onclick=function(){S.driveEmail=$("driveEmail").value.trim();save();showToast(S.driveEmail?"Drive account saved":"Drive account cleared");};
+
+function download(name,text,type){var a=el("a",{download:name});a.href=URL.createObjectURL(new Blob([text],{type:type}));document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);}
+function buildListMatrixRows(){
+ var hdr=["Pupil","Pathway","Subject","Week","Week beginning","Day","Period","Lesson","Catch-up folder","Status","Note","Link"],out=[hdr];
+ getFilteredList().forEach(function(r){out.push([publicPupil(r.pupil),r.path,r.subj,r.w,wb(r.w),r.d,r.per,r.lesson,r.path+" / w/b "+wb(r.w)+" / "+r.subj+" / Catch-up",LABEL[r.state],redacted(r.note),redacted(linkFor(lkey(r.w,lessonPath(r),r.subj,r.lesson)))]);});
+ return out;
+}
+function buildAssessMatrixRows(){
+ var hdr=["Pupil","Pathway","Subject","Open catch-ups","Missed","Partly done","More needed","Completed catch-ups","Status"],out=[hdr];
+ getAssessRecs().forEach(function(r){
+  var st=r.am.passed?"Assessment done":(r.ready?(r.am.override&&r.open?"Ready (override)":"Ready"):"On hold");
+  out.push([publicPupil(r.pupil),r.path,r.subj,r.open,r.c.missed,r.c.partial,r.c.more,r.c.done,st]);
+ });
+ return out;
+}
+function toCsv(aoa){var q=function(s){return '"'+String(s==null?"":s).replace(/"/g,'""')+'"';};return "\uFEFF"+aoa.map(function(r){return r.map(q).join(",");}).join("\r\n");}
+function toTsv(aoa){return aoa.map(function(r){return r.map(function(c){return String(c==null?"":c).replace(/[\t\r\n]+/g," ");}).join("\t");}).join("\r\n");}
+
+$("csv").onclick=function(){download("catch_up_list_"+todayIso()+".csv",toCsv(buildListMatrixRows()),"text/csv");};
+$("copyListTsv").onclick=function(){copyOutput(toTsv(buildListMatrixRows()),"Table copied");};
+$("csvAssess").onclick=function(){download("assessment_readiness_"+todayIso()+".csv",toCsv(buildAssessMatrixRows()),"text/csv");};
+$("copyAssessTsv").onclick=function(){copyOutput(toTsv(buildAssessMatrixRows()),"Assessment table copied");};
+
+$("backup").onclick=function(){
+ S.lastBackup=todayIso();S.dirtySinceBackup=false;save(true);
+ download("catch_up_tracker_"+todayIso()+".json",JSON.stringify(publicBackup(),null,2),"application/json");
+};
+// A backup made for carrying about says Pupil N. If this computer holds real labels for the same class
+// layout, keep them (and the adaptation notes, which that file never carries) and file the marks under them.
+function keepOwnLabelsOnRestore(inc,cur){
+ var numbered=/^(?:Pupil\s*|P)?\d{1,2}$/i,swap={},same=!!(cur&&cur.pupils),paths=Object.keys(inc.pupils||{});
+ if(same)Object.keys(cur.pupils).concat(paths).forEach(function(p){var a=inc.pupils[p],b=cur.pupils[p];if((Array.isArray(a)?a.length:0)!==(Array.isArray(b)?b.length:0))same=false;});
+ if(same)paths.forEach(function(p){(Array.isArray(inc.pupils[p])?inc.pupils[p]:[]).forEach(function(label,i){var mine=String(cur.pupils[p][i]||"").trim();label=String(label||"").trim();if(numbered.test(label)&&mine&&!numbered.test(mine))swap[label]=mine;else if(label!==mine)same=false;});});
+ var own=cur&&cur.adapt&&Object.keys(cur.adapt).length,none=!inc.adapt||!Object.keys(inc.adapt).length;
+ if(!same||!Object.keys(swap).length){if(own&&none&&same)inc.adapt=cur.adapt;return inc;}
+ function rekey(map,lead){if(!map||typeof map!=="object")return map;var next={};Object.keys(map).forEach(function(k){var parts=k.split("|"),who=parts.slice(lead).join("|"),key=parts.length>lead&&swap[who]?parts.slice(0,lead).concat(swap[who]).join("|"):k;next[key in next?k:key]=map[k];});return next;}
+ paths.forEach(function(p){if(Array.isArray(inc.pupils[p]))inc.pupils[p]=inc.pupils[p].map(function(label){return swap[String(label||"").trim()]||label;});});
+ inc.marks=rekey(inc.marks,3);inc.assessMarks=rekey(inc.assessMarks,2);
+ if(own&&none)inc.adapt=cur.adapt;
+ return inc;
+}
+$("restore").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var s=JSON.parse(r.result);if(!s.pupils||!s.marks)throw 0;if(confirm("Replace what is on this computer with the backup?")){localStorage.setItem(KEY,JSON.stringify(keepOwnLabelsOnRestore(s,S)));S=load();syncBadge();show("today");showToast("Backup restored");}}catch(x){alert("That file is not a tracker backup.");}};r.readAsText(f);};
+$("wipe").onclick=function(){if(confirm("Clear every missed mark and assessment tick? Pupils and links stay.")){S.marks={};S.assessMarks={};clearTrackerSyncedCoverage();save();showToast("All marks cleared");}};
+
+function owedRows(pupil){return rows().filter(function(r){return r.state!=="done"&&(pupil==null||samePupil(r.pupil,pupil));});}
+function publicBackup(){
+ var b=JSON.parse(JSON.stringify(S)),marks={},assess={};
+ Object.keys(b.pupils).forEach(function(g){b.pupils[g]=S.pupils[g].map(publicPupil);});
+ numberedKeysLast(Object.keys(b.marks),3).forEach(function(k){var p=k.split("|");p[3]=publicPupil(p[3]);var mark=b.marks[k];if(typeof mark.note==="string")mark.note=redacted(mark.note);marks[p.join("|")]=mark;});
+ numberedKeysLast(Object.keys(b.assessMarks),2).forEach(function(k){var p=k.split("|");p[2]=publicPupil(p[2]);assess[p.join("|")]=b.assessMarks[k];});
+ b.marks=marks;b.assessMarks=assess;b.adapt={};Object.keys(b.links).forEach(function(k){b.links[k]=redacted(b.links[k]);});b.pins.forEach(function(pin){pin.title=redacted(pin.title);pin.url=redacted(pin.url);});return b;
+}
+function lessonCodeFor(r,part){
+ var w="A2_W"+String(Math.max(1,+r.w-(({"LAUNCH|Careers":1,"GROW|Humanities":1,"BUILD|Vocational":1})[r.path+"|"+r.subj]||0))).padStart(2,"0"),p=r.path,n=r.lesson;
+ if(r.subj==="Community Projects"){var cw=+r.w===4?(part===2?4:3):(+r.w<4?Math.max(1,+r.w-1):+r.w);return "COMMUNITY_A2_W"+String(cw).padStart(2,"0");}
+ if(r.subj==="Science")return p==="GROW"?"GROW_SCI_"+w+"_P"+n:"SCI_"+p+"_"+w+"_L"+n;
+ if(r.subj==="Creative Arts")return "ART_"+p+"_"+w+"_P"+n;
+ if(r.subj==="RE")return p+"_RE_"+w;
+ var prefix={Vocational:"VOC",Humanities:"HUM",Careers:"CAREERS",ICT:"ICT",RSHE:"RSHE",PSHE:"PSHE",DT:"DT",RSE:"RSE"};
+ var base=(prefix[r.subj]||r.subj.toUpperCase().replace(/\s+/g,"_"))+"_"+p+"_"+w;
+ return r.subj==="Vocational"&&p==="LAUNCH"&&+r.w===7?base+" L"+n:base;
+}
+var sheetPupils=[],sheetReturnFocus=null;
+function sheetLesson(r,part){
+ var card=el("article",{"class":"sheet-lesson"}),num=part===2?2:r.lesson;
+ card.appendChild(el("h3",{},r.subj+" · Lesson "+num));card.appendChild(el("code",{},lessonCodeFor(r,part)));
+ card.appendChild(el("p",{"class":"sheet-meta"},r.path+" · "+r.d+" · period "+r.per+" · week "+r.w));
+ var url=redacted(linkFor(lkey(r.w,r.path,r.subj,num))),line=el("div",{"class":"sheet-link"});
+ if(url){var qr=QR(url);if(qr){qr.setAttribute("role","img");qr.setAttribute("aria-label","Scan to open this lesson");line.appendChild(qr);}line.appendChild(el("a",{href:url,target:"_blank",rel:"noopener",title:url},"Open lesson"));}
+ else line.appendChild(el("p",{},"No lesson link saved. Ask for the sheet."));
+ card.appendChild(line);card.appendChild(el("p",{"class":"sheet-check"},"□ Done   □ Checked"));return card;
+}
+function buildSheets(){
+ var box=$("catchupPages"),privateCopy=$("sheetMode").value==="private";box.textContent="";
+ sheetPupils.forEach(function(p){
+  var rs=owedRows(p),page=el("section",{"class":"catch-sheet","data-pupil-number":pupilNumber(p)}),inner=el("div",{"class":"sheet-inner"});
+  if(privateCopy)inner.appendChild(el("p",{"class":"private-stamp"},"Private: keep this copy"));
+  inner.appendChild(el("h1",{},"Catch-up for "+(privateCopy?pupilTag(pupilNumber(p),"initials"):publicPupil(p))));
+  inner.appendChild(el("p",{},"Tick each lesson when it is done. Ask for help when you need it."));
+  if(privateCopy){
+   inner.appendChild(el("h2",{},"How this work is set up for you"));var help=effectiveAdapt(p),ul=el("ul",{"class":"sheet-adapt sheet-private-adapt"});
+   (help.length?help:["Ask for the help you need."]).forEach(function(s){ul.appendChild(el("li",{},cleanPupilText(s,true)));});inner.appendChild(ul);
+  }
+  inner.appendChild(el("h2",{},rs.length+" lesson"+(rs.length===1?"":"s")+" to catch up"));
+  var grid=el("div",{"class":"sheet-lessons"});if(rs.length>8)grid.style.setProperty("--sheet-cols","3");
+  rs.forEach(function(r){grid.appendChild(sheetLesson(r,1));if(r.subj==="Community Projects"&&+r.w===4&&+r.lesson===1&&linkFor(lkey(r.w,r.path,r.subj,2)))grid.appendChild(sheetLesson(r,2));});
+  inner.appendChild(grid);inner.appendChild(el("p",{"class":"sheet-meta"},"Check with your teacher when you finish."));page.appendChild(inner);box.appendChild(page);
+ });
+ $("printAndGo").disabled=!sheetPupils.length;
+ if(!sheetPupils.length)box.appendChild(el("p",{"class":"panel"},"No catch-up work is owed. You are up to date."));
+ $("sheetHelp").textContent=privateCopy?"Private: keep this copy. Initials and help notes are on this sheet. Use number only for copies that leave the room.":"Number only: Pupil N, with no labels or help notes. Use this copy outside the room.";
+ fitSheets();
+}
+function fitSheets(){
+ var min=1;
+ document.querySelectorAll(".catch-sheet").forEach(function(page){
+  var inner=page.firstElementChild,old=inner.getAttribute("style");
+  inner.style.cssText="width:190mm;transform:none;zoom:1";var grid=inner.querySelector(".sheet-lessons");grid.style.gridTemplateColumns="repeat("+(grid.style.getPropertyValue("--sheet-cols")||"2")+",minmax(0,1fr))";
+  var available=276*96/25.4,scale=Math.min(1,(available-6)/inner.scrollHeight);min=Math.min(min,scale);
+  inner.setAttribute("style",old||"");grid.style.gridTemplateColumns="";page.style.setProperty("--sheet-scale",String(scale));
+ });
+ $("sheetFit").textContent=sheetPupils.length?sheetPupils.length+" A4 side"+(sheetPupils.length===1?"":"s")+". Each pupil starts a new page. Use A4 and turn print headers and footers off."+(min<0.8?" This is a long list, so the print will be small. Zoom the on-screen copy to read it.":""):"";
+}
+function openSheets(pupil,printNow){
+ sheetReturnFocus=document.activeElement;var seen={};
+ owedRows(pupil).forEach(function(r){seen[publicPupil(r.pupil)]=1;});sheetPupils=Object.keys(seen).sort(function(a,b){return pupilNumber(a)-pupilNumber(b);});
+ $("catchupPreview").hidden=false;document.body.classList.add("viewing-sheets");
+ document.querySelector("main").hidden=true;document.querySelector("header").hidden=true;document.querySelector("footer").hidden=true;
+ buildSheets();$("sheetPreviewTitle").focus();if(printNow&&sheetPupils.length)printSheets();
+}
+function closeSheets(){
+ $("catchupPreview").hidden=true;document.body.classList.remove("viewing-sheets","printing-catchup");
+ document.querySelector("main").hidden=false;document.querySelector("header").hidden=false;document.querySelector("footer").hidden=false;
+ if(sheetReturnFocus&&sheetReturnFocus.isConnected)sheetReturnFocus.focus();
+}
+function printSheets(){fitSheets();document.body.classList.remove("printing-labels");document.body.classList.add("printing-catchup");window.print();}
+$("sheetMode").onchange=buildSheets;$("closeSheets").onclick=closeSheets;$("printAndGo").onclick=printSheets;
+$("printAllOwed").onclick=function(){openSheets(null,false);};
+window.addEventListener("beforeprint",function(){if(!$("catchupPreview").hidden&&!document.body.classList.contains("printing-labels")){fitSheets();document.body.classList.add("printing-catchup");}});
+window.addEventListener("afterprint",function(){document.body.classList.remove("printing-catchup","printing-labels");});
+$("showTags").value=pupilProfile().show||"initials";
+$("showTags").onchange=function(){if(!setShow(this.value))showToast("This browser could not save the Show choice.");refreshTags();};
+window.addEventListener("storage",function(e){if(e.key==="mbm_pupil_key_v1"||e.key==="mbm_pupil_profile_v1"){ $("showTags").value=pupilProfile().show||"initials";refreshTags();}});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(!$("catchupPreview").hidden)closeSheets();if(!$("qrModal").hidden){$("qrModal").hidden=true;$("openCustomQr").focus();}}});
+
+var HELP_CHOICES=['Enlarged print','Now and next card','Extra time','Reader','Movement break','Word bank','Sit near front'];
+var LEGACY_HELP={large_print:'Enlarged print',chunked:'One task at a time',sentence_starters:'Sentence starters',word_bank:'Word bank',fewer_questions:'Fewer questions',read_aloud:'Reader',extra_space:'Extra time',visual_steps:'Visual steps'};
+function putProfile(profile){try{localStorage.setItem('mbm_pupil_profile_v1',JSON.stringify(profile));return true;}catch(e){showToast('Help could not be saved. Keep this page open and try again.');return false;}}
+function migrateHelp(){
+ if(!Object.keys(S.adapt||{}).length)return;
+ var profile=pupilProfile();profile.pupils=profile.pupils||{};
+ Object.keys(S.adapt).forEach(function(label){var n=pupilNumber(label),old=S.adapt[label]||{},p=profile.pupils[n]||{adapt:[],note:''},all=[].concat(p.adapt||[],(old.t||[]).map(function(k){return LEGACY_HELP[k]||k;}),old.note?[old.note]:[]),seen=new Set(),lines=[];
+ all.forEach(function(s){s=String(s).trim();if(s&&!seen.has(normalLabel(s))){seen.add(normalLabel(s));lines.push(s);}});
+ var extra=lines.slice(4);p.adapt=lines.slice(0,4).map(function(s){if(s.length>80)extra.push(s);return s.slice(0,80);});if(extra.length)p.note=(p.note?p.note+'\n':'')+'Other saved help: '+extra.join('; ');profile.pupils[n]=p;});
+ if(putProfile(profile)){S.adapt={};try{localStorage.setItem(KEY,JSON.stringify(S));showToast('Help lines moved to Class names.');$('helpMoved').textContent='Help lines moved to Class names.';}catch(e){showToast('Help lines copied. The old choices could not be cleared yet.');}}
+}
+function effectiveAdapt(pupil){return pupilAdapt(pupilNumber(pupil));}
+function shortHelp(line){var known=HELP_CHOICES.concat(Object.values(LEGACY_HELP)).find(function(s){return line===s||line.startsWith(s+':');});if(known)return known;var words=line.split(/\s+/),short='';for(var i=0;i<words.length;i++){if((short+' '+words[i]).trim().length>28)break;short+=(short?' ':'')+words[i];}return short+(short!==line?'…':'');}
+function helpButton(line){var b=el('button',{type:'button','class':'adapt-chip',title:line,'aria-label':line},shortHelp(line));b.onclick=function(){showToast(line);};return b;}
+function addAdaptChips(parent,pupil,fold){
+ var lines=effectiveAdapt(pupil);if(!lines.length)return;
+ var wrap=el('div',{'class':'adapt-chips noprint'});
+ if(fold){var details=el('details',{'class':'help-fold'});details.appendChild(el('summary',{},'Help ('+lines.length+')'));lines.forEach(function(line){details.appendChild(helpButton(line));});wrap.appendChild(details);}
+ else{var first=el('div',{'class':'help-chip-list'});lines.slice(0,2).forEach(function(line){first.appendChild(helpButton(line));});wrap.appendChild(first);if(lines.length>2){var rest=el('details',{'class':'more-help'});rest.appendChild(el('summary',{},'+'+(lines.length-2)+' more'));lines.slice(2).forEach(function(line){rest.appendChild(helpButton(line));});wrap.appendChild(rest);}}
+ parent.appendChild(wrap);
+}
+function renderAdapt(){
+ var box=$('adaptList');box.textContent='';if(!trackerEntries().length){box.appendChild(el('p',{'class':'note'},'Add pupils above first.'));return;}
+ trackerEntries().forEach(function(row){var section=el('details',{'class':'adapt-row'}),summary=el('summary');summary.appendChild(pupilNode(row.label));summary.appendChild(document.createTextNode(' · '+row.path+' · Help ('+pupilAdapt(row.n).length+'/4)'));section.appendChild(summary);
+ function store(lines){var profile=pupilProfile();profile.pupils=profile.pupils||{};var old=profile.pupils[row.n]||{note:''};profile.pupils[row.n]=Object.assign({},old,{adapt:lines});if(putProfile(profile)){summary.lastChild.textContent=' · '+row.path+' · Help ('+lines.length+'/4)';renderToday();renderList();renderAssess();renderTodayStrip();return true;}return false;}
+ HELP_CHOICES.forEach(function(word){var lab=el('label',{'class':'help-choice'}),cb=el('input',{type:'checkbox','data-pupil':row.n,'data-help':word});cb.checked=pupilAdapt(row.n).includes(word);cb.onchange=function(){var lines=pupilAdapt(row.n).filter(function(s){return s!==word;});if(cb.checked){if(lines.length===4){cb.checked=false;showToast('There are four help lines already. Clear one first.');return;}lines.push(word);}if(store(lines)){fields.forEach(function(f,i){f.value=pupilAdapt(row.n)[i]||'';});}};lab.appendChild(cb);lab.appendChild(document.createTextNode(word));section.appendChild(lab);});
+ var fields=[];for(var i=0;i<4;i++){var label=el('label',{},'Help line '+(i+1)),field=el('input',{type:'text',maxlength:80,'aria-label':'Help line '+(i+1)+' for Pupil '+row.n});field.value=pupilAdapt(row.n)[i]||'';label.appendChild(field);fields.push(field);section.appendChild(label);}
+ var button=el('button',{type:'button'},'Save help lines');button.onclick=function(){var lines=Array.from(new Set(fields.map(function(f){return f.value.trim();}).filter(Boolean)));if(store(lines)){section.querySelectorAll('input[type=checkbox]').forEach(function(cb){cb.checked=lines.includes(cb.dataset.help);});showToast('Help lines saved. Class names uses the same lines.');}};section.appendChild(button);box.appendChild(section);
+ });
+}
+function draftGroups(){var groups={};['BUILD','GROW','LAUNCH'].forEach(function(path){groups[path]=$('p'+path).value.split(/\r?\n/).map(function(s){return s.trim();}).filter(Boolean);});return groups;}
+function renderPupilNumbers(){
+ var groups=draftGroups(),entries=numberedPupils(groups,pupilKey()),counts={};entries.forEach(function(row){counts[row.n]=(counts[row.n]||0)+1;});
+ ['BUILD','GROW','LAUNCH'].forEach(function(path){var list=$('numbers'+path);list.textContent='';entries.filter(function(row){return row.path===path;}).forEach(function(row){list.appendChild(el('li',{},row.n+'  '+row.label));});});
+ var duplicate=Object.keys(counts).some(function(n){return counts[n]>1;});$('numberWarning').textContent=entries.length>20?'Use 20 pupils or fewer.':duplicate?'Two pupils have the same number. Check the numbered lines before linking the names.':'';return !duplicate&&entries.length<=20&&entries.every(function(row){return row.n>=1&&row.n<=20;});
+}
+function linkTrackerNames(){
+ if(!renderPupilNumbers()){showToast('Check the pupil numbers first.');return;}
+ $('savep').onclick();var key=Object.assign({},pupilKey()),count=0;trackerEntries().forEach(function(row){if(!/^(?:pupil\s*|p)?\d+$/i.test(normalLabel(row.label))){key[row.n]=row.label;count++;}});
+ try{localStorage.setItem('mbm_pupil_key_v1',JSON.stringify(key));refreshTags();showToast('Saved. '+count+' labels are now used by all your tools.');$('saved').textContent='Saved. '+count+' labels are now used by all your tools.';}catch(e){showToast('The labels could not be saved. Try again.');}
+}
+function supplyTrackerGroups(){
+ var profile=pupilProfile(),changed=false;profile.pupils=profile.pupils||{};
+ trackerEntries().forEach(function(row){var pupil=profile.pupils[row.n]||{adapt:[],note:''};if(!Object.prototype.hasOwnProperty.call(pupil,'group')){profile.pupils[row.n]=Object.assign({},pupil,{group:row.path});changed=true;}});
+ if(changed)putProfile(profile);
+}
+var todayExpanded=false;
+function renderTodayStrip(){
+ var box=$('todayStrip');if(!box)return;box.textContent='';var last=lastSchoolDay(),grouped={};owedRows().filter(function(r){return +markDate(r)===+last;}).forEach(function(r){var id=publicPupil(r.pupil);(grouped[id]||(grouped[id]=[])).push(r);});
+ box.appendChild(el('h3',{id:'todayTitle'},'Today'));box.appendChild(el('p',{'class':'note'},'Catch-up from the last school day'));
+ var pupils=Object.keys(grouped).sort(function(a,b){return pupilNumber(a)-pupilNumber(b);});if(!pupils.length){box.appendChild(el('p',{},'No catch-up is owed from the last school day.'));return;}
+ (todayExpanded?pupils:pupils.slice(0,3)).forEach(function(pupil){var item=el('div',{'class':'today-item'}),line=el('div',{'class':'today-line'});line.appendChild(pupilNode(pupil));line.appendChild(el('span',{'class':'owed-count'},grouped[pupil].map(function(r){var ns=nextSlotFor(r.path,r.subj);return r.subj+' (P'+r.per+(ns?' · '+ns:'')+')';}).join(' · ')));var button=tagControl(el('button',{type:'button','class':'smbtn'},'Catch-up sheet'),pupil);button.onclick=function(){openSheets(pupil,false);};line.appendChild(button);item.appendChild(line);addAdaptChips(item,pupil,true);box.appendChild(item);});
+ if(pupils.length>3){var all=el('button',{type:'button',id:'showAllToday','aria-expanded':String(todayExpanded)},todayExpanded?'Show fewer':'Show all ('+pupils.length+')');all.onclick=function(){todayExpanded=!todayExpanded;renderTodayStrip();};box.appendChild(all);}
+}
+function refreshTags(){renderToday();renderList();renderAssess();renderAdapt();renderTodayStrip();renderPupilNumbers();if(!$('catchupPreview').hidden)buildSheets();}
+async function copyOutput(text,message){
+ try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);showToast(message);return;}}catch(e){}
+ var previous=document.activeElement,field=el('textarea',{readonly:'readonly','aria-label':'Number-only text to copy','class':'noprint'});field.value=text;field.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(field);field.focus();field.select();var copied=false;try{copied=document.execCommand('copy');}catch(e){}field.remove();if(previous&&previous.isConnected)previous.focus({preventScroll:true});showToast(copied?message:'This browser could not copy. Use Save CSV or open the link instead.');
+}
+
+["BUILD","GROW","LAUNCH"].forEach(function(group){$("p"+group).oninput=renderPupilNumbers;});$("linkNames").onclick=linkTrackerNames;
+fillSetup();migrateHelp();renderToday();renderTodayStrip();
+})();
+</script>
+<div id="labelSheet" aria-hidden="true"></div>
+<script>
+function initToolTour(config) {
+  const find = selector => document.querySelector(selector);
+  const help = document.createElement('button');
+  help.type='button';help.className='tour-help';help.textContent='? Help';help.id='pageTourHelp';
+  help.setAttribute('aria-label','? Help · Show me round');
+  const top = find(config.bar) || find('header') || find('h1').parentElement;
+  if (top.tagName==='H1') top.after(help); else top.append(help);
+  const tip=document.createElement('aside');
+  tip.hidden=true;tip.className='tour-tip';tip.setAttribute('aria-label','Show me round');
+  const count=document.createElement('small'), words=document.createElement('p'), actions=document.createElement('div');
+  words.setAttribute('aria-live','polite');actions.className='tour-actions';
+  function button(label,action){
+    const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=action;actions.append(b);return b;
+  }
+  const back=button('Back',()=>step(index-1,true)), next=button('Next',()=>{if(index===steps.length-1)close();else step(index+1,true);});
+  button('Skip the tour',()=>close());
+  const guide=document.createElement('a');guide.textContent='How it all works';guide.href=config.guide;
+  tip.append(count,words,actions,guide);document.body.append(tip);
+  let index=0,steps=[],target=null,returnTo=help,sessionSeen=new Set();
+  function seen(id,mark=false){
+    let state={};
+    try {
+      const data=JSON.parse(localStorage.getItem(config.key)||'{}');
+      if(data && typeof data==='object' && !Array.isArray(data))state=data;
+      if(mark){state[id]=true;localStorage.setItem(config.key,JSON.stringify(state));}
+    } catch { /* A device with storage turned off can run the tour for this visit. */ }
+    if(mark)sessionSeen.add(id);
+    return sessionSeen.has(id)||state[id]===true;
+  }
+  function close(){
+    const restore=tip.contains(document.activeElement);tip.hidden=true;target?.classList.remove('tour-target');
+    target=null;if(restore)returnTo.focus({preventScroll:true});
+  }
+  function place(){
+    const anchor=target.closest('header') || target.closest('.picker,.opts,.row,.tabs,fieldset,details') || target;
+    anchor.after(tip);
+  }
+  function step(i,move){
+    target?.classList.remove('tour-target');index=i;
+    const [selector,label,after,before]=steps[index];target=find(selector);
+    if(!target){close();return;}
+    const bold=document.createElement('b');bold.textContent=label;
+    words.replaceChildren(before||'Use ',bold,after);
+    count.textContent='Show me round · '+(index+1)+' of '+steps.length;
+    back.disabled=index===0;next.textContent=index===steps.length-1?'Done':'Next';
+    target.classList.add('tour-target');tip.hidden=false;
+    place();
+    if(move)target.scrollIntoView({block:'center',behavior:'instant'});if(move)next.focus({preventScroll:true});
+  }
+  function start(list,id,manual,opener){
+    if(!manual&&seen(id))return;
+    close();returnTo=opener||help;steps=list;seen(id,true);step(0,manual);
+  }
+  help.onclick=()=>start(config.steps,config.id,true,help);
+  if(config.panel){
+    const panel=find('#dayLauncher'), launchHelp=document.createElement('button');
+    launchHelp.type='button';launchHelp.textContent='? Help';launchHelp.className='tour-help';
+    launchHelp.setAttribute('aria-label','? Help for Start my day');find('#launchDetails').prepend(launchHelp);
+    launchHelp.onclick=()=>start(config.panel,config.id+'/day',true,launchHelp);
+    panel.addEventListener('launcheropened',()=>start(config.panel,config.id+'/day',false,launchHelp));
+  }
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!tip.hidden)close();});
+  function firstVisit(){
+    const dialog=document.querySelector('dialog[open]');
+    if(dialog){dialog.addEventListener('close',firstVisit,{once:true});return;}
+    start(config.steps,config.id,false,help);
+  }
+  firstVisit();
+}
+initToolTour({
+  "bar": "header",
+  "steps": [
+    [
+      "[data-view=\"today\"]",
+      "Mark a lesson",
+      " to record who missed it."
+    ],
+    [
+      "[data-view=\"list\"]",
+      "Who needs catch-up",
+      " to see open items."
+    ],
+    [
+      "[data-view=\"assess\"]",
+      "Ready for assessment",
+      " to see the next checks."
+    ]
+  ],
+  "id": "personal/Catch_up_Tracker",
+  "guide": "guide/How_it_all_works.html",
+  "key": "mbm_tour_seen_v1"
+});
+
+</script>
+</body>
+</html>

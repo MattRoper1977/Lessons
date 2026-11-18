@@ -64,13 +64,18 @@ function visibleScience(env){return [...env.document.querySelectorAll('[data-les
  const recommended=await boot('index.html','?view=recommended');
  // HUB1 R1 (2026-09-23): the count is DERIVED from the published metadata, never pinned. Before R1 it
 // was the 15 LAUNCH W3-W7 lessons and the 6 FoodWise taught-week pages (21); R1 adds the one A / L1
-// deck of every Autumn 2 Science cell, and those 21 must still be among what the view shows.
+// deck of every Autumn 2 Science cell. Owner ruling 2026-11-08 (Autumn 1 list fix): the 15 original
+// LAUNCH W3-W7 pages are retained as earlier versions until their rebuilt replacements land, so they
+// must now be styled 'earlier' and absent from the view; the 6 FoodWise pages stay recommended.
  const recommendedRows=rows.filter(r=>(metadata.entries[r.file||r.path]||{}).style==='recommended');
- check('Recommended view exposes exactly the catalogue rows styled recommended (derived: '+recommendedRows.length+'), the 15 LAUNCH and 6 FoodWise among them',()=>{
+ const legacyLaunch=rows.filter(r=>/^Science\/Launch\/SCI_L_W[3-7]_L[123]_/.test(r.file||r.path||''));
+ check('Recommended view exposes exactly the catalogue rows styled recommended (derived: '+recommendedRows.length+'), the 6 FoodWise among them and the 15 original LAUNCH W3-W7 retained as earlier',()=>{
   const shown=recommended.document.querySelectorAll('#cards article.card').length;
   assert.equal(shown,recommendedRows.length);
-  assert.ok(recommendedRows.length>=21,'the pre-R1 21 are still recommended');
-  assert.equal(recommendedRows.filter(r=>/^Science\/Launch\/SCI_L_W[3-7]_L[123]_/.test(r.file||r.path||'')).length,15);
+  assert.ok(recommendedRows.length>=6,'the FoodWise 6 are still recommended');
+  assert.equal(legacyLaunch.length,15);
+  assert.equal(legacyLaunch.filter(r=>(metadata.entries[r.file||r.path]||{}).style==='earlier').length,15);
+  assert.equal(recommendedRows.filter(r=>/^Science\/Launch\/SCI_L_W[3-7]_L[123]_/.test(r.file||r.path||'')).length,0);
   assert.equal(recommendedRows.filter(r=>/^BUILD_ASDAN\/FoodWise\//.test(r.file||r.path||'')).length,6);
  });
  const searching=await boot('index.html','?q=osmosis');

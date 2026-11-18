@@ -1,0 +1,3214 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; manifest-src 'none'; worker-src 'none'">
+<title>Class record</title>
+<style>
+:root{--bg:#f6f4ee;--card:#fff;--ink:#14212b;--soft:#3d4c58;--line:#8a97a1;--accent:#0b4f6c;--accent-ink:#fff;--got:#0f5a2e;--got-bg:#dff3e4;--part:#6b4700;--part-bg:#fff0c7;--not:#8a1c1c;--not-bg:#fde0de;--abs:#3a3f8f;--abs-bg:#e4e6fb}
+@media (prefers-color-scheme:dark){:root{--bg:#10171d;--card:#1a242c;--ink:#f1f5f8;--soft:#c5d0d8;--line:#6f7f8a;--accent:#8fd3f0;--accent-ink:#06222e;--got:#a6ecbc;--got-bg:#12351f;--part:#ffd98a;--part-bg:#3d2c05;--not:#ffb3ad;--not-bg:#461614;--abs:#c3c7ff;--abs-bg:#22254f}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+header.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--card);border-bottom:2px solid var(--line)}
+header.top h1{font-size:1.35rem;margin:0}
+header.top .brand{font-size:.9rem;color:var(--soft)}
+main{max-width:1400px;margin:0 auto;padding:16px}
+a{color:var(--accent)}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.tabs button{flex:1 1 auto}
+button,.button{font:inherit;min-height:44px;padding:8px 14px;border-radius:10px;border:2px solid var(--accent);background:var(--card);color:var(--accent);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:600}
+button.primary,.tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+button.danger{border-color:var(--not);color:var(--not)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+section.card,.staff{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:0 0 16px}
+h2{font-size:1.15rem;margin:0 0 8px}
+h3{font-size:1rem;margin:16px 0 6px}
+.hint{color:var(--soft);margin:4px 0 10px;font-size:.95rem}
+label{display:block;font-weight:600;margin:8px 0 4px}
+input,select,textarea{font:inherit;width:100%;min-height:44px;padding:8px 10px;border-radius:8px;border:2px solid var(--line);background:var(--card);color:var(--ink)}
+input[type=checkbox]{width:auto;min-height:0}
+textarea{min-height:70px}
+.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.msg{padding:10px 12px;border-radius:10px;border:2px solid var(--line);margin:10px 0;font-weight:600}
+.msg.bad{border-color:var(--not);background:var(--not-bg);color:var(--not)}
+.msg.ok{border-color:var(--got);background:var(--got-bg);color:var(--got)}
+.msg.note{border-color:var(--accent)}
+.pupils{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));margin:10px 0}
+.pbtn{flex-direction:column;gap:0;min-height:64px;border-color:var(--line);color:var(--ink);line-height:1.25}
+.pbtn b{font-size:1.15rem}
+.pbtn span{font-size:.9rem}
+.today{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
+.today button{flex-direction:column;gap:0;line-height:1.25;font-weight:400;text-align:center}
+.today button b{font-weight:700}
+.today button.logged{border-style:dashed}
+.st-got{background:var(--got-bg);color:var(--got);border-color:var(--got)}
+.st-partly{background:var(--part-bg);color:var(--part);border-color:var(--part)}
+.st-notyet{background:var(--not-bg);color:var(--not);border-color:var(--not)}
+.st-absent{background:var(--abs-bg);color:var(--abs);border-color:var(--abs)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+#sheet{min-width:1560px}#central{min-width:1100px}.tt{min-width:980px}
+#sheet th:nth-child(1){min-width:150px}#sheet th:nth-child(2){min-width:100px}#sheet th:nth-child(3){min-width:150px}#sheet th:nth-child(4),#sheet th:nth-child(5),#sheet th:nth-child(8),#sheet th:nth-child(10){min-width:190px}#sheet th:nth-child(7){min-width:120px}#sheet th:nth-child(9){min-width:185px}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+thead th{position:sticky;top:0;background:var(--accent);color:var(--accent-ink);white-space:nowrap}
+td input,td select,td textarea{min-height:40px;padding:4px 6px;border-width:1px}
+td textarea{min-height:40px;height:40px;resize:vertical}
+.tt td input{margin:1px 0}
+td.num,th.num{font-weight:700;white-space:nowrap}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;border:2px solid;font-weight:700;white-space:nowrap}
+.count{font-weight:700}
+.sr{position:absolute;left:-9999px}
+[hidden]{display:none!important}
+pre.prompt,textarea.link{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;max-height:260px;overflow:auto;font:inherit;font-size:.9rem;word-break:break-all}
+details{margin:8px 0}summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+#slips{display:none}
+.qr{max-width:520px;background:#fff;padding:10px;border-radius:8px;margin:8px 0;border:1px solid var(--line)}.qr svg{width:100%;height:auto;display:block}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.chips button{min-height:40px;padding:4px 12px;border-radius:999px;font-weight:400;border-width:1px;text-align:left}
+.cusheet{break-after:page;font-size:14pt;line-height:1.45;color:#000}.cusheet h2{font-size:20pt;margin:0 0 4pt}.cusheet h3{font-size:14pt;margin:12pt 0 4pt;border-bottom:2px solid #000}.cusheet li{margin:6pt 0}.cusheet .lines{border-bottom:1px solid #000;height:22pt}.cusheet .box{border:2px solid #000;border-radius:8px;height:110pt}.cusheet .foot{margin-top:12pt;font-size:11pt}
+.slip{border:2px solid #000;border-radius:8px;padding:10px 14px;margin:0 0 12px;break-inside:avoid}
+.slip h3{margin:0 0 6px}.slip li{margin:4px 0}
+@media print{header.top .row,.tabs,.noprint,button,#status{display:none!important}body{background:#fff;color:#000;font-size:11pt}section.card{border:0;padding:0}table,#sheet,#central{min-width:0!important;font-size:9pt}#sheet th{min-width:0!important}thead th{background:#ddd;color:#000;position:static}td input,td select,td textarea{border:0;padding:0;min-height:0;height:auto;background:transparent;color:#000;appearance:none}.tablewrap{overflow:visible;border:0}
+body.slips main>*,body.slips header.top{display:none!important}body.slips #slips{display:block!important}}
+</style>
+<style>.tour-tip,.tour-help{font:600 15px/1.35 system-ui,sans-serif!important}.tour-help,.tour-actions button{background:#fff!important;color:#183c31!important;border:1px solid #365b49!important;min-height:44px!important;padding:.4rem .65rem!important;border-radius:7px!important;cursor:pointer}.tour-tip{position:relative;z-index:1;margin:.4rem 0;max-width:calc(100vw - 12px);width:300px;color:#172e2a!important;background:#fffbea!important;border:2px solid #355944;border-radius:9px;padding:10px 12px;box-sizing:border-box;box-shadow:0 3px 10px #172e2a26}.tour-tip[hidden]{display:none!important}.tour-tip small,.tour-tip p,.tour-tip a{color:#172e2a!important}.tour-tip p{margin:.35rem 0}.tour-actions{display:flex;flex-wrap:wrap;gap:.3rem}.tour-tip a{display:inline-block;margin-top:.4rem;text-decoration:underline}.tour-target{outline:3px dashed #345f43!important;outline-offset:2px}.tour-actions button:disabled{opacity:1;color:#384734!important;background:#eceee4!important}.tour-tip,.tour-tip *,.tour-target{animation:none!important;transition:none!important}@media print{.tour-tip,.tour-help{display:none!important}.tour-target{outline:0!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div><h1>Class record</h1><div class="brand"><span id="who"></span>Made by Matt · teacher tools trial · saved on this device only</div></div>
+  <div class="row"><a class="button" href="My_tools.html">← My tools</a></div>
+</header>
+<main>
+<div class="tabs" role="tablist" aria-label="Class record sections">
+  <button role="tab" id="tab-add" aria-controls="p-add" aria-selected="true">1 · Add a lesson</button>
+  <button role="tab" id="tab-sheet" aria-controls="p-sheet" aria-selected="false">2 · My sheet</button>
+  <button role="tab" id="tab-central" aria-controls="p-central" aria-selected="false">3 · Central sheet</button>
+  <button role="tab" id="tab-setup" aria-controls="p-setup" aria-selected="false">Set up</button>
+  <button role="tab" id="tab-admin" aria-controls="p-admin" aria-selected="false" hidden>Admin</button>
+</div>
+<div id="notice" class="msg note" hidden></div>
+<div id="status" class="msg" role="status" aria-live="polite" hidden></div>
+<div id="sendBar" class="msg note noprint" hidden><span id="sendBarText"></span> <button type="button" class="primary" id="sendOpen">Send to admin</button></div>
+<section class="card noprint" id="sendBox" hidden>
+  <h2>Send to admin</h2>
+  <p class="hint" id="sendInfo"></p>
+  <div id="sheetRoute" hidden>
+    <div class="row"><button id="sendSheet" class="primary" type="button">Copy my rows and open the shared sheet</button></div>
+    <p class="hint">Then click the first empty box in column A of the sheet and paste. That is all.</p>
+    <h3>Backup: send by link or QR code</h3>
+  </div>
+  <div class="row"><button id="sendShare" class="primary" type="button">Share the link</button><button id="sendCopy" type="button">Copy the link</button></div>
+  <p class="hint">Or show this code to your admin. They point their phone or tablet camera at it.</p>
+  <div class="qr" id="sendQR"></div>
+  <div class="row"><span class="count" id="sendPart"></span><button id="sendNext" type="button" hidden>Next code</button></div>
+  <div class="row"><button id="sendDone" class="primary" type="button">Done, I have sent it</button><button id="sendCancel" type="button">Not now</button></div>
+</section>
+
+<section class="card" id="p-add" role="tabpanel" aria-labelledby="tab-add">
+  <h2>Add a lesson</h2>
+  <p class="hint">Pick the lesson, type the objective and skill once, then tap each pupil who did not simply get it. Pupils are numbers only. Never type a name.</p>
+  <div id="todayBox" hidden><h3 id="todayTitle">Today's lessons</h3><div class="today" id="todayStrip"></div></div>
+  <p class="hint" id="noTT">Add your timetable in Set up to pick a lesson with one tap.</p>
+  <div class="grid">
+    <div><label for="f-date">Date</label><input id="f-date" type="date"></div>
+    <div><label for="f-period">Period</label><select id="f-period"><option value="">Not set</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+    <div><label for="f-class">Class code</label><input id="f-class" maxlength="12" list="classList" autocomplete="off"><datalist id="classList"></datalist></div>
+    <div><label for="f-subject">Subject</label><input id="f-subject" maxlength="40" list="subjects" autocomplete="off"><datalist id="subjects"></datalist></div>
+  </div>
+  <div class="row noprint"><button id="sameLast" type="button" hidden>Same as last lesson</button></div>
+  <div class="grid">
+    <div><label for="f-objective">Lesson objective</label><textarea id="f-objective" maxlength="240" placeholder="I can ..."></textarea></div>
+    <div><label for="f-skill">Skill or content taught</label><input id="f-skill" maxlength="240" list="skillList" autocomplete="off" placeholder="Pick from the list or type your own"><datalist id="skillList"></datalist>
+      <div class="chips" id="skillChips" aria-label="Skills to pick from"></div>
+      <label for="f-code">Lesson code (optional)</label><input id="f-code" maxlength="30" autocomplete="off"></div>
+  </div>
+  <div class="row noprint">
+    <button id="allGot" type="button">All got it</button>
+    <button id="clearResults" type="button">Clear results</button>
+    <span class="hint">Tap a pupil to change: Got it, Partly, Not yet, Absent.</span>
+  </div>
+  <div class="pupils" id="pupilGrid"></div>
+  <div class="row"><button class="primary" id="saveLesson" type="button">Save lesson to my sheet</button></div>
+  <details><summary>Or pull results in from Quick capture</summary>
+  <p class="hint">If you tallied the end of a lesson in Quick capture on this device, this copies those results into your sheet. You then add the objective and skill in My sheet.</p>
+  <div class="row"><button id="pullQC" type="button">Pull in Quick capture results</button></div></details>
+</section>
+
+<section class="card" id="p-sheet" role="tabpanel" aria-labelledby="tab-sheet" hidden>
+  <h2>My sheet</h2>
+  <p class="hint">One row per pupil per lesson. Click a cell to change it. Changes save as you go.</p>
+  <div class="grid noprint">
+    <div><label for="q-pupil">Pupil</label><select id="q-pupil"></select></div>
+    <div><label for="q-subject">Subject</label><select id="q-subject"></select></div>
+    <div><label for="q-result">Result</label><select id="q-result"><option value="">All results</option><option value="got">Got it</option><option value="partly">Partly</option><option value="notyet">Not yet</option><option value="absent">Absent</option></select></div>
+    <div><label for="q-need">Show</label><select id="q-need"><option value="">Everything</option><option value="need">Needs catch-up only</option><option value="notes">Rows with a note only</option></select></div>
+  </div>
+  <p class="count" id="sheetCount"></p>
+  <div class="tablewrap"><table id="sheet"><thead><tr>
+    <th>Date</th><th>Class</th><th>Subject</th><th>Lesson objective</th><th>Skill or content</th><th>Pupil</th><th>Result</th><th>Missed (skill or content)</th><th>Catch-up</th><th>Adaptive teaching note</th><th class="noprint">Row</th>
+  </tr></thead><tbody></tbody></table></div>
+  <div class="row noprint">
+    <button class="primary" id="shareFile" type="button">Share: save my share file</button>
+    <button id="csvMine" type="button">Save as spreadsheet (CSV)</button>
+    <button id="slipsMine" type="button">Print catch-up slips</button>
+    <button id="printMine" type="button">Print sheet</button>
+    <a class="button" id="openFolder" target="_blank" rel="noopener noreferrer" hidden>Open shared folder</a>
+  </div>
+  <details id="cuBox" class="noprint"><summary>Make catch-up sheets</summary>
+    <p class="hint">Pick a lesson that someone missed. Fill the boxes once, then print one sheet for each pupil who needs it. Leave a box empty and a simple version is made from the skill. Nothing is uploaded.</p>
+    <label for="cu-lesson">Lesson</label><select id="cu-lesson"></select>
+    <div class="grid">
+      <div><label for="cu-know">What you need to know (one point per line, up to four)</label><textarea id="cu-know" maxlength="500"></textarea></div>
+      <div><label for="cu-tasks">Quick tasks (one per line, up to four)</label><textarea id="cu-tasks" maxlength="500"></textarea></div>
+    </div>
+    <label for="cu-show">Show me question</label><input id="cu-show" maxlength="200" autocomplete="off">
+    <label for="cu-link">Link to your own sheet or folder for this lesson (optional)</label><input id="cu-link" type="url" placeholder="https://" autocomplete="off">
+    <p class="hint">If you keep your own catch-up sheets in a drive, paste the link here to open it from this page. It stays on this device.</p>
+    <div class="row"><button id="cuSave" type="button">Save for this lesson</button><button class="primary" id="cuPrint" type="button">Print a sheet for each pupil who needs it</button><a class="button" id="cuOpen" target="_blank" rel="noopener noreferrer" hidden>Open my own sheet</a></div>
+  </details>
+  <div id="assistantBox" class="noprint" hidden>
+    <h3>Ask your assistant (optional)</h3>
+    <p class="hint">This makes a prompt from the rows showing above. It holds pupil numbers and lesson details only. Read it before you copy it.</p>
+    <div class="row"><button id="makePrompt" type="button">Show the prompt</button><button id="copyPrompt" type="button" hidden>Copy prompt</button><a class="button" id="openAssistant" target="_blank" rel="noopener noreferrer" hidden>Open assistant</a></div>
+    <pre class="prompt" id="promptText" hidden></pre>
+  </div>
+</section>
+
+<section class="card" id="p-central" role="tabpanel" aria-labelledby="tab-central" hidden>
+  <h2>Central sheet</h2>
+  <p class="hint">Rows that teachers send by link or QR code land here by themselves. Nothing is stored online. Save any view to your school's own shared drive.</p>
+  <p class="count" id="inboxInfo"></p>
+  <div class="row noprint"><button id="inboxClear" type="button" hidden>Clear the rows received by link</button></div>
+  <details class="noprint"><summary>Bring in rows from the shared sheet</summary>
+    <p class="hint">In the shared sheet, select all the rows and copy. Paste them here to see the By pupil, By skill and By teacher views, and to print catch-up slips.</p>
+    <label for="c-paste">Paste the rows here</label><textarea id="c-paste" autocomplete="off" spellcheck="false" style="min-height:110px"></textarea>
+    <div class="row"><button id="pasteAdd" type="button">Add the pasted rows</button><button id="pasteClear" type="button">Clear pasted rows</button></div>
+  </details>
+  <label for="combineFiles">Or add share files</label>
+  <input id="combineFiles" type="file" accept=".json,application/json" multiple>
+  <div class="row noprint"><label style="margin:0;font-weight:400"><input type="checkbox" id="includeMine" checked> Include my own sheet from this device</label>
+    <label style="margin:0;font-weight:400" id="namesWrap" hidden><input type="checkbox" id="c-names" checked> Show staff names (they stay on this device and in files you save)</label></div>
+  <div class="grid noprint">
+    <div><label for="c-view">View</label><select id="c-view"><option value="rows">Every row</option><option value="pupil">By pupil</option><option value="skill">By skill: who is not secure</option><option value="teacher">By teacher: what has been logged</option></select></div>
+    <div><label for="c-pupil">Pupil</label><select id="c-pupil"></select></div>
+    <div><label for="c-teacher">Teacher</label><select id="c-teacher"></select></div>
+    <div><label for="c-need">Show</label><select id="c-need"><option value="">Everything</option><option value="need">Needs catch-up only</option><option value="notes">Rows with a note only</option></select></div>
+  </div>
+  <p class="count" id="centralCount"></p>
+  <div class="tablewrap"><table id="central"><thead></thead><tbody></tbody></table></div>
+  <div class="row noprint">
+    <button class="primary" id="csvCentral" type="button">Save this view as spreadsheet (CSV)</button>
+    <button id="slipsCentral" type="button">Print catch-up slips</button>
+    <button id="printCentral" type="button">Print this view</button>
+  </div>
+</section>
+
+<section class="card" id="p-setup" role="tabpanel" aria-labelledby="tab-setup" hidden>
+  <h2>Set up</h2>
+  <p class="hint" id="packInfo"></p>
+  <div class="row"><label class="button" for="packFile" style="margin:0">Load a set up file from your admin</label><input class="sr" id="packFile" type="file" accept=".json,application/json"></div>
+  <div class="grid">
+    <div><label for="s-teacher">I am</label><select id="s-teacher"></select></div>
+    <div><label for="s-size">Pupils in the whole group (1 to 35)</label><input id="s-size" type="number" min="1" max="35"></div>
+    <div><label for="s-class">Usual class code</label><input id="s-class" maxlength="12" autocomplete="off"></div>
+  </div>
+  <label for="s-classes">Classes and their pupil numbers (one class per line)</label>
+  <textarea id="s-classes" autocomplete="off" spellcheck="false" placeholder="Class A: 1, 2, 3, 4" style="min-height:110px"></textarea>
+  <p class="hint">Every teacher must use the same number for the same pupil, so the central sheet lines up. A class with no numbers shows the whole group.</p>
+  <div class="row"><button class="primary" id="saveSetup" type="button">Save set up</button></div>
+  <details><summary>My weekly timetable</summary><p class="hint">Class code on top, subject underneath. Leave a box empty when you do not teach. It saves as you type.</p><div class="tablewrap" id="myTT"></div></details>
+  <h3>Optional extras (all are off until you fill them in)</h3>
+  <div class="grid">
+    <div><label for="s-sheet">Shared sheet address</label><input id="s-sheet" type="url" placeholder="https://" autocomplete="off"><p class="hint">Your school's own shared spreadsheet for the class record. With this filled in, Send to admin offers Copy my rows and open the shared sheet.</p></div>
+    <div><label for="s-folder">Shared folder address</label><input id="s-folder" type="url" placeholder="https://" autocomplete="off"><p class="hint">Paste your school's own shared folder address to get an Open shared folder button. Leave blank to keep it off.</p></div>
+    <div><label for="s-assistant">Assistant address</label><input id="s-assistant" type="url" placeholder="https://" autocomplete="off"><p class="hint">Paste the address of an assistant your school allows to get Copy prompt and Open assistant buttons. Leave blank to keep it off.</p></div>
+  </div>
+  <h3>Words that must never be saved</h3>
+  <p class="hint">Any name saved in Class names on this device is blocked already. Add other names here, one per line. This list stays on this device and is never shared or backed up.</p>
+  <textarea id="s-block" autocomplete="off" spellcheck="false"></textarea>
+  <div class="row"><button id="saveBlock" type="button">Save blocked words</button></div>
+  <h3>Backup and clear</h3>
+  <div class="row">
+    <button id="backup" type="button">Save a backup file</button>
+    <label class="button" for="restoreFile" style="margin:0">Restore from a backup file</label><input class="sr" id="restoreFile" type="file" accept=".json,application/json">
+    <button class="danger" id="wipe" type="button">Clear my Class record on this device</button>
+  </div>
+  <h3>Admin</h3>
+  <div class="row"><button id="adminToggle" type="button">Make this the admin device</button></div>
+</section>
+
+<section class="card" id="p-admin" role="tabpanel" aria-labelledby="tab-admin" hidden>
+  <h2>Admin</h2>
+  <p class="hint">Set each teacher up from here. Type their name, check their timetable, then send them their set up link or file. When they open it, their tools are set up for them. Send a new link whenever you change something. Names typed here stay on this device and in the links and files you send; they are never part of the website.</p>
+  <div class="row"><label class="button" for="starterFile" style="margin:0">Load an admin file (timetables and classes)</label><input class="sr" id="starterFile" type="file" accept=".json,application/json"><button id="adminExport" type="button">Save my admin settings as a file</button></div>
+  <div id="staffList"></div>
+  <div class="row"><button id="addStaff" type="button">Add a teacher</button></div>
+  <h3>For every teacher</h3>
+  <label for="a-classes">Classes and their pupil numbers (one class per line)</label>
+  <textarea id="a-classes" autocomplete="off" spellcheck="false" style="min-height:130px"></textarea>
+  <div class="row"><button id="classesFromNames" type="button">Fill from the groups in Class names on this device</button></div>
+  <label for="a-skills">Skills list (one subject per line, skills split by semicolons)</label>
+  <textarea id="a-skills" autocomplete="off" style="min-height:140px"></textarea>
+  <div class="grid"><div><label for="a-sk-subject">Add a skill: subject</label><input id="a-sk-subject" maxlength="40" list="subjects" autocomplete="off"></div><div><label for="a-sk-skill">Skill</label><input id="a-sk-skill" maxlength="120" autocomplete="off"></div></div>
+  <div class="row"><button id="a-sk-add" type="button">Add this skill</button></div>
+  <p class="hint">Teachers see these as tap buttons, so the same skill is always spelt the same way and the By skill view adds up.</p>
+  <label for="a-notice">Message shown at the top of every teacher's Class record</label>
+  <input id="a-notice" maxlength="200" autocomplete="off" placeholder="For example: please log every lesson before Friday">
+  <label for="a-sheet">Shared sheet address for everyone (optional)</label><input id="a-sheet" type="url" placeholder="https://" autocomplete="off">
+  <p class="hint">Make one spreadsheet in your school's own system, share it with the teachers, and paste its address here. Teachers then send their rows into it with one tap and a paste.</p>
+  <div class="row"><button id="copyHead" type="button">Copy the heading row for the sheet</button></div>
+  <div class="grid">
+    <div><label for="a-folder">Shared folder address for everyone (optional)</label><input id="a-folder" type="url" placeholder="https://" autocomplete="off"></div>
+    <div><label for="a-assistant">Assistant address for everyone (optional)</label><input id="a-assistant" type="url" placeholder="https://" autocomplete="off"></div>
+  </div>
+  <div class="row"><button class="primary" id="saveAdmin" type="button">Save admin settings</button></div>
+  <div id="linkBox" hidden><h3 id="linkTitle">Set up link</h3><p class="hint">Let that teacher point their phone or tablet camera at this code, or send them the link underneath by a private route. It sets up their Class record and holds no pupil information.</p><div class="qr" id="linkQR"></div><textarea class="link" id="linkText" readonly rows="4"></textarea></div>
+  <p class="hint">To see everything, ask each teacher for their share file and open tab 3, Central sheet.</p>
+</section>
+<div id="slips"></div>
+</main>
+<script id="qrlib">
+//---------------------------------------------------------------------
+//
+// QR Code Generator for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//  http://www.opensource.org/licenses/mit-license.php
+//
+//
+//---------------------------------------------------------------------
+
+var qrcode = function() {
+
+  //---------------------------------------------------------------------
+  // qrcode
+  //---------------------------------------------------------------------
+
+  /**
+   * qrcode
+   * @param typeNumber 1 to 40
+   * @param errorCorrectionLevel 'L','M','Q','H'
+   */
+  var qrcode = function(typeNumber, errorCorrectionLevel) {
+
+    var PAD0 = 0xEC;
+    var PAD1 = 0x11;
+
+    var _typeNumber = typeNumber;
+    var _errorCorrectionLevel = QRErrorCorrectionLevel[errorCorrectionLevel];
+    var _modules = null;
+    var _moduleCount = 0;
+    var _dataCache = null;
+    var _dataList = [];
+
+    var _this = {};
+
+    var makeImpl = function(test, maskPattern) {
+
+      _moduleCount = _typeNumber * 4 + 17;
+      _modules = function(moduleCount) {
+        var modules = new Array(moduleCount);
+        for (var row = 0; row < moduleCount; row += 1) {
+          modules[row] = new Array(moduleCount);
+          for (var col = 0; col < moduleCount; col += 1) {
+            modules[row][col] = null;
+          }
+        }
+        return modules;
+      }(_moduleCount);
+
+      setupPositionProbePattern(0, 0);
+      setupPositionProbePattern(_moduleCount - 7, 0);
+      setupPositionProbePattern(0, _moduleCount - 7);
+      setupPositionAdjustPattern();
+      setupTimingPattern();
+      setupTypeInfo(test, maskPattern);
+
+      if (_typeNumber >= 7) {
+        setupTypeNumber(test);
+      }
+
+      if (_dataCache == null) {
+        _dataCache = createData(_typeNumber, _errorCorrectionLevel, _dataList);
+      }
+
+      mapData(_dataCache, maskPattern);
+    };
+
+    var setupPositionProbePattern = function(row, col) {
+
+      for (var r = -1; r <= 7; r += 1) {
+
+        if (row + r <= -1 || _moduleCount <= row + r) continue;
+
+        for (var c = -1; c <= 7; c += 1) {
+
+          if (col + c <= -1 || _moduleCount <= col + c) continue;
+
+          if ( (0 <= r && r <= 6 && (c == 0 || c == 6) )
+              || (0 <= c && c <= 6 && (r == 0 || r == 6) )
+              || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+            _modules[row + r][col + c] = true;
+          } else {
+            _modules[row + r][col + c] = false;
+          }
+        }
+      }
+    };
+
+    var getBestMaskPattern = function() {
+
+      var minLostPoint = 0;
+      var pattern = 0;
+
+      for (var i = 0; i < 8; i += 1) {
+
+        makeImpl(true, i);
+
+        var lostPoint = QRUtil.getLostPoint(_this);
+
+        if (i == 0 || minLostPoint > lostPoint) {
+          minLostPoint = lostPoint;
+          pattern = i;
+        }
+      }
+
+      return pattern;
+    };
+
+    var setupTimingPattern = function() {
+
+      for (var r = 8; r < _moduleCount - 8; r += 1) {
+        if (_modules[r][6] != null) {
+          continue;
+        }
+        _modules[r][6] = (r % 2 == 0);
+      }
+
+      for (var c = 8; c < _moduleCount - 8; c += 1) {
+        if (_modules[6][c] != null) {
+          continue;
+        }
+        _modules[6][c] = (c % 2 == 0);
+      }
+    };
+
+    var setupPositionAdjustPattern = function() {
+
+      var pos = QRUtil.getPatternPosition(_typeNumber);
+
+      for (var i = 0; i < pos.length; i += 1) {
+
+        for (var j = 0; j < pos.length; j += 1) {
+
+          var row = pos[i];
+          var col = pos[j];
+
+          if (_modules[row][col] != null) {
+            continue;
+          }
+
+          for (var r = -2; r <= 2; r += 1) {
+
+            for (var c = -2; c <= 2; c += 1) {
+
+              if (r == -2 || r == 2 || c == -2 || c == 2
+                  || (r == 0 && c == 0) ) {
+                _modules[row + r][col + c] = true;
+              } else {
+                _modules[row + r][col + c] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    var setupTypeNumber = function(test) {
+
+      var bits = QRUtil.getBCHTypeNumber(_typeNumber);
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[Math.floor(i / 3)][i % 3 + _moduleCount - 8 - 3] = mod;
+      }
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[i % 3 + _moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+      }
+    };
+
+    var setupTypeInfo = function(test, maskPattern) {
+
+      var data = (_errorCorrectionLevel << 3) | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+
+      // vertical
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 6) {
+          _modules[i][8] = mod;
+        } else if (i < 8) {
+          _modules[i + 1][8] = mod;
+        } else {
+          _modules[_moduleCount - 15 + i][8] = mod;
+        }
+      }
+
+      // horizontal
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 8) {
+          _modules[8][_moduleCount - i - 1] = mod;
+        } else if (i < 9) {
+          _modules[8][15 - i - 1 + 1] = mod;
+        } else {
+          _modules[8][15 - i - 1] = mod;
+        }
+      }
+
+      // fixed module
+      _modules[_moduleCount - 8][8] = (!test);
+    };
+
+    var mapData = function(data, maskPattern) {
+
+      var inc = -1;
+      var row = _moduleCount - 1;
+      var bitIndex = 7;
+      var byteIndex = 0;
+      var maskFunc = QRUtil.getMaskFunction(maskPattern);
+
+      for (var col = _moduleCount - 1; col > 0; col -= 2) {
+
+        if (col == 6) col -= 1;
+
+        while (true) {
+
+          for (var c = 0; c < 2; c += 1) {
+
+            if (_modules[row][col - c] == null) {
+
+              var dark = false;
+
+              if (byteIndex < data.length) {
+                dark = ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
+              }
+
+              var mask = maskFunc(row, col - c);
+
+              if (mask) {
+                dark = !dark;
+              }
+
+              _modules[row][col - c] = dark;
+              bitIndex -= 1;
+
+              if (bitIndex == -1) {
+                byteIndex += 1;
+                bitIndex = 7;
+              }
+            }
+          }
+
+          row += inc;
+
+          if (row < 0 || _moduleCount <= row) {
+            row -= inc;
+            inc = -inc;
+            break;
+          }
+        }
+      }
+    };
+
+    var createBytes = function(buffer, rsBlocks) {
+
+      var offset = 0;
+
+      var maxDcCount = 0;
+      var maxEcCount = 0;
+
+      var dcdata = new Array(rsBlocks.length);
+      var ecdata = new Array(rsBlocks.length);
+
+      for (var r = 0; r < rsBlocks.length; r += 1) {
+
+        var dcCount = rsBlocks[r].dataCount;
+        var ecCount = rsBlocks[r].totalCount - dcCount;
+
+        maxDcCount = Math.max(maxDcCount, dcCount);
+        maxEcCount = Math.max(maxEcCount, ecCount);
+
+        dcdata[r] = new Array(dcCount);
+
+        for (var i = 0; i < dcdata[r].length; i += 1) {
+          dcdata[r][i] = 0xff & buffer.getBuffer()[i + offset];
+        }
+        offset += dcCount;
+
+        var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+        var rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+        var modPoly = rawPoly.mod(rsPoly);
+        ecdata[r] = new Array(rsPoly.getLength() - 1);
+        for (var i = 0; i < ecdata[r].length; i += 1) {
+          var modIndex = i + modPoly.getLength() - ecdata[r].length;
+          ecdata[r][i] = (modIndex >= 0)? modPoly.getAt(modIndex) : 0;
+        }
+      }
+
+      var totalCodeCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalCodeCount += rsBlocks[i].totalCount;
+      }
+
+      var data = new Array(totalCodeCount);
+      var index = 0;
+
+      for (var i = 0; i < maxDcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < dcdata[r].length) {
+            data[index] = dcdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      for (var i = 0; i < maxEcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < ecdata[r].length) {
+            data[index] = ecdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      return data;
+    };
+
+    var createData = function(typeNumber, errorCorrectionLevel, dataList) {
+
+      var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectionLevel);
+
+      var buffer = qrBitBuffer();
+
+      for (var i = 0; i < dataList.length; i += 1) {
+        var data = dataList[i];
+        buffer.put(data.getMode(), 4);
+        buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+        data.write(buffer);
+      }
+
+      // calc num max data.
+      var totalDataCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalDataCount += rsBlocks[i].dataCount;
+      }
+
+      if (buffer.getLengthInBits() > totalDataCount * 8) {
+        throw 'code length overflow. ('
+          + buffer.getLengthInBits()
+          + '>'
+          + totalDataCount * 8
+          + ')';
+      }
+
+      // end code
+      if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+        buffer.put(0, 4);
+      }
+
+      // padding
+      while (buffer.getLengthInBits() % 8 != 0) {
+        buffer.putBit(false);
+      }
+
+      // padding
+      while (true) {
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD0, 8);
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD1, 8);
+      }
+
+      return createBytes(buffer, rsBlocks);
+    };
+
+    _this.addData = function(data, mode) {
+
+      mode = mode || 'Byte';
+
+      var newData = null;
+
+      switch(mode) {
+      case 'Numeric' :
+        newData = qrNumber(data);
+        break;
+      case 'Alphanumeric' :
+        newData = qrAlphaNum(data);
+        break;
+      case 'Byte' :
+        newData = qr8BitByte(data);
+        break;
+      case 'Kanji' :
+        newData = qrKanji(data);
+        break;
+      default :
+        throw 'mode:' + mode;
+      }
+
+      _dataList.push(newData);
+      _dataCache = null;
+    };
+
+    _this.isDark = function(row, col) {
+      if (row < 0 || _moduleCount <= row || col < 0 || _moduleCount <= col) {
+        throw row + ',' + col;
+      }
+      return _modules[row][col];
+    };
+
+    _this.getModuleCount = function() {
+      return _moduleCount;
+    };
+
+    _this.make = function() {
+      if (_typeNumber < 1) {
+        var typeNumber = 1;
+
+        for (; typeNumber < 40; typeNumber++) {
+          var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, _errorCorrectionLevel);
+          var buffer = qrBitBuffer();
+
+          for (var i = 0; i < _dataList.length; i++) {
+            var data = _dataList[i];
+            buffer.put(data.getMode(), 4);
+            buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+            data.write(buffer);
+          }
+
+          var totalDataCount = 0;
+          for (var i = 0; i < rsBlocks.length; i++) {
+            totalDataCount += rsBlocks[i].dataCount;
+          }
+
+          if (buffer.getLengthInBits() <= totalDataCount * 8) {
+            break;
+          }
+        }
+
+        _typeNumber = typeNumber;
+      }
+
+      makeImpl(false, getBestMaskPattern() );
+    };
+
+    _this.createTableTag = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var qrHtml = '';
+
+      qrHtml += '<table style="';
+      qrHtml += ' border-width: 0px; border-style: none;';
+      qrHtml += ' border-collapse: collapse;';
+      qrHtml += ' padding: 0px; margin: ' + margin + 'px;';
+      qrHtml += '">';
+      qrHtml += '<tbody>';
+
+      for (var r = 0; r < _this.getModuleCount(); r += 1) {
+
+        qrHtml += '<tr>';
+
+        for (var c = 0; c < _this.getModuleCount(); c += 1) {
+          qrHtml += '<td style="';
+          qrHtml += ' border-width: 0px; border-style: none;';
+          qrHtml += ' border-collapse: collapse;';
+          qrHtml += ' padding: 0px; margin: 0px;';
+          qrHtml += ' width: ' + cellSize + 'px;';
+          qrHtml += ' height: ' + cellSize + 'px;';
+          qrHtml += ' background-color: ';
+          qrHtml += _this.isDark(r, c)? '#000000' : '#ffffff';
+          qrHtml += ';';
+          qrHtml += '"/>';
+        }
+
+        qrHtml += '</tr>';
+      }
+
+      qrHtml += '</tbody>';
+      qrHtml += '</table>';
+
+      return qrHtml;
+    };
+
+    _this.createSvgTag = function(cellSize, margin, alt, title) {
+
+      var opts = {};
+      if (typeof arguments[0] == 'object') {
+        // Called by options.
+        opts = arguments[0];
+        // overwrite cellSize and margin.
+        cellSize = opts.cellSize;
+        margin = opts.margin;
+        alt = opts.alt;
+        title = opts.title;
+      }
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      // Compose alt property surrogate
+      alt = (typeof alt === 'string') ? {text: alt} : alt || {};
+      alt.text = alt.text || null;
+      alt.id = (alt.text) ? alt.id || 'qrcode-description' : null;
+
+      // Compose title property surrogate
+      title = (typeof title === 'string') ? {text: title} : title || {};
+      title.text = title.text || null;
+      title.id = (title.text) ? title.id || 'qrcode-title' : null;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var c, mc, r, mr, qrSvg='', rect;
+
+      rect = 'l' + cellSize + ',0 0,' + cellSize +
+        ' -' + cellSize + ',0 0,-' + cellSize + 'z ';
+
+      qrSvg += '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"';
+      qrSvg += !opts.scalable ? ' width="' + size + 'px" height="' + size + 'px"' : '';
+      qrSvg += ' viewBox="0 0 ' + size + ' ' + size + '" ';
+      qrSvg += ' preserveAspectRatio="xMinYMin meet"';
+      qrSvg += (title.text || alt.text) ? ' role="img" aria-labelledby="' +
+          escapeXml([title.id, alt.id].join(' ').trim() ) + '"' : '';
+      qrSvg += '>';
+      qrSvg += (title.text) ? '<title id="' + escapeXml(title.id) + '">' +
+          escapeXml(title.text) + '</title>' : '';
+      qrSvg += (alt.text) ? '<description id="' + escapeXml(alt.id) + '">' +
+          escapeXml(alt.text) + '</description>' : '';
+      qrSvg += '<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>';
+      qrSvg += '<path d="';
+
+      for (r = 0; r < _this.getModuleCount(); r += 1) {
+        mr = r * cellSize + margin;
+        for (c = 0; c < _this.getModuleCount(); c += 1) {
+          if (_this.isDark(r, c) ) {
+            mc = c*cellSize+margin;
+            qrSvg += 'M' + mc + ',' + mr + rect;
+          }
+        }
+      }
+
+      qrSvg += '" stroke="transparent" fill="black"/>';
+      qrSvg += '</svg>';
+
+      return qrSvg;
+    };
+
+    _this.createDataURL = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      return createDataURL(size, size, function(x, y) {
+        if (min <= x && x < max && min <= y && y < max) {
+          var c = Math.floor( (x - min) / cellSize);
+          var r = Math.floor( (y - min) / cellSize);
+          return _this.isDark(r, c)? 0 : 1;
+        } else {
+          return 1;
+        }
+      } );
+    };
+
+    _this.createImgTag = function(cellSize, margin, alt) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+
+      var img = '';
+      img += '<img';
+      img += '\u0020src="';
+      img += _this.createDataURL(cellSize, margin);
+      img += '"';
+      img += '\u0020width="';
+      img += size;
+      img += '"';
+      img += '\u0020height="';
+      img += size;
+      img += '"';
+      if (alt) {
+        img += '\u0020alt="';
+        img += escapeXml(alt);
+        img += '"';
+      }
+      img += '/>';
+
+      return img;
+    };
+
+    var escapeXml = function(s) {
+      var escaped = '';
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charAt(i);
+        switch(c) {
+        case '<': escaped += '&lt;'; break;
+        case '>': escaped += '&gt;'; break;
+        case '&': escaped += '&amp;'; break;
+        case '"': escaped += '&quot;'; break;
+        default : escaped += c; break;
+        }
+      }
+      return escaped;
+    };
+
+    var _createHalfASCII = function(margin) {
+      var cellSize = 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r1, r2, p;
+
+      var blocks = {
+        '██': '█',
+        '█ ': '▀',
+        ' █': '▄',
+        '  ': ' '
+      };
+
+      var blocksLastLineNoMargin = {
+        '██': '▀',
+        '█ ': '▀',
+        ' █': ' ',
+        '  ': ' '
+      };
+
+      var ascii = '';
+      for (y = 0; y < size; y += 2) {
+        r1 = Math.floor((y - min) / cellSize);
+        r2 = Math.floor((y + 1 - min) / cellSize);
+        for (x = 0; x < size; x += 1) {
+          p = '█';
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r1, Math.floor((x - min) / cellSize))) {
+            p = ' ';
+          }
+
+          if (min <= x && x < max && min <= y+1 && y+1 < max && _this.isDark(r2, Math.floor((x - min) / cellSize))) {
+            p += ' ';
+          }
+          else {
+            p += '█';
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          ascii += (margin < 1 && y+1 >= max) ? blocksLastLineNoMargin[p] : blocks[p];
+        }
+
+        ascii += '\n';
+      }
+
+      if (size % 2 && margin > 0) {
+        return ascii.substring(0, ascii.length - size - 1) + Array(size+1).join('▀');
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.createASCII = function(cellSize, margin) {
+      cellSize = cellSize || 1;
+
+      if (cellSize < 2) {
+        return _createHalfASCII(margin);
+      }
+
+      cellSize -= 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r, p;
+
+      var white = Array(cellSize+1).join('██');
+      var black = Array(cellSize+1).join('  ');
+
+      var ascii = '';
+      var line = '';
+      for (y = 0; y < size; y += 1) {
+        r = Math.floor( (y - min) / cellSize);
+        line = '';
+        for (x = 0; x < size; x += 1) {
+          p = 1;
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r, Math.floor((x - min) / cellSize))) {
+            p = 0;
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          line += p ? white : black;
+        }
+
+        for (r = 0; r < cellSize; r += 1) {
+          ascii += line + '\n';
+        }
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.renderTo2dContext = function(context, cellSize) {
+      cellSize = cellSize || 2;
+      var length = _this.getModuleCount();
+      for (var row = 0; row < length; row++) {
+        for (var col = 0; col < length; col++) {
+          context.fillStyle = _this.isDark(row, col) ? 'black' : 'white';
+          context.fillRect(row * cellSize, col * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrcode.stringToBytes
+  //---------------------------------------------------------------------
+
+  qrcode.stringToBytesFuncs = {
+    'default' : function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        bytes.push(c & 0xff);
+      }
+      return bytes;
+    }
+  };
+
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs['default'];
+
+  //---------------------------------------------------------------------
+  // qrcode.createStringToBytes
+  //---------------------------------------------------------------------
+
+  /**
+   * @param unicodeData base64 string of byte array.
+   * [16bit Unicode],[16bit Bytes], ...
+   * @param numChars
+   */
+  qrcode.createStringToBytes = function(unicodeData, numChars) {
+
+    // create conversion map.
+
+    var unicodeMap = function() {
+
+      var bin = base64DecodeInputStream(unicodeData);
+      var read = function() {
+        var b = bin.read();
+        if (b == -1) throw 'eof';
+        return b;
+      };
+
+      var count = 0;
+      var unicodeMap = {};
+      while (true) {
+        var b0 = bin.read();
+        if (b0 == -1) break;
+        var b1 = read();
+        var b2 = read();
+        var b3 = read();
+        var k = String.fromCharCode( (b0 << 8) | b1);
+        var v = (b2 << 8) | b3;
+        unicodeMap[k] = v;
+        count += 1;
+      }
+      if (count != numChars) {
+        throw count + ' != ' + numChars;
+      }
+
+      return unicodeMap;
+    }();
+
+    var unknownChar = '?'.charCodeAt(0);
+
+    return function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        if (c < 128) {
+          bytes.push(c);
+        } else {
+          var b = unicodeMap[s.charAt(i)];
+          if (typeof b == 'number') {
+            if ( (b & 0xff) == b) {
+              // 1byte
+              bytes.push(b);
+            } else {
+              // 2bytes
+              bytes.push(b >>> 8);
+              bytes.push(b & 0xff);
+            }
+          } else {
+            bytes.push(unknownChar);
+          }
+        }
+      }
+      return bytes;
+    };
+  };
+
+  //---------------------------------------------------------------------
+  // QRMode
+  //---------------------------------------------------------------------
+
+  var QRMode = {
+    MODE_NUMBER :    1 << 0,
+    MODE_ALPHA_NUM : 1 << 1,
+    MODE_8BIT_BYTE : 1 << 2,
+    MODE_KANJI :     1 << 3
+  };
+
+  //---------------------------------------------------------------------
+  // QRErrorCorrectionLevel
+  //---------------------------------------------------------------------
+
+  var QRErrorCorrectionLevel = {
+    L : 1,
+    M : 0,
+    Q : 3,
+    H : 2
+  };
+
+  //---------------------------------------------------------------------
+  // QRMaskPattern
+  //---------------------------------------------------------------------
+
+  var QRMaskPattern = {
+    PATTERN000 : 0,
+    PATTERN001 : 1,
+    PATTERN010 : 2,
+    PATTERN011 : 3,
+    PATTERN100 : 4,
+    PATTERN101 : 5,
+    PATTERN110 : 6,
+    PATTERN111 : 7
+  };
+
+  //---------------------------------------------------------------------
+  // QRUtil
+  //---------------------------------------------------------------------
+
+  var QRUtil = function() {
+
+    var PATTERN_POSITION_TABLE = [
+      [],
+      [6, 18],
+      [6, 22],
+      [6, 26],
+      [6, 30],
+      [6, 34],
+      [6, 22, 38],
+      [6, 24, 42],
+      [6, 26, 46],
+      [6, 28, 50],
+      [6, 30, 54],
+      [6, 32, 58],
+      [6, 34, 62],
+      [6, 26, 46, 66],
+      [6, 26, 48, 70],
+      [6, 26, 50, 74],
+      [6, 30, 54, 78],
+      [6, 30, 56, 82],
+      [6, 30, 58, 86],
+      [6, 34, 62, 90],
+      [6, 28, 50, 72, 94],
+      [6, 26, 50, 74, 98],
+      [6, 30, 54, 78, 102],
+      [6, 28, 54, 80, 106],
+      [6, 32, 58, 84, 110],
+      [6, 30, 58, 86, 114],
+      [6, 34, 62, 90, 118],
+      [6, 26, 50, 74, 98, 122],
+      [6, 30, 54, 78, 102, 126],
+      [6, 26, 52, 78, 104, 130],
+      [6, 30, 56, 82, 108, 134],
+      [6, 34, 60, 86, 112, 138],
+      [6, 30, 58, 86, 114, 142],
+      [6, 34, 62, 90, 118, 146],
+      [6, 30, 54, 78, 102, 126, 150],
+      [6, 24, 50, 76, 102, 128, 154],
+      [6, 28, 54, 80, 106, 132, 158],
+      [6, 32, 58, 84, 110, 136, 162],
+      [6, 26, 54, 82, 110, 138, 166],
+      [6, 30, 58, 86, 114, 142, 170]
+    ];
+    var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
+    var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
+    var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
+
+    var _this = {};
+
+    var getBCHDigit = function(data) {
+      var digit = 0;
+      while (data != 0) {
+        digit += 1;
+        data >>>= 1;
+      }
+      return digit;
+    };
+
+    _this.getBCHTypeInfo = function(data) {
+      var d = data << 10;
+      while (getBCHDigit(d) - getBCHDigit(G15) >= 0) {
+        d ^= (G15 << (getBCHDigit(d) - getBCHDigit(G15) ) );
+      }
+      return ( (data << 10) | d) ^ G15_MASK;
+    };
+
+    _this.getBCHTypeNumber = function(data) {
+      var d = data << 12;
+      while (getBCHDigit(d) - getBCHDigit(G18) >= 0) {
+        d ^= (G18 << (getBCHDigit(d) - getBCHDigit(G18) ) );
+      }
+      return (data << 12) | d;
+    };
+
+    _this.getPatternPosition = function(typeNumber) {
+      return PATTERN_POSITION_TABLE[typeNumber - 1];
+    };
+
+    _this.getMaskFunction = function(maskPattern) {
+
+      switch (maskPattern) {
+
+      case QRMaskPattern.PATTERN000 :
+        return function(i, j) { return (i + j) % 2 == 0; };
+      case QRMaskPattern.PATTERN001 :
+        return function(i, j) { return i % 2 == 0; };
+      case QRMaskPattern.PATTERN010 :
+        return function(i, j) { return j % 3 == 0; };
+      case QRMaskPattern.PATTERN011 :
+        return function(i, j) { return (i + j) % 3 == 0; };
+      case QRMaskPattern.PATTERN100 :
+        return function(i, j) { return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 == 0; };
+      case QRMaskPattern.PATTERN101 :
+        return function(i, j) { return (i * j) % 2 + (i * j) % 3 == 0; };
+      case QRMaskPattern.PATTERN110 :
+        return function(i, j) { return ( (i * j) % 2 + (i * j) % 3) % 2 == 0; };
+      case QRMaskPattern.PATTERN111 :
+        return function(i, j) { return ( (i * j) % 3 + (i + j) % 2) % 2 == 0; };
+
+      default :
+        throw 'bad maskPattern:' + maskPattern;
+      }
+    };
+
+    _this.getErrorCorrectPolynomial = function(errorCorrectLength) {
+      var a = qrPolynomial([1], 0);
+      for (var i = 0; i < errorCorrectLength; i += 1) {
+        a = a.multiply(qrPolynomial([1, QRMath.gexp(i)], 0) );
+      }
+      return a;
+    };
+
+    _this.getLengthInBits = function(mode, type) {
+
+      if (1 <= type && type < 10) {
+
+        // 1 - 9
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 10;
+        case QRMode.MODE_ALPHA_NUM : return 9;
+        case QRMode.MODE_8BIT_BYTE : return 8;
+        case QRMode.MODE_KANJI     : return 8;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 27) {
+
+        // 10 - 26
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 12;
+        case QRMode.MODE_ALPHA_NUM : return 11;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 10;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 41) {
+
+        // 27 - 40
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 14;
+        case QRMode.MODE_ALPHA_NUM : return 13;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 12;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else {
+        throw 'type:' + type;
+      }
+    };
+
+    _this.getLostPoint = function(qrcode) {
+
+      var moduleCount = qrcode.getModuleCount();
+
+      var lostPoint = 0;
+
+      // LEVEL1
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount; col += 1) {
+
+          var sameCount = 0;
+          var dark = qrcode.isDark(row, col);
+
+          for (var r = -1; r <= 1; r += 1) {
+
+            if (row + r < 0 || moduleCount <= row + r) {
+              continue;
+            }
+
+            for (var c = -1; c <= 1; c += 1) {
+
+              if (col + c < 0 || moduleCount <= col + c) {
+                continue;
+              }
+
+              if (r == 0 && c == 0) {
+                continue;
+              }
+
+              if (dark == qrcode.isDark(row + r, col + c) ) {
+                sameCount += 1;
+              }
+            }
+          }
+
+          if (sameCount > 5) {
+            lostPoint += (3 + sameCount - 5);
+          }
+        }
+      };
+
+      // LEVEL2
+
+      for (var row = 0; row < moduleCount - 1; row += 1) {
+        for (var col = 0; col < moduleCount - 1; col += 1) {
+          var count = 0;
+          if (qrcode.isDark(row, col) ) count += 1;
+          if (qrcode.isDark(row + 1, col) ) count += 1;
+          if (qrcode.isDark(row, col + 1) ) count += 1;
+          if (qrcode.isDark(row + 1, col + 1) ) count += 1;
+          if (count == 0 || count == 4) {
+            lostPoint += 3;
+          }
+        }
+      }
+
+      // LEVEL3
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount - 6; col += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row, col + 1)
+              &&  qrcode.isDark(row, col + 2)
+              &&  qrcode.isDark(row, col + 3)
+              &&  qrcode.isDark(row, col + 4)
+              && !qrcode.isDark(row, col + 5)
+              &&  qrcode.isDark(row, col + 6) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount - 6; row += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row + 1, col)
+              &&  qrcode.isDark(row + 2, col)
+              &&  qrcode.isDark(row + 3, col)
+              &&  qrcode.isDark(row + 4, col)
+              && !qrcode.isDark(row + 5, col)
+              &&  qrcode.isDark(row + 6, col) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      // LEVEL4
+
+      var darkCount = 0;
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount; row += 1) {
+          if (qrcode.isDark(row, col) ) {
+            darkCount += 1;
+          }
+        }
+      }
+
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+
+      return lostPoint;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // QRMath
+  //---------------------------------------------------------------------
+
+  var QRMath = function() {
+
+    var EXP_TABLE = new Array(256);
+    var LOG_TABLE = new Array(256);
+
+    // initialize tables
+    for (var i = 0; i < 8; i += 1) {
+      EXP_TABLE[i] = 1 << i;
+    }
+    for (var i = 8; i < 256; i += 1) {
+      EXP_TABLE[i] = EXP_TABLE[i - 4]
+        ^ EXP_TABLE[i - 5]
+        ^ EXP_TABLE[i - 6]
+        ^ EXP_TABLE[i - 8];
+    }
+    for (var i = 0; i < 255; i += 1) {
+      LOG_TABLE[EXP_TABLE[i] ] = i;
+    }
+
+    var _this = {};
+
+    _this.glog = function(n) {
+
+      if (n < 1) {
+        throw 'glog(' + n + ')';
+      }
+
+      return LOG_TABLE[n];
+    };
+
+    _this.gexp = function(n) {
+
+      while (n < 0) {
+        n += 255;
+      }
+
+      while (n >= 256) {
+        n -= 255;
+      }
+
+      return EXP_TABLE[n];
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrPolynomial
+  //---------------------------------------------------------------------
+
+  function qrPolynomial(num, shift) {
+
+    if (typeof num.length == 'undefined') {
+      throw num.length + '/' + shift;
+    }
+
+    var _num = function() {
+      var offset = 0;
+      while (offset < num.length && num[offset] == 0) {
+        offset += 1;
+      }
+      var _num = new Array(num.length - offset + shift);
+      for (var i = 0; i < num.length - offset; i += 1) {
+        _num[i] = num[i + offset];
+      }
+      return _num;
+    }();
+
+    var _this = {};
+
+    _this.getAt = function(index) {
+      return _num[index];
+    };
+
+    _this.getLength = function() {
+      return _num.length;
+    };
+
+    _this.multiply = function(e) {
+
+      var num = new Array(_this.getLength() + e.getLength() - 1);
+
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        for (var j = 0; j < e.getLength(); j += 1) {
+          num[i + j] ^= QRMath.gexp(QRMath.glog(_this.getAt(i) ) + QRMath.glog(e.getAt(j) ) );
+        }
+      }
+
+      return qrPolynomial(num, 0);
+    };
+
+    _this.mod = function(e) {
+
+      if (_this.getLength() - e.getLength() < 0) {
+        return _this;
+      }
+
+      var ratio = QRMath.glog(_this.getAt(0) ) - QRMath.glog(e.getAt(0) );
+
+      var num = new Array(_this.getLength() );
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        num[i] = _this.getAt(i);
+      }
+
+      for (var i = 0; i < e.getLength(); i += 1) {
+        num[i] ^= QRMath.gexp(QRMath.glog(e.getAt(i) ) + ratio);
+      }
+
+      // recursive call
+      return qrPolynomial(num, 0).mod(e);
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // QRRSBlock
+  //---------------------------------------------------------------------
+
+  var QRRSBlock = function() {
+
+    var RS_BLOCK_TABLE = [
+
+      // L
+      // M
+      // Q
+      // H
+
+      // 1
+      [1, 26, 19],
+      [1, 26, 16],
+      [1, 26, 13],
+      [1, 26, 9],
+
+      // 2
+      [1, 44, 34],
+      [1, 44, 28],
+      [1, 44, 22],
+      [1, 44, 16],
+
+      // 3
+      [1, 70, 55],
+      [1, 70, 44],
+      [2, 35, 17],
+      [2, 35, 13],
+
+      // 4
+      [1, 100, 80],
+      [2, 50, 32],
+      [2, 50, 24],
+      [4, 25, 9],
+
+      // 5
+      [1, 134, 108],
+      [2, 67, 43],
+      [2, 33, 15, 2, 34, 16],
+      [2, 33, 11, 2, 34, 12],
+
+      // 6
+      [2, 86, 68],
+      [4, 43, 27],
+      [4, 43, 19],
+      [4, 43, 15],
+
+      // 7
+      [2, 98, 78],
+      [4, 49, 31],
+      [2, 32, 14, 4, 33, 15],
+      [4, 39, 13, 1, 40, 14],
+
+      // 8
+      [2, 121, 97],
+      [2, 60, 38, 2, 61, 39],
+      [4, 40, 18, 2, 41, 19],
+      [4, 40, 14, 2, 41, 15],
+
+      // 9
+      [2, 146, 116],
+      [3, 58, 36, 2, 59, 37],
+      [4, 36, 16, 4, 37, 17],
+      [4, 36, 12, 4, 37, 13],
+
+      // 10
+      [2, 86, 68, 2, 87, 69],
+      [4, 69, 43, 1, 70, 44],
+      [6, 43, 19, 2, 44, 20],
+      [6, 43, 15, 2, 44, 16],
+
+      // 11
+      [4, 101, 81],
+      [1, 80, 50, 4, 81, 51],
+      [4, 50, 22, 4, 51, 23],
+      [3, 36, 12, 8, 37, 13],
+
+      // 12
+      [2, 116, 92, 2, 117, 93],
+      [6, 58, 36, 2, 59, 37],
+      [4, 46, 20, 6, 47, 21],
+      [7, 42, 14, 4, 43, 15],
+
+      // 13
+      [4, 133, 107],
+      [8, 59, 37, 1, 60, 38],
+      [8, 44, 20, 4, 45, 21],
+      [12, 33, 11, 4, 34, 12],
+
+      // 14
+      [3, 145, 115, 1, 146, 116],
+      [4, 64, 40, 5, 65, 41],
+      [11, 36, 16, 5, 37, 17],
+      [11, 36, 12, 5, 37, 13],
+
+      // 15
+      [5, 109, 87, 1, 110, 88],
+      [5, 65, 41, 5, 66, 42],
+      [5, 54, 24, 7, 55, 25],
+      [11, 36, 12, 7, 37, 13],
+
+      // 16
+      [5, 122, 98, 1, 123, 99],
+      [7, 73, 45, 3, 74, 46],
+      [15, 43, 19, 2, 44, 20],
+      [3, 45, 15, 13, 46, 16],
+
+      // 17
+      [1, 135, 107, 5, 136, 108],
+      [10, 74, 46, 1, 75, 47],
+      [1, 50, 22, 15, 51, 23],
+      [2, 42, 14, 17, 43, 15],
+
+      // 18
+      [5, 150, 120, 1, 151, 121],
+      [9, 69, 43, 4, 70, 44],
+      [17, 50, 22, 1, 51, 23],
+      [2, 42, 14, 19, 43, 15],
+
+      // 19
+      [3, 141, 113, 4, 142, 114],
+      [3, 70, 44, 11, 71, 45],
+      [17, 47, 21, 4, 48, 22],
+      [9, 39, 13, 16, 40, 14],
+
+      // 20
+      [3, 135, 107, 5, 136, 108],
+      [3, 67, 41, 13, 68, 42],
+      [15, 54, 24, 5, 55, 25],
+      [15, 43, 15, 10, 44, 16],
+
+      // 21
+      [4, 144, 116, 4, 145, 117],
+      [17, 68, 42],
+      [17, 50, 22, 6, 51, 23],
+      [19, 46, 16, 6, 47, 17],
+
+      // 22
+      [2, 139, 111, 7, 140, 112],
+      [17, 74, 46],
+      [7, 54, 24, 16, 55, 25],
+      [34, 37, 13],
+
+      // 23
+      [4, 151, 121, 5, 152, 122],
+      [4, 75, 47, 14, 76, 48],
+      [11, 54, 24, 14, 55, 25],
+      [16, 45, 15, 14, 46, 16],
+
+      // 24
+      [6, 147, 117, 4, 148, 118],
+      [6, 73, 45, 14, 74, 46],
+      [11, 54, 24, 16, 55, 25],
+      [30, 46, 16, 2, 47, 17],
+
+      // 25
+      [8, 132, 106, 4, 133, 107],
+      [8, 75, 47, 13, 76, 48],
+      [7, 54, 24, 22, 55, 25],
+      [22, 45, 15, 13, 46, 16],
+
+      // 26
+      [10, 142, 114, 2, 143, 115],
+      [19, 74, 46, 4, 75, 47],
+      [28, 50, 22, 6, 51, 23],
+      [33, 46, 16, 4, 47, 17],
+
+      // 27
+      [8, 152, 122, 4, 153, 123],
+      [22, 73, 45, 3, 74, 46],
+      [8, 53, 23, 26, 54, 24],
+      [12, 45, 15, 28, 46, 16],
+
+      // 28
+      [3, 147, 117, 10, 148, 118],
+      [3, 73, 45, 23, 74, 46],
+      [4, 54, 24, 31, 55, 25],
+      [11, 45, 15, 31, 46, 16],
+
+      // 29
+      [7, 146, 116, 7, 147, 117],
+      [21, 73, 45, 7, 74, 46],
+      [1, 53, 23, 37, 54, 24],
+      [19, 45, 15, 26, 46, 16],
+
+      // 30
+      [5, 145, 115, 10, 146, 116],
+      [19, 75, 47, 10, 76, 48],
+      [15, 54, 24, 25, 55, 25],
+      [23, 45, 15, 25, 46, 16],
+
+      // 31
+      [13, 145, 115, 3, 146, 116],
+      [2, 74, 46, 29, 75, 47],
+      [42, 54, 24, 1, 55, 25],
+      [23, 45, 15, 28, 46, 16],
+
+      // 32
+      [17, 145, 115],
+      [10, 74, 46, 23, 75, 47],
+      [10, 54, 24, 35, 55, 25],
+      [19, 45, 15, 35, 46, 16],
+
+      // 33
+      [17, 145, 115, 1, 146, 116],
+      [14, 74, 46, 21, 75, 47],
+      [29, 54, 24, 19, 55, 25],
+      [11, 45, 15, 46, 46, 16],
+
+      // 34
+      [13, 145, 115, 6, 146, 116],
+      [14, 74, 46, 23, 75, 47],
+      [44, 54, 24, 7, 55, 25],
+      [59, 46, 16, 1, 47, 17],
+
+      // 35
+      [12, 151, 121, 7, 152, 122],
+      [12, 75, 47, 26, 76, 48],
+      [39, 54, 24, 14, 55, 25],
+      [22, 45, 15, 41, 46, 16],
+
+      // 36
+      [6, 151, 121, 14, 152, 122],
+      [6, 75, 47, 34, 76, 48],
+      [46, 54, 24, 10, 55, 25],
+      [2, 45, 15, 64, 46, 16],
+
+      // 37
+      [17, 152, 122, 4, 153, 123],
+      [29, 74, 46, 14, 75, 47],
+      [49, 54, 24, 10, 55, 25],
+      [24, 45, 15, 46, 46, 16],
+
+      // 38
+      [4, 152, 122, 18, 153, 123],
+      [13, 74, 46, 32, 75, 47],
+      [48, 54, 24, 14, 55, 25],
+      [42, 45, 15, 32, 46, 16],
+
+      // 39
+      [20, 147, 117, 4, 148, 118],
+      [40, 75, 47, 7, 76, 48],
+      [43, 54, 24, 22, 55, 25],
+      [10, 45, 15, 67, 46, 16],
+
+      // 40
+      [19, 148, 118, 6, 149, 119],
+      [18, 75, 47, 31, 76, 48],
+      [34, 54, 24, 34, 55, 25],
+      [20, 45, 15, 61, 46, 16]
+    ];
+
+    var qrRSBlock = function(totalCount, dataCount) {
+      var _this = {};
+      _this.totalCount = totalCount;
+      _this.dataCount = dataCount;
+      return _this;
+    };
+
+    var _this = {};
+
+    var getRsBlockTable = function(typeNumber, errorCorrectionLevel) {
+
+      switch(errorCorrectionLevel) {
+      case QRErrorCorrectionLevel.L :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+      case QRErrorCorrectionLevel.M :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+      case QRErrorCorrectionLevel.Q :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+      case QRErrorCorrectionLevel.H :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+      default :
+        return undefined;
+      }
+    };
+
+    _this.getRSBlocks = function(typeNumber, errorCorrectionLevel) {
+
+      var rsBlock = getRsBlockTable(typeNumber, errorCorrectionLevel);
+
+      if (typeof rsBlock == 'undefined') {
+        throw 'bad rs block @ typeNumber:' + typeNumber +
+            '/errorCorrectionLevel:' + errorCorrectionLevel;
+      }
+
+      var length = rsBlock.length / 3;
+
+      var list = [];
+
+      for (var i = 0; i < length; i += 1) {
+
+        var count = rsBlock[i * 3 + 0];
+        var totalCount = rsBlock[i * 3 + 1];
+        var dataCount = rsBlock[i * 3 + 2];
+
+        for (var j = 0; j < count; j += 1) {
+          list.push(qrRSBlock(totalCount, dataCount) );
+        }
+      }
+
+      return list;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrBitBuffer
+  //---------------------------------------------------------------------
+
+  var qrBitBuffer = function() {
+
+    var _buffer = [];
+    var _length = 0;
+
+    var _this = {};
+
+    _this.getBuffer = function() {
+      return _buffer;
+    };
+
+    _this.getAt = function(index) {
+      var bufIndex = Math.floor(index / 8);
+      return ( (_buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+    };
+
+    _this.put = function(num, length) {
+      for (var i = 0; i < length; i += 1) {
+        _this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+      }
+    };
+
+    _this.getLengthInBits = function() {
+      return _length;
+    };
+
+    _this.putBit = function(bit) {
+
+      var bufIndex = Math.floor(_length / 8);
+      if (_buffer.length <= bufIndex) {
+        _buffer.push(0);
+      }
+
+      if (bit) {
+        _buffer[bufIndex] |= (0x80 >>> (_length % 8) );
+      }
+
+      _length += 1;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrNumber
+  //---------------------------------------------------------------------
+
+  var qrNumber = function(data) {
+
+    var _mode = QRMode.MODE_NUMBER;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _data;
+
+      var i = 0;
+
+      while (i + 2 < data.length) {
+        buffer.put(strToNum(data.substring(i, i + 3) ), 10);
+        i += 3;
+      }
+
+      if (i < data.length) {
+        if (data.length - i == 1) {
+          buffer.put(strToNum(data.substring(i, i + 1) ), 4);
+        } else if (data.length - i == 2) {
+          buffer.put(strToNum(data.substring(i, i + 2) ), 7);
+        }
+      }
+    };
+
+    var strToNum = function(s) {
+      var num = 0;
+      for (var i = 0; i < s.length; i += 1) {
+        num = num * 10 + chatToNum(s.charAt(i) );
+      }
+      return num;
+    };
+
+    var chatToNum = function(c) {
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      }
+      throw 'illegal char :' + c;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrAlphaNum
+  //---------------------------------------------------------------------
+
+  var qrAlphaNum = function(data) {
+
+    var _mode = QRMode.MODE_ALPHA_NUM;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var s = _data;
+
+      var i = 0;
+
+      while (i + 1 < s.length) {
+        buffer.put(
+          getCode(s.charAt(i) ) * 45 +
+          getCode(s.charAt(i + 1) ), 11);
+        i += 2;
+      }
+
+      if (i < s.length) {
+        buffer.put(getCode(s.charAt(i) ), 6);
+      }
+    };
+
+    var getCode = function(c) {
+
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      } else if ('A' <= c && c <= 'Z') {
+        return c.charCodeAt(0) - 'A'.charCodeAt(0) + 10;
+      } else {
+        switch (c) {
+        case ' ' : return 36;
+        case '$' : return 37;
+        case '%' : return 38;
+        case '*' : return 39;
+        case '+' : return 40;
+        case '-' : return 41;
+        case '.' : return 42;
+        case '/' : return 43;
+        case ':' : return 44;
+        default :
+          throw 'illegal char :' + c;
+        }
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qr8BitByte
+  //---------------------------------------------------------------------
+
+  var qr8BitByte = function(data) {
+
+    var _mode = QRMode.MODE_8BIT_BYTE;
+    var _data = data;
+    var _bytes = qrcode.stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _bytes.length;
+    };
+
+    _this.write = function(buffer) {
+      for (var i = 0; i < _bytes.length; i += 1) {
+        buffer.put(_bytes[i], 8);
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrKanji
+  //---------------------------------------------------------------------
+
+  var qrKanji = function(data) {
+
+    var _mode = QRMode.MODE_KANJI;
+    var _data = data;
+
+    var stringToBytes = qrcode.stringToBytesFuncs['SJIS'];
+    if (!stringToBytes) {
+      throw 'sjis not supported.';
+    }
+    !function(c, code) {
+      // self test for sjis support.
+      var test = stringToBytes(c);
+      if (test.length != 2 || ( (test[0] << 8) | test[1]) != code) {
+        throw 'sjis not supported.';
+      }
+    }('\u53cb', 0x9746);
+
+    var _bytes = stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return ~~(_bytes.length / 2);
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _bytes;
+
+      var i = 0;
+
+      while (i + 1 < data.length) {
+
+        var c = ( (0xff & data[i]) << 8) | (0xff & data[i + 1]);
+
+        if (0x8140 <= c && c <= 0x9FFC) {
+          c -= 0x8140;
+        } else if (0xE040 <= c && c <= 0xEBBF) {
+          c -= 0xC140;
+        } else {
+          throw 'illegal char at ' + (i + 1) + '/' + c;
+        }
+
+        c = ( (c >>> 8) & 0xff) * 0xC0 + (c & 0xff);
+
+        buffer.put(c, 13);
+
+        i += 2;
+      }
+
+      if (i < data.length) {
+        throw 'illegal char at ' + (i + 1);
+      }
+    };
+
+    return _this;
+  };
+
+  //=====================================================================
+  // GIF Support etc.
+  //
+
+  //---------------------------------------------------------------------
+  // byteArrayOutputStream
+  //---------------------------------------------------------------------
+
+  var byteArrayOutputStream = function() {
+
+    var _bytes = [];
+
+    var _this = {};
+
+    _this.writeByte = function(b) {
+      _bytes.push(b & 0xff);
+    };
+
+    _this.writeShort = function(i) {
+      _this.writeByte(i);
+      _this.writeByte(i >>> 8);
+    };
+
+    _this.writeBytes = function(b, off, len) {
+      off = off || 0;
+      len = len || b.length;
+      for (var i = 0; i < len; i += 1) {
+        _this.writeByte(b[i + off]);
+      }
+    };
+
+    _this.writeString = function(s) {
+      for (var i = 0; i < s.length; i += 1) {
+        _this.writeByte(s.charCodeAt(i) );
+      }
+    };
+
+    _this.toByteArray = function() {
+      return _bytes;
+    };
+
+    _this.toString = function() {
+      var s = '';
+      s += '[';
+      for (var i = 0; i < _bytes.length; i += 1) {
+        if (i > 0) {
+          s += ',';
+        }
+        s += _bytes[i];
+      }
+      s += ']';
+      return s;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64EncodeOutputStream
+  //---------------------------------------------------------------------
+
+  var base64EncodeOutputStream = function() {
+
+    var _buffer = 0;
+    var _buflen = 0;
+    var _length = 0;
+    var _base64 = '';
+
+    var _this = {};
+
+    var writeEncoded = function(b) {
+      _base64 += String.fromCharCode(encode(b & 0x3f) );
+    };
+
+    var encode = function(n) {
+      if (n < 0) {
+        // error.
+      } else if (n < 26) {
+        return 0x41 + n;
+      } else if (n < 52) {
+        return 0x61 + (n - 26);
+      } else if (n < 62) {
+        return 0x30 + (n - 52);
+      } else if (n == 62) {
+        return 0x2b;
+      } else if (n == 63) {
+        return 0x2f;
+      }
+      throw 'n:' + n;
+    };
+
+    _this.writeByte = function(n) {
+
+      _buffer = (_buffer << 8) | (n & 0xff);
+      _buflen += 8;
+      _length += 1;
+
+      while (_buflen >= 6) {
+        writeEncoded(_buffer >>> (_buflen - 6) );
+        _buflen -= 6;
+      }
+    };
+
+    _this.flush = function() {
+
+      if (_buflen > 0) {
+        writeEncoded(_buffer << (6 - _buflen) );
+        _buffer = 0;
+        _buflen = 0;
+      }
+
+      if (_length % 3 != 0) {
+        // padding
+        var padlen = 3 - _length % 3;
+        for (var i = 0; i < padlen; i += 1) {
+          _base64 += '=';
+        }
+      }
+    };
+
+    _this.toString = function() {
+      return _base64;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64DecodeInputStream
+  //---------------------------------------------------------------------
+
+  var base64DecodeInputStream = function(str) {
+
+    var _str = str;
+    var _pos = 0;
+    var _buffer = 0;
+    var _buflen = 0;
+
+    var _this = {};
+
+    _this.read = function() {
+
+      while (_buflen < 8) {
+
+        if (_pos >= _str.length) {
+          if (_buflen == 0) {
+            return -1;
+          }
+          throw 'unexpected end of file./' + _buflen;
+        }
+
+        var c = _str.charAt(_pos);
+        _pos += 1;
+
+        if (c == '=') {
+          _buflen = 0;
+          return -1;
+        } else if (c.match(/^\s$/) ) {
+          // ignore if whitespace.
+          continue;
+        }
+
+        _buffer = (_buffer << 6) | decode(c.charCodeAt(0) );
+        _buflen += 6;
+      }
+
+      var n = (_buffer >>> (_buflen - 8) ) & 0xff;
+      _buflen -= 8;
+      return n;
+    };
+
+    var decode = function(c) {
+      if (0x41 <= c && c <= 0x5a) {
+        return c - 0x41;
+      } else if (0x61 <= c && c <= 0x7a) {
+        return c - 0x61 + 26;
+      } else if (0x30 <= c && c <= 0x39) {
+        return c - 0x30 + 52;
+      } else if (c == 0x2b) {
+        return 62;
+      } else if (c == 0x2f) {
+        return 63;
+      } else {
+        throw 'c:' + c;
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // gifImage (B/W)
+  //---------------------------------------------------------------------
+
+  var gifImage = function(width, height) {
+
+    var _width = width;
+    var _height = height;
+    var _data = new Array(width * height);
+
+    var _this = {};
+
+    _this.setPixel = function(x, y, pixel) {
+      _data[y * _width + x] = pixel;
+    };
+
+    _this.write = function(out) {
+
+      //---------------------------------
+      // GIF Signature
+
+      out.writeString('GIF87a');
+
+      //---------------------------------
+      // Screen Descriptor
+
+      out.writeShort(_width);
+      out.writeShort(_height);
+
+      out.writeByte(0x80); // 2bit
+      out.writeByte(0);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Global Color Map
+
+      // black
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+
+      // white
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+
+      //---------------------------------
+      // Image Descriptor
+
+      out.writeString(',');
+      out.writeShort(0);
+      out.writeShort(0);
+      out.writeShort(_width);
+      out.writeShort(_height);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Local Color Map
+
+      //---------------------------------
+      // Raster Data
+
+      var lzwMinCodeSize = 2;
+      var raster = getLZWRaster(lzwMinCodeSize);
+
+      out.writeByte(lzwMinCodeSize);
+
+      var offset = 0;
+
+      while (raster.length - offset > 255) {
+        out.writeByte(255);
+        out.writeBytes(raster, offset, 255);
+        offset += 255;
+      }
+
+      out.writeByte(raster.length - offset);
+      out.writeBytes(raster, offset, raster.length - offset);
+      out.writeByte(0x00);
+
+      //---------------------------------
+      // GIF Terminator
+      out.writeString(';');
+    };
+
+    var bitOutputStream = function(out) {
+
+      var _out = out;
+      var _bitLength = 0;
+      var _bitBuffer = 0;
+
+      var _this = {};
+
+      _this.write = function(data, length) {
+
+        if ( (data >>> length) != 0) {
+          throw 'length over';
+        }
+
+        while (_bitLength + length >= 8) {
+          _out.writeByte(0xff & ( (data << _bitLength) | _bitBuffer) );
+          length -= (8 - _bitLength);
+          data >>>= (8 - _bitLength);
+          _bitBuffer = 0;
+          _bitLength = 0;
+        }
+
+        _bitBuffer = (data << _bitLength) | _bitBuffer;
+        _bitLength = _bitLength + length;
+      };
+
+      _this.flush = function() {
+        if (_bitLength > 0) {
+          _out.writeByte(_bitBuffer);
+        }
+      };
+
+      return _this;
+    };
+
+    var getLZWRaster = function(lzwMinCodeSize) {
+
+      var clearCode = 1 << lzwMinCodeSize;
+      var endCode = (1 << lzwMinCodeSize) + 1;
+      var bitLength = lzwMinCodeSize + 1;
+
+      // Setup LZWTable
+      var table = lzwTable();
+
+      for (var i = 0; i < clearCode; i += 1) {
+        table.add(String.fromCharCode(i) );
+      }
+      table.add(String.fromCharCode(clearCode) );
+      table.add(String.fromCharCode(endCode) );
+
+      var byteOut = byteArrayOutputStream();
+      var bitOut = bitOutputStream(byteOut);
+
+      // clear code
+      bitOut.write(clearCode, bitLength);
+
+      var dataIndex = 0;
+
+      var s = String.fromCharCode(_data[dataIndex]);
+      dataIndex += 1;
+
+      while (dataIndex < _data.length) {
+
+        var c = String.fromCharCode(_data[dataIndex]);
+        dataIndex += 1;
+
+        if (table.contains(s + c) ) {
+
+          s = s + c;
+
+        } else {
+
+          bitOut.write(table.indexOf(s), bitLength);
+
+          if (table.size() < 0xfff) {
+
+            if (table.size() == (1 << bitLength) ) {
+              bitLength += 1;
+            }
+
+            table.add(s + c);
+          }
+
+          s = c;
+        }
+      }
+
+      bitOut.write(table.indexOf(s), bitLength);
+
+      // end code
+      bitOut.write(endCode, bitLength);
+
+      bitOut.flush();
+
+      return byteOut.toByteArray();
+    };
+
+    var lzwTable = function() {
+
+      var _map = {};
+      var _size = 0;
+
+      var _this = {};
+
+      _this.add = function(key) {
+        if (_this.contains(key) ) {
+          throw 'dup key:' + key;
+        }
+        _map[key] = _size;
+        _size += 1;
+      };
+
+      _this.size = function() {
+        return _size;
+      };
+
+      _this.indexOf = function(key) {
+        return _map[key];
+      };
+
+      _this.contains = function(key) {
+        return typeof _map[key] != 'undefined';
+      };
+
+      return _this;
+    };
+
+    return _this;
+  };
+
+  var createDataURL = function(width, height, getPixel) {
+    var gif = gifImage(width, height);
+    for (var y = 0; y < height; y += 1) {
+      for (var x = 0; x < width; x += 1) {
+        gif.setPixel(x, y, getPixel(x, y) );
+      }
+    }
+
+    var b = byteArrayOutputStream();
+    gif.write(b);
+
+    var base64 = base64EncodeOutputStream();
+    var bytes = b.toByteArray();
+    for (var i = 0; i < bytes.length; i += 1) {
+      base64.writeByte(bytes[i]);
+    }
+    base64.flush();
+
+    return 'data:image/gif;base64,' + base64;
+  };
+
+  //---------------------------------------------------------------------
+  // returns qrcode function.
+
+  return qrcode;
+}();
+
+// multibyte support
+!function() {
+
+  qrcode.stringToBytesFuncs['UTF-8'] = function(s) {
+    function toUTF8Array(str) {
+      var utf8 = [];
+      for (var i=0; i < str.length; i++) {
+        var charcode = str.charCodeAt(i);
+        if (charcode < 0x80) utf8.push(charcode);
+        else if (charcode < 0x800) {
+          utf8.push(0xc0 | (charcode >> 6),
+              0x80 | (charcode & 0x3f));
+        }
+        else if (charcode < 0xd800 || charcode >= 0xe000) {
+          utf8.push(0xe0 | (charcode >> 12),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+        // surrogate pair
+        else {
+          i++;
+          // UTF-16 encodes 0x10000-0x10FFFF by
+          // subtracting 0x10000 and splitting the
+          // 20 bits of 0x0-0xFFFFF into two halves
+          charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+            | (str.charCodeAt(i) & 0x3ff));
+          utf8.push(0xf0 | (charcode >>18),
+              0x80 | ((charcode>>12) & 0x3f),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+      }
+      return utf8;
+    }
+    return toUTF8Array(s);
+  };
+
+}();
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+      define([], factory);
+  } else if (typeof exports === 'object') {
+      module.exports = factory();
+  }
+}(function () {
+    return qrcode;
+}));
+
+</script>
+<script>
+(function(){
+'use strict';
+var KEY='mbm_class_record_v1', BLOCK_KEY='mbm_class_record_block_v1', ADMIN_KEY='mbm_class_record_admin_v1', INBOX_KEY='mbm_class_record_inbox_v1';
+var RESULTS={got:'Got it',partly:'Partly',notyet:'Not yet',absent:'Absent'}, CYCLE=['','got','partly','notyet','absent'];
+var CATCH={'':'Not needed',need:'Needs catch-up',partdone:'Partly done',done:'Done'};
+var DAYS=['Mon','Tue','Wed','Thu','Fri'], DAYNAME={Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thu:'Thursday',Fri:'Friday'}, NP=6;
+var $=function(id){return document.getElementById(id);};
+function blank(){return {version:2,teacher:'Teacher 1',name:'',size:13,classCode:'Class A',classes:[],tt:null,skills:{},notice:'',packMade:'',sheet:'',folder:'',assistant:'',admin:false,lessons:{},rows:{}};}
+function readJSON(k,fb){try{var r=localStorage.getItem(k);return r?JSON.parse(r):fb;}catch(e){return fb;}}
+function loadS(s){if(!s||typeof s!=='object'||!s.lessons||!s.rows)s=blank();var b=blank();for(var k in b)if(s[k]===undefined)s[k]=b[k];s.classes=normClasses(s.classes);s.tt=s.tt?normTT(s.tt):null;s.skills=normSkills(s.skills);return s;}
+var S;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));return true;}catch(e){say('This could not be saved. The device storage may be full or blocked.','bad');return false;}}
+var sayTimer;
+function say(t,kind){var el=$('status');el.textContent=t;el.className='msg '+(kind||'ok');el.hidden=false;clearTimeout(sayTimer);if(kind!=='bad')sayTimer=setTimeout(function(){el.hidden=true;},6000);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function clean(s,max){return String(s==null?'':s).replace(/[\u0000-\u001f\u007f]/g,' ').replace(/\s+/g,' ').trim().slice(0,max||240);}
+
+/* ---------- shapes ---------- */
+function normTT(x){var o={};DAYS.forEach(function(d){var a=x&&Array.isArray(x[d])?x[d]:[];o[d]=[];for(var p=0;p<NP;p++){var c=Array.isArray(a[p])?a[p]:[];o[d].push([clean(c[0],12),clean(c[1],40)]);}});return o;}
+function ttEmpty(tt){if(!tt)return true;return DAYS.every(function(d){return tt[d].every(function(c){return !c[0]&&!c[1];});});}
+function normClasses(a){var out=[],seen={};(Array.isArray(a)?a:[]).slice(0,12).forEach(function(c){var code=clean(c&&c.code,12);if(!code||seen[code.toLowerCase()])return;seen[code.toLowerCase()]=1;var ps={};(Array.isArray(c.pupils)?c.pupils:[]).forEach(function(n){n=Math.round(+n);if(n>=1&&n<=35)ps[n]=1;});out.push({code:code,pupils:Object.keys(ps).map(Number).sort(function(a,b){return a-b;})});});return out;}
+function parseClasses(t){var a=[];String(t||'').split(/\n/).forEach(function(line){var i=line.indexOf(':'),code=i<0?line:line.slice(0,i),rest=i<0?'':line.slice(i+1);if(clean(code,12))a.push({code:code,pupils:rest.split(/[^0-9]+/).filter(Boolean)});});return normClasses(a);}
+function fmtClasses(a){return a.map(function(c){return c.code+': '+c.pupils.join(', ');}).join('\n');}
+function normSkills(x){var o={},n=0;if(x&&typeof x==='object')Object.keys(x).forEach(function(k){var s=clean(k,40);if(!s||n>=30||!Array.isArray(x[k]))return;var seen={},l=[];x[k].forEach(function(v){v=clean(v,120);if(v&&!seen[v.toLowerCase()]&&l.length<40){seen[v.toLowerCase()]=1;l.push(v);}});if(l.length){o[s]=l;n++;}});return o;}
+function parseSkills(t){var o={};String(t||'').split(/\n/).forEach(function(line){var i=line.indexOf(':');if(i<1)return;o[line.slice(0,i)]=line.slice(i+1).split(';');});return normSkills(o);}
+function fmtSkills(o){return Object.keys(o).map(function(k){return k+': '+o[k].join('; ');}).join('\n');}
+
+/* ---------- names guard ---------- */
+var STOP={pupil:1,class:1,group:1,teacher:1,the:1,and:1,not:1,yet:1,got:1,all:1,for:1,with:1};
+function blockedWords(){
+  var out={};
+  function add(v){String(v||'').split(/[^A-Za-zÀ-ÿ'-]+/).forEach(function(w){w=w.replace(/^['-]+|['-]+$/g,'');if(w.length<2)return;if(STOP[w.toLowerCase()])return;out[w]=1;});}
+  var key=readJSON('mbm_pupil_key_v1',{});if(key&&typeof key==='object')Object.keys(key).forEach(function(n){add(key[n]);});
+  var prof=readJSON('mbm_pupil_profile_v1',{});if(prof&&prof.pupils)Object.keys(prof.pupils).forEach(function(n){add(prof.pupils[n]&&prof.pupils[n].label);});
+  ['mbm_names_list_v1','mbm_class_names_v1'].forEach(function(k){var v=readJSON(k,null);(function walk(x){if(typeof x==='string')add(x);else if(Array.isArray(x))x.forEach(walk);else if(x&&typeof x==='object')Object.keys(x).forEach(function(q){if(/name|label|first|last|initial/i.test(q)||Array.isArray(x[q])||typeof x[q]==='object')walk(x[q]);});})(v);});
+  String(localStorage.getItem(BLOCK_KEY)||'').split(/\n/).forEach(add);
+  return Object.keys(out);
+}
+function nameHit(text){
+  text=String(text||'');if(!text)return '';
+  var words=blockedWords();
+  for(var i=0;i<words.length;i++){var w=words[i],safe=w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    var re=new RegExp('(^|[^A-Za-zÀ-ÿ])'+safe+'($|[^A-Za-zÀ-ÿ])',w.length<=3?'':'i'); /* short labels and initials: exact case */
+    if(re.test(text))return w;}
+  return '';
+}
+var NAME_MSG='Not saved. That text looks like it holds a pupil name or initials saved on this device. Use the pupil number instead.';
+function guard(fields){for(var i=0;i<fields.length;i++){if(nameHit(fields[i])){say(NAME_MSG,'bad');return false;}}return true;}
+
+/* ---------- tabs ---------- */
+var TABS=['add','sheet','central','setup','admin'];
+function show(t){if(t==='admin'&&!S.admin)t='add';TABS.forEach(function(x){var on=x===t;$('tab-'+x).setAttribute('aria-selected',on?'true':'false');$('p-'+x).hidden=!on;});if(t==='sheet')renderSheet();if(t==='central')renderCentral();if(t==='admin')renderAdmin();if(t==='add')renderToday();try{sessionStorage.setItem('mbm_cr_tab',t);}catch(e){}}
+TABS.forEach(function(t){$('tab-'+t).addEventListener('click',function(){show(t);});});
+
+/* ---------- timetable editor (shared by Set up and Admin) ---------- */
+function ttEditor(host,tt,onChange,idp){
+  var h='<table class="tt"><thead><tr><th>Day</th>';for(var p=1;p<=NP;p++)h+='<th>Period '+p+'</th>';h+='</tr></thead><tbody>';
+  DAYS.forEach(function(d){h+='<tr><th class="num" scope="row">'+DAYNAME[d]+'</th>';for(var p=0;p<NP;p++){var c=tt[d][p];h+='<td><input aria-label="'+DAYNAME[d]+' period '+(p+1)+' class" maxlength="12" list="classList" data-d="'+d+'" data-p="'+p+'" data-i="0" id="'+idp+d+p+'c" value="'+esc(c[0])+'" placeholder="Class"><input aria-label="'+DAYNAME[d]+' period '+(p+1)+' subject" maxlength="40" data-d="'+d+'" data-p="'+p+'" data-i="1" id="'+idp+d+p+'s" value="'+esc(c[1])+'" placeholder="Subject"></td>';}h+='</tr>';});
+  host.innerHTML=h+'</tbody></table>';
+  host.onchange=function(e){var el=e.target,d=el.getAttribute('data-d');if(!d)return;var p=+el.getAttribute('data-p'),i=+el.getAttribute('data-i'),v=clean(el.value,i?40:12);if(nameHit(v)){say(NAME_MSG,'bad');el.value=tt[d][p][i];return;}tt[d][p][i]=v;el.value=v;onChange();};
+}
+
+/* ---------- add a lesson ---------- */
+function iso(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
+function today(){return iso(new Date());}
+function nice(s){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||'');return m?(+m[3])+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2]-1]+' '+m[1]:String(s||'');}
+function dayOf(dateStr){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr||'');if(!m)return '';var i=new Date(+m[1],+m[2]-1,+m[3],12).getDay();return i>=1&&i<=5?DAYS[i-1]:'';}
+function members(code){code=String(code||'').toLowerCase();for(var i=0;i<S.classes.length;i++)if(S.classes[i].code.toLowerCase()===code&&S.classes[i].pupils.length)return S.classes[i].pupils.slice();var a=[];for(var n=1;n<=S.size;n++)a.push(n);return a;}
+var picks={};
+function paintP(b){var v=b.getAttribute('data-v'),n=b.getAttribute('data-n');b.className='pbtn'+(v?' st-'+v:'');b.innerHTML='<b>Pupil '+n+'</b><span>'+(v?RESULTS[v]:'No result')+'</span>';b.setAttribute('aria-label','Pupil '+n+': '+(v?RESULTS[v]:'no result')+'. Tap to change.');}
+function renderGrid(){
+  var ms=members($('f-class').value),h='';
+  ms.forEach(function(n){h+='<button type="button" id="r-'+n+'" data-n="'+n+'" data-v="'+(picks[n]||'')+'"></button>';});
+  $('pupilGrid').innerHTML=h;$('pupilGrid').querySelectorAll('button').forEach(paintP);
+}
+$('pupilGrid').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var v=CYCLE[(CYCLE.indexOf(b.getAttribute('data-v'))+1)%CYCLE.length];b.setAttribute('data-v',v);picks[b.getAttribute('data-n')]=v;paintP(b);});
+function setAll(v){picks={};$('pupilGrid').querySelectorAll('button').forEach(function(b){b.setAttribute('data-v',v);picks[b.getAttribute('data-n')]=v;paintP(b);});}
+$('allGot').addEventListener('click',function(){setAll('got');});
+$('clearResults').addEventListener('click',function(){setAll('');});
+$('f-class').addEventListener('change',function(){picks={};renderGrid();fillSkillList();});
+$('f-subject').addEventListener('change',fillSkillList);
+$('f-date').addEventListener('change',renderToday);
+function logged(date,period){for(var id in S.lessons){var L=S.lessons[id];if(L.date===date&&String(L.period||'')===String(period))return true;}return false;}
+function renderToday(){
+  var date=$('f-date').value||today(),d=dayOf(date),has=!ttEmpty(S.tt);
+  $('noTT').hidden=has;$('todayBox').hidden=!has;if(!has)return;
+  $('todayTitle').textContent=(date===today()?"Today's lessons":'Lessons on '+nice(date))+(d?' ('+DAYNAME[d]+')':'');
+  var h='';if(d)S.tt[d].forEach(function(c,p){if(!c[0]&&!c[1])return;var lg=logged(date,p+1);h+='<button type="button" data-p="'+(p+1)+'"'+(lg?' class="logged"':'')+'><b>Period '+(p+1)+(lg?' ✓ logged':'')+'</b><span>'+esc(c[0]||'Class not set')+' · '+esc(c[1]||'Subject not set')+'</span></button>';});
+  $('todayStrip').innerHTML=h||'<span class="hint">No lessons on your timetable for this day.</span>';
+}
+$('todayStrip').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var p=+b.getAttribute('data-p'),d=dayOf($('f-date').value||today()),c=S.tt[d][p-1];
+  $('f-period').value=String(p);if(c[0])$('f-class').value=c[0];$('f-subject').value=c[1];picks={};renderGrid();fillSkillList();$('f-objective').focus();});
+function fillSkillList(){
+  var subj=clean($('f-subject').value,40).toLowerCase(),seen={},list=[];
+  function add(v){if(v&&!seen[v.toLowerCase()]){seen[v.toLowerCase()]=1;list.push(v);}}
+  Object.keys(S.skills).forEach(function(k){if(!subj||k.toLowerCase()===subj)S.skills[k].forEach(add);});
+  Object.keys(S.lessons).forEach(function(id){var L=S.lessons[id];if(L.skill&&(!subj||L.subject.toLowerCase()===subj))add(L.skill);});
+  $('skillList').innerHTML=list.map(function(s){return '<option value="'+esc(s)+'">';}).join('');
+  $('skillChips').innerHTML=list.slice(0,14).map(function(s){return '<button type="button" data-s="'+esc(s)+'">'+esc(s)+'</button>';}).join('');
+  $('sameLast').hidden=!lastLike();
+}
+function lastLike(){var subj=clean($('f-subject').value,40).toLowerCase(),cls=clean($('f-class').value,12).toLowerCase(),best=null,bestC=null;if(!subj)return null;
+  Object.keys(S.lessons).forEach(function(id){var L=S.lessons[id];if(L.subject.toLowerCase()!==subj||(!L.objective&&!L.skill))return;if(!best||L.date>best.date)best=L;if(L.cls.toLowerCase()===cls&&(!bestC||L.date>bestC.date))bestC=L;});return bestC||best;}
+$('skillChips').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;$('f-skill').value=b.getAttribute('data-s');});
+$('sameLast').addEventListener('click',function(){var L=lastLike();if(!L)return;$('f-objective').value=L.objective;$('f-skill').value=L.skill;say('Filled in from your lesson on '+nice(L.date)+'. Change it if today is different.');});
+function lessonId(){return 'L'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function defaultCatch(result){return result==='absent'||result==='notyet'||result==='partly'?'need':'';}
+$('saveLesson').addEventListener('click',function(){
+  var L={date:$('f-date').value||today(),period:$('f-period').value,cls:clean($('f-class').value,12)||S.classCode,subject:clean($('f-subject').value,40),code:clean($('f-code').value,30),objective:clean($('f-objective').value),skill:clean($('f-skill').value)};
+  if(!L.subject){say('Add the subject first.','bad');$('f-subject').focus();return;}
+  if(!L.objective&&!L.skill){say('Add the lesson objective or the skill first.','bad');$('f-objective').focus();return;}
+  if(!guard([L.cls,L.subject,L.code,L.objective,L.skill]))return;
+  var chosen=[];$('pupilGrid').querySelectorAll('button').forEach(function(b){var v=b.getAttribute('data-v');if(v)chosen.push([+b.getAttribute('data-n'),v]);});
+  if(!chosen.length){say('Tap All got it, or tap a result for at least one pupil.','bad');return;}
+  var id=lessonId();S.lessons[id]=L;
+  chosen.forEach(function(p){var r=p[1];S.rows[id+'|'+p[0]]={result:r,missed:(r==='absent'||r==='notyet')?(L.skill||L.objective):'',catchup:defaultCatch(r),note:''};});
+  if(!save())return;
+  say('Saved '+chosen.length+' rows to My sheet.');renderSendBar();
+  $('f-objective').value='';$('f-skill').value='';$('f-code').value='';picks={};renderGrid();fillSubjects();renderToday();
+});
+
+/* ---------- pull from Quick capture ---------- */
+var QC_MAP={got:'got',nearly:'partly',again:'notyet',absent:'absent'};
+$('pullQC').addEventListener('click',function(){
+  var t=readJSON('mbm_exit_tally_v1',{}),tr=readJSON('mbm_catchup_tracker_v1',{}),marks=(tr&&tr.marks)||{};
+  if(!t||typeof t!=='object'||!Object.keys(t).length){say('No Quick capture results are saved on this device yet.','bad');return;}
+  var added=0,skipped=0,byLesson={};
+  Object.keys(S.lessons).forEach(function(id){if(S.lessons[id].qc)byLesson[S.lessons[id].qc]=id;});
+  Object.keys(t).forEach(function(k){
+    var r=t[k],parts=k.split('|');if(!r||!QC_MAP[r.state]||parts.length<4)return;
+    var n=+parts[3];if(!(n>=1&&n<=35))return;
+    var qc=parts.slice(0,3).join('|'),id=byLesson[qc];
+    if(!id){id=lessonId();byLesson[qc]=id;var per=+parts[2];S.lessons[id]={date:String(r.ts||'').slice(0,10)||today(),period:per>=1&&per<=NP?String(per):'',cls:clean(r.path,12)||S.classCode,subject:clean(r.subj,40),code:clean(r.code,30),objective:'',skill:'',qc:qc};}
+    var rk=id+'|'+n;if(S.rows[rk]){skipped++;return;}
+    var res=QC_MAP[r.state],note=clean(r.note);if(nameHit(note))note='';
+    var cu=defaultCatch(res);if(r.tracker&&r.tracker.key&&marks[r.tracker.key]){var ms=marks[r.tracker.key].state;cu=ms==='done'?'done':ms==='partial'?'partdone':'need';}
+    S.rows[rk]={result:res,missed:'',catchup:cu,note:note};added++;
+  });
+  Object.keys(S.lessons).forEach(function(id){var any=false;for(var k in S.rows)if(k.indexOf(id+'|')===0){any=true;break;}if(!any)delete S.lessons[id];});
+  if(!save())return;
+  say(added?('Pulled in '+added+' new rows'+(skipped?' ('+skipped+' were already there)':'')+'. Open My sheet to add each objective and skill.'):'Nothing new to pull in. Those results are already in My sheet.');
+  fillSubjects();renderToday();
+});
+
+/* ---------- my sheet ---------- */
+function allRows(){
+  var out=[];Object.keys(S.rows).forEach(function(k){var i=k.lastIndexOf('|'),id=k.slice(0,i),n=+k.slice(i+1),L=S.lessons[id];if(!L)return;out.push({k:k,id:id,n:n,L:L,r:S.rows[k]});});
+  out.sort(function(a,b){return a.L.date<b.L.date?1:a.L.date>b.L.date?-1:a.id<b.id?-1:a.id>b.id?1:a.n-b.n;});return out;
+}
+function needs(r){return r.catchup==='need'||r.catchup==='partdone';}
+function fillSubjects(){
+  var seen={};Object.keys(S.lessons).forEach(function(id){if(S.lessons[id].subject)seen[S.lessons[id].subject]=1;});
+  Object.keys(S.skills).forEach(function(k){seen[k]=1;});
+  if(S.tt)DAYS.forEach(function(d){S.tt[d].forEach(function(c){if(c[1])seen[c[1]]=1;});});
+  var pk=readJSON('mbm_school_pack_v1',null);if(pk&&Array.isArray(pk.subjects)&&!Object.keys(S.skills).length&&ttEmpty(S.tt))pk.subjects.forEach(function(s){s=clean(s,40);if(s)seen[s]=1;});
+  var list=Object.keys(seen).sort();
+  $('subjects').innerHTML=list.map(function(s){return '<option value="'+esc(s)+'">';}).join('');
+  $('classList').innerHTML=S.classes.map(function(c){return '<option value="'+esc(c.code)+'">';}).join('');
+  var cur=$('q-subject').value;$('q-subject').innerHTML='<option value="">All subjects</option>'+list.map(function(s){return '<option'+(s===cur?' selected':'')+'>'+esc(s)+'</option>';}).join('');
+  var cp=$('q-pupil').value,h='<option value="">All pupils</option>';for(var n=1;n<=S.size;n++)h+='<option value="'+n+'"'+(String(n)===cp?' selected':'')+'>Pupil '+n+'</option>';$('q-pupil').innerHTML=h;
+  fillSkillList();
+}
+function filtered(){
+  var p=$('q-pupil').value,s=$('q-subject').value,r=$('q-result').value,nd=$('q-need').value;
+  return allRows().filter(function(x){return (!p||x.n===+p)&&(!s||x.L.subject===s)&&(!r||x.r.result===r)&&(nd!=='need'||needs(x.r))&&(nd!=='notes'||x.r.note);});
+}
+function resultOptions(v){return Object.keys(RESULTS).map(function(k){return '<option value="'+k+'"'+(k===v?' selected':'')+'>'+RESULTS[k]+'</option>';}).join('');}
+function catchOptions(v){return Object.keys(CATCH).map(function(k){return '<option value="'+k+'"'+(k===v?' selected':'')+'>'+CATCH[k]+'</option>';}).join('');}
+function renderSheet(){
+  fillSubjects();var rows=filtered(),h='';
+  rows.forEach(function(x){var L=x.L,r=x.r,a=' data-k="'+esc(x.k)+'" data-id="'+esc(x.id)+'"';
+    h+='<tr><td><input type="date" aria-label="Date"'+a+' data-f="L.date" value="'+esc(L.date)+'"></td>'+
+      '<td><input aria-label="Class code" maxlength="12"'+a+' data-f="L.cls" value="'+esc(L.cls)+'"></td>'+
+      '<td><input aria-label="Subject" maxlength="40"'+a+' data-f="L.subject" value="'+esc(L.subject)+'"></td>'+
+      '<td><textarea aria-label="Lesson objective" maxlength="240"'+a+' data-f="L.objective">'+esc(L.objective)+'</textarea></td>'+
+      '<td><textarea aria-label="Skill or content" maxlength="240"'+a+' data-f="L.skill">'+esc(L.skill)+'</textarea></td>'+
+      '<td class="num">Pupil '+x.n+'</td>'+
+      '<td><select aria-label="Result for pupil '+x.n+'" class="st-'+esc(r.result)+'"'+a+' data-f="r.result">'+resultOptions(r.result)+'</select></td>'+
+      '<td><textarea aria-label="Missed skill or content" maxlength="240"'+a+' data-f="r.missed">'+esc(r.missed)+'</textarea></td>'+
+      '<td><select aria-label="Catch-up"'+a+' data-f="r.catchup">'+catchOptions(r.catchup)+'</select></td>'+
+      '<td><textarea aria-label="Adaptive teaching note" maxlength="240"'+a+' data-f="r.note">'+esc(r.note)+'</textarea></td>'+
+      '<td class="noprint"><button type="button" class="danger" data-del="'+esc(x.k)+'" aria-label="Delete row for pupil '+x.n+'">Delete</button></td></tr>';});
+  $('sheet').querySelector('tbody').innerHTML=h||'<tr><td colspan="11">No rows yet. Add a lesson in tab 1.</td></tr>';
+  var total=Object.keys(S.rows).length,need=allRows().filter(function(x){return needs(x.r);}).length;
+  $('sheetCount').textContent='Showing '+rows.length+' of '+total+' rows. '+need+' need catch-up.';
+  fillCu();
+}
+['q-pupil','q-subject','q-result','q-need'].forEach(function(id){$(id).addEventListener('change',renderSheet);});
+$('sheet').addEventListener('change',function(e){
+  var el=e.target,f=el.getAttribute('data-f');if(!f)return;
+  var k=el.getAttribute('data-k'),id=el.getAttribute('data-id'),isL=f.indexOf('L.')===0,name=f.slice(2);
+  var obj=isL?S.lessons[id]:S.rows[k];if(!obj)return;
+  var plain=el.tagName==='SELECT'||el.type==='date',v=plain?el.value:clean(el.value,name==='cls'?12:name==='subject'?40:240);
+  if(!plain&&nameHit(v)){say(NAME_MSG,'bad');el.value=obj[name]||'';return;}
+  if(name==='date'&&!v){el.value=obj.date;return;}
+  obj[name]=v;
+  if(isL){for(var q in S.rows)if(q.indexOf(id+'|')===0)S.rows[q].sent=false;}else S.rows[k].sent=false;
+  if(name==='result'){var r=S.rows[k];r.catchup=defaultCatch(v);if((v==='absent'||v==='notyet')&&!r.missed)r.missed=S.lessons[id].skill||S.lessons[id].objective||'';if(v==='got')r.missed='';}
+  if(save()){say('Saved.');renderSendBar();if(isL||name==='result')renderSheet();}
+});
+$('sheet').addEventListener('click',function(e){var k=e.target.getAttribute&&e.target.getAttribute('data-del');if(!k)return;if(!confirm('Delete this one row?'))return;var id=k.slice(0,k.lastIndexOf('|'));delete S.rows[k];var any=false;for(var q in S.rows)if(q.indexOf(id+'|')===0){any=true;break;}if(!any)delete S.lessons[id];save();renderSheet();});
+
+/* ---------- export ---------- */
+function flat(teacher,x){return {lid:x.id,teacher:teacher,date:x.L.date,period:x.L.period||'',cls:x.L.cls,subject:x.L.subject,code:x.L.code||'',objective:x.L.objective,skill:x.L.skill,pupil:x.n,result:x.r.result,missed:x.r.missed,catchup:x.r.catchup,note:x.r.note};}
+function download(name,text,type){var b=new Blob([text],{type:type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},2000);}
+function cell(v){v=String(v==null?'':v);if(/^[=+\-@\t\r]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"';}
+function csvOf(lines){return '﻿'+lines.map(function(a){return a.map(cell).join(',');}).join('\r\n')+'\r\n';}
+function toCSV(rows,withTeacher){
+  var lines=[(withTeacher?['Teacher']:[]).concat(['Date','Period','Class','Subject','Lesson code','Lesson objective','Skill or content','Pupil','Result','Missed (skill or content)','Catch-up','Adaptive teaching note'])];
+  rows.forEach(function(r){lines.push((withTeacher?[staffName(r.teacher)]:[]).concat([r.date,r.period,r.cls,r.subject,r.code,r.objective,r.skill,'Pupil '+r.pupil,RESULTS[r.result]||'',r.missed,CATCH[r.catchup]||'',r.note]));});
+  return csvOf(lines);
+}
+function tag(){return S.teacher.replace(/\s+/g,'_')+'_'+today();}
+$('csvMine').addEventListener('click',function(){var rows=filtered().map(function(x){return flat(S.teacher,x);});if(!rows.length){say('There are no rows showing to save.','bad');return;}download('Class_record_'+tag()+'.csv',toCSV(rows,false),'text/csv');say('Saved '+rows.length+' rows as a spreadsheet file.');});
+$('printMine').addEventListener('click',function(){window.print();});
+$('printCentral').addEventListener('click',function(){window.print();});
+$('shareFile').addEventListener('click',function(){
+  var rows=allRows().map(function(x){return flat(S.teacher,x);});if(!rows.length){say('There are no rows to share yet.','bad');return;}
+  download('Class_record_share_'+tag()+'.json',JSON.stringify({kind:'mbm_class_record_share',version:1,teacher:S.teacher,made:today(),rows:rows}),'application/json');
+  say('Share file saved with '+rows.length+' rows. It holds pupil numbers only. Put it in your school shared folder or hand it to your admin.');
+});
+/* catch-up slips */
+function printSlips(rows){
+  var by={},order=[];rows.filter(needs).forEach(function(r){var k=r.cls+'\u0001'+r.pupil;if(!by[k]){by[k]=[];order.push(k);}by[k].push(r);});
+  if(!order.length){say('Nobody showing needs catch-up.','bad');return;}
+  order.sort(function(a,b){var x=a.split('\u0001'),y=b.split('\u0001');return x[0]<y[0]?-1:x[0]>y[0]?1:x[1]-y[1];});
+  var h='';order.forEach(function(k){var a=by[k];h+='<div class="slip"><h3>'+esc(a[0].cls)+' · Pupil '+a[0].pupil+' · catch-up</h3><ul>';
+    a.forEach(function(r){h+='<li><b>'+esc(r.subject)+'</b> ('+esc(nice(r.date))+'): '+esc(r.missed||r.skill||r.objective||'see teacher')+' &nbsp; ☐ done</li>';});h+='</ul></div>';});
+  $('slips').innerHTML=h;document.body.classList.add('slips');window.print();
+}
+window.addEventListener('afterprint',function(){document.body.classList.remove('slips');});
+$('slipsMine').addEventListener('click',function(){printSlips(filtered().map(function(x){return flat(S.teacher,x);}));});
+$('slipsCentral').addEventListener('click',function(){printSlips(centralFiltered());});
+
+/* catch-up sheet maker */
+function lineList(t,n){var a=[];String(t||'').split(/\n/).forEach(function(l){l=clean(l,140);if(l&&a.length<n)a.push(l);});return a;}
+function cuLessons(){var m={};allRows().forEach(function(x){if(needs(x.r)){(m[x.id]=m[x.id]||[]).push(x.n);}});return m;}
+function fillCu(){
+  var m=cuLessons(),cur=$('cu-lesson').value,ids=Object.keys(m).sort(function(a,b){return S.lessons[a].date<S.lessons[b].date?1:-1;});
+  $('cu-lesson').innerHTML=ids.length?ids.map(function(id){var L=S.lessons[id];return '<option value="'+esc(id)+'"'+(id===cur?' selected':'')+'>'+esc(L.date+' · '+L.cls+' · '+L.subject+' · '+(L.skill||L.objective||'no skill yet')+' · '+m[id].length+' pupil'+(m[id].length>1?'s':''))+'</option>';}).join(''):'<option value="">No lesson has a pupil who needs catch-up</option>';
+  loadCu();
+}
+function loadCu(){var L=S.lessons[$('cu-lesson').value],c=(L&&L.cu)||{};$('cu-know').value=(c.know||[]).join('\n');$('cu-tasks').value=(c.tasks||[]).join('\n');$('cu-show').value=c.show||'';$('cu-link').value=c.link||'';var u=okURL(c.link);$('cuOpen').hidden=!u;if(u)$('cuOpen').href=u;else $('cuOpen').removeAttribute('href');}
+$('cu-lesson').addEventListener('change',loadCu);
+function saveCu(){
+  var L=S.lessons[$('cu-lesson').value];if(!L){say('Pick a lesson first.','bad');return null;}
+  var c={know:lineList($('cu-know').value,4),tasks:lineList($('cu-tasks').value,4),show:clean($('cu-show').value,200),link:okURL($('cu-link').value)};
+  if(c.link===null){say('The link must start with https:// and hold no password.','bad');return null;}
+  if(!guard(c.know.concat(c.tasks,[c.show])))return null;
+  L.cu=c;if(!save())return null;loadCu();return L;
+}
+$('cuSave').addEventListener('click',function(){if(saveCu())say('Catch-up sheet saved for this lesson.');});
+$('cuPrint').addEventListener('click',function(){
+  var id=$('cu-lesson').value,L=saveCu();if(!L)return;var ns=cuLessons()[id]||[];if(!ns.length){say('Nobody needs catch-up for this lesson.','bad');return;}
+  var c=L.cu,skill=L.skill||L.objective||L.subject;
+  var know=c.know.length?c.know:[skill],tasks=c.tasks.length?c.tasks:['Read what you need to know. Cover it and say it back.','Write or draw one example of: '+skill,'Tell an adult one thing you found tricky.'],showq=c.show||'Show or tell an adult what you can do now: '+skill;
+  var h='';ns.sort(function(a,b){return a-b;}).forEach(function(n){
+    h+='<div class="cusheet"><h2>Catch-up: '+esc(L.subject)+'</h2><p><b>'+esc(L.cls)+' · Pupil '+n+'</b> · lesson of '+esc(nice(L.date))+'</p>'+
+      (L.objective?'<h3>What we were learning</h3><p>'+esc(L.objective)+'</p>':'')+
+      '<h3>What you need to know</h3><ul>'+know.map(function(k){return '<li>'+esc(k)+'</li>';}).join('')+'</ul>'+
+      '<h3>Have a go</h3><ol>'+tasks.map(function(k){return '<li>'+esc(k)+'<div class="lines"></div><div class="lines"></div></li>';}).join('')+'</ol>'+
+      '<h3>Show me</h3><p>'+esc(showq)+'</p><div class="box"></div>'+
+      '<p class="foot">Finished ☐ &nbsp; Checked by an adult ☐ &nbsp; · Made by Matt</p></div>';});
+  $('slips').innerHTML=h;document.body.classList.add('slips');window.print();
+});
+
+/* ---------- central ---------- */
+var loaded=[];
+function validRow(r){return r&&typeof r==='object'&&+r.pupil>=1&&+r.pupil<=35&&RESULTS[r.result]!==undefined&&/^\d{4}-\d{2}-\d{2}$/.test(String(r.date||''));}
+$('combineFiles').addEventListener('change',function(){
+  var files=[].slice.call(this.files||[]);loaded=[];if(!files.length){renderCentral();return;}
+  var left=files.length,bad=0,blockedCount=0;
+  files.forEach(function(f){var rd=new FileReader();
+    rd.onload=function(){try{var d=JSON.parse(String(rd.result));if(!d||d.kind!=='mbm_class_record_share'||!Array.isArray(d.rows))throw 0;
+        var t=/^Teacher ([1-9]|1[0-2])$/.test(String(d.teacher))?d.teacher:'Teacher ?';
+        d.rows.forEach(function(r){if(!validRow(r))return;var o={lid:clean(r.lid,24),teacher:t,date:r.date,period:/^[1-6]$/.test(String(r.period))?String(r.period):'',cls:clean(r.cls,12),subject:clean(r.subject,40),code:clean(r.code,30),objective:clean(r.objective),skill:clean(r.skill),pupil:+r.pupil,result:r.result,missed:clean(r.missed),catchup:CATCH[r.catchup]!==undefined?r.catchup:'',note:clean(r.note)};
+          if(nameHit([o.cls,o.subject,o.code,o.objective,o.skill,o.missed,o.note].join(' | '))){blockedCount++;return;}loaded.push(o);});
+      }catch(e){bad++;}done();};
+    rd.onerror=function(){bad++;done();};rd.readAsText(f);});
+  function done(){if(--left)return;renderCentral();
+    if(bad||blockedCount)say((bad?bad+' file'+(bad>1?'s were':' was')+' not a Class record share file and was left out. ':'')+(blockedCount?blockedCount+' rows were left out because they look like they hold a name saved on this device.':''),'bad');
+    else say('Combined '+files.length+' share file'+(files.length>1?'s':'')+'.');}
+});
+function sig(r){return r.lid?[r.teacher,r.lid,r.pupil].join('\u0001'):[r.teacher,r.date,r.period,r.cls,r.subject,r.code,r.objective,r.skill,r.pupil].join('\u0001');}
+function centralRows(){
+  var rows=loaded.concat(pasted),ib=inbox().rows;Object.keys(ib).forEach(function(k){rows.push(ib[k]);});
+  if($('includeMine').checked)allRows().forEach(function(x){rows.push(flat(S.teacher,x));});
+  var seen={},out=[];rows.forEach(function(r){var s=sig(r);if(seen[s])return;seen[s]=1;out.push(r);});
+  out.sort(function(a,b){return a.cls<b.cls?-1:a.cls>b.cls?1:a.pupil-b.pupil||(a.date<b.date?1:a.date>b.date?-1:0)||(a.teacher<b.teacher?-1:1);});return out;
+}
+function pk(r){return r.cls+' · '+r.pupil;}
+function centralFiltered(){var p=$('c-pupil').value,t=$('c-teacher').value,nd=$('c-need').value;return centralRows().filter(function(r){return (!p||pk(r)===p)&&(!t||r.teacher===t)&&(nd!=='need'||needs(r))&&(nd!=='notes'||r.note);});}
+function staffName(label){if(!S.admin||!$('c-names').checked)return label;var A=adminData();for(var i=0;i<A.staff.length;i++)if(A.staff[i].label===label&&A.staff[i].name)return A.staff[i].name+' ('+label+')';return label;}
+function uniq(a){var s={},o=[];a.forEach(function(v){if(v&&!s[v]){s[v]=1;o.push(v);}});return o;}
+function renderCentral(){
+  var all=centralRows(),ps={},ts={};all.forEach(function(r){ps[pk(r)]=[r.cls,r.pupil];ts[r.teacher]=1;});
+  var nIn=Object.keys(inbox().rows).length;$('inboxInfo').textContent=nIn?nIn+' rows received by link or QR code are included.':'No rows received by link or QR code yet.';$('inboxClear').hidden=!nIn;
+  $('namesWrap').hidden=!(S.admin&&adminData().staff.some(function(s){return s.name;}));
+  var cp=$('c-pupil').value,ct=$('c-teacher').value;
+  $('c-pupil').innerHTML='<option value="">All pupils</option>'+Object.keys(ps).sort(function(a,b){return ps[a][0]<ps[b][0]?-1:ps[a][0]>ps[b][0]?1:ps[a][1]-ps[b][1];}).map(function(k){return '<option value="'+esc(k)+'"'+(k===cp?' selected':'')+'>'+esc(ps[k][0])+' · Pupil '+ps[k][1]+'</option>';}).join('');
+  $('c-teacher').innerHTML='<option value="">All teachers</option>'+Object.keys(ts).sort().map(function(k){return '<option value="'+esc(k)+'"'+(k===ct?' selected':'')+'>'+esc(staffName(k))+'</option>';}).join('');
+  var rows=centralFiltered(),view=$('c-view').value,head,body=[];
+  if(view==='pupil'){
+    head=['Class','Pupil','Lessons','Got it','Partly','Not yet','Absent','Catch-up still to do','Skills to catch up','Notes'];
+    var g={},ord=[];rows.forEach(function(r){var k=pk(r);if(!g[k]){g[k]={r:r,n:0,got:0,partly:0,notyet:0,absent:0,need:0,sk:[],notes:[]};ord.push(k);}var o=g[k];o.n++;o[r.result]++;if(needs(r)){o.need++;o.sk.push((r.missed||r.skill||r.objective||'')+(r.subject?' ('+r.subject+')':''));}if(r.note)o.notes.push(r.note);});
+    ord.forEach(function(k){var o=g[k];body.push([o.r.cls,'Pupil '+o.r.pupil,o.n,o.got,o.partly,o.notyet,o.absent,o.need,uniq(o.sk).join('; '),uniq(o.notes).join('; ')]);});
+  }else if(view==='skill'){
+    head=['Subject','Skill or content','Pupils taught','Secure','Not secure yet','Who is not secure (class · pupil)'];
+    var g2={},ord2=[];rows.forEach(function(r){var sk=r.skill||r.objective||'(no skill given)',k=r.subject+'\u0001'+sk.toLowerCase();if(!g2[k]){g2[k]={subject:r.subject,skill:sk,best:{}};ord2.push(k);}var b=g2[k].best,p=pk(r),secure=r.result==='got'||r.catchup==='done';if(b[p]===undefined||secure)b[p]=b[p]||secure;});
+    ord2.sort();ord2.forEach(function(k){var o=g2[k],ks=Object.keys(o.best),no=ks.filter(function(p){return !o.best[p];});body.push([o.subject,o.skill,ks.length,ks.length-no.length,no.length,no.join(', ')]);});
+    body.sort(function(a,b){return b[4]-a[4];});
+  }else if(view==='teacher'){
+    head=['Teacher','Lessons logged','Rows','Needs catch-up','Rows with a note','Last lesson logged'];
+    var g3={},ord3=[];rows.forEach(function(r){if(!g3[r.teacher]){g3[r.teacher]={les:{},n:0,need:0,notes:0,last:''};ord3.push(r.teacher);}var o=g3[r.teacher];o.les[[r.date,r.period,r.cls,r.subject,r.objective,r.skill].join('\u0001')]=1;o.n++;if(needs(r))o.need++;if(r.note)o.notes++;if(r.date>o.last)o.last=r.date;});
+    ord3.sort().forEach(function(t){var o=g3[t];body.push([staffName(t),Object.keys(o.les).length,o.n,o.need,o.notes,o.last]);});
+  }else{
+    head=['Teacher','Date','Class','Subject','Lesson objective','Skill or content','Pupil','Result','Missed (skill or content)','Catch-up','Adaptive teaching note'];
+  }
+  var h='';
+  if(view==='rows')rows.forEach(function(r){h+='<tr><td>'+esc(staffName(r.teacher))+'</td><td>'+esc(r.date)+(r.period?' P'+esc(r.period):'')+'</td><td>'+esc(r.cls)+'</td><td>'+esc(r.subject)+'</td><td>'+esc(r.objective)+'</td><td>'+esc(r.skill)+'</td><td class="num">Pupil '+r.pupil+'</td><td><span class="pill st-'+esc(r.result)+'">'+esc(RESULTS[r.result])+'</span></td><td>'+esc(r.missed)+'</td><td>'+esc(CATCH[r.catchup]||'')+'</td><td>'+esc(r.note)+'</td></tr>';});
+  else body.forEach(function(a){h+='<tr>'+a.map(function(v){return '<td>'+esc(v)+'</td>';}).join('')+'</tr>';});
+  $('central').querySelector('thead').innerHTML='<tr>'+head.map(function(t){return '<th>'+esc(t)+'</th>';}).join('')+'</tr>';
+  $('central').querySelector('tbody').innerHTML=h||'<tr><td colspan="'+head.length+'">Nothing to show yet. Choose the share files above.</td></tr>';
+  $('central')._csv=view==='rows'?null:[head].concat(body);
+  $('centralCount').textContent='Showing '+rows.length+' of '+all.length+' rows from '+Object.keys(ts).length+' teacher'+(Object.keys(ts).length===1?'':'s')+'. '+all.filter(needs).length+' need catch-up.';
+}
+['c-view','c-pupil','c-teacher','c-need','includeMine','c-names'].forEach(function(id){$(id).addEventListener('change',renderCentral);});
+$('csvCentral').addEventListener('click',function(){var rows=centralFiltered();if(!rows.length){say('There are no rows showing to save.','bad');return;}var v=$('c-view').value;download('Central_class_record_'+(v==='rows'?'':'by_'+v+'_')+today()+'.csv',$('central')._csv?csvOf($('central')._csv):toCSV(rows,true),'text/csv');say('Saved this view as a spreadsheet file. Keep it on your school shared drive.');});
+
+/* ---------- set up, packs and optional slots ---------- */
+function okURL(v){v=String(v||'').trim();if(!v)return '';try{var u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch(e){return null;}}
+function applySlots(){
+  var f=okURL(S.folder),a=okURL(S.assistant);
+  $('openFolder').hidden=!f;if(f)$('openFolder').href=f;else $('openFolder').removeAttribute('href');
+  $('assistantBox').hidden=!a;$('openAssistant').hidden=true;if(a)$('openAssistant').href=a;else $('openAssistant').removeAttribute('href');
+}
+function fillSetup(){
+  var h='';for(var i=1;i<=12;i++)h+='<option'+(S.teacher==='Teacher '+i?' selected':'')+'>Teacher '+i+'</option>';$('s-teacher').innerHTML=h;
+  $('s-size').value=S.size;$('s-class').value=S.classCode;$('s-sheet').value=S.sheet;$('s-folder').value=S.folder;$('s-assistant').value=S.assistant;$('s-classes').value=fmtClasses(S.classes);
+  $('s-block').value=localStorage.getItem(BLOCK_KEY)||'';
+  $('packInfo').textContent=S.packMade?'Set up by your admin on '+S.packMade.slice(0,10)+'. You can still change anything below.':'';
+  if(!S.tt)S.tt=normTT(null);ttEditor($('myTT'),S.tt,function(){if(save()){say('Timetable saved.');fillSubjects();}},'m');
+  $('adminToggle').textContent=S.admin?'Stop using this as the admin device':'Make this the admin device';$('tab-admin').hidden=!S.admin;
+  $('who').textContent=(S.name?S.name+' · ':'')+S.teacher+' · ';
+  $('notice').hidden=!S.notice;$('notice').textContent=S.notice?'From your admin: '+S.notice:'';
+}
+$('saveSetup').addEventListener('click',function(){
+  var size=Math.round(+$('s-size').value);if(!(size>=1&&size<=35)){say('The group size must be from 1 to 35.','bad');return;}
+  var f=okURL($('s-folder').value),a=okURL($('s-assistant').value),sh=okURL($('s-sheet').value);
+  if(f===null||a===null||sh===null){say('An address must start with https:// and hold no password. Leave it blank to keep the extra switched off.','bad');return;}
+  var cls=clean($('s-class').value,12)||'Class A',classes=parseClasses($('s-classes').value);if(!guard([cls,fmtClasses(classes)]))return;
+  S.teacher=$('s-teacher').value;S.size=size;S.classCode=cls;S.classes=classes;S.folder=f;S.assistant=a;S.sheet=sh;
+  if(save()){say('Set up saved.');init(true);}
+});
+$('saveBlock').addEventListener('click',function(){try{localStorage.setItem(BLOCK_KEY,String($('s-block').value).slice(0,4000));say('Blocked words saved on this device.');}catch(e){say('This could not be saved.','bad');}});
+$('adminToggle').addEventListener('click',function(){S.admin=!S.admin;if(save()){fillSetup();say(S.admin?'This is now the admin device. Open the Admin tab.':'Admin tab hidden on this device.');}});
+/* packs */
+function readPack(d){
+  if(!d||d.kind!=='mbm_trial_pack'||!/^Teacher ([1-9]|1[0-2])$/.test(String(d.teacher)))return null;
+  var p={teacher:d.teacher,name:clean(d.name,30),classes:normClasses(d.classes),tt:normTT(d.tt),skills:normSkills(d.skills),notice:clean(d.notice,200),sheet:okURL(d.sheet)||'',folder:okURL(d.folder)||'',assistant:okURL(d.assistant)||'',made:/^\d{4}-\d{2}-\d{2}/.test(String(d.made))?String(d.made).slice(0,10):today()};
+  if(nameHit([fmtClasses(p.classes),JSON.stringify(p.tt),fmtSkills(p.skills),p.notice].join(' | ')))return null;
+  return p;
+}
+function applyPack(p,ask){
+  if(ask&&!confirm('Load the set up for '+(p.name?p.name+' ('+p.teacher+')':p.teacher)+'? Your saved rows are kept.'))return false;
+  S.teacher=p.teacher;S.name=p.name;S.classes=p.classes;S.tt=p.tt;S.skills=p.skills;S.notice=p.notice;S.sheet=p.sheet;S.folder=p.folder;S.assistant=p.assistant;S.packMade=p.made;
+  var mx=0;p.classes.forEach(function(c){c.pupils.forEach(function(n){if(n>mx)mx=n;});});if(mx)S.size=Math.max(mx,1);
+  var first='';DAYS.forEach(function(d){p.tt[d].forEach(function(c){if(!first&&c[0])first=c[0];});});if(first)S.classCode=first;
+  if(!save())return false;init(true);say('Set up loaded'+(p.name?' for '+p.name:'')+'.');return true;
+}
+$('packFile').addEventListener('change',function(){var f=this.files&&this.files[0],inp=this;if(!f)return;var rd=new FileReader();rd.onload=function(){var p=null;try{p=readPack(JSON.parse(String(rd.result)));}catch(e){}if(p)applyPack(p,true);else say('That file is not a set up file from your admin.','bad');inp.value='';};rd.readAsText(f);});
+function bytes64(b){var t='';for(var i=0;i<b.length;i++)t+=String.fromCharCode(b[i]);return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+function from64(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';var t=atob(s),b=new Uint8Array(t.length);for(var i=0;i<t.length;i++)b[i]=t.charCodeAt(i);return b;}
+function pipe(bytes,stream){return new Response(new Blob([bytes]).stream().pipeThrough(stream)).arrayBuffer().then(function(a){return new Uint8Array(a);});}
+function encode64(obj){var raw=new TextEncoder().encode(JSON.stringify(obj));
+  if(typeof CompressionStream==='function'){try{return pipe(raw,new CompressionStream('deflate-raw')).then(function(z){return 'z.'+bytes64(z);},function(){return 'j.'+bytes64(raw);});}catch(e){}}
+  return Promise.resolve('j.'+bytes64(raw));}
+function decode64(s){return Promise.resolve().then(function(){
+  if(s.indexOf('z.')===0)return pipe(from64(s.slice(2)),new DecompressionStream('deflate-raw')).then(function(b){return JSON.parse(new TextDecoder().decode(b));});
+  return JSON.parse(new TextDecoder().decode(from64(s.indexOf('j.')===0?s.slice(2):s)));});}
+function pageURL(){return location.href.split('#')[0];}
+/* Set up links always point teachers at the staff copy in the trial folder, even when the admin opens this page from another folder. */
+function staffURL(){var u=pageURL().split('?')[0],i=u.lastIndexOf('/'),dir=u.slice(0,i),file=u.slice(i+1)||'Class_record.html';return /\/trial$/.test(dir)?u:dir+'/trial/'+file;}
+function drawQR(host,text){host.innerHTML='';try{var q=qrcode(0,'L');q.addData(text,'Byte');q.make();host.innerHTML=q.createSvgTag({cellSize:4,margin:4,scalable:true});host.querySelector('svg').setAttribute('role','img');host.querySelector('svg').setAttribute('shape-rendering','crispEdges');host.querySelector('svg').setAttribute('aria-label','QR code');host.hidden=false;return true;}catch(e){host.hidden=true;return false;}}
+function fromHash(){
+  var h=location.hash||'';
+  if(h==='#admin'){if(!S.admin){S.admin=true;save();}return;}
+  var isPack=h.indexOf('#pack=')===0,isIn=h.indexOf('#in=')===0;if(!isPack&&!isIn)return;
+  try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
+  decode64(h.slice(isPack?6:4)).then(function(d){
+    if(isPack){var p=readPack(d);if(p)applyPack(p,true);else say('That set up link did not work. Ask your admin for a new one.','bad');}
+    else receiveRows(d);
+  },function(){say(isPack?'That set up link did not work. Ask your admin for a new one.':'That results link did not work. Ask the teacher to send it again.','bad');});
+}
+
+/* ---------- send to admin by link or QR ---------- */
+var RIDX=['got','partly','notyet','absent'],CIDX=['','need','partdone','done'],QR_MAX=520,sendState=null;
+function unsentKeys(){return Object.keys(S.rows).filter(function(k){return !S.rows[k].sent&&S.lessons[k.slice(0,k.lastIndexOf('|'))];});}
+function renderSendBar(){var n=S.admin?0:unsentKeys().length;$('sendBar').hidden=!n||!$('sendBox').hidden;$('sendBarText').textContent=n+' row'+(n===1?'':'s')+' not sent to your admin yet.';}
+function lessonPayload(keys){var by={},order=[];keys.forEach(function(k){var i=k.lastIndexOf('|'),id=k.slice(0,i),r=S.rows[k];if(!by[id]){var L=S.lessons[id];by[id]=[id,L.date,L.period||'',L.cls,L.subject,L.code||'',L.objective,L.skill,[]];order.push(id);}by[id][8].push([+k.slice(i+1),RIDX.indexOf(r.result),r.missed,CIDX.indexOf(r.catchup),r.note]);});return order.map(function(id){return by[id];});}
+function linkFor(list){return encode64({k:'mbm_rows',v:1,t:S.teacher,L:list}).then(function(c){return pageURL()+'#in='+c;});}
+function chunkLinks(list){return linkFor(list).then(function(link){if(link.length<=QR_MAX||list.length<=1)return [link];var h=Math.ceil(list.length/2);return Promise.all([chunkLinks(list.slice(0,h)),chunkLinks(list.slice(h))]).then(function(a){return a[0].concat(a[1]);});});}
+function showPart(){var s=sendState;drawQR($('sendQR'),s.parts[s.i]);$('sendPart').textContent=s.parts.length>1?'Code '+(s.i+1)+' of '+s.parts.length+'. Show each one in turn.':'';$('sendNext').hidden=s.parts.length<2;}
+$('sendOpen').addEventListener('click',function(){
+  var keys=unsentKeys();if(!keys.length)return;var list=lessonPayload(keys);
+  Promise.all([linkFor(list),chunkLinks(list)]).then(function(a){
+    sendState={keys:keys,full:a[0],parts:a[1],i:0};
+    $('sendInfo').textContent=keys.length+' rows from '+list.length+' lesson'+(list.length===1?'':'s')+'. Pupil numbers only. Nothing is uploaded: the rows travel inside the link or code.';
+    var shu=okURL(S.sheet);$('sheetRoute').hidden=!shu;$('sendShare').className=shu?'':'primary';
+    $('sendShare').hidden=!(navigator.share);$('sendBox').hidden=false;$('sendBar').hidden=true;showPart();$('sendBox').scrollIntoView({block:'start'});
+  },function(){say('The link could not be made on this device. Use Share: save my share file in My sheet.','bad');});
+});
+function sendText(){var s=sendState;return s.full.length<=6000?s.full:s.parts.join('\n');}
+$('sendShare').addEventListener('click',function(){try{navigator.share({title:'Class record rows from '+S.teacher,text:'Class record rows from '+S.teacher+'. Open on the admin device:\n'+sendText()}).catch(function(){});}catch(e){}});
+$('sendCopy').addEventListener('click',function(){copyText(sendText(),'Link copied. Paste it into a message to your admin.');});
+$('sendNext').addEventListener('click',function(){sendState.i=(sendState.i+1)%sendState.parts.length;showPart();});
+$('sendDone').addEventListener('click',function(){sendState.keys.forEach(function(k){if(S.rows[k])S.rows[k].sent=true;});sendState=null;$('sendBox').hidden=true;if(save()){say('Marked as sent.');renderSendBar();}});
+$('sendCancel').addEventListener('click',function(){sendState=null;$('sendBox').hidden=true;renderSendBar();});
+var HEAD=['Teacher','Date','Period','Class','Subject','Lesson objective','Skill or content','Pupil','Result','Missed (skill or content)','Catch-up','Adaptive teaching note','Row id'];
+function tsvCell(v){v=String(v==null?'':v).replace(/[\t\r\n]+/g,' ');if(/^[=+\-@]/.test(v))v="'"+v;return v;}
+function rowsTSV(keys){return keys.map(function(k){var i=k.lastIndexOf('|'),id=k.slice(0,i),n=+k.slice(i+1),L=S.lessons[id],r=S.rows[k];return [S.teacher,L.date,L.period||'',L.cls,L.subject,L.objective,L.skill,'Pupil '+n,RESULTS[r.result]||'',r.missed,CATCH[r.catchup]||'',r.note,id+'-'+n].map(tsvCell).join('\t');}).join('\n')+'\n';}
+$('sendSheet').addEventListener('click',function(){var u=okURL(S.sheet);if(!u||!sendState)return;copyText(rowsTSV(sendState.keys),sendState.keys.length+' rows copied. In the sheet, click the first empty box in column A and paste. Then press Done here.');try{window.open(u,'_blank','noopener');}catch(e){}});
+$('copyHead').addEventListener('click',function(){copyText(HEAD.join('\t'),'Heading row copied. Click box A1 in your new sheet and paste.');});
+var pasted=[];
+function isoDate(v){v=String(v||'').trim();var m=/^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(v);if(m)return m[1]+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[3]).slice(-2);m=/^(\d{1,2})[\/.](\d{1,2})[\/.](\d{4})/.exec(v);if(m)return m[3]+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[1]).slice(-2);return '';}
+function keyByLabel(map,label){label=String(label||'').trim().toLowerCase();for(var k in map)if(map[k].toLowerCase()===label)return k;return null;}
+$('pasteAdd').addEventListener('click',function(){
+  var by={},blockedCount=0,n=0;String($('c-paste').value).split(/\r?\n/).forEach(function(line){var c=line.split('\t').map(function(x){return x.replace(/^'/,'');});if(c.length<9||c[0].trim()==='Teacher')return;
+    var pm=/(\d+)/.exec(c[7]||''),res=keyByLabel(RESULTS,c[8]),cu=keyByLabel(CATCH,c[10]),rid=clean(c[12],40),di=rid.lastIndexOf('-');
+    var o={lid:di>0?rid.slice(0,di):'',teacher:/^Teacher ([1-9]|1[0-2])$/.test(c[0].trim())?c[0].trim():'Teacher ?',date:isoDate(c[1]),period:/^[1-6]$/.test(String(c[2]).trim())?String(c[2]).trim():'',cls:clean(c[3],12),subject:clean(c[4],40),code:'',objective:clean(c[5]),skill:clean(c[6]),pupil:pm?+pm[1]:0,result:res,missed:clean(c[9]),catchup:cu==null||cu==='null'?'':cu,note:clean(c[11])};
+    if(!validRow(o))return;if(nameHit([o.cls,o.subject,o.objective,o.skill,o.missed,o.note].join(' | '))){blockedCount++;return;}by[sig(o)]=o;n++;});
+  pasted=Object.keys(by).map(function(k){return by[k];});renderCentral();
+  if(!pasted.length)say(blockedCount?'Those rows were left out because they look like they hold a name saved on this device.':'No rows were found in what you pasted. Copy whole rows from the shared sheet.','bad');
+  else say('Added '+pasted.length+' rows from the shared sheet.'+(blockedCount?' '+blockedCount+' rows were left out because they look like they hold a name.':''));
+});
+$('pasteClear').addEventListener('click',function(){pasted=[];$('c-paste').value='';renderCentral();});
+function inbox(){var b=readJSON(INBOX_KEY,null);return b&&b.rows&&typeof b.rows==='object'?b:{rows:{}};}
+function receiveRows(d){
+  if(!d||d.k!=='mbm_rows'||!/^Teacher ([1-9]|1[0-2])$/.test(String(d.t))||!Array.isArray(d.L)){say('That results link did not work. Ask the teacher to send it again.','bad');return;}
+  var got=[],blockedCount=0;
+  d.L.slice(0,400).forEach(function(L){if(!Array.isArray(L)||!Array.isArray(L[8]))return;var lid=clean(L[0],24);if(!lid)return;
+    L[8].slice(0,35).forEach(function(r){if(!Array.isArray(r))return;var o={lid:lid,teacher:d.t,date:String(L[1]||''),period:/^[1-6]$/.test(String(L[2]))?String(L[2]):'',cls:clean(L[3],12),subject:clean(L[4],40),code:clean(L[5],30),objective:clean(L[6]),skill:clean(L[7]),pupil:+r[0],result:RIDX[r[1]],missed:clean(r[2]),catchup:CIDX[r[3]]||'',note:clean(r[4])};
+      if(!validRow(o))return;if(nameHit([o.cls,o.subject,o.code,o.objective,o.skill,o.missed,o.note].join(' | '))){blockedCount++;return;}got.push(o);});});
+  if(!got.length){say(blockedCount?'Those rows were left out because they look like they hold a name saved on this device.':'That link held no rows.','bad');return;}
+  if(!confirm('Add '+got.length+' rows from '+staffLabel(d.t)+' to the central sheet on this device?'))return;
+  var b=inbox();got.forEach(function(o){b.rows[sig(o)]=o;});
+  try{localStorage.setItem(INBOX_KEY,JSON.stringify(b));}catch(e){say('This could not be saved. The device storage may be full.','bad');return;}
+  show('central');say('Added '+got.length+' rows from '+staffLabel(d.t)+'.'+(blockedCount?' '+blockedCount+' rows were left out because they look like they hold a name.':''));
+}
+function staffLabel(label){var a=readJSON(ADMIN_KEY,null);if(S.admin&&a&&Array.isArray(a.staff))for(var i=0;i<a.staff.length;i++)if(a.staff[i].label===label&&a.staff[i].name)return clean(a.staff[i].name,30)+' ('+label+')';return label;}
+$('inboxClear').addEventListener('click',function(){if(!confirm('Clear every row received by link or QR code on this device? Teachers can send them again.'))return;localStorage.removeItem(INBOX_KEY);renderCentral();});
+
+/* ---------- admin ---------- */
+var SKILLS0={English:['Finding the main idea','Retrieving information from a text','Inference: reading between the lines','Vocabulary in context','Reading aloud with fluency','Sentence punctuation','Spelling common words','Writing in paragraphs','Writing for a purpose and audience','Speaking and listening: taking turns'],Maths:['Place value','Addition and subtraction','Multiplication and division','Fractions','Money','Time','Measures','Shape and space','Handling data','Problem solving']};
+function adminBlank(){return {staff:[1,2,3].map(function(i){return {label:'Teacher '+i,name:'',tt:normTT(null)};}),classes:[],skills:normSkills(SKILLS0),notice:'',sheet:'',folder:'',assistant:''};}
+var A=null;
+function adminData(){if(A)return A;var a=readJSON(ADMIN_KEY,null);if(!a||!Array.isArray(a.staff))a=adminBlank();
+  a.staff=a.staff.slice(0,12).map(function(s,i){return {label:/^Teacher ([1-9]|1[0-2])$/.test(String(s.label))?s.label:'Teacher '+(i+1),name:clean(s.name,30),tt:normTT(s.tt)};});
+  a.classes=normClasses(a.classes);a.skills=normSkills(a.skills);a.notice=clean(a.notice,200);a.sheet=okURL(a.sheet)||'';a.folder=okURL(a.folder)||'';a.assistant=okURL(a.assistant)||'';A=a;return A;}
+function saveAdminData(){try{localStorage.setItem(ADMIN_KEY,JSON.stringify(A));return true;}catch(e){say('This could not be saved.','bad');return false;}}
+function packFor(st){return {kind:'mbm_trial_pack',v:1,made:today(),teacher:st.label,name:st.name,classes:A.classes,tt:st.tt,skills:A.skills,notice:A.notice,sheet:A.sheet,folder:A.folder,assistant:A.assistant};}
+function renderAdmin(){
+  adminData();var h='';
+  A.staff.forEach(function(st,i){
+    h+='<div class="staff" data-i="'+i+'"><h3 style="margin-top:0">'+esc(st.label)+'</h3><div class="grid">'+
+      '<div><label for="st-name-'+i+'">Name shown on their tools</label><input id="st-name-'+i+'" data-a="name" maxlength="30" autocomplete="off" value="'+esc(st.name)+'" placeholder="Type their first name"></div></div>'+
+      '<details><summary>Check or change their timetable'+(ttEmpty(st.tt)?' (empty)':'')+'</summary><p class="hint">Class code on top, subject underneath. Fill any box that has no class yet.</p><div class="tablewrap" id="st-tt-'+i+'"></div></details>'+
+      '<div class="row"><button type="button" class="primary" data-act="qr">Show set up QR code</button><button type="button" data-act="link">Copy set up link</button><button type="button" data-act="file">Save set up file</button><button type="button" data-act="use">Use this set up on this device</button><button type="button" class="danger" data-act="remove">Remove</button></div></div>';
+  });
+  $('staffList').innerHTML=h;
+  A.staff.forEach(function(st,i){ttEditor($('st-tt-'+i),st.tt,function(){if(saveAdminData())say('Timetable saved for '+st.label+'.');},'a'+i);});
+  $('a-classes').value=fmtClasses(A.classes);$('a-skills').value=fmtSkills(A.skills);$('a-notice').value=A.notice;$('a-sheet').value=A.sheet;$('a-folder').value=A.folder;$('a-assistant').value=A.assistant;
+}
+function readAdminForm(){
+  var f=okURL($('a-folder').value),a=okURL($('a-assistant').value),sh=okURL($('a-sheet').value);if(f===null||a===null||sh===null){say('An address must start with https:// and hold no password.','bad');return false;}
+  var classes=parseClasses($('a-classes').value),skills=parseSkills($('a-skills').value),notice=clean($('a-notice').value,200);
+  if(!guard([fmtClasses(classes),fmtSkills(skills),notice]))return false;
+  A.classes=classes;A.skills=skills;A.notice=notice;A.folder=f;A.assistant=a;A.sheet=sh;return saveAdminData();
+}
+$('saveAdmin').addEventListener('click',function(){if(readAdminForm()){say('Admin settings saved. Send each teacher a new link so they get the change.');renderAdmin();}});
+$('staffList').addEventListener('change',function(e){var el=e.target,k=el.getAttribute('data-a');if(!k)return;var st=A.staff[+el.closest('.staff').getAttribute('data-i')];
+  if(k==='name'){st.name=clean(el.value,30);el.value=st.name;saveAdminData();}});
+$('starterFile').addEventListener('change',function(){var f=this.files&&this.files[0],inp=this;if(!f)return;var rd=new FileReader();
+  rd.onload=function(){try{var d=JSON.parse(String(rd.result));if(!d||d.kind!=='mbm_trial_admin_starter'||!Array.isArray(d.staff)||!d.staff.length)throw 0;
+      var staff=d.staff.slice(0,12).map(function(s,i){return {label:/^Teacher ([1-9]|1[0-2])$/.test(String(s.label))?s.label:'Teacher '+(i+1),name:clean(s.name,30),tt:normTT(s.tt)};});
+      var classes=normClasses(d.classes),skills=normSkills(d.skills),notice=clean(d.notice,200);
+      if(nameHit([JSON.stringify(staff.map(function(s){return s.tt;})),fmtClasses(classes),fmtSkills(skills),notice].join(' | '))){say(NAME_MSG,'bad');return;}
+      if(!confirm('Load this admin file? It replaces the timetables and classes in Admin on this device. Names you have typed are kept.'))return;
+      adminData();var old={};A.staff.forEach(function(s){old[s.label]=s.name;});staff.forEach(function(s){if(!s.name&&old[s.label])s.name=old[s.label];});
+      A.staff=staff;if(classes.length)A.classes=classes;if(Object.keys(skills).length)A.skills=skills;if(notice)A.notice=notice;if(d.sheet!==undefined)A.sheet=okURL(d.sheet)||'';if(d.folder!==undefined)A.folder=okURL(d.folder)||'';if(d.assistant!==undefined)A.assistant=okURL(d.assistant)||'';
+      if(saveAdminData()){renderAdmin();say('Admin file loaded. Check each timetable, then send the set up links.');}
+    }catch(e){say('That file is not an admin file for this tool.','bad');}inp.value='';};rd.readAsText(f);});
+$('adminExport').addEventListener('click',function(){if(!readAdminForm())return;download('Admin_settings_'+today()+'.json',JSON.stringify({kind:'mbm_trial_admin_starter',v:1,staff:A.staff,classes:A.classes,skills:A.skills,notice:A.notice,sheet:A.sheet,folder:A.folder,assistant:A.assistant}),'application/json');say('Admin settings saved as a file. It holds the staff names you typed, so keep it private.');});
+function copyText(t,okMsg){function ok(){say(okMsg);}function fb(){var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();var d=false;try{d=document.execCommand('copy');}catch(e){}ta.remove();if(d)ok();else say('Copy did not work here. Select the text and copy it yourself.','bad');}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,fb);else fb();}
+$('staffList').addEventListener('click',function(e){var b=e.target.closest('button[data-act]');if(!b)return;var i=+b.closest('.staff').getAttribute('data-i'),st=A.staff[i],act=b.getAttribute('data-act');
+  if(act==='remove'){if(A.staff.length<2||!confirm('Remove '+st.label+' from this list? Their own device is not changed.'))return;A.staff.splice(i,1);saveAdminData();renderAdmin();return;}
+  if(!readAdminForm())return;var p=packFor(st),who=st.name?st.name+' ('+st.label+')':st.label;
+  if(act==='link'||act==='qr'){encode64(p).then(function(c){var link=staffURL()+'#pack='+c;$('linkBox').hidden=false;$('linkTitle').textContent='Set up for '+who;$('linkText').value=link;var okq=drawQR($('linkQR'),link);
+      if(act==='link')copyText(link,'Link copied for '+who+'. Send it to them only.');else{say(okq?'Show this code to '+who+'.':'This set up is too big for one code. Use Copy set up link instead.',okq?'ok':'bad');$('linkBox').scrollIntoView({block:'start'});}});}
+  if(act==='file'){download('Set_up_'+st.label.replace(/\s+/g,'_')+'_'+today()+'.json',JSON.stringify(p),'application/json');say('Set up file saved for '+who+'.');}
+  if(act==='use'){var rp=readPack(p);if(rp)applyPack(rp,true);else say('This set up holds text that looks like a pupil name. Fix it first.','bad');}
+});
+$('a-sk-add').addEventListener('click',function(){var sub=clean($('a-sk-subject').value,40),sk=clean($('a-sk-skill').value,120);if(!sub||!sk){say('Type the subject and the skill first.','bad');return;}if(!guard([sub,sk]))return;
+  var o=parseSkills($('a-skills').value),key=Object.keys(o).filter(function(k){return k.toLowerCase()===sub.toLowerCase();})[0]||sub;(o[key]=o[key]||[]).push(sk);$('a-skills').value=fmtSkills(normSkills(o));$('a-sk-skill').value='';if(readAdminForm())say('Skill added under '+key+'. Send each teacher a new set up to pass it on.');});
+$('addStaff').addEventListener('click',function(){var used={};A.staff.forEach(function(s){used[s.label]=1;});for(var i=1;i<=12;i++)if(!used['Teacher '+i]){A.staff.push({label:'Teacher '+i,name:'',tt:normTT(null)});saveAdminData();renderAdmin();return;}say('Twelve teachers is the most this trial holds.','bad');});
+$('classesFromNames').addEventListener('click',function(){var prof=readJSON('mbm_pupil_profile_v1',{}),g={},all=[];if(prof&&prof.pupils)Object.keys(prof.pupils).forEach(function(n){var grp=clean(prof.pupils[n]&&prof.pupils[n].group,12);if(+n>=1&&+n<=35){all.push(+n);if(grp){(g[grp]=g[grp]||[]).push(+n);}}});
+  if(!Object.keys(g).length){say('No groups are saved in Class names on this device.','bad');return;}
+  var list=Object.keys(g).sort().map(function(k){return {code:k,pupils:g[k]};});list.push({code:'ALL',pupils:all});$('a-classes').value=fmtClasses(normClasses(list));say('Classes filled from this device. Press Save admin settings to keep them.');});
+
+/* ---------- prompt ---------- */
+$('makePrompt').addEventListener('click',function(){
+  var rows=filtered().slice(0,120).map(function(x){return flat(S.teacher,x);});
+  if(!rows.length){say('There are no rows showing to build a prompt from.','bad');return;}
+  var t='You are helping a teacher plan catch-up and adaptive teaching. Pupils are numbers only. Do not ask for names.\n'+
+    'From the class record below: 1) group pupils who need the same skill or content again, 2) suggest one short catch-up task for each group, 3) suggest one adaptive teaching step for the next lesson. Keep it brief and practical.\n\nCLASS RECORD\n';
+  rows.forEach(function(r){t+='- '+r.date+' | '+r.cls+' | '+r.subject+' | objective: '+(r.objective||'not given')+' | skill: '+(r.skill||'not given')+' | Pupil '+r.pupil+' | '+RESULTS[r.result]+(r.missed?' | missed: '+r.missed:'')+(r.catchup?' | catch-up: '+CATCH[r.catchup]:'')+(r.note?' | note: '+r.note:'')+'\n';});
+  if(nameHit(t)){say('The prompt was not made because a row looks like it holds a name. Fix that row first.','bad');return;}
+  $('promptText').textContent=t;$('promptText').hidden=false;$('copyPrompt').hidden=false;
+});
+$('copyPrompt').addEventListener('click',function(){copyText($('promptText').textContent,'Prompt copied. Open your assistant and paste it in.');$('openAssistant').hidden=false;});
+
+/* ---------- backup ---------- */
+$('backup').addEventListener('click',function(){download('Class_record_backup_'+tag()+'.json',JSON.stringify({kind:'mbm_class_record_backup',version:2,data:S}),'application/json');say('Backup saved. Keep it somewhere private at school.');});
+$('restoreFile').addEventListener('change',function(){
+  var f=this.files&&this.files[0];if(!f)return;var rd=new FileReader(),inp=this;
+  rd.onload=function(){try{var d=JSON.parse(String(rd.result));if(!d||d.kind!=='mbm_class_record_backup'||!d.data||typeof d.data.lessons!=='object'||typeof d.data.rows!=='object')throw 0;
+      if(!confirm('Replace the Class record on this device with this backup?'))return;
+      var n=loadS(d.data);n.size=Math.min(35,Math.max(1,Math.round(+n.size)||13));n.teacher=/^Teacher ([1-9]|1[0-2])$/.test(n.teacher)?n.teacher:'Teacher 1';n.name=clean(n.name,30);n.notice=clean(n.notice,200);n.sheet=okURL(n.sheet)||'';n.folder=okURL(n.folder)||'';n.assistant=okURL(n.assistant)||'';n.admin=!!S.admin;
+      S=n;if(save()){init(true);say('Backup restored.');}
+    }catch(e){say('That file is not a Class record backup.','bad');}inp.value='';};
+  rd.readAsText(f);
+});
+$('wipe').addEventListener('click',function(){if(!confirm('Clear every Class record row on this device? Your set up is kept. Save a backup first if you need one. This cannot be undone.'))return;S.lessons={};S.rows={};if(save()){init(true);say('Class record rows cleared on this device.');}});
+window.addEventListener('storage',function(e){if(e.key===KEY){S=loadS(readJSON(KEY,null));if(!$('p-sheet').hidden)renderSheet();if(!$('p-central').hidden)renderCentral();}if(e.key===ADMIN_KEY){A=null;}});
+
+function init(stay){
+  $('f-date').value=$('f-date').value||today();$('f-class').value=S.classCode;picks={};fillSubjects();renderGrid();fillSetup();applySlots();renderToday();renderSendBar();
+  var t='add';try{t=sessionStorage.getItem('mbm_cr_tab')||'add';}catch(e){}
+  if(!stay){if(location.hash==='#sheet')t='sheet';if(location.hash==='#central')t='central';if(location.hash==='#admin')t='admin';}
+  if(TABS.indexOf(t)<0)t='add';show(t);
+}
+S=loadS(readJSON(KEY,null));
+(function(){if(localStorage.getItem(KEY))return;var pk2=readJSON('mbm_school_pack_v1',null);if(pk2&&+pk2.classSize>=1&&+pk2.classSize<=35)S.size=+pk2.classSize;})();
+fromHash();init(false);
+window.addEventListener('hashchange',function(){fromHash();init(false);});
+})();
+</script>
+<script>
+function initToolTour(config) {
+  const find = selector => document.querySelector(selector);
+  const help = document.createElement('button');
+  help.type='button';help.className='tour-help';help.textContent='? Help';help.id='pageTourHelp';
+  help.setAttribute('aria-label','? Help · Show me round');
+  const top = find(config.bar) || find('header') || find('h1').parentElement;
+  if (top.tagName==='H1') top.after(help); else top.append(help);
+  const tip=document.createElement('aside');
+  tip.hidden=true;tip.className='tour-tip';tip.setAttribute('aria-label','Show me round');
+  const count=document.createElement('small'), words=document.createElement('p'), actions=document.createElement('div');
+  words.setAttribute('aria-live','polite');actions.className='tour-actions';
+  function button(label,action){
+    const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=action;actions.append(b);return b;
+  }
+  const back=button('Back',()=>step(index-1,true)), next=button('Next',()=>{if(index===steps.length-1)close();else step(index+1,true);});
+  button('Skip the tour',()=>close());
+  const guide=document.createElement('a');guide.textContent='How it all works';guide.href=config.guide;
+  tip.append(count,words,actions,guide);document.body.append(tip);
+  let index=0,steps=[],target=null,returnTo=help,sessionSeen=new Set();
+  function seen(id,mark=false){
+    let state={};
+    try {
+      const data=JSON.parse(localStorage.getItem(config.key)||'{}');
+      if(data && typeof data==='object' && !Array.isArray(data))state=data;
+      if(mark){state[id]=true;localStorage.setItem(config.key,JSON.stringify(state));}
+    } catch { /* A device with storage turned off can run the tour for this visit. */ }
+    if(mark)sessionSeen.add(id);
+    return sessionSeen.has(id)||state[id]===true;
+  }
+  function close(){
+    const restore=tip.contains(document.activeElement);tip.hidden=true;target?.classList.remove('tour-target');
+    target=null;if(restore)returnTo.focus({preventScroll:true});
+  }
+  function place(){
+    const anchor=target.closest('header') || target.closest('.picker,.opts,.row,.tabs,fieldset,details') || target;
+    anchor.after(tip);
+  }
+  function step(i,move){
+    target?.classList.remove('tour-target');index=i;
+    const [selector,label,after,before]=steps[index];target=find(selector);
+    if(!target){close();return;}
+    const bold=document.createElement('b');bold.textContent=label;
+    words.replaceChildren(before||'Use ',bold,after);
+    count.textContent='Show me round · '+(index+1)+' of '+steps.length;
+    back.disabled=index===0;next.textContent=index===steps.length-1?'Done':'Next';
+    target.classList.add('tour-target');tip.hidden=false;
+    place();
+    if(move)target.scrollIntoView({block:'center',behavior:'instant'});if(move)next.focus({preventScroll:true});
+  }
+  function start(list,id,manual,opener){
+    if(!manual&&seen(id))return;
+    close();returnTo=opener||help;steps=list;seen(id,true);step(0,manual);
+  }
+  help.onclick=()=>start(config.steps,config.id,true,help);
+  if(config.panel){
+    const panel=find('#dayLauncher'), launchHelp=document.createElement('button');
+    launchHelp.type='button';launchHelp.textContent='? Help';launchHelp.className='tour-help';
+    launchHelp.setAttribute('aria-label','? Help for Start my day');find('#launchDetails').prepend(launchHelp);
+    launchHelp.onclick=()=>start(config.panel,config.id+'/day',true,launchHelp);
+    panel.addEventListener('launcheropened',()=>start(config.panel,config.id+'/day',false,launchHelp));
+  }
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!tip.hidden)close();});
+  function firstVisit(){
+    const dialog=document.querySelector('dialog[open]');
+    if(dialog){dialog.addEventListener('close',firstVisit,{once:true});return;}
+    start(config.steps,config.id,false,help);
+  }
+  firstVisit();
+}
+initToolTour({
+  "bar": "header",
+  "steps": [
+    [
+      "#tab-add",
+      "Add a lesson",
+      " to record your class work."
+    ],
+    [
+      "#tab-sheet",
+      "My sheet",
+      " to see your saved lessons."
+    ],
+    [
+      "#tab-setup",
+      "Set up",
+      " to add your timetable."
+    ]
+  ],
+  "id": "personal/Class_record",
+  "guide": "guide/How_it_all_works.html",
+  "key": "mbm_tour_seen_v1"
+});
+
+</script>
+</body>
+</html>

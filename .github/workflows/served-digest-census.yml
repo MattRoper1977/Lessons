@@ -18,7 +18,11 @@ on:
         description: Site publisher commit to build with (the carrier this branch pins)
         required: true
       paths:
-        description: Newline- or comma-separated published paths; blank means every path that differs from origin/main
+        description: Newline- or comma-separated published paths; blank means every path that differs from origin/main. A path that starts with education-site/, education-lessons/ or education-apps/ is read from that tree; any other path is read from the lessons tree.
+        required: false
+        default: ''
+      lessons_ref:
+        description: Lessons commit to build from; blank means the branch this job is run on. Give the carrier pin here to measure what a Site-triggered publication builds.
         required: false
         default: ''
 
@@ -32,6 +36,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.lessons_ref || github.sha }}
           path: .sources/Lessons
           fetch-depth: 0
           persist-credentials: false
@@ -48,7 +53,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: MattRoper1977/Matt-s-Apps-
-          ref: 3ad0a7df958274e5401e8d40d0a94096be0962bc
+          ref: dd908441664339a27dc59f5bd0364024c7a1c231
           path: .sources/Apps
           persist-credentials: false
 
@@ -62,7 +67,133 @@ jobs:
         run: |
           set -euo pipefail
           python .sources/Site/domain-split/build_publications.py --lessons .sources/Lessons
-          python .sources/Site/domain-split/build_education.py --lessons .sources/Lessons --apps .sources/Apps
+          # The builder ends with its own admission check, after every tree is written. A branch
+          # that changes a published file is refused there by design, which used to stop this job
+          # before it could measure anything. That one refusal is tolerated here, and only that
+          # one: any other builder failure still fails the job, so a half-built tree is never
+          # measured. This job admits nothing; the registry is still changed only by a reviewed diff.
+          if ! python .sources/Site/domain-split/build_education.py --lessons .sources/Lessons --apps .sources/Apps > build_education.log 2>&1; then
+            tail -n 30 build_education.log
+            grep -q 'Education file admission blocked publication' build_education.log
+            echo 'Builder stopped at its own admission check after writing the trees; they are measured below.'
+          else
+            tail -n 5 build_education.log
+          fi
+
+      - name: Write the full census of all three trees (proposal only, not an approval)
+        env:
+          BUILDER_REF: ${{ inputs.builder_ref }}
+        run: |
+          set -euo pipefail
+          python .sources/Site/domain-split/education_publication_admission.py --output .sources/Site/domain-split/output > admission_output.txt 2>&1 || true
+          grep -E '^(CHANGED|MISSING|UNREVIEWED) ' admission_output.txt || echo 'No path differs from the admission record.'
+          python .sources/Site/domain-split/education_publication_admission.py --output .sources/Site/domain-split/output --proposal census.json --review-source "Served digest census run $GITHUB_RUN_ID: Site $BUILDER_REF, Lessons $(git -C .sources/Lessons rev-parse HEAD), Apps dd908441664339a27dc59f5bd0364024c7a1c231"
+      # The artifact cannot be fetched from every reviewing environment, and the admission check
+      # stops at the first tree with a difference, so the complete list is also printed here: every
+      # path in any of the three trees whose built digest the admission record does not yet hold,
+      # and every recorded path the build did not produce. Read-only; it admits nothing.
+      - name: Print every built digest the admission record does not yet hold
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          sys.path.insert(0, '.sources/Site/domain-split')
+          import education_publication_admission as admission  # the Site's own rules, not a copy
+          census = json.loads(pathlib.Path('census.json').read_text())['trees']
+          registry = admission.load_registry()['trees']
+          pending, unreviewed, missing = {}, [], []
+          for tree, rows in census.items():
+              reviewed = registry[tree]
+              for path, digest in rows.items():
+                  if path not in reviewed:
+                      unreviewed.append(tree + '/' + path)
+                      pending[tree + '/' + path] = digest
+                  elif digest not in admission.admitted(reviewed[path]):
+                      pending[tree + '/' + path] = digest
+              missing += [tree + '/' + path for path in reviewed
+                          if path not in rows and not admission.may_be_absent(reviewed[path])]
+          print('=== DIGESTS NOT YET IN THE ADMISSION RECORD ===')
+          print(json.dumps(pending, indent=2, sort_keys=True))
+          print(f'\n{len(pending)} path(s) built to a digest the record does not hold '
+                f'({len(unreviewed)} of them with no row at all); {len(missing)} recorded path(s) not built')
+          for path in sorted(unreviewed):
+              print('  no row yet:', path)
+          for path in sorted(missing):
+              print('  not built:', path)
+          PY
+      # Report only. The publisher runs these after the build, and a branch should learn here, not
+      # on main, everything the publisher would refuse (Lessons #861 passed the admission record
+      # and was then refused by the retained usage registry fence). Nothing in this step can fail
+      # the job and nothing in it admits anything. The retained registry digest is measured by
+      # calling the Site's own registry_errors and watching the value it tests, not by a copy.
+      - name: Run the publisher's remaining checks, report only
+        env:
+          REQUESTED: ${{ inputs.paths }}
+        run: |
+          set +e
+          D=.sources/Site/domain-split
+          check() { name="$1"; shift; "$@" > check.log 2>&1; rc=$?; if [ $rc -eq 0 ]; then echo "PUBLISHER CHECK ok: $name"; else echo "PUBLISHER CHECK WOULD REFUSE: $name (exit $rc)"; tail -n 25 check.log; fi; }
+          check 'check_publications' python $D/check_publications.py
+          check 'check_education_separation --self-test' python $D/check_education_separation.py --self-test
+          check 'check_education_separation' python $D/check_education_separation.py
+          check 'verify_education_tree_has_no_games' python $D/verify_education_tree_has_no_games.py --output $D/output
+          check 'check_education_support' python $D/check_education_support.py
+          check 'check_game_saves' node $D/check_game_saves.cjs
+          check 'check_education_publication_admission' python $D/check_education_publication_admission.py --output $D/output --lessons .sources/Lessons --apps .sources/Apps --build-control
+          python - <<'PY'
+          import hashlib, json, os, pathlib, sys
+          sys.path.insert(0, '.sources/Site/domain-split')
+          import check_education_separation as separation
+          seen = {}
+          real = separation.retained_admitted
+          def watched(retained, accepted):
+              held = real(retained, accepted)
+              digest = hashlib.sha256((json.dumps(retained, ensure_ascii=False, indent=2) + '\n').encode()).hexdigest()
+              seen.update(digest=digest, rows=len(retained), held=held, retained=retained)
+              return held
+          separation.retained_admitted = watched
+          errors = separation.registry_errors(pathlib.Path('.sources/Site/domain-split/output'))
+          print('=== RETAINED USAGE REGISTRY ===')
+          if 'digest' not in seen:
+              print('not measured; the registry check stopped earlier with:', errors)
+          else:
+              print('the pinned additions, teaching-pack, pending and retiring files passed (the check reached the registry fence)')
+              print(json.dumps({'digest': seen['digest'], 'rows': seen['rows'],
+                                'held by the Site baselines': seen['held'], 'errors': errors}, indent=2))
+              trees = ('education-site', 'education-lessons', 'education-apps')
+              wanted = [p.strip() for p in os.environ.get('REQUESTED', '').replace(',', '\n').splitlines() if p.strip()]
+              wanted = [p.split('/', 1)[1] if p.split('/', 1)[0] in trees else p for p in wanted]
+              for row in seen['retained']:
+                  text = json.dumps(row, ensure_ascii=False, sort_keys=True)
+                  if any(w in text for w in wanted):
+                      print('  row:', text)
+          # Report only (ruling thread, 17 Nov 2026). A listed page under a reviewed Teaching_Packs prefix adds registry
+          # rows that the Site holds as a reviewed list, not as retained rows, and the check above names the prefix
+          # without the rows. This prints, for each reviewed prefix, the built rows its reviewed list does not hold, in
+          # built order with their place among the built rows of that prefix, so a reviewed diff can be written from
+          # measured rows and never from a transcription. It reads the Site's own files and admits nothing.
+          try:
+              built = json.loads(pathlib.Path('.sources/Site/domain-split/output/usage-registry.json').read_text())
+              reviewed = json.loads(separation.TEACHING_PACK_ADDITIONS.read_text())
+              print('=== BUILT PACK ROWS THE REVIEWED LIST DOES NOT HOLD ===')
+              for prefix, approved in reviewed.items():
+                  inpack = [r for r in built if r['route'].startswith(prefix) and not r['route'].startswith(separation.ICT_A2_PUBLIC_PREFIX)]
+                  extra = [(n, r) for n, r in enumerate(inpack) if r not in approved]
+                  absent = [r for r in approved if r not in inpack]
+                  print(json.dumps({'prefix': prefix, 'built': len(inpack), 'reviewed': len(approved),
+                                    'built and not reviewed': len(extra), 'reviewed and not built': len(absent)}))
+                  for n, r in extra:
+                      print('  pack row %d:' % n, json.dumps(r, ensure_ascii=False))
+          except Exception as error:
+              print('pack rows not measured:', error)
+          PY
+          exit 0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: full-census
+          path: |
+            census.json
+            admission_output.txt
+          retention-days: 7
 
       - name: Report the served digest of each requested path
         env:
@@ -79,8 +210,12 @@ jobs:
                   ['git','-C',str(src),'diff','--name-only','FETCH_HEAD...HEAD'], text=True)
               requested = [p for p in out.split('\n') if p.strip()]
           rows = {}
+          trees = ('education-site', 'education-lessons', 'education-apps')
           for rel in requested:
-              f = tree / rel
+              # a tree-qualified path is read from that tree; the three names are the only roots accepted
+              f = tree.parent / rel if rel.split('/', 1)[0] in trees else tree / rel
+              if tree.parent.resolve() not in f.resolve().parents:
+                  raise SystemExit('Path leaves the published trees: ' + rel)
               rows[rel] = hashlib.sha256(f.read_bytes()).hexdigest() if f.is_file() else None
           published = {k: v for k, v in rows.items() if v}
           skipped = sorted(k for k, v in rows.items() if not v)

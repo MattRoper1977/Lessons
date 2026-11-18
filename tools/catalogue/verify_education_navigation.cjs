@@ -413,10 +413,10 @@ async function storageAndUntrustedContextTests(browser) {
   await checkCase('storage-denied-still-browses-and-does-not-falsely-save', blocked.page, async () => {
     // The hub's ?subject= means an exact record subject, as it did before UX2 - the
     // Part D3 catalogue restored that after Part A had briefly widened it to the
-    // subject card. This lesson's record subject is "Art · Teesside Studio Suite",
+    // subject card. This lesson's record subject is "Art",
     // so the card query uses that rather than the card's name, which never matched
     // this row and now correctly does not.
-    await goto(blocked.page, '/Lessons/?subject=' + encodeURIComponent('Art · Teesside Studio Suite') + '&q=Surface%20Hunt', true);
+    await goto(blocked.page, '/Lessons/?subject=' + encodeURIComponent('Art') + '&q=Surface%20Hunt', true);
     await blocked.page.locator('#cards button[data-save]').first().click();
     assert.match(await blocked.page.locator('#lesson-save-status').innerText(), /cannot save/);
     assert.equal(await blocked.page.locator('[data-saved-count]').first().innerText(), '0');

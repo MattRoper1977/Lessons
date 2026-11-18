@@ -28,6 +28,17 @@ What stays out, and why:
     tools/catalogue/dead_links_plan.json and by the compliance auditor,
     not silently promoted to a URL.
 
+Since 11 November 2026 the derivation also follows links. A subject hub in
+the catalogue links to its lesson pages, and those lesson pages mostly have
+no catalogue row of their own, so a catalogue-only sitemap told search
+engines about the hub and not the lessons. Every served .html page reached
+by following <a href> links from a page already in the sitemap now goes in
+too, under the same exclusions, plus one more for linked pages only: a path
+that names cover material stays out unless the catalogue lists it. A page
+that asks not to be indexed (meta robots noindex) or that only redirects
+(meta refresh) stays out whichever way it was reached, and its links are
+not followed.
+
 No lastmod is written. A git-derived date would make --check depend on the
 depth of the clone it runs in; a file-mtime date would make it depend on
 the checkout. The sitemap must be a pure function of the catalogue and the
@@ -45,7 +56,7 @@ import re
 import sys
 import tempfile
 from pathlib import Path, PurePosixPath
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 from xml.sax.saxutils import escape
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -59,6 +70,10 @@ SKIP_TYPES = {"game", "teacher"}
 # Staff-facing material is kept off the crawl surface. The token must stand on
 # its own between separators so "Data" or "Stage" never matches.
 STAFF_TOKEN = re.compile(r"(?i)(?:^|[\W_])(?:staff|teacher|teachers|ta|answer|answers|markscheme|mark_scheme)(?=[\W_]|$)")
+# Linked-only pages (no catalogue row) that name cover material stay out; a catalogue row can still admit one.
+COVER_TOKEN = re.compile(r"(?i)(?:^|[\W_])cover(?=[\W_]|$)")
+HREF = re.compile(r"""<a\b[^>]*?\bhref\s*=\s*(?:"([^"]*)"|'([^']*)')""", re.I)
+META = re.compile(r"<meta\b[^>]*>", re.I)
 OG_URL = re.compile(r'<meta\s+property="og:url"\s+content="([^"]+)"', re.I)
 
 
@@ -103,6 +118,77 @@ def excluded(rel: str, row: dict) -> str | None:
     return None
 
 
+def page_opts_out(text: str) -> str | None:
+    """The reason a page's own markup keeps it out of the sitemap, or None."""
+    for tag in META.findall(text):
+        low = tag.lower()
+        if re.search(r"""name\s*=\s*["']?robots""", low) and "noindex" in low:
+            return "noindex"
+        if re.search(r"""http-equiv\s*=\s*["']?refresh""", low):
+            return "redirect"
+    return None
+
+
+def linked_targets(rel: str, text: str) -> list[str]:
+    """Clean in-tree .html paths that the page at `rel` links to, in document order."""
+    out = []
+    here = PurePosixPath(rel).parent
+    for match in HREF.finditer(text):
+        href = (match.group(1) or match.group(2) or "").strip()
+        if not href or "://" in href or href.startswith(("#", "/", "mailto:", "tel:", "javascript:", "data:")):
+            continue
+        href = unquote(href.split("#")[0].split("?")[0])
+        if not href.lower().endswith((".html", ".htm")):
+            continue
+        parts: list[str] = []
+        escaped = False
+        for part in (here / href).parts:
+            if part == ".":
+                continue
+            if part == "..":
+                if not parts:
+                    escaped = True
+                    break
+                parts.pop()
+            else:
+                parts.append(part)
+        if escaped or not parts or "\\" in href:
+            continue
+        out.append("/".join(parts))
+    return out
+
+
+def follow_links(root: Path, wanted: set[str], left_out: list[tuple[str, str, str]]) -> None:
+    """Drop pages that opt out, then add every served page linked from a kept page (to a fixed point)."""
+    for rel in sorted(wanted - {""}):
+        reason = page_opts_out((root / rel).read_text("utf-8", errors="replace"))
+        if reason:
+            wanted.discard(rel)
+            left_out.append(("", rel, reason))
+    judged = set(wanted) | {HUB}
+    queue = sorted(rel or HUB for rel in wanted)
+    while queue:
+        current = queue.pop()
+        try:
+            text = (root / current).read_text("utf-8", errors="replace")
+        except OSError:
+            continue
+        for rel in linked_targets(current, text):
+            if rel in judged:
+                continue
+            judged.add(rel)
+            if not (root / rel).is_file():
+                continue  # a dead link is the dead-links plan's finding, not a URL
+            reason = excluded(rel, {}) or ("cover material" if COVER_TOKEN.search(rel) else None)
+            if not reason:
+                reason = page_opts_out((root / rel).read_text("utf-8", errors="replace"))
+            if reason:
+                left_out.append(("", rel, reason))
+                continue
+            wanted.add(rel)
+            queue.append(rel)
+
+
 def derive_paths(root: Path) -> tuple[list[str], list[tuple[str, str, str]]]:
     """Return (sorted served paths, [(id, file, reason) for every row left out])."""
     rows = json.loads((root / CATALOGUE).read_text("utf-8"))
@@ -126,6 +212,7 @@ def derive_paths(root: Path) -> tuple[list[str], list[tuple[str, str, str]]]:
             left_out.append((str(row.get("id", "")), raw, "file missing"))
             continue
         wanted.add(rel)
+    follow_links(root, wanted, left_out)
     return sorted(wanted), left_out
 
 
@@ -254,7 +341,62 @@ def self_test() -> int:
         if check(root) == 0:
             print("FAIL | self-test | --check did not notice a moved base URL")
             return 1
+    if self_test_links():
+        return 1
     print("PASS | self-test | hub + 2 pages kept, 11 planted exclusions named, encoding right, --check red before write, green after, red on drift")
+    return 0
+
+
+def self_test_links() -> int:
+    """Plant a hub whose links reach every linked-page shape; prove what is kept and why the rest is not."""
+    with tempfile.TemporaryDirectory(prefix="sitemap-links-") as temp:
+        root = Path(temp)
+        (root / HUB).write_text('<html><head><meta property="og:url" content="https://example.test/Lessons/"></head></html>', "utf-8")
+        noindex = '<html><head><meta name="robots" content="noindex,follow"></head><a href="Hidden_Child.html">x</a></html>'
+        pages = {
+            "Science/index.html": '<a href="Unit/L1.html">1</a> <a href=\'Unit/L1.html#top\'>again</a> <a href="Unit/Private.html">p</a>'
+                                  '<a href="Unit/Moved.html">m</a> <a href="Unit_Cover_W3/C1.html">c</a> <a href="Unit/L1_Teacher.html">t</a>'
+                                  '<a href="../Games/Clash.html">g</a> <a href="../../outside.html">o</a> <a href="Unit/Gone.html">d</a>'
+                                  '<a href="https://example.test/else.html">e</a> <a href="Unit/pack.zip">z</a> <a href="Unit/Recovery.html">r</a>',
+            "Science/Unit/L1.html": '<a href="L2%20Next.html">next</a> <a href="../index.html">back</a>',
+            "Science/Unit/L2 Next.html": "<html></html>",
+            "Science/Unit/Recovery.html": "<html></html>",
+            "Science/Unit/Private.html": noindex,
+            "Science/Unit/Hidden_Child.html": "<html></html>",
+            "Science/Unit/Moved.html": '<meta http-equiv="refresh" content="0; url=L1.html">',
+            "Science/Unit_Cover_W3/C1.html": "<html></html>",
+            "Science/Unit/L1_Teacher.html": "<html></html>",
+            "Games/Clash.html": "<html></html>",
+            "Art/Listed_Private.html": noindex,
+            "Art/Unlinked.html": "<html></html>",
+        }
+        for rel, text in pages.items():
+            (root / rel).parent.mkdir(parents=True, exist_ok=True)
+            (root / rel).write_text(text, "utf-8")
+        rows = [{"id": "hub", "type": "hub", "file": "Science/index.html"},
+                {"id": "listed-private", "type": "lesson", "file": "Art/Listed_Private.html"}]
+        (root / CATALOGUE).write_text(json.dumps(rows), "utf-8")
+        paths, left_out = derive_paths(root)
+        want = ["", "Science/Unit/L1.html", "Science/Unit/L2 Next.html", "Science/Unit/Recovery.html", "Science/index.html"]
+        if paths != want:
+            print(f"FAIL | self-test | linked pages derived {paths}, wanted {want}")
+            return 1
+        reasons = {rel: reason for _, rel, reason in left_out}
+        expect = {"Art/Listed_Private.html": "noindex", "Science/Unit/Private.html": "noindex", "Science/Unit/Moved.html": "redirect",
+                  "Science/Unit_Cover_W3/C1.html": "cover material", "Science/Unit/L1_Teacher.html": "staff material",
+                  "Games/Clash.html": "games folder"}
+        if reasons != expect:
+            print(f"FAIL | self-test | linked exclusion reasons {reasons} != {expect}")
+            return 1
+        write(root)
+        (root / "Science/Unit/L3.html").write_text("<html></html>", "utf-8")
+        (root / "Science/Unit/L2 Next.html").write_text('<a href="L3.html">3</a>', "utf-8")
+        if check(root) == 0:
+            print("FAIL | self-test | --check did not notice a newly linked page")
+            return 1
+    print("PASS | self-test | links: 3 linked pages kept (one two hops out), noindex (listed and linked), redirect, cover, staff, "
+          "games, out-of-tree, dead, external and non-HTML links all left out, a page behind a noindex page not reached, "
+          "an unlinked page not invented, --check red on a newly linked page")
     return 0
 
 

@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Lesson resource">
+<meta name="creator" content="Lesson resource">
+<title>Class names (private)</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2212%22%20fill%3D%22%23153e64%22%2F%3E%3Cpath%20d%3D%22M16%2020h32M16%2032h32M16%2044h20%22%20stroke%3D%22white%22%20stroke-width%3D%225%22%2F%3E%3C%2Fsvg%3E">
+<style>
+.print-picks{margin:1rem 0;padding:.75rem;border:1px solid currentColor;min-width:0;color:#172c3b;background:#fff}.print-picks legend{font-weight:700;background:#fff}.print-picks .pick-option{display:inline-flex;align-items:center;gap:.4rem;min-height:44px;margin:0 .8rem 0 0;color:#172c3b}.pick-option input[type=checkbox]{width:1.2rem;min-height:0;height:1.2rem}
+
+:root{color-scheme:light dark;--ink:#18283b;--accent:#153e64;--soft:#edf3f7;--line:#52677c;--bg:#fff;--focus:#713600}
+@media(prefers-color-scheme:dark){:root{--ink:#f4f7fb;--accent:#c6e2ff;--soft:#1b2a3d;--line:#a9bdd2;--bg:#101b29;--focus:#ffd4a8}}
+*{box-sizing:border-box}html{scroll-padding:20px}body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.5 system-ui,sans-serif;overflow-wrap:anywhere}main{max-width:1000px;margin:auto;padding:22px 16px 48px}h1{font-size:30px;margin:0 0 6px}h2{font-size:24px;margin:24px 0 10px}h3{font-size:20px;margin:0 0 8px}p{margin:8px 0 14px}a{color:var(--accent)}button,input,textarea,select{font:inherit;color:inherit}button,.btn,select,input:not([type=checkbox]),summary{min-height:48px}button,.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border:2px solid var(--accent);border-radius:10px;background:var(--bg);color:var(--accent);font-size:18px;text-decoration:none;cursor:pointer}button.primary,.btn.primary{background:var(--accent);color:var(--bg)}button[aria-pressed=true]{background:var(--accent);color:var(--bg)}button:disabled{cursor:default}input:not([type=checkbox]),textarea,select{width:100%;max-width:100%;padding:10px;border:2px solid var(--line);border-radius:8px;background:var(--bg)}input[type=checkbox]{width:24px;height:24px;flex:none;margin:0}textarea{min-height:200px}label{display:block}summary{display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:650}summary::before{content:'+';font-size:24px}details[open]>summary::before{content:'−'}:focus-visible{outline:3px solid var(--focus);outline-offset:4px}button:focus-visible,.btn:focus-visible{position:relative;z-index:1}.note,.panel{padding:16px;border:2px solid var(--line);border-radius:14px;background:var(--soft);margin:14px 0}.row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}.row>*{max-width:100%;min-width:0}.small,.hint{font-size:17px}.status{min-height:1.5em;font-weight:650}.check{display:flex;gap:12px;align-items:center;min-height:48px}.file{position:absolute;width:1px!important;height:1px!important;min-height:0!important;opacity:0;overflow:hidden;padding:0!important;border:0!important}.file:focus-visible+.btn{outline:3px solid var(--focus);outline-offset:4px}[hidden]{display:none!important}.badge{display:inline-block;border:2px solid currentColor;border-radius:8px;padding:1px 8px;font-size:17px;font-weight:650}.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.section-head h2{margin-bottom:0}.empty{padding:12px 0;font-size:17px}ol{padding-left:24px}li{margin:8px 0}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}@media print{body>main{display:none!important}body::before{content:'Private: keep this copy. Print is turned off here to keep pupil labels private.';font:18px/1.5 sans-serif;color:#000}}
+input::placeholder,textarea::placeholder{color:var(--ink);opacity:1}.tile{-webkit-touch-callout:none;touch-action:manipulation}
+.pupils{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.pupil-card{border:2px solid var(--line);padding:16px;border-radius:14px;min-width:0}.pupil-card h2{margin:0 0 12px;font-size:22px}.pupil-card details{margin-top:12px}.pupil-card input,.pupil-card textarea{margin:4px 0 12px}.pupil-card textarea{min-height:80px}.choices button{font-size:17px}@media(max-width:720px){.pupils{grid-template-columns:1fr}}
+.group-select{width:auto;min-width:140px;max-width:100%;min-height:48px;font-size:17px;display:block;margin:4px 0 12px}
+</style>
+<style>.tour-tip,.tour-help{font:600 15px/1.35 system-ui,sans-serif!important}.tour-help,.tour-actions button{background:#fff!important;color:#183c31!important;border:1px solid #365b49!important;min-height:44px!important;padding:.4rem .65rem!important;border-radius:7px!important;cursor:pointer}.tour-tip{position:relative;z-index:1;margin:.4rem 0;max-width:calc(100vw - 12px);width:300px;color:#172e2a!important;background:#fffbea!important;border:2px solid #355944;border-radius:9px;padding:10px 12px;box-sizing:border-box;box-shadow:0 3px 10px #172e2a26}.tour-tip[hidden]{display:none!important}.tour-tip small,.tour-tip p,.tour-tip a{color:#172e2a!important}.tour-tip p{margin:.35rem 0}.tour-actions{display:flex;flex-wrap:wrap;gap:.3rem}.tour-tip a{display:inline-block;margin-top:.4rem;text-decoration:underline}.tour-target{outline:3px dashed #345f43!important;outline-offset:2px}.tour-actions button:disabled{opacity:1;color:#384734!important;background:#eceee4!important}.tour-tip,.tour-tip *,.tour-target{animation:none!important;transition:none!important}@media print{.tour-tip,.tour-help{display:none!important}.tour-target{outline:0!important}}
+</style>
+</head>
+<body>
+<main>
+<h1>Class names <span class="small">(private)</span></h1>
+<p class="note"><b>Keep this page on your own device.</b> Labels and help lines stay here. Nothing is sent online.</p>
+<p id="storageWarning" class="note" role="alert" hidden></p>
+<label for="show">Show pupils as</label><select id="show"><option value="initials">Initials</option><option value="first">First name</option><option value="number">Number</option></select>
+<div class="row"><button class="primary" id="saveProfile">Save on this device</button><a class="btn" href="My_tools.html">My tools</a></div>
+<p id="profileStatus" class="status" role="status">Add a label, then choose up to four help lines.</p>
+<div class="row"><button id="copyTracker" hidden>Copy names from the tracker</button><button id="addPupil">Add pupil</button></div><div id="pupils" class="pupils"></div>
+<section class="panel" aria-labelledby="copyTitle">
+<h2 id="copyTitle">Move to your other device</h2>
+<p><b>Private: save only to your private folder</b></p>
+<p>profile.txt holds all pupil labels and help lines. Keep it on your own phone and home laptop. Do not share it. Save the private copy into your private "Names inbox" folder: that is where your laptop looks for it.</p>
+<div class="row"><button id="saveCopy">Save private copy</button><span><input class="file" type="file" id="loadCopy" accept=".txt,.json,text/plain,application/json"><label class="btn" for="loadCopy">Load private copy</label></span></div>
+<p class="small">Loading a copy replaces the numbered labels and help lines shown above. Check them, then press Save on this device.</p>
+</section>
+<details class="panel" id="namesPanel"><summary>Names file for the laptop</summary>
+<p><b>One name per line.</b> First name and surname is best. This keeps the old names.txt list working.</p>
+<label for="names">Your private list</label><textarea id="names" spellcheck="false" autocomplete="off" placeholder="Type or paste one label per line"></textarea><p id="count"></p>
+<div class="row"><button id="save">Save names file</button><span><input class="file" type="file" id="load" accept=".txt,text/plain"><label class="btn" for="load">Open a names file</label></span><button id="clear">Clear this page</button></div>
+<label class="check"><input type="checkbox" id="remember"><span>Remember this list on this device. Only use your own phone or home laptop.</span></label>
+<div class="row"><button id="useList">Use this list</button></div>
+<p>This saves the labels in list order in one press. Check each pupil number above.</p><p id="msg" class="status" role="status"></p>
+<ol><li>Save names.txt to your downloads.</li><li>Put it in the private tracker folder, inside Names inbox. On a phone, use the file's Share menu. On a computer, drag the file into that folder.</li><li>The home laptop takes the newest list within 15 minutes. Its status note says when.</li></ol>
+<p>To change the list later, open the last names file, change it, and save again.</p>
+</details>
+</main>
+<script>
+
+function pupilTag(n) {
+  let key = {}, profile = {};
+  try { key = JSON.parse(localStorage.getItem('mbm_pupil_key_v1') || '{}') || {}; } catch (e) {}
+  try { profile = JSON.parse(localStorage.getItem('mbm_pupil_profile_v1') || '{}') || {}; } catch (e) {}
+  const words = value => String(value || '').trim().split(/\s+/).map(w => Array.from(w.replace(/[^\p{L}\p{M}]/gu, '').toLocaleUpperCase('en-GB'))).filter(w => w.length);
+  const own = words(key[n]);
+  if (!own.length || profile.show === 'number') return 'P' + n;
+  if (profile.show === 'first') return String(key[n]).trim().split(/\s+/)[0];
+  const rows = Object.keys(key).filter(k => /^\d+$/.test(k)).map(k => {
+    const w = words(key[k]);
+    return { n: k, tag: w.slice(0, 3).map(x => x[0]).join(''), last: w.length ? w[w.length - 1] : [], at: 1 };
+  }).filter(r => r.tag);
+  for (let step = 0; step < 102; step++) {
+    const counts = new Map();
+    rows.forEach(r => counts.set(r.tag, (counts.get(r.tag) || 0) + 1));
+    const collisions = rows.filter(r => counts.get(r.tag) > 1);
+    if (!collisions.length) break;
+    collisions.forEach(r => { r.tag += r.at < r.last.length ? r.last[r.at++] : r.n; });
+  }
+  return (rows.find(r => r.n === String(n)) || {}).tag || 'P' + n;
+}
+function pupilAdapt(n) {
+  try {
+    const p = JSON.parse(localStorage.getItem('mbm_pupil_profile_v1') || '{}');
+    const lines = p && p.pupils && p.pupils[n] && p.pupils[n].adapt;
+    return Array.isArray(lines) ? lines.filter(x => typeof x === 'string' && x.trim()).slice(0, 4).map(x => x.trim().slice(0, 80)) : [];
+  } catch (e) { return []; }
+}
+
+const NAMES_HEADER=String.fromCodePoint(35,32,77,97,100,101,32,98,121,32,77,97,116,116,32,112,114,105,118,97,116,101,32,110,97,109,101,115,32,108,105,115,116,46,32,79,110,101,32,110,97,109,101,32,112,101,114,32,108,105,110,101,46,32,75,101,101,112,32,112,114,105,118,97,116,101,46,13,10);
+
+'use strict';
+const KEYS={names:'mbm_class_names_v1',key:'mbm_pupil_key_v1',profile:'mbm_pupil_profile_v1'};
+const $=id=>document.getElementById(id), blocked=new Set();
+function warning(text){$('storageWarning').hidden=false;$('storageWarning').textContent=text;}
+function read(key,fallback,json=true){try{const raw=localStorage.getItem(key);if(raw===null)return fallback;const v=json?JSON.parse(raw):raw;if(json&&(!v||typeof v!=='object'||Array.isArray(v)))throw Error();return v;}catch(e){blocked.add(key);warning('Saved data could not be read. It has been kept. You can still make a private copy of your changes.');return fallback;}}
+function put(key,value){if(blocked.has(key))return false;try{localStorage.setItem(key,value);return true;}catch(e){warning('This device could not save your changes. Keep a private copy before closing this page.');return false;}}
+const printTags = ['Large print', 'One task at a time', 'Sentence starters', 'Word bank',
+  'Fewer questions', 'Visual steps', 'Extra space', 'Blue background', 'Green background',
+  'Pink background', 'Cream background'];
+function validTags(tags) {
+  return tags === undefined || (Array.isArray(tags) && tags.length <= 8 &&
+    new Set(tags).size === tags.length && tags.every(tag => printTags.includes(tag)));
+}
+function validPrintNote(pupil) {
+  return pupil.printNote !== true || (typeof pupil.note === 'string' && pupil.note.length <= 120 && !/[\r\n]/.test(pupil.note));
+}
+function addPrintFields(details, n) {
+  const pupil = profile.pupils[n] || {};
+  const fieldset = node('fieldset', {class:'print-picks', 'data-pupil-note':'1'});
+  fieldset.append(node('legend', {}, 'Print choices for Pupil ' + n));
+  const count = node('p', {'aria-live':'polite'});
+  const inputs = printTags.map((tag, index) => {
+    const input = node('input', {type:'checkbox', id:'pick-'+n+'-'+index, value:tag});
+    input.checked = (pupil.tags || []).includes(tag);
+    const label = node('label', {class:'pick-option'});
+    label.append(input, ' '+tag);
+    fieldset.append(label);
+    return input;
+  });
+  function syncChoices() {
+    const total = inputs.filter(input => input.checked).length;
+    count.textContent = total + ' of 8 chosen.';
+    inputs.forEach(input => { input.disabled = !input.checked && total >= 8; });
+  }
+  inputs.forEach(input => input.addEventListener('change', () => { syncChoices(); dirty(); }));
+  syncChoices();
+  fieldset.append(count);
+  const noteLabel = node('label', {for:'note-'+n}, "Note for the top of this pupil's print");
+  const note = node('input', {type:'text', id:'note-'+n, maxlength:120, 'data-pupil-note':'1'});
+  // An older private note is retained verbatim until its owner edits the print note.
+  note.value = pupil.note || '';
+  if (pupil.note && !pupil.printNote) {
+    fieldset.append(node('p', {}, 'Your old note stays private. Edit the box to use a print note.'));
+  }
+  note.dataset.edited = 'false';
+  note.addEventListener('input', () => { note.dataset.edited = 'true'; dirty(); });
+  details.append(fieldset, noteLabel, note);
+}
+function readPrintFields(n) {
+  const note = $('note-'+n);
+  const old = profile.pupils[n] || {};
+  const changed = note.dataset.edited === 'true';
+  const tags = printTags.filter((tag, index) => $('pick-'+n+'-'+index).checked);
+  return {tags, note:changed ? note.value.trim().slice(0,120) : (old.note || ''),
+    printNote:changed ? true : old.printNote === true};
+}
+
+let key=read(KEYS.key,{}), profile=read(KEYS.profile,{version:1,show:'initials',pupils:{}});
+if(profile.version!==1||!profile.pupils||typeof profile.pupils!=='object'||Array.isArray(profile.pupils)||!['initials','first','number'].includes(profile.show)||Object.values(profile.pupils).some(p=>!p||!Array.isArray(p.adapt)||p.adapt.length>4||!validTags(p.tags)||!validPrintNote(p)||p.adapt.some(s=>typeof s!=='string')||(p.note!==undefined&&typeof p.note!=='string')||(p.group!==undefined&&!['','BUILD','GROW','LAUNCH'].includes(p.group)))){blocked.add(KEYS.profile);warning('The saved help lines have an unknown format. They have been kept.');profile={version:1,show:'initials',pupils:{}};}
+let cardCount=classCardCount();
+const choices=['Enlarged print','Now and next card','Extra time','Reader','Movement break','Word bank','Sit near front'];
+const node=(tag,attrs={},text)=>{const e=document.createElement(tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;return e;};
+function normalLabel(value){return String(value||'').trim().replace(/\s+/g,' ').toLocaleLowerCase('en-GB');}
+function numberedPupils(groups,key){
+ var all=['BUILD','GROW','LAUNCH'].flatMap(function(path){return (groups[path]||[]).map(function(label){return {path:path,label:label};});});
+ return all.map(function(row,i){
+  var value=normalLabel(row.label),explicit=value.match(/^(?:pupil\s*|p)?(\d+)$/i),full=Object.keys(key).filter(function(n){return normalLabel(key[n])===value;}),first=Object.keys(key).filter(function(n){return normalLabel(key[n]).split(' ')[0]===value;});
+  row.n=explicit?+explicit[1]:(full.length===1?+full[0]:(first.length===1?+first[0]:i+1));return row;
+ });
+}
+function trackerClass(){try{const tracker=JSON.parse(localStorage.getItem('mbm_catchup_tracker_v1')||'{}');return numberedPupils(tracker.pupils||{},key);}catch(e){return [];}}
+function classCardCount(){return Math.min(20,Math.max(12,...Object.keys(key).map(Number),...Object.keys(profile.pupils||{}).map(Number),...trackerClass().map(row=>row.n)));}
+function savedGroup(n){const pupil=profile.pupils[n]||{};if(Object.prototype.hasOwnProperty.call(pupil,'group'))return ['BUILD','GROW','LAUNCH'].includes(pupil.group)?pupil.group:'';return (trackerClass().find(row=>row.n===n)||{}).path||'';}
+function cardGroup(n){const select=$('group-'+n);if(!select)return {};if(select.value)return {group:select.value};return select.dataset.unset==='true'?{group:''}:{};}
+function privatePupilCopy(label,pupil){const copy={label,...pupil};if(!copy.group)delete copy.group;return copy;}
+function retainHelp(){for(let n=1;n<=cardCount;n++)if($('note-'+n)){profile.pupils[n]={adapt:[...new Set(Array.from({length:4},(_,i)=>$('adapt-'+n+'-'+i).value.trim()).filter(Boolean))],...readPrintFields(n),...cardGroup(n)};}}
+function syncClassActions(){if(!$('addPupil'))return;$('addPupil').disabled=cardCount>=20;$('copyTracker').hidden=Object.values(key).some(v=>String(v).trim())||!trackerClass().some(row=>!/^(?:pupil\s*|p)?\d+$/i.test(normalLabel(row.label)));}
+
+function render(){
+  $('show').value=profile.show;syncClassActions();
+  const box=$('pupils');box.replaceChildren();
+  for(let n=1;n<=cardCount;n++){
+    const card=node('article',{class:'pupil-card'}), h=node('h2',{},'Pupil '+n),tag=pupilTag(n),badge=node('span',{class:'badge',id:'tag-'+n,title:'Pupil '+n+' · '+tag,'aria-label':'Pupil '+n+' · '+tag},tag);
+    h.append(' ',badge);card.append(h);
+    const label=node('label',{for:'label-'+n},'Label for Pupil '+n), input=node('input',{id:'label-'+n,type:'text',maxlength:100,autocomplete:'off',spellcheck:'false'});input.value=typeof key[n]==='string'?key[n]:'';card.append(label,input);const groupLabel=node('label',{for:'group-'+n},'Group (optional)'),group=node('select',{id:'group-'+n,class:'group-select','aria-label':'Group for Pupil '+n});[['','Not set'],['BUILD','BUILD'],['GROW','GROW'],['LAUNCH','LAUNCH']].forEach(([value,text])=>group.append(node('option',{value},text)));group.value=savedGroup(n);group.dataset.unset=String((profile.pupils[n]||{}).group==='');group.onchange=()=>{group.dataset.unset=String(group.value==='');dirty();};card.append(groupLabel,group);
+    const details=node('details'),summary=node('summary',{id:'summary-'+n},'Help lines ('+((profile.pupils[n]||{}).adapt||[]).filter(Boolean).slice(0,4).length+'/4)');details.append(summary,node('p',{class:'hint'},'Tap a common line, or type your own. Tap it again to remove it.'));
+    const chips=node('div',{class:'row choices'});choices.forEach((text,i)=>{const b=node('button',{type:'button',id:'chip-'+n+'-'+i,'aria-pressed':'false'},text);b.onclick=()=>{const fields=Array.from({length:4},(_,j)=>$('adapt-'+n+'-'+j)),match=fields.find(f=>f.value.trim()===text);if(match)match.value='';else{const free=fields.find(f=>!f.value.trim());if(!free){$('profileStatus').textContent='Pupil '+n+' already has four help lines. Clear one first.';return;}free.value=text;}syncCard(n);dirty();};chips.append(b);});details.append(chips);
+    for(let j=0;j<4;j++){const l=node('label',{for:'adapt-'+n+'-'+j},'Help line '+(j+1)),f=node('input',{type:'text',id:'adapt-'+n+'-'+j,maxlength:80,autocomplete:'off'});f.value=typeof ((profile.pupils[n]||{}).adapt||[])[j]==='string'?profile.pupils[n].adapt[j]:'';f.oninput=()=>{syncCard(n);dirty();};details.append(l,f);}
+    addPrintFields(details, n);card.append(details);box.append(card);input.oninput=dirty;syncCard(n);
+  }
+}
+function syncCard(n){const values=Array.from({length:4},(_,i)=>$('adapt-'+n+'-'+i).value.trim());choices.forEach((v,i)=>$('chip-'+n+'-'+i).setAttribute('aria-pressed',String(values.includes(v))));$('summary-'+n).textContent='Help lines ('+values.filter(Boolean).length+'/4)';}
+let unsaved=false;
+let autoSaveTimer;function dirty(auto=true){unsaved=true;$('profileStatus').textContent='Saving on this device…';clearTimeout(autoSaveTimer);if(auto)autoSaveTimer=setTimeout(saveProfile,400);}
+function collect(){const nextKey={},pupils={},seen=new Set();for(let n=1;n<=cardCount;n++){const label=$('label-'+n).value.trim();if(/[\r\n\t|]/.test(label)){throw Error('Pupil '+n+': use one label without tabs, line breaks or |.');}if(label){const lower=normalLabel(label);if(seen.has(lower))throw Error('Use a different label for each pupil. Check Pupil '+n+'.');seen.add(lower);nextKey[n]=label;}const adapt=[...new Set(Array.from({length:4},(_,i)=>$('adapt-'+n+'-'+i).value.trim()).filter(Boolean))];pupils[n]={adapt,...readPrintFields(n),...cardGroup(n)};}return {key:nextKey,profile:{version:1,show:$('show').value,pupils}};}
+// Names live only in this browser. Two date stamps (no names in them) let My tools say when a private copy is due.
+var loadedCopyText='';function rawSaved(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function saveProfile(){clearTimeout(autoSaveTimer);let draft;try{draft=collect();}catch(e){$('profileStatus').textContent=e.message;return false;}const nowText=JSON.stringify(draft.key)+JSON.stringify(draft.profile),namesChanged=rawSaved(KEYS.key)!==JSON.stringify(draft.key)||rawSaved(KEYS.profile)!==JSON.stringify(draft.profile);const savedKey=put(KEYS.key,JSON.stringify(draft.key)),savedProfile=put(KEYS.profile,JSON.stringify(draft.profile));key=draft.key;profile=draft.profile;unsaved=!(savedKey&&savedProfile);for(let n=1;n<=cardCount;n++){const t=pupilTag(n),b=$('tag-'+n);b.textContent=t;b.title='Pupil '+n+' · '+t;b.setAttribute('aria-label',b.title);}$('profileStatus').textContent=unsaved?'Could not save all changes. Keep a private copy.':'✓ Saved on this device.';if(!unsaved&&namesChanged){const stamp=String(Date.now());put('mbm_names_changed_v1',stamp);if(nowText===loadedCopyText)put('mbm_names_copy_saved_v1',stamp);if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});}syncClassActions();return !unsaved;}
+function download(name,text){const a=document.createElement('a'),u=URL.createObjectURL(new Blob([text],{type:'text/plain'}));a.href=u;a.download=name;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(u);a.remove();},1000);}
+$('saveProfile').onclick=saveProfile;$('show').onchange=()=>saveProfile();
+$('saveCopy').onclick=()=>{let draft;try{draft=collect();}catch(e){$('profileStatus').textContent=e.message;return;}const pupils={};for(let n=1;n<=cardCount;n++)if(draft.key[n]||draft.profile.pupils[n].adapt.length||draft.profile.pupils[n].tags.length||draft.profile.pupils[n].note||draft.profile.pupils[n].group||trackerClass().some(row=>row.n===n))pupils[n]=privatePupilCopy(draft.key[n]||'',draft.profile.pupils[n]);download('profile.txt',JSON.stringify({version:1,show:draft.profile.show,pupils},null,2)+'\r\n');put('mbm_names_copy_saved_v1',String(Date.now()));$('profileStatus').textContent='Private copy saved. Save only to your private folder.';};
+async function fileText(input,done){const f=input.files[0];if(!f)return;if(f.size>200000){$('profileStatus').textContent='That file is too large. Choose a small private text file.';input.value='';return;}try{done(await f.text());}catch(e){$('profileStatus').textContent=e.message||'Could not open that file. Try another copy.';}finally{input.value='';}}
+$('loadCopy').onchange=()=>fileText($('loadCopy'),text=>{let v;try{v=JSON.parse(text);}catch(e){throw Error('That is not a profile copy. Choose profile.txt.');}if(!v||v.version!==1||!['initials','first','number'].includes(v.show)||!v.pupils||typeof v.pupils!=='object'||Array.isArray(v.pupils))throw Error('That profile format is not supported. Nothing was changed.');const nk={},np={};for(const [n,p] of Object.entries(v.pupils)){if(!/^(?:[1-9]|1[0-9]|20)$/.test(n)||!p||typeof p!=='object'||typeof p.label!=='string'||p.label.length>100||/[\r\n\t|]/.test(p.label)||!Array.isArray(p.adapt)||p.adapt.length>4||!validTags(p.tags)||!validPrintNote(p)||p.adapt.some(s=>typeof s!=='string'||s.length>80||/[\r\n]/.test(s))||(p.note!==undefined&&typeof p.note!=='string')||(p.note||'').length>500||(p.group!==undefined&&!['BUILD','GROW','LAUNCH'].includes(p.group)))throw Error('A pupil entry is not valid. Nothing was changed.');if(p.label.trim())nk[n]=p.label.trim();np[n]={adapt:p.adapt.map(s=>s.trim()).filter(Boolean),note:p.note||'',tags:p.tags||[],printNote:p.printNote===true,group:p.group||''};}if(Object.keys(nk).length!==new Set(Object.values(nk).map(s=>s.toLocaleLowerCase('en-GB'))).size)throw Error('This copy has repeated labels. Nothing was changed.');if(unsaved&&!confirm('Replace the changes shown here with this private copy?'))return;key=nk;profile={version:1,show:v.show,pupils:np};cardCount=classCardCount();render();dirty(false);try{const shown=collect();loadedCopyText=JSON.stringify(shown.key)+JSON.stringify(shown.profile);}catch(e){loadedCopyText='';}$('profileStatus').textContent='Private copy loaded. Check the numbers, then press Save on this device.';});
+const ta=$('names'),rem=$('remember');
+function lines(){return ta.value.split(/\r?\n/).map(s=>s.trim()).filter(s=>s&&s.charAt(0)!=='#');}
+function say(t){$('msg').textContent=t;}
+function update(){const n=lines(),bad=n.filter(s=>!/^[\p{L}\p{M}'’ .\-‐‑]{2,100}$/u.test(s));$('count').textContent=n.length+' name'+(n.length===1?'':'s')+(bad.length?' · '+bad.length+' line(s) look unusual (numbers or symbols)':'');if(rem.checked)put(KEYS.names,ta.value);}
+const saved=read(KEYS.names,null,false);if(saved!==null){ta.value=saved;rem.checked=true;}
+ta.oninput=update;rem.onchange=()=>{if(rem.checked){update();say('Remembered on this device only.');}else{try{localStorage.removeItem(KEYS.names);say('Forgotten on this device.');}catch(e){say('This device could not forget the list.');}}};
+$('save').onclick=()=>{const n=lines();if(!n.length){say('There are no names to save yet.');return;}download('names.txt',NAMES_HEADER+n.join('\r\n')+'\r\n');say('Saved names.txt ('+n.length+' names). Put it in your private Names inbox.');};
+$('load').onchange=()=>fileText($('load'),text=>{ta.value=text.split(/\r?\n/).filter(s=>s.trim()&&s.trim().charAt(0)!=='#').join('\n');update();say('Opened your names file.');});
+$('clear').onclick=()=>{if(ta.value&&!confirm('Clear the names from this page?'))return;ta.value='';try{localStorage.removeItem(KEYS.names);rem.checked=false;say('Names list cleared. Numbered labels and help lines are kept above.');}catch(e){say('The page is clear. This device could not forget the saved list.');}update();};
+$('useList').onclick=()=>{
+ const labels=lines();if(labels.length>20){say('There are more than 20 lines. Keep 20 or fewer.');return;}if(!labels.length){say('Add a name or label first.');return;}
+ clearTimeout(autoSaveTimer);retainHelp();key={};labels.forEach((label,i)=>key[i+1]=label);cardCount=Math.min(20,Math.max(cardCount,labels.length));render();
+ if(saveProfile()){const text='Saved. '+labels.length+' labels are now used by the tracker and Quick capture.';say(text);$('profileStatus').textContent=text;syncClassActions();}
+};
+$('addPupil').onclick=()=>{if(cardCount>=20)return;clearTimeout(autoSaveTimer);const draft=collect();key=draft.key;profile=draft.profile;cardCount++;render();$('label-'+cardCount).focus();};
+$('copyTracker').onclick=()=>{
+ clearTimeout(autoSaveTimer);retainHelp();const entries=trackerClass(),numbers=new Set();if(entries.some(row=>row.n<1||row.n>20||numbers.has(row.n)||!numbers.add(row.n))){$('profileStatus').textContent='Two pupils have the same number. Check the tracker first.';return;}
+ key={};entries.forEach(row=>{if(!/^(?:pupil\s*|p)?\d+$/i.test(normalLabel(row.label)))key[row.n]=row.label;});cardCount=classCardCount();render();if(saveProfile())$('profileStatus').textContent='Saved. '+Object.keys(key).length+' labels copied from the tracker.';
+};
+
+window.addEventListener('beforeunload',e=>{if(unsaved){e.preventDefault();e.returnValue='';}});
+render();update();syncClassActions();
+
+</script>
+<script>
+function initToolTour(config) {
+  const find = selector => document.querySelector(selector);
+  const help = document.createElement('button');
+  help.type='button';help.className='tour-help';help.textContent='? Help';help.id='pageTourHelp';
+  help.setAttribute('aria-label','? Help · Show me round');
+  const top = find(config.bar) || find('header') || find('h1').parentElement;
+  if (top.tagName==='H1') top.after(help); else top.append(help);
+  const tip=document.createElement('aside');
+  tip.hidden=true;tip.className='tour-tip';tip.setAttribute('aria-label','Show me round');
+  const count=document.createElement('small'), words=document.createElement('p'), actions=document.createElement('div');
+  words.setAttribute('aria-live','polite');actions.className='tour-actions';
+  function button(label,action){
+    const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=action;actions.append(b);return b;
+  }
+  const back=button('Back',()=>step(index-1,true)), next=button('Next',()=>{if(index===steps.length-1)close();else step(index+1,true);});
+  button('Skip the tour',()=>close());
+  const guide=document.createElement('a');guide.textContent='How it all works';guide.href=config.guide;
+  tip.append(count,words,actions,guide);document.body.append(tip);
+  let index=0,steps=[],target=null,returnTo=help,sessionSeen=new Set();
+  function seen(id,mark=false){
+    let state={};
+    try {
+      const data=JSON.parse(localStorage.getItem(config.key)||'{}');
+      if(data && typeof data==='object' && !Array.isArray(data))state=data;
+      if(mark){state[id]=true;localStorage.setItem(config.key,JSON.stringify(state));}
+    } catch { /* A device with storage turned off can run the tour for this visit. */ }
+    if(mark)sessionSeen.add(id);
+    return sessionSeen.has(id)||state[id]===true;
+  }
+  function close(){
+    const restore=tip.contains(document.activeElement);tip.hidden=true;target?.classList.remove('tour-target');
+    target=null;if(restore)returnTo.focus({preventScroll:true});
+  }
+  function place(){
+    const anchor=target.closest('header') || target.closest('.picker,.opts,.row,.tabs,fieldset,details') || target;
+    anchor.after(tip);
+  }
+  function step(i,move){
+    target?.classList.remove('tour-target');index=i;
+    const [selector,label,after,before]=steps[index];target=find(selector);
+    if(!target){close();return;}
+    const bold=document.createElement('b');bold.textContent=label;
+    words.replaceChildren(before||'Use ',bold,after);
+    count.textContent='Show me round · '+(index+1)+' of '+steps.length;
+    back.disabled=index===0;next.textContent=index===steps.length-1?'Done':'Next';
+    target.classList.add('tour-target');tip.hidden=false;
+    place();
+    if(move)target.scrollIntoView({block:'center',behavior:'instant'});if(move)next.focus({preventScroll:true});
+  }
+  function start(list,id,manual,opener){
+    if(!manual&&seen(id))return;
+    close();returnTo=opener||help;steps=list;seen(id,true);step(0,manual);
+  }
+  help.onclick=()=>start(config.steps,config.id,true,help);
+  if(config.panel){
+    const panel=find('#dayLauncher'), launchHelp=document.createElement('button');
+    launchHelp.type='button';launchHelp.textContent='? Help';launchHelp.className='tour-help';
+    launchHelp.setAttribute('aria-label','? Help for Start my day');find('#launchDetails').prepend(launchHelp);
+    launchHelp.onclick=()=>start(config.panel,config.id+'/day',true,launchHelp);
+    panel.addEventListener('launcheropened',()=>start(config.panel,config.id+'/day',false,launchHelp));
+  }
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!tip.hidden)close();});
+  function firstVisit(){
+    const dialog=document.querySelector('dialog[open]');
+    if(dialog){dialog.addEventListener('close',firstVisit,{once:true});return;}
+    start(config.steps,config.id,false,help);
+  }
+  firstVisit();
+}
+initToolTour({
+  "bar": "h1",
+  "steps": [
+    [
+      "#show",
+      "Show pupils as",
+      " to choose codes or initials."
+    ],
+    [
+      "#summary-1",
+      "Help lines",
+      " to set up a pupil’s print."
+    ],
+    [
+      "#saveProfile",
+      "Save on this device",
+      " to keep your choices."
+    ]
+  ],
+  "id": "personal/Class_names",
+  "guide": "guide/How_it_all_works.html",
+  "key": "mbm_tour_seen_v1"
+});
+
+</script>
+</body>
+</html>

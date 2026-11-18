@@ -169,7 +169,9 @@ function rowsOf(file) {
     }
     // LAND-A2 R5 §1: and its own pathway, by name
     if (pathway) {
-      for (const b of ar.brandlines) if (!new RegExp(`\\b${pathway}\\b`).test(b)) fails.push({ limb: 'brand', detail: `brandline "${b.slice(0, 110)}" does not name this lesson's pathway (${pathway})` });
+      // Pathway rename (8 Nov 2026): BUILD/GROW/LAUNCH are shown as BASE/TRACK/SUMMIT; either name for the SAME pathway counts.
+      const shown = { BUILD: 'BASE', GROW: 'TRACK', LAUNCH: 'SUMMIT' }[pathway];
+      for (const b of ar.brandlines) if (!new RegExp(`\\b(${pathway}|${shown})\\b`).test(b)) fails.push({ limb: 'brand', detail: `brandline "${b.slice(0, 110)}" does not name this lesson's pathway (${pathway} / ${shown})` });
     }
     for (const w of ar.wordHelp) if (!ar.ownWords.includes(w.term)) fails.push({ limb: 'brand', detail: `word help for "${w.term}" is not one of this lesson's arrival words (${ar.ownWords.join(', ') || 'none'}): "${w.text}"` });
 

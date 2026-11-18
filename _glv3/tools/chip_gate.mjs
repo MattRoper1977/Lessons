@@ -14,8 +14,10 @@ if (newResources.length !== 88) {
 }
 
 const chips = [...new Set(newResources.map(x => x.subject))].sort();
+// Lessons #834 renamed the Art catalogue subject to its plain name; the gate's
+// expected set follows the catalogue it measures (catalogue label fix).
 const expectedChips = [
-  'Art · Teesside Studio Suite',
+  'Art',
   'GROW Vocational & PfA',
   'Humanities',
   'LAUNCH Vocational & PfA',

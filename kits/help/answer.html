@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Made by Matt">
+<title>Help: write your answer</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2212%22%20fill%3D%22%23153e64%22%2F%3E%3Cpath%20d%3D%22M32%2014v24M32%2046v4%22%20stroke%3D%22white%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
+<style>
+:root{--ink:#18283b;--accent:#153e64;--soft:#edf3f7;--line:#52677c;--bg:#fff;--card:#fffdf6;--mark:#b3261e;--good:#1b6e3c;--tint:#ffe9a8;--fs:1}
+*{box-sizing:border-box}
+body{margin:0;background:var(--soft);color:var(--ink);font:calc(20px*var(--fs))/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:auto;padding:14px 14px 40px}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:space-between}
+h1{font-size:calc(26px*var(--fs));margin:4px 0}
+.sub{margin:0 0 10px;color:#33475b}
+button{font:inherit;min-height:52px;padding:10px 18px;border:2px solid var(--accent);border-radius:12px;background:var(--bg);color:var(--accent);cursor:pointer;font-weight:600}
+button.primary{background:var(--accent);color:#fff}
+button[aria-pressed=true]{background:var(--accent);color:#fff}
+button:focus-visible{outline:4px solid #c9730a;outline-offset:2px}
+button:disabled{opacity:.45;cursor:default}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.card{background:var(--bg);border:2px solid var(--line);border-radius:16px;padding:14px;margin-top:10px}
+.count{font-weight:700;color:var(--accent);margin:0 0 4px}
+.pic{background:var(--card);border:1px solid #c8d3dd;border-radius:12px;display:block;width:100%;height:auto}
+.say{font-size:calc(26px*var(--fs));font-weight:650;margin:12px 0 4px}
+.tip{margin:6px 0 0;padding:8px 12px;border-left:6px solid var(--good);background:#eef7f0;border-radius:6px}
+.nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.nav .grow{flex:1}
+.dots{display:flex;gap:8px;margin:12px 0 0;padding:0;list-style:none;flex-wrap:wrap}
+.dots li{width:16px;height:16px;border-radius:50%;border:2px solid var(--accent)}
+.dots li.on{background:var(--accent)}
+details{margin-top:14px}
+summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+dl{margin:6px 0 0}dt{font-weight:700}dd{margin:0 0 8px}
+footer{margin-top:18px;color:#33475b;font-size:16px}
+svg text{font-family:system-ui,sans-serif;fill:var(--ink)}
+.k{stroke:var(--ink);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cardfill{fill:#f6e7c8;stroke:var(--ink);stroke-width:3}
+.dash{stroke:var(--mark);stroke-width:3;stroke-dasharray:9 7;fill:none}
+.red{fill:var(--mark)}.lab{font-size:22px;font-weight:700}.small{font-size:18px}
+.hl{fill:var(--tint);stroke:var(--ink);stroke-width:2}
+@keyframes slideIn{from{transform:translate(var(--dx,0),var(--dy,-60px));opacity:.2}to{transform:none;opacity:1}}
+@keyframes pop{0%,35%{opacity:0;transform:scale(.4)}70%{opacity:1;transform:scale(1.25)}100%{opacity:1;transform:scale(1)}}
+@keyframes draw{from{stroke-dashoffset:var(--len,400)}to{stroke-dashoffset:0}}
+@keyframes fade{0%,40%{opacity:0}100%{opacity:1}}
+@keyframes rise{from{transform:rotate(0)}to{transform:rotate(var(--rot,-90deg))}}
+@keyframes move{from{transform:translate(0,0)}to{transform:translate(var(--mx,0),var(--my,0))}}
+.a-slide{animation:slideIn 1.6s ease-out both}
+.a-pop{animation:pop 1.4s ease-out both;transform-box:fill-box;transform-origin:center}
+.a-pop2{animation:pop 1.4s ease-out 1.1s both;transform-box:fill-box;transform-origin:center}
+.a-draw{stroke-dasharray:var(--len,400);animation:draw 2s ease-in-out .4s both}
+.a-draw2{stroke-dasharray:var(--len,400);animation:draw 2s ease-in-out 2.2s both}
+.a-fade{animation:fade 2.2s ease-out both}.a-fade2{animation:fade 2.2s ease-out 1.6s both}.a-fade3{animation:fade 2.2s ease-out 3s both}
+.a-rise{animation:rise 2s ease-in-out .6s both;transform-box:fill-box}
+.a-move{animation:move 2.2s ease-in-out .6s both}
+@keyframes gone{to{opacity:0}}
+.a-gone{animation:gone .8s ease-in 2s both}
+@media (prefers-reduced-motion:reduce){[class*="a-"]{animation:none!important;stroke-dasharray:none!important}}
+body.still [class*="a-"]{animation:none!important;stroke-dasharray:none!important}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.tabs button{border-radius:12px 12px 0 0}
+.tabs button[aria-selected=true]{background:var(--accent);color:#fff}
+.try{list-style:none;margin:0;padding:0;counter-reset:t}
+.try li{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-top:1px solid #c8d3dd;font-size:calc(22px*var(--fs))}
+.try li:first-child{border-top:0}
+.try .n{flex:none;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.try b{display:block}
+.lead{font-size:calc(22px*var(--fs));font-weight:650;margin:0 0 6px}
+@media print{.tools,.nav,details,.dots,.tabs{display:none}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div><h1>Help: write your answer</h1><p class="sub">Six small steps for any writing question. Watch each step, then do it.</p></div>
+<div class="tools">
+<button type="button" id="bigger" aria-pressed="false">Bigger words</button>
+<button type="button" id="still" aria-pressed="false">Stop the moving</button>
+<button type="button" id="tint">Page colour: white</button>
+</div>
+</header>
+<div class="tabs" role="tablist" aria-label="Kinds of help">
+<button type="button" role="tab" id="tab-steps" aria-controls="p-steps" aria-selected="true">Help with this task</button>
+<button type="button" role="tab" id="tab-stuck" aria-controls="p-stuck" aria-selected="false" tabindex="-1">I am stuck</button>
+<button type="button" role="tab" id="tab-ways" aria-controls="p-ways" aria-selected="false" tabindex="-1">Ways to answer</button>
+</div>
+<div id="p-steps" role="tabpanel" aria-labelledby="tab-steps">
+<section class="card" aria-live="polite">
+<p class="count" id="count"></p>
+<div id="pic"></div>
+<p class="say" id="say"></p>
+<p class="tip" id="tip" hidden></p>
+<div class="nav">
+<button type="button" id="back">Back</button>
+<button type="button" id="next" class="primary">Next step</button>
+<span class="grow"></span>
+<button type="button" id="again">Show again</button>
+<button type="button" id="read">Read to me</button>
+<button type="button" id="watch" aria-pressed="false">Watch all steps</button>
+</div>
+<ol class="dots" id="dots" aria-hidden="true"></ol>
+</section>
+<details class="card"><summary>Word help</summary><dl id="words"></dl></details>
+<details class="card"><summary>Still stuck?</summary><p>Go back to step 3 and read the box again. Then put your hand up or show your help card, and an adult will come to you.</p></details>
+</div>
+<div id="p-stuck" role="tabpanel" aria-labelledby="tab-stuck" hidden>
+<section class="card">
+<p class="lead">Being stuck is normal. Try these three things first.</p>
+<ol class="try" id="stucklist">
+<li><span class="n" aria-hidden="true">1</span><span><b>Read the task again.</b>Point to each word as you read.</span></li>
+<li><span class="n" aria-hidden="true">2</span><span><b>Look at your sheet.</b>Find the box called What you need to know. Look at the picture too.</span></li>
+<li><span class="n" aria-hidden="true">3</span><span><b>Do the first small bit.</b>Use the sentence starter or the first step.</span></li>
+</ol>
+<p class="tip">Still stuck? Put your hand up or show your help card. While you wait, do the next part that you can do.</p>
+<div class="nav"><button type="button" class="readp" data-for="p-stuck">Read to me</button></div>
+</section>
+</div>
+<div id="p-ways" role="tabpanel" aria-labelledby="tab-ways" hidden>
+<section class="card">
+<p class="lead">You can show what you know in different ways. Pick one.</p>
+<ol class="try">
+<li><span class="n" aria-hidden="true">A</span><span><b>Write it.</b>Use the sentence starter on your sheet.</span></li>
+<li><span class="n" aria-hidden="true">B</span><span><b>Draw it and label it.</b>Add three labels with key words.</span></li>
+<li><span class="n" aria-hidden="true">C</span><span><b>Say it.</b>Tell an adult your answer and they will write it down.</span></li>
+</ol>
+<p class="tip">Check with your teacher which way is right for this task.</p>
+<div class="nav"><button type="button" class="readp" data-for="p-ways">Read to me</button></div>
+</section>
+</div>
+<footer>Made by Matt · help page · nothing you do here is saved or sent anywhere.</footer>
+</main>
+<script>
+(function(){
+var STEPS=[{"t": "Read the question two times. Point to each word as you read.", "tip": "", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A pointer moves along the question on a sheet.\"><rect x=\"150\" y=\"40\" width=\"500\" height=\"300\" rx=\"8\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><line x1=\"190\" y1=\"90\" x2=\"560\" y2=\"90\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><line x1=\"190\" y1=\"130\" x2=\"560\" y2=\"130\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><text x=\"190\" y=\"200\" class=\"lab\">1.<\/text><line x1=\"240\" y1=\"192\" x2=\"600\" y2=\"192\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><g class=\"a-move\" style=\"--mx:330px\"><path d=\"M250 250 l0 -34 l14 12 l12 -4 l-10 26 z\" fill=\"#153e64\"/><\/g><text x=\"400\" y=\"310\" class=\"small\" text-anchor=\"middle\">Read it once. Then read it again.<\/text><\/svg>"}, {"t": "Find the key word in the question. Underline it.", "tip": "The key word tells you what the question is about.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"The key word in a question is underlined in red.\"><rect x=\"150\" y=\"40\" width=\"500\" height=\"300\" rx=\"8\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"190\" y=\"150\" class=\"lab\">Why do we wash our hands?<\/text><path d=\"M335 162 H420\" class=\"k a-draw\" style=\"stroke:#b3261e;--len:90;stroke-width:6\"/><g class=\"a-fade2\"><path d=\"M470 250 L400 176\" class=\"k\" style=\"stroke:#b3261e\"/><text x=\"480\" y=\"270\" class=\"lab\">key word<\/text><\/g><\/svg>"}, {"t": "Look in the box called What you need to know. The answer is in there.", "tip": "", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"The What you need to know box at the top of the sheet lights up.\"><rect x=\"150\" y=\"40\" width=\"500\" height=\"300\" rx=\"8\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><rect x=\"180\" y=\"64\" width=\"440\" height=\"110\" rx=\"8\" class=\"hl a-pop\"/><text x=\"400\" y=\"100\" class=\"lab a-fade\" text-anchor=\"middle\">What you need to know<\/text><line x1=\"210\" y1=\"130\" x2=\"590\" y2=\"130\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><line x1=\"210\" y1=\"152\" x2=\"590\" y2=\"152\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><line x1=\"190\" y1=\"230\" x2=\"610\" y2=\"230\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><line x1=\"190\" y1=\"270\" x2=\"610\" y2=\"270\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><line x1=\"190\" y1=\"310\" x2=\"610\" y2=\"310\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><g class=\"a-fade3\"><path d=\"M400 250 V186\" class=\"k\" style=\"stroke:#b3261e\"/><path d=\"M400 186 l-10 14 M400 186 l10 14\" class=\"k\" style=\"stroke:#b3261e\"/><\/g><\/svg>"}, {"t": "Use the sentence starter. Fill each gap with a word from the box.", "tip": "", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A missing word drops into the gap in a sentence starter.\"><rect x=\"150\" y=\"40\" width=\"500\" height=\"300\" rx=\"8\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"180\" y=\"120\" class=\"small\">Sentence starter:<\/text><text x=\"180\" y=\"190\" class=\"lab\">We wash our hands to<\/text><rect x=\"452\" y=\"160\" width=\"130\" height=\"42\" rx=\"6\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\" stroke-dasharray=\"8 6\"/><text x=\"517\" y=\"190\" class=\"lab a-fade3\" text-anchor=\"middle\" style=\"fill:#1b6e3c\">remove<\/text><text x=\"180\" y=\"250\" class=\"lab a-fade3\">germs.<\/text><\/svg>"}, {"t": "Say your sentence out loud. Then write it down.", "tip": "If it sounds right, it is ready to write.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A face says the sentence aloud before writing it.\"><circle cx=\"230\" cy=\"190\" r=\"70\" fill=\"#f6e7c8\" stroke=\"#18283b\" stroke-width=\"3\"/><circle cx=\"208\" cy=\"172\" r=\"7\" fill=\"#18283b\"/><circle cx=\"252\" cy=\"172\" r=\"7\" fill=\"#18283b\"/><path d=\"M205 212 q25 22 50 0\" class=\"k\"/><g class=\"a-fade\"><path d=\"M330 120 h300 a16 16 0 0 1 16 16 v70 a16 16 0 0 1 -16 16 h-240 l-40 30 l10 -30 h-30 a16 16 0 0 1 -16 -16 v-70 a16 16 0 0 1 16 -16 z\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"488\" y=\"180\" class=\"lab\" text-anchor=\"middle\">Say it first.<\/text><\/g><g class=\"a-fade3\"><path d=\"M360 320 H640\" class=\"k\" style=\"stroke:#153e64\"/><text x=\"500\" y=\"306\" class=\"lab\" text-anchor=\"middle\">Then write it.<\/text><\/g><\/svg>"}, {"t": "Check it. Capital letter at the start. Full stop at the end. Does it make sense?", "tip": "Tick the Done when line on your sheet.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"The capital letter and the full stop are circled and a green tick appears.\"><rect x=\"150\" y=\"40\" width=\"500\" height=\"300\" rx=\"8\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"190\" y=\"150\" class=\"lab\" textLength=\"410\" lengthAdjust=\"spacingAndGlyphs\">We wash our hands to remove germs.<\/text><g class=\"a-pop\"><circle cx=\"203\" cy=\"140\" r=\"26\" fill=\"none\" stroke=\"#1b6e3c\" stroke-width=\"5\"/><\/g><g class=\"a-pop2\"><circle cx=\"597\" cy=\"146\" r=\"15\" fill=\"none\" stroke=\"#1b6e3c\" stroke-width=\"5\"/><\/g><g class=\"a-fade3\"><path d=\"M330 250 l30 34 l70 -80\" class=\"k\" style=\"stroke:#1b6e3c;stroke-width:10\"/><text x=\"470\" y=\"270\" class=\"lab\">It makes sense.<\/text><\/g><\/svg>"}];
+var WORDS=[["key word", "The most important word in the question."], ["sentence starter", "The first part of the answer, written for you."], ["gap", "A space where you write the missing word."], ["full stop", "The dot at the end of a sentence."]];
+var i=0,watching=false,timer=null;
+var $=function(id){return document.getElementById(id)};
+var canSpeak=('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window);
+if(!canSpeak){$('read').hidden=true}
+var dots=$('dots');STEPS.forEach(function(){dots.appendChild(document.createElement('li'))});
+var dl=$('words');WORDS.forEach(function(w){var dt=document.createElement('dt');dt.textContent=w[0];var dd=document.createElement('dd');dd.textContent=w[1];dl.appendChild(dt);dl.appendChild(dd)});
+function stopTalk(){if(canSpeak){try{window.speechSynthesis.cancel()}catch(e){}}}
+function speak(text,done){
+  if(!canSpeak){if(done)timer=setTimeout(done,6500);return}
+  stopTalk();
+  var u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=0.9;
+  var fired=false;function fin(){if(fired)return;fired=true;if(done)timer=setTimeout(done,1800)}
+  u.onend=fin;u.onerror=fin;
+  if(done){timer=setTimeout(fin,Math.max(7000,text.length*110))}
+  try{window.speechSynthesis.speak(u)}catch(e){fin()}
+}
+function show(n){
+  i=Math.max(0,Math.min(STEPS.length-1,n));
+  var s=STEPS[i];
+  $('count').textContent='Step '+(i+1)+' of '+STEPS.length;
+  $('pic').innerHTML=s.svg;
+  $('say').textContent=s.t;
+  var tip=$('tip');if(s.tip){tip.textContent=s.tip;tip.hidden=false}else{tip.hidden=true}
+  $('back').disabled=i===0;
+  $('next').textContent=i===STEPS.length-1?'Start again':'Next step';
+  Array.prototype.forEach.call(dots.children,function(d,k){d.className=k<=i?'on':''});
+}
+function textOf(s){return s.t+(s.tip?' '+s.tip:'')}
+function stopWatch(){watching=false;clearTimeout(timer);stopTalk();$('watch').setAttribute('aria-pressed','false');$('watch').textContent='Watch all steps'}
+function playFrom(n){
+  if(!watching)return;show(n);
+  speak(textOf(STEPS[i]),function(){if(!watching)return;if(i<STEPS.length-1){playFrom(i+1)}else{stopWatch()}});
+}
+$('next').onclick=function(){stopWatch();show(i===STEPS.length-1?0:i+1)};
+$('back').onclick=function(){stopWatch();show(i-1)};
+$('again').onclick=function(){stopWatch();show(i)};
+$('read').onclick=function(){stopWatch();speak(textOf(STEPS[i]))};
+$('watch').onclick=function(){
+  if(watching){stopWatch();return}
+  watching=true;this.setAttribute('aria-pressed','true');this.textContent='Stop';playFrom(i===STEPS.length-1?0:i);
+};
+$('bigger').onclick=function(){var on=this.getAttribute('aria-pressed')!=='true';this.setAttribute('aria-pressed',on);document.documentElement.style.setProperty('--fs',on?'1.3':'1')};
+var TINTS=[['white','#edf3f7','#fff','#fffdf6'],['cream','#f3ead2','#fbf5e2','#fdf9ec'],['blue','#d6e6f2','#e6f0f8','#eef5fa'],['green','#d9ead9','#e8f3e8','#f0f7f0']],ti=0;
+$('tint').onclick=function(){ti=(ti+1)%TINTS.length;var c=TINTS[ti],r=document.documentElement.style;r.setProperty('--soft',c[1]);r.setProperty('--bg',c[2]);r.setProperty('--card',c[3]);this.textContent='Page colour: '+c[0]};
+$('still').onclick=function(){var on=this.getAttribute('aria-pressed')!=='true';this.setAttribute('aria-pressed',on);document.body.classList.toggle('still',on)};
+var TABS=['steps','stuck','ways'],cur='steps';
+function pick(name,focus){
+  stopWatch();cur=name;
+  TABS.forEach(function(t){var on=t===name,b=$('tab-'+t);b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;$('p-'+t).hidden=!on;if(on&&focus)b.focus()});
+}
+TABS.forEach(function(t,k){
+  $('tab-'+t).onclick=function(){pick(t)};
+  $('tab-'+t).addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();e.stopPropagation();pick(TABS[(k+(e.key==='ArrowRight'?1:TABS.length-1))%TABS.length],true)}
+  });
+});
+Array.prototype.forEach.call(document.querySelectorAll('.readp'),function(b){
+  if(!canSpeak){b.hidden=true;return}
+  b.onclick=function(){var p=$(b.getAttribute('data-for'));var parts=[];Array.prototype.forEach.call(p.querySelectorAll('.lead,.try li,.tip'),function(el){var x=el.cloneNode(true);var n=x.querySelector('.n');var lab=n?n.textContent+'. ':'';if(n)n.remove();var bb=x.querySelector('b');parts.push(lab+(bb?bb.textContent+' '+x.textContent.slice(bb.textContent.length):x.textContent))});speak(parts.join(' '))};
+});
+document.addEventListener('keydown',function(e){if(cur!=='steps')return;if(e.key==='ArrowRight'){$('next').click()}else if(e.key==='ArrowLeft'&&i>0){$('back').click()}});
+window.addEventListener('pagehide',stopTalk);
+show(0);
+})();
+</script>
+</body>
+</html>
