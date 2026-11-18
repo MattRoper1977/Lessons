@@ -59,7 +59,16 @@ svg text{font-family:system-ui,sans-serif;fill:var(--ink)}
 .a-gone{animation:gone .8s ease-in 2s both}
 @media (prefers-reduced-motion:reduce){[class*="a-"]{animation:none!important;stroke-dasharray:none!important}}
 body.still [class*="a-"]{animation:none!important;stroke-dasharray:none!important}
-@media print{.tools,.nav,details,.dots{display:none}}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.tabs button{border-radius:12px 12px 0 0}
+.tabs button[aria-selected=true]{background:var(--accent);color:#fff}
+.try{list-style:none;margin:0;padding:0;counter-reset:t}
+.try li{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-top:1px solid #c8d3dd;font-size:calc(22px*var(--fs))}
+.try li:first-child{border-top:0}
+.try .n{flex:none;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.try b{display:block}
+.lead{font-size:calc(22px*var(--fs));font-weight:650;margin:0 0 6px}
+@media print{.tools,.nav,details,.dots,.tabs{display:none}}
 </style>
 </head>
 <body>
@@ -71,6 +80,12 @@ body.still [class*="a-"]{animation:none!important;stroke-dasharray:none!importan
 <button type="button" id="still" aria-pressed="false">Stop the moving</button>
 </div>
 </header>
+<div class="tabs" role="tablist" aria-label="Kinds of help">
+<button type="button" role="tab" id="tab-steps" aria-controls="p-steps" aria-selected="true">Help with this task</button>
+<button type="button" role="tab" id="tab-stuck" aria-controls="p-stuck" aria-selected="false" tabindex="-1">I am stuck</button>
+<button type="button" role="tab" id="tab-ways" aria-controls="p-ways" aria-selected="false" tabindex="-1">Ways to answer</button>
+</div>
+<div id="p-steps" role="tabpanel" aria-labelledby="tab-steps">
 <section class="card" aria-live="polite">
 <p class="count" id="count"></p>
 <div id="pic"></div>
@@ -88,6 +103,31 @@ body.still [class*="a-"]{animation:none!important;stroke-dasharray:none!importan
 </section>
 <details class="card"><summary>Word help</summary><dl id="words"></dl></details>
 <details class="card"><summary>Still stuck?</summary><p>Go back to step 3 and read the box again. Then put your hand up or show your help card, and an adult will come to you.</p></details>
+</div>
+<div id="p-stuck" role="tabpanel" aria-labelledby="tab-stuck" hidden>
+<section class="card">
+<p class="lead">Being stuck is normal. Try these three things first.</p>
+<ol class="try" id="stucklist">
+<li><span class="n" aria-hidden="true">1</span><span><b>Read the task again.</b>Point to each word as you read.</span></li>
+<li><span class="n" aria-hidden="true">2</span><span><b>Look at your sheet.</b>Find the box called What you need to know. Look at the picture too.</span></li>
+<li><span class="n" aria-hidden="true">3</span><span><b>Do the first small bit.</b>Use the sentence starter or the first step.</span></li>
+</ol>
+<p class="tip">Still stuck? Put your hand up or show your help card. While you wait, do the next part that you can do.</p>
+<div class="nav"><button type="button" class="readp" data-for="p-stuck">Read to me</button></div>
+</section>
+</div>
+<div id="p-ways" role="tabpanel" aria-labelledby="tab-ways" hidden>
+<section class="card">
+<p class="lead">You can show what you know in different ways. Pick one.</p>
+<ol class="try">
+<li><span class="n" aria-hidden="true">A</span><span><b>Write it.</b>Use the sentence starter on your sheet.</span></li>
+<li><span class="n" aria-hidden="true">B</span><span><b>Draw it and label it.</b>Add three labels with key words.</span></li>
+<li><span class="n" aria-hidden="true">C</span><span><b>Say it.</b>Tell an adult your answer and they will write it down.</span></li>
+</ol>
+<p class="tip">Check with your teacher which way is right for this task.</p>
+<div class="nav"><button type="button" class="readp" data-for="p-ways">Read to me</button></div>
+</section>
+</div>
 <footer>Made by Matt · help page · nothing you do here is saved or sent anywhere.</footer>
 </main>
 <script>
@@ -137,7 +177,22 @@ $('watch').onclick=function(){
 };
 $('bigger').onclick=function(){var on=this.getAttribute('aria-pressed')!=='true';this.setAttribute('aria-pressed',on);document.documentElement.style.setProperty('--fs',on?'1.3':'1')};
 $('still').onclick=function(){var on=this.getAttribute('aria-pressed')!=='true';this.setAttribute('aria-pressed',on);document.body.classList.toggle('still',on)};
-document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){$('next').click()}else if(e.key==='ArrowLeft'&&i>0){$('back').click()}});
+var TABS=['steps','stuck','ways'],cur='steps';
+function pick(name,focus){
+  stopWatch();cur=name;
+  TABS.forEach(function(t){var on=t===name,b=$('tab-'+t);b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;$('p-'+t).hidden=!on;if(on&&focus)b.focus()});
+}
+TABS.forEach(function(t,k){
+  $('tab-'+t).onclick=function(){pick(t)};
+  $('tab-'+t).addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();e.stopPropagation();pick(TABS[(k+(e.key==='ArrowRight'?1:TABS.length-1))%TABS.length],true)}
+  });
+});
+Array.prototype.forEach.call(document.querySelectorAll('.readp'),function(b){
+  if(!canSpeak){b.hidden=true;return}
+  b.onclick=function(){var p=$(b.getAttribute('data-for'));var parts=[];Array.prototype.forEach.call(p.querySelectorAll('.lead,.try li,.tip'),function(el){var x=el.cloneNode(true);var n=x.querySelector('.n');var lab=n?n.textContent+'. ':'';if(n)n.remove();var bb=x.querySelector('b');parts.push(lab+(bb?bb.textContent+' '+x.textContent.slice(bb.textContent.length):x.textContent))});speak(parts.join(' '))};
+});
+document.addEventListener('keydown',function(e){if(cur!=='steps')return;if(e.key==='ArrowRight'){$('next').click()}else if(e.key==='ArrowLeft'&&i>0){$('back').click()}});
 window.addEventListener('pagehide',stopTalk);
 show(0);
 })();
