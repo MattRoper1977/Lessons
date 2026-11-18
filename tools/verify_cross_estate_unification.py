@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "1dabbb43cdf04a6e25c9b07e061d56d72c37513b9591d8afe6bb65b17a72852f"
+    "resources.json": "8788533c0fe72cabffc24317340da01f4dda6a7a5226073f22ab81ebe8854207"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -129,7 +129,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles_browser.cjs": "0c193780f901cf4d3b7013819a7488567bf7ce40a75d05dbe43c7a6971877344",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
         "tools/sw2/check_tokens_inert.cjs": "c45f009235c70d84a7e1ee8fc08fb0e6aa5e7efcc162714eff3c844cce68e9f1",
-        "assets/catalogue/lesson-order.json": "c80c6172bf062c5bccbf24b7211644c5cb71d94fc7612fd6ef5ca3151e8b2203",
+        "assets/catalogue/lesson-order.json": "37413c9748e52a2789fe7a549a6bc51fc1676e4de1e8d557ee107c20b33e5ba0",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "daf4703a160678b9076ed3bc7487e841327162d237559356a01335a3051e3e3c",
@@ -153,7 +153,7 @@ CATALOGUE_PINS = {
         "assets/catalogue/lesson-navigation.js": "42e579bbef3940c24ca4360319290820305a777330b8bff79152b2cb6aa077e3",
         "assets/catalogue/science-shelf.css": "b2b1eb328662d841add139ccfff107f985f17373f1ee82b8762475663097ab60",
         "assets/catalogue/science-shelf.js": "a59fe0c988a5de7d614afc6a36d7dacf14c6e3fa92c732740442e4914d00f356",
-        "assets/catalogue/terms-and-styles.json": "b1e9f283dac59ad2c67c75c3f19fa7578ae60ad6129b5485ab1829ac0a453756",
+        "assets/catalogue/terms-and-styles.json": "6d253fa6fd773b207e46010f697effa75732666e0d8ae986fb63c8344b90456e",
         "assets/catalogue/science-shelf.json": "6bfcac8579a72f8413e158b49460a8b853f284b8dc64bd4da4442c37e92edadf",
         "assets/catalogue/humanities-shelf.json": "f0a730012b8ec6c0835b3220e17a9c482c025bd1e05ce469005cca5072d81af2",
         "tools/catalogue/build_catalogue.py": "249e82b795e0fa5f1eaeb7afd00883a963d63742b50b783fa88f808737ab230d",
@@ -173,7 +173,7 @@ CATALOGUE_PINS = {
         "Science/Build/START_HERE.html": "acac26140f5aeef22292e6ce3831fa61aaf5e62432cc3998b340918c8bfaee7f",
         "Science/Grow/START_HERE.html": "d2bec305dec3212215c6f599cad3925c571f9a34ca6e85268893c8ed142170dd",
         "Science/Launch/START_HERE.html": "10b46e7cf26e3aa4b7f1fb4758a039bcbec7000bc2ec8d30dfe3ce0e0b966353",
-        "tools/catalogue/SHELF_SELECTION.json": "6fe40513dd76520dcfe24e300053d2bda4728d312619673999db0d86e1d01b46",
+        "tools/catalogue/SHELF_SELECTION.json": "11503604c44d99ee941caff20882d22ae4e64bc82fac6f6901b8219234a61504",
         "tools/catalogue/HUMANITIES_SELECTION.json": "2aac459b1d9b113a7b20caa005b050651e73087ed499ce91d4b501ad2c44d7db",
         "tools/easter/science_original_browser.cjs": "aae28a4166d41546cbe5b0acd0866eeaf5e6f47cd5b1949fc48ecb2d4c79a1ec",
         "tools/science_pack/browser_checks.cjs": "058c9bc1f06c876f2994a23d467d83fced683c6355eb92d0ef43986d3e28d72d",
@@ -247,7 +247,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "156981247e4508c9016d91090ad52bc4ee4d76a65235beb93ac65b71256e1c9f",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "526f8b5cecf4457554c7cd94aba18537ebdea8223659c2091cc1d4f6850010d8",
         "tools/catalogue/TERM_REVIEW.json": "202e6fb09a1b163114d806f085e4712f9bfde4d1a55a89fcef4392d24a366847",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -3071,6 +3071,30 @@ CATALOGUE_PINS = {
         "Art/Grow/CREATIVE_ARTS_A2_W04/Public/ART_GROW_A2_W04_P2.html": "a968b226acf083b931df9d1c7a8fb543bed6715e83c0d2b4d8f3604a2cea6da9",
         "Careers/Build/Autumn_2_2026-27/CAREERS_BUILD_A2_W08/CAREERS_BUILD_A2_W08.html": "33f737202795340ef5f1740d2fbc1fab38cba0c59d15bb8a24e11cc5cb672e54",
         "Careers/Launch/Autumn_2_2026-27/CAREERS_LAUNCH_A2_W08/CAREERS_LAUNCH_A2_W08.html": "c0674881a561271756a7c4f3b9181023b8661f11c900098831cde20e4717db49",
+        "Community_Projects/Build/Autumn_1_2026-27/COMMUNITY_BUILD_A1_W01_P1/COMMUNITY_BUILD_A1_W01_P1.html": "e6e56d299a956cfde15e6c70d5352b2af166df20616406b6910a6a668884bc80",
+        "Community_Projects/Build/Autumn_1_2026-27/COMMUNITY_BUILD_A1_W01_P2/COMMUNITY_BUILD_A1_W01_P2.html": "857a910f0392eedd397a7022498cdd5fef9370199f94bbd542a3f991e5c3e9fc",
+        "Community_Projects/Build/Autumn_1_2026-27/COMMUNITY_BUILD_A1_W02_P1/COMMUNITY_BUILD_A1_W02_P1.html": "46de1b323e83a03989903a364a4a5551e2726b3facb087f8aa97f8e82d67b6e1",
+        "Community_Projects/Build/Autumn_1_2026-27/COMMUNITY_BUILD_A1_W02_P2/COMMUNITY_BUILD_A1_W02_P2.html": "472467c66a51a7298fa354d7b4fe4d9b60fa274c0768078d7db8a3ac94866b2f",
+        "Community_Projects/Build/Autumn_1_2026-27/COMMUNITY_BUILD_A1_W03_P1/COMMUNITY_BUILD_A1_W03_P1.html": "d954d83eb074f4f344e6754c9dec24179374173485c21fff918ee79907eb135f",
+        "Community_Projects/Build/Autumn_1_2026-27/COMMUNITY_BUILD_A1_W03_P2/COMMUNITY_BUILD_A1_W03_P2.html": "820898f383c0052a908d4fc83d25c2a8df88eb11fefc04c559dbd21904e2df24",
+        "Community_Projects/Build/Autumn_1_2026-27/COMMUNITY_BUILD_A1_W04_P1/COMMUNITY_BUILD_A1_W04_P1.html": "9b74a2eace59733dcb4d74620dfb8aacdb4a984d9c0558b92c5bb3c17217f378",
+        "Community_Projects/Build/Autumn_1_2026-27/COMMUNITY_BUILD_A1_W04_P2/COMMUNITY_BUILD_A1_W04_P2.html": "db9c4f5a2cf5c6641fc6c37eb43c385020b87d38c8034bf38be9f1d8df0e254c",
+        "Community_Projects/Build/Autumn_1_2026-27/COMMUNITY_BUILD_A1_W05_P1/COMMUNITY_BUILD_A1_W05_P1.html": "d1683b4742f131486deaffdc54249ca45c03ac1dc6e889b1297ba79dc981ed41",
+        "Community_Projects/Build/Autumn_1_2026-27/COMMUNITY_BUILD_A1_W05_P2/COMMUNITY_BUILD_A1_W05_P2.html": "7cbb27ebcf9fa13362b038b0b0823dbd4a690df04a1cc33608cae2de5587ebe9",
+        "Community_Projects/Build/Autumn_1_2026-27/COMMUNITY_BUILD_A1_W06_P1/COMMUNITY_BUILD_A1_W06_P1.html": "8b8305468ad12a71e2435732b38f5359fc7b165ba3113a1378a4d4b563eaa45d",
+        "Community_Projects/Build/Autumn_1_2026-27/COMMUNITY_BUILD_A1_W06_P2/COMMUNITY_BUILD_A1_W06_P2.html": "90e51083288dc1558710d1fcc07d561ec55efb9c853eb8e383d2ef40514b359b",
+        "Community_Projects/Grow/Autumn_1_2026-27/GCOMM_GROW_A1_W01_P1/GCOMM_GROW_A1_W01_P1.html": "c94f4a465cadb09262722fa7ec1df9bbf6207310fc5b2f162c80f32489fe9095",
+        "Community_Projects/Grow/Autumn_1_2026-27/GCOMM_GROW_A1_W02_P1/GCOMM_GROW_A1_W02_P1.html": "81225c5547fbb24236a94d7b5032f9c52711dab39d4b19de2ec0934f476481f1",
+        "Community_Projects/Grow/Autumn_1_2026-27/GCOMM_GROW_A1_W03_P1/GCOMM_GROW_A1_W03_P1.html": "1ff609bbc586c048edb7910df3b50e2e3d341863825ffcc8b97927446340ba3d",
+        "Community_Projects/Grow/Autumn_1_2026-27/GCOMM_GROW_A1_W04_P1/GCOMM_GROW_A1_W04_P1.html": "2cce08e1fcf13f56ad817448546115511cc7d55baab73841aefddc06a3b570f4",
+        "Community_Projects/Grow/Autumn_1_2026-27/GCOMM_GROW_A1_W05_P1/GCOMM_GROW_A1_W05_P1.html": "e6a599776f40b240ad8b6ac922ade99f3975c11e4296998759722c9a2b92c9eb",
+        "Community_Projects/Grow/Autumn_1_2026-27/GCOMM_GROW_A1_W06_P1/GCOMM_GROW_A1_W06_P1.html": "57312dc06d592e87a88e2d842f5222b74f5d06e7b63c4dbaf4ebd33bd7254d19",
+        "Community_Projects/Launch/Autumn_1_2026-27/COMM_LAUNCH_A1_W01_P1/COMM_LAUNCH_A1_W01_P1.html": "c8e9fa79d879c9efbc21d1cba2ccd5ab8b6217bf62d6fb373bc0c01f3cab18fe",
+        "Community_Projects/Launch/Autumn_1_2026-27/COMM_LAUNCH_A1_W02_P1/COMM_LAUNCH_A1_W02_P1.html": "d81cc5ef5bcd4608c89430acb4f4e3ebb72d2b745130e683bff873f4e2ff6214",
+        "Community_Projects/Launch/Autumn_1_2026-27/COMM_LAUNCH_A1_W03_P1/COMM_LAUNCH_A1_W03_P1.html": "760f9fba9295e97eef1fd6c9c373cca55ec3a07e65471260eec3bafa69f6f169",
+        "Community_Projects/Launch/Autumn_1_2026-27/COMM_LAUNCH_A1_W04_P1/COMM_LAUNCH_A1_W04_P1.html": "54675e9c8073ef0f4fc51da2abcee06832c0f8762d1f5b0b6db44305289300b2",
+        "Community_Projects/Launch/Autumn_1_2026-27/COMM_LAUNCH_A1_W05_P1/COMM_LAUNCH_A1_W05_P1.html": "81b1252e74a115010788ef5302edb22f2b33577e8501980d9103418c27ac93d8",
+        "Community_Projects/Launch/Autumn_1_2026-27/COMM_LAUNCH_A1_W06_P1/COMM_LAUNCH_A1_W06_P1.html": "86737d594596f8f53df31aec531f2167392a8a2c143633f06dce390ceb3b40a1",
         "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W01/COMMUNITY_A2_W01.html": "f65c61d2511dad4d38bde320d52f79efb4cea341560b08aa313b95e5636e9683",
         "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W03/COMMUNITY_A2_W03.html": "158446487364c878f732ee63117828aefe2f3240c5b6e94a7ad4ce2804300f84",
         "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W04/COMMUNITY_A2_W04.html": "d5aa34cc69da55c477e6335e46a943cdca297b082f38260a206314f8c702e37c",
@@ -3560,7 +3584,7 @@ CATALOGUE_ORIGINAL_ROWS_SHA256 = "15150552200dcf96089afd27ec81b5712a63aef929d07e
 # digest below are re-cut by tools/catalogue/pin_catalogue_contract.py from
 # rows it has verified against that derivation; an edit to any appended row,
 # a removed pack row or an extra lesson row still reds here.
-CATALOGUE_SHELF_ROWS = 765
+CATALOGUE_SHELF_ROWS = 789
 # UX2 A1: keys that may be appended to an original row without moving its
 # digest (see catalogue_errors). Nothing else is additive. No original row
 # carried either key before the ruling (measured 2026-09-08: 0 of 734), so the
@@ -3574,7 +3598,8 @@ CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
 # Re-cut 2026-11-17 (ruling thread, group D pilot, on the owner's standing word of 2026-11-16): 13 reviewed rows for the Vocational Autumn 1 lessons are added as new listed pages (a1list-voc-build-a1-w01, a1list-voc-build-a1-w02, a1list-voc-build-a1-w03, a1list-voc-build-a1-w04, a1list-voc-build-a1-w05, a1list-voc-build-a1-w06, a1list-voc-build-a1-w07, a1list-voc-launch-a1-w01, a1list-voc-launch-a1-w02, a1list-voc-launch-a1-w03, a1list-voc-launch-a1-w04, a1list-voc-launch-a1-w05, a1list-voc-launch-a1-w06); no other row added, removed, reordered or edited (with the 13 dropped the 720 rows digest to e86b7783). Previous count 720, previous digest e86b7783.
 # Re-cut 2026-11-17 (ruling thread, group D pilot, on the owner's standing word of 2026-11-16): 20 reviewed rows for the Careers Autumn 1 lessons are added as new listed pages (a1list-careers-build-a1-w01-p1, a1list-careers-build-a1-w01-p2, a1list-careers-build-a1-w02-p1, a1list-careers-build-a1-w02-p2, a1list-careers-build-a1-w03-p1, a1list-careers-build-a1-w03-p2, a1list-careers-build-a1-w04-p1, a1list-careers-build-a1-w04-p2, a1list-careers-build-a1-w05-p1, a1list-careers-build-a1-w05-p2, a1list-careers-build-a1-w06-p1, a1list-careers-build-a1-w06-p2, a1list-careers-build-a1-w07-p1, a1list-careers-build-a1-w07-p2, a1list-careers-launch-a1-w01, a1list-careers-launch-a1-w02, a1list-careers-launch-a1-w03, a1list-careers-launch-a1-w04, a1list-careers-launch-a1-w05, a1list-careers-launch-a1-w06); no other row added, removed, reordered or edited (with the 20 dropped the 733 rows digest to d7f2f7b4). Previous count 733, previous digest d7f2f7b4.
 # Re-cut 2026-11-17 (ruling thread, group D pilot, on the owner's standing word of 2026-11-16): 12 reviewed rows for the DT Autumn 1 lessons are added as new listed pages (a1list-dt-build-a1-w01-p1, a1list-dt-build-a1-w01-p2, a1list-dt-build-a1-w02-p1, a1list-dt-build-a1-w02-p2, a1list-dt-build-a1-w03-p1, a1list-dt-build-a1-w03-p2, a1list-dt-build-a1-w04-p1, a1list-dt-build-a1-w04-p2, a1list-dt-build-a1-w05-p1, a1list-dt-build-a1-w05-p2, a1list-dt-build-a1-w06-p1, a1list-dt-build-a1-w06-p2); no other row added, removed, reordered or edited (with the 12 dropped the 753 rows digest to b2091d62). Previous count 753, previous digest b2091d62.
-CATALOGUE_SHELF_ROWS_SHA256 = "62c51d1873ef603863806272ffb0a0c8d38a7a8bfbe9bf536141819d60afa18f"
+# Re-cut 2026-11-17 (ruling thread, group D pilot, on the owner's standing word of 2026-11-16): 24 reviewed rows for the Community Projects Autumn 1 lessons are added as new listed pages (a1list-community-build-a1-w01-p1, a1list-community-build-a1-w01-p2, a1list-community-build-a1-w02-p1, a1list-community-build-a1-w02-p2, a1list-community-build-a1-w03-p1, a1list-community-build-a1-w03-p2, a1list-community-build-a1-w04-p1, a1list-community-build-a1-w04-p2, a1list-community-build-a1-w05-p1, a1list-community-build-a1-w05-p2, a1list-community-build-a1-w06-p1, a1list-community-build-a1-w06-p2, a1list-community-grow-a1-w01, a1list-community-grow-a1-w02, a1list-community-grow-a1-w03, a1list-community-grow-a1-w04, a1list-community-grow-a1-w05, a1list-community-grow-a1-w06, a1list-community-launch-a1-w01, a1list-community-launch-a1-w02, a1list-community-launch-a1-w03, a1list-community-launch-a1-w04, a1list-community-launch-a1-w05, a1list-community-launch-a1-w06); no other row added, removed, reordered or edited (with the 24 dropped the 765 rows digest to 62c51d18). Previous count 765, previous digest 62c51d18.
+CATALOGUE_SHELF_ROWS_SHA256 = "3ed450974a02b3ddfb6d95a7f77ff681cfec25178f998fa71f88221658d29c6a"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
