@@ -3212,6 +3212,26 @@ CATALOGUE_PINS = {
         "kits/help/gridmap.html": "c4661555f8d4c6a086900356c2b090148ef558edbd0dc92ff590df8090a16140",
         "kits/help/snack.html": "44aef22b1e2c7c58cae16ff747423c9236ff1edfba00977a61b52b5748285260",
         "kits/help/weigh.html": "c20d0ede328b07bb79dffdf1bd50f62ea1f40d82d49ef78ade99485367fde313",
+        "kits/help/index.html": "5469d5bdfe7ac5056e0672c6ead5d229dc0669d3a6b901a5f579289748283466",
+        "help/index.html": "d67c8e340d39335e71de9684a75490c7819db9636fa13190416bdd0a2a6f4b92",
+        "help/answer/index.html": "fb088bb2a003d3734864060849ffb5ca50a0e2c8e9b5c881c4753896ca8c361a",
+        "help/bridge/index.html": "a41bb7327ff4973eae526d2f98c5903586a87b2d30e11e0d76b7ee74584acb77",
+        "help/calm/index.html": "42803308ff8cb4b48adbff4ac36acb7ef42128db1da2d3bda7508da3acd34767",
+        "help/change/index.html": "4d39a35fadbc9e1211001006c32ef3005b13ce43b8af40dc64e27e62cd9d846e",
+        "help/check/index.html": "6ece9be4b9626ede8e54da2c1ae7fb94d9b3e0da423ba36aa23f487fc7f2a0e0",
+        "help/cue/index.html": "284bef1a212fb765b06a75bf6dffebe0b4ca08e38b5639b8ec2674ea1efa67f9",
+        "help/follow/index.html": "a55db795ec39b2767a818b77b017d0c5676718acd75ffa5388541dcc78979023",
+        "help/gridmap/index.html": "36549c44f769e544c8530fc8e333c8c9af8d7aebb9dd24671e90a88c47b81fb2",
+        "help/kitchen/index.html": "50d96fdc855c94c40de2280bd3388653fa84a7e5e19ad37008b27d9eaf98057b",
+        "help/model/index.html": "a552ffa5c6d389efce0174a1ce2a591098dff36712f3c9bdcc1cd8be0cc7222d",
+        "help/pace/index.html": "83b04281fc93749f91e7ae60478f169b6567780bd64d0b083d32a6f2c3b137c4",
+        "help/private/index.html": "237f30fc1cf7b034b060d55de768ca6bc7efe3d404b3f2023131386e2aae0471",
+        "help/record/index.html": "a9c2a842f7ee377a511b50e6ac6ce2a6b5d2052f08a582c8cae1bb22fff3a38d",
+        "help/safer/index.html": "c03c2f7751270d8f031fa481af5dd35018c86af7ba99d7885d4572fdf69f5fee",
+        "help/snack/index.html": "82dcf990fa557c1bbfc47731144ae502756030f75f6370b01c64d55b41679396",
+        "help/source/index.html": "0b87690cf6017010d9cd2a2105b59f61b89b334548cdf3ce6faa79c989afc14b",
+        "help/testclue/index.html": "21f6256b7199f58365ba4dba565a513ec8d35e1ef95a0e828ff937e13d98887b",
+        "help/weigh/index.html": "63b0ea83e59b2def656866b5af4289753c0314d3c2b80cfad5fef19be1d5472d",
         "kits/help/change.html": "bef956dbac0f3be9510e3ee62bd3389a2accac2f7d4245231f7ab5d758208b4d",
         "kits/help/cue.html": "4a62af973467836c920f37d6944f49214364ad1f6351bb735c49316aadaee64b",
         "kits/help/follow.html": "58a0bf459a37d67cb9abcb98490028f66aff5dc8c0d7df2d2458351547a54118",
@@ -3978,7 +3998,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "8a0c43680b4e1bdb83e3d34797816f86491e01bb7af7caeae8da0a31ce412d77",
+    "lessons": "b81ef2a556ab5f0715c4dc39a0c2526a3390d286cf6004b55d058858f462b0b5",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
