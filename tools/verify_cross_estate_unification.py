@@ -3212,7 +3212,7 @@ CATALOGUE_PINS = {
         "kits/help/gridmap.html": "c4661555f8d4c6a086900356c2b090148ef558edbd0dc92ff590df8090a16140",
         "kits/help/snack.html": "44aef22b1e2c7c58cae16ff747423c9236ff1edfba00977a61b52b5748285260",
         "kits/help/weigh.html": "c20d0ede328b07bb79dffdf1bd50f62ea1f40d82d49ef78ade99485367fde313",
-        "kits/help/index.html": "5469d5bdfe7ac5056e0672c6ead5d229dc0669d3a6b901a5f579289748283466",
+        "kits/help/index.html": "6bdb429e437e6cf0c95d26a00d9dedd32d59f313c8855795a34fba2a9b5bdf37",
         "help/index.html": "d67c8e340d39335e71de9684a75490c7819db9636fa13190416bdd0a2a6f4b92",
         "help/answer/index.html": "fb088bb2a003d3734864060849ffb5ca50a0e2c8e9b5c881c4753896ca8c361a",
         "help/bridge/index.html": "a41bb7327ff4973eae526d2f98c5903586a87b2d30e11e0d76b7ee74584acb77",
@@ -3998,7 +3998,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "b81ef2a556ab5f0715c4dc39a0c2526a3390d286cf6004b55d058858f462b0b5",
+    "lessons": "73bd2b7d59b9e39a984015753bf138d98f73c555c4e8dcabb56b3ac154645f6f",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
