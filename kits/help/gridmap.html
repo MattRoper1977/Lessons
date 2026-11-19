@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Made by Matt">
+<title>Help: read a grid map</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2212%22%20fill%3D%22%23153e64%22%2F%3E%3Cpath%20d%3D%22M32%2014v24M32%2046v4%22%20stroke%3D%22white%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
+<style>
+:root{--ink:#18283b;--accent:#153e64;--soft:#edf3f7;--line:#52677c;--bg:#fff;--card:#fffdf6;--mark:#b3261e;--good:#1b6e3c;--tint:#ffe9a8;--fs:1}
+*{box-sizing:border-box}
+body{margin:0;background:var(--soft);color:var(--ink);font:calc(20px*var(--fs))/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:auto;padding:14px 14px 40px}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:space-between}
+h1{font-size:calc(26px*var(--fs));margin:4px 0}
+.sub{margin:0 0 10px;color:#33475b}
+button{font:inherit;min-height:52px;padding:10px 18px;border:2px solid var(--accent);border-radius:12px;background:var(--bg);color:var(--accent);cursor:pointer;font-weight:600}
+button.primary{background:var(--accent);color:#fff}
+button[aria-pressed=true]{background:var(--accent);color:#fff}
+button:focus-visible{outline:4px solid #c9730a;outline-offset:2px}
+button:disabled{opacity:.45;cursor:default}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.card{background:var(--bg);border:2px solid var(--line);border-radius:16px;padding:14px;margin-top:10px}
+.count{font-weight:700;color:var(--accent);margin:0 0 4px}
+.pic{background:var(--card);border:1px solid #c8d3dd;border-radius:12px;display:block;width:100%;height:auto}
+.say{font-size:calc(26px*var(--fs));font-weight:650;margin:12px 0 4px}
+.tip{margin:6px 0 0;padding:8px 12px;border-left:6px solid var(--good);background:#eef7f0;border-radius:6px}
+.nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.nav .grow{flex:1}
+.dots{display:flex;gap:8px;margin:12px 0 0;padding:0;list-style:none;flex-wrap:wrap}
+.dots li{width:16px;height:16px;border-radius:50%;border:2px solid var(--accent)}
+.dots li.on{background:var(--accent)}
+details{margin-top:14px}
+summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+dl{margin:6px 0 0}dt{font-weight:700}dd{margin:0 0 8px}
+footer{margin-top:18px;color:#33475b;font-size:16px}
+svg text{font-family:system-ui,sans-serif;fill:var(--ink)}
+.k{stroke:var(--ink);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cardfill{fill:#f6e7c8;stroke:var(--ink);stroke-width:3}
+.dash{stroke:var(--mark);stroke-width:3;stroke-dasharray:9 7;fill:none}
+.red{fill:var(--mark)}.lab{font-size:22px;font-weight:700}.small{font-size:18px}
+.hl{fill:var(--tint);stroke:var(--ink);stroke-width:2}
+@keyframes slideIn{from{transform:translate(var(--dx,0),var(--dy,-60px));opacity:.2}to{transform:none;opacity:1}}
+@keyframes pop{0%,35%{opacity:0;transform:scale(.4)}70%{opacity:1;transform:scale(1.25)}100%{opacity:1;transform:scale(1)}}
+@keyframes draw{from{stroke-dashoffset:var(--len,400)}to{stroke-dashoffset:0}}
+@keyframes fade{0%,40%{opacity:0}100%{opacity:1}}
+@keyframes rise{from{transform:rotate(0)}to{transform:rotate(var(--rot,-90deg))}}
+@keyframes move{from{transform:translate(0,0)}to{transform:translate(var(--mx,0),var(--my,0))}}
+.a-slide{animation:slideIn 1.6s ease-out both}
+.a-pop{animation:pop 1.4s ease-out both;transform-box:fill-box;transform-origin:center}
+.a-pop2{animation:pop 1.4s ease-out 1.1s both;transform-box:fill-box;transform-origin:center}
+.a-draw{stroke-dasharray:var(--len,400);animation:draw 2s ease-in-out .4s both}
+.a-draw2{stroke-dasharray:var(--len,400);animation:draw 2s ease-in-out 2.2s both}
+.a-fade{animation:fade 2.2s ease-out both}.a-fade2{animation:fade 2.2s ease-out 1.6s both}.a-fade3{animation:fade 2.2s ease-out 3s both}
+.a-rise{animation:rise 2s ease-in-out .6s both;transform-box:fill-box}
+.a-move{animation:move 2.2s ease-in-out .6s both}
+@keyframes gone{to{opacity:0}}
+.a-gone{animation:gone .8s ease-in 2s both}
+@media (prefers-reduced-motion:reduce){[class*="a-"]{animation:none!important;stroke-dasharray:none!important}}
+body.still [class*="a-"]{animation:none!important;stroke-dasharray:none!important}
+.levels{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}.lvl-lab{font-weight:700}
+body.simple .say{font-size:calc(34px*var(--fs))}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.tabs button{border-radius:12px 12px 0 0}
+.tabs button[aria-selected=true]{background:var(--accent);color:#fff}
+.try{list-style:none;margin:0;padding:0;counter-reset:t}
+.try li{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-top:1px solid #c8d3dd;font-size:calc(22px*var(--fs))}
+.try li:first-child{border-top:0}
+.try .n{flex:none;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.try b{display:block}
+.lead{font-size:calc(22px*var(--fs));font-weight:650;margin:0 0 6px}
+@media print{.tools,.nav,details,.dots,.tabs,.levels{display:none}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div><h1>Help: read a grid map</h1><p class="sub">Seven clear steps to read a four-figure grid reference and direction. Watch each step, then do it.</p></div>
+<div class="tools">
+<button type="button" id="bigger" aria-pressed="false">Bigger words</button>
+<button type="button" id="still" aria-pressed="false">Stop the moving</button>
+<button type="button" id="tint">Page colour: white</button>
+</div>
+</header>
+<div class="levels" role="group" aria-label="Help level">
+<span class="lvl-lab">Help level:</span>
+<button type="button" class="lvl" data-l="simple" aria-pressed="false">Simple</button>
+<button type="button" class="lvl" data-l="steps" aria-pressed="true">Step by step</button>
+<button type="button" class="lvl" data-l="detail" aria-pressed="false">More detail</button>
+</div>
+<div class="tabs" role="tablist" aria-label="Kinds of help">
+<button type="button" role="tab" id="tab-steps" aria-controls="p-steps" aria-selected="true">Help with this task</button>
+<button type="button" role="tab" id="tab-stuck" aria-controls="p-stuck" aria-selected="false" tabindex="-1">I am stuck</button>
+<button type="button" role="tab" id="tab-ways" aria-controls="p-ways" aria-selected="false" tabindex="-1">Ways to answer</button>
+</div>
+<div id="p-steps" role="tabpanel" aria-labelledby="tab-steps">
+<section class="card" aria-live="polite">
+<p class="count" id="count"></p>
+<div id="pic"></div>
+<p class="say" id="say"></p>
+<p class="tip" id="tip" hidden></p>
+<div class="nav">
+<button type="button" id="back">Back</button>
+<button type="button" id="next" class="primary">Next step</button>
+<span class="grow"></span>
+<button type="button" id="again">Show again</button>
+<button type="button" id="read">Read to me</button>
+<button type="button" id="watch" aria-pressed="false">Watch all steps</button>
+</div>
+<ol class="dots" id="dots" aria-hidden="true"></ol>
+</section>
+<details class="card"><summary>Word help</summary><dl id="words"></dl></details>
+<details class="card"><summary>Still stuck?</summary><p>Muddled the two numbers? Go back to step 3 for Along first, then step 4 for Up next, or show your help card for an adult.</p></details>
+</div>
+<div id="p-stuck" role="tabpanel" aria-labelledby="tab-stuck" hidden>
+<section class="card">
+<p class="lead">Being stuck is normal. Try these three things first.</p>
+<ol class="try" id="stucklist">
+<li><span class="n" aria-hidden="true">1</span><span><b>Read the task again.</b>Point to each word as you read.</span></li>
+<li><span class="n" aria-hidden="true">2</span><span><b>Look at your sheet.</b>Find the box called What you need to know. Look at the picture too.</span></li>
+<li><span class="n" aria-hidden="true">3</span><span><b>Do the first small bit.</b>Use the sentence starter or the first step.</span></li>
+</ol>
+<p class="tip">Still stuck? Put your hand up or show your help card. While you wait, do the next part that you can do.</p>
+<div class="nav"><button type="button" class="readp" data-for="p-stuck">Read to me</button></div>
+</section>
+</div>
+<div id="p-ways" role="tabpanel" aria-labelledby="tab-ways" hidden>
+<section class="card">
+<p class="lead">You can show what you know in different ways. Pick one.</p>
+<ol class="try">
+<li><span class="n" aria-hidden="true">A</span><span><b>Write it.</b>Use the sentence starter on your sheet.</span></li>
+<li><span class="n" aria-hidden="true">B</span><span><b>Draw it and label it.</b>Add three labels with key words.</span></li>
+<li><span class="n" aria-hidden="true">C</span><span><b>Say it.</b>Tell an adult your answer and they will write it down.</span></li>
+</ol>
+<p class="tip">Check with your teacher which way is right for this task.</p>
+<div class="nav"><button type="button" class="readp" data-for="p-ways">Read to me</button></div>
+</section>
+</div>
+<footer>Made by Matt · help page · nothing you do here is saved or sent anywhere.</footer>
+</main>
+<script>
+(function(){
+var STEPS=[{"t": "Find the place or symbol on the map. Put your finger there.", "tip": "Check the map key first so you know what each symbol means.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A numbered grid map highlights the square with the park tree symbol.\"><rect x=\"180\" y=\"46\" width=\"270\" height=\"216\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><line x1=\"270\" y1=\"46\" x2=\"270\" y2=\"262\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"180\" y1=\"118\" x2=\"450\" y2=\"118\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"360\" y1=\"46\" x2=\"360\" y2=\"262\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"180\" y1=\"190\" x2=\"450\" y2=\"190\" stroke=\"#52677c\" stroke-width=\"2\"/><text x=\"180\" y=\"294\" class=\"lab\" text-anchor=\"middle\">10<\/text><text x=\"270\" y=\"294\" class=\"lab\" text-anchor=\"middle\">11<\/text><text x=\"360\" y=\"294\" class=\"lab\" text-anchor=\"middle\">12<\/text><text x=\"450\" y=\"294\" class=\"lab\" text-anchor=\"middle\">13<\/text><text x=\"164\" y=\"54\" class=\"lab\" text-anchor=\"end\">23<\/text><text x=\"164\" y=\"126\" class=\"lab\" text-anchor=\"end\">22<\/text><text x=\"164\" y=\"198\" class=\"lab\" text-anchor=\"end\">21<\/text><text x=\"164\" y=\"270\" class=\"lab\" text-anchor=\"end\">20<\/text><rect x=\"311\" y=\"88\" width=\"8\" height=\"18\" fill=\"#52677c\"/><circle cx=\"315\" cy=\"78\" r=\"18\" fill=\"#d9ead9\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><path d=\"M201 236 H249 M207 236 Q225 214 243 236\" class=\"k\" style=\"stroke:#153e64;stroke-width:4\"/><rect x=\"270\" y=\"46\" width=\"90\" height=\"72\" fill=\"#d9ead9\" fill-opacity=\"0.45\" stroke=\"#1b6e3c\" stroke-width=\"5\" class=\"a-fade\"/><rect x=\"500\" y=\"88\" width=\"236\" height=\"148\" rx=\"12\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><rect x=\"556\" y=\"138\" width=\"8\" height=\"18\" fill=\"#52677c\"/><circle cx=\"560\" cy=\"128\" r=\"18\" fill=\"#d9ead9\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><text x=\"594\" y=\"142\" class=\"lab\">Park<\/text><text x=\"618\" y=\"206\" class=\"small\" text-anchor=\"middle\">Find this square first.<\/text><text x=\"400\" y=\"352\" class=\"lab\" text-anchor=\"middle\">Find the place on the grid.<\/text><\/svg>", "s": "Find the place on the map."}, {"t": "Find the bottom-left corner of that square. Put a light pencil dot.", "tip": "Always use the bottom-left corner of the square, never the middle or top.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A red dot marks the bottom-left corner of the park square on the numbered grid.\"><rect x=\"180\" y=\"46\" width=\"270\" height=\"216\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><line x1=\"270\" y1=\"46\" x2=\"270\" y2=\"262\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"180\" y1=\"118\" x2=\"450\" y2=\"118\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"360\" y1=\"46\" x2=\"360\" y2=\"262\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"180\" y1=\"190\" x2=\"450\" y2=\"190\" stroke=\"#52677c\" stroke-width=\"2\"/><text x=\"180\" y=\"294\" class=\"lab\" text-anchor=\"middle\">10<\/text><text x=\"270\" y=\"294\" class=\"lab\" text-anchor=\"middle\">11<\/text><text x=\"360\" y=\"294\" class=\"lab\" text-anchor=\"middle\">12<\/text><text x=\"450\" y=\"294\" class=\"lab\" text-anchor=\"middle\">13<\/text><text x=\"164\" y=\"54\" class=\"lab\" text-anchor=\"end\">23<\/text><text x=\"164\" y=\"126\" class=\"lab\" text-anchor=\"end\">22<\/text><text x=\"164\" y=\"198\" class=\"lab\" text-anchor=\"end\">21<\/text><text x=\"164\" y=\"270\" class=\"lab\" text-anchor=\"end\">20<\/text><rect x=\"311\" y=\"88\" width=\"8\" height=\"18\" fill=\"#52677c\"/><circle cx=\"315\" cy=\"78\" r=\"18\" fill=\"#d9ead9\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><path d=\"M201 236 H249 M207 236 Q225 214 243 236\" class=\"k\" style=\"stroke:#153e64;stroke-width:4\"/><rect x=\"270\" y=\"46\" width=\"90\" height=\"72\" fill=\"#ffe9a8\" fill-opacity=\"0.55\" stroke=\"#18283b\" stroke-width=\"3\"/><rect x=\"311\" y=\"88\" width=\"8\" height=\"18\" fill=\"#52677c\"/><circle cx=\"315\" cy=\"78\" r=\"18\" fill=\"#d9ead9\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><circle cx=\"270\" cy=\"118\" r=\"11\" fill=\"#b3261e\" stroke=\"#fff\" stroke-width=\"3\" class=\"a-pop\"/><rect x=\"500\" y=\"88\" width=\"236\" height=\"148\" rx=\"12\" fill=\"#fff\" stroke=\"#b3261e\" stroke-width=\"3\"/><text x=\"618\" y=\"144\" class=\"lab\" text-anchor=\"middle\" style=\"fill:#b3261e\">Bottom-left<\/text><text x=\"618\" y=\"178\" class=\"lab\" text-anchor=\"middle\" style=\"fill:#b3261e\">corner<\/text><text x=\"618\" y=\"214\" class=\"small\" text-anchor=\"middle\">Put a light dot here.<\/text><text x=\"400\" y=\"352\" class=\"lab\" text-anchor=\"middle\">Mark the bottom-left corner.<\/text><\/svg>", "s": "Mark the bottom-left corner first."}, {"t": "Go along the corridor first. Read the number on the bottom line.", "tip": "The bottom numbers are called eastings. Slide your finger right until the corner line.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A finger moves right along the bottom numbers of the grid to read eleven.\"><rect x=\"180\" y=\"46\" width=\"270\" height=\"216\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><line x1=\"270\" y1=\"46\" x2=\"270\" y2=\"262\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"180\" y1=\"118\" x2=\"450\" y2=\"118\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"360\" y1=\"46\" x2=\"360\" y2=\"262\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"180\" y1=\"190\" x2=\"450\" y2=\"190\" stroke=\"#52677c\" stroke-width=\"2\"/><text x=\"180\" y=\"294\" class=\"lab\" text-anchor=\"middle\">10<\/text><text x=\"270\" y=\"294\" class=\"lab\" text-anchor=\"middle\">11<\/text><text x=\"360\" y=\"294\" class=\"lab\" text-anchor=\"middle\">12<\/text><text x=\"450\" y=\"294\" class=\"lab\" text-anchor=\"middle\">13<\/text><text x=\"164\" y=\"54\" class=\"lab\" text-anchor=\"end\">23<\/text><text x=\"164\" y=\"126\" class=\"lab\" text-anchor=\"end\">22<\/text><text x=\"164\" y=\"198\" class=\"lab\" text-anchor=\"end\">21<\/text><text x=\"164\" y=\"270\" class=\"lab\" text-anchor=\"end\">20<\/text><rect x=\"311\" y=\"88\" width=\"8\" height=\"18\" fill=\"#52677c\"/><circle cx=\"315\" cy=\"78\" r=\"18\" fill=\"#d9ead9\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><path d=\"M201 236 H249 M207 236 Q225 214 243 236\" class=\"k\" style=\"stroke:#153e64;stroke-width:4\"/><rect x=\"270\" y=\"46\" width=\"90\" height=\"72\" fill=\"#ffe9a8\" fill-opacity=\"0.55\" stroke=\"#18283b\" stroke-width=\"2\"/><rect x=\"311\" y=\"88\" width=\"8\" height=\"18\" fill=\"#52677c\"/><circle cx=\"315\" cy=\"78\" r=\"18\" fill=\"#d9ead9\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><line x1=\"270\" y1=\"118\" x2=\"270\" y2=\"262\" stroke=\"#153e64\" stroke-width=\"6\"/><circle cx=\"270\" cy=\"118\" r=\"9\" fill=\"#b3261e\"/><rect x=\"246\" y=\"270\" width=\"48\" height=\"32\" rx=\"6\" class=\"hl\"/><text x=\"270\" y=\"294\" class=\"lab\" text-anchor=\"middle\">11<\/text><g class=\"a-slide\" style=\"--dx:-90px;--dy:0px\"><path d=\"M270 308 l-10 18 h6 v22 h8 v-22 h6 z\" fill=\"#153e64\"/><path d=\"M210 330 H252\" class=\"k\" style=\"stroke:#153e64;stroke-width:5\"/><\/g><rect x=\"500\" y=\"82\" width=\"236\" height=\"162\" rx=\"12\" fill=\"#e6f0f8\" stroke=\"#153e64\" stroke-width=\"3\"/><text x=\"618\" y=\"126\" class=\"lab\" text-anchor=\"middle\">1. Along first<\/text><rect x=\"576\" y=\"144\" width=\"84\" height=\"48\" rx=\"8\" class=\"hl\"/><text x=\"618\" y=\"177\" class=\"lab\" text-anchor=\"middle\">11<\/text><text x=\"618\" y=\"224\" class=\"small\" text-anchor=\"middle\">Bottom number = 11<\/text><\/svg>", "s": "Go along the bottom line first."}, {"t": "Go up the stairs next. Read the number on the left side.", "tip": "The side numbers are called northings. Slide your finger up to the corner line.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A finger moves up the side numbers of the grid to read twenty-two.\"><rect x=\"180\" y=\"46\" width=\"270\" height=\"216\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><line x1=\"270\" y1=\"46\" x2=\"270\" y2=\"262\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"180\" y1=\"118\" x2=\"450\" y2=\"118\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"360\" y1=\"46\" x2=\"360\" y2=\"262\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"180\" y1=\"190\" x2=\"450\" y2=\"190\" stroke=\"#52677c\" stroke-width=\"2\"/><text x=\"180\" y=\"294\" class=\"lab\" text-anchor=\"middle\">10<\/text><text x=\"270\" y=\"294\" class=\"lab\" text-anchor=\"middle\">11<\/text><text x=\"360\" y=\"294\" class=\"lab\" text-anchor=\"middle\">12<\/text><text x=\"450\" y=\"294\" class=\"lab\" text-anchor=\"middle\">13<\/text><text x=\"164\" y=\"54\" class=\"lab\" text-anchor=\"end\">23<\/text><text x=\"164\" y=\"126\" class=\"lab\" text-anchor=\"end\">22<\/text><text x=\"164\" y=\"198\" class=\"lab\" text-anchor=\"end\">21<\/text><text x=\"164\" y=\"270\" class=\"lab\" text-anchor=\"end\">20<\/text><rect x=\"311\" y=\"88\" width=\"8\" height=\"18\" fill=\"#52677c\"/><circle cx=\"315\" cy=\"78\" r=\"18\" fill=\"#d9ead9\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><path d=\"M201 236 H249 M207 236 Q225 214 243 236\" class=\"k\" style=\"stroke:#153e64;stroke-width:4\"/><rect x=\"270\" y=\"46\" width=\"90\" height=\"72\" fill=\"#ffe9a8\" fill-opacity=\"0.55\" stroke=\"#18283b\" stroke-width=\"2\"/><rect x=\"311\" y=\"88\" width=\"8\" height=\"18\" fill=\"#52677c\"/><circle cx=\"315\" cy=\"78\" r=\"18\" fill=\"#d9ead9\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><line x1=\"180\" y1=\"118\" x2=\"270\" y2=\"118\" stroke=\"#1b6e3c\" stroke-width=\"6\"/><circle cx=\"270\" cy=\"118\" r=\"9\" fill=\"#b3261e\"/><rect x=\"118\" y=\"102\" width=\"48\" height=\"32\" rx=\"6\" class=\"hl\"/><text x=\"164\" y=\"126\" class=\"lab\" text-anchor=\"end\">22<\/text><g class=\"a-slide\" style=\"--dx:0px;--dy:140px\"><path d=\"M112 118 l-18 -10 v6 h-26 v8 h26 v6 z\" fill=\"#1b6e3c\"/><path d=\"M84 176 V136\" class=\"k\" style=\"stroke:#1b6e3c;stroke-width:5\"/><\/g><rect x=\"500\" y=\"82\" width=\"236\" height=\"162\" rx=\"12\" fill=\"#eef7f0\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><text x=\"618\" y=\"126\" class=\"lab\" text-anchor=\"middle\">2. Up next<\/text><rect x=\"576\" y=\"144\" width=\"84\" height=\"48\" rx=\"8\" class=\"hl\"/><text x=\"618\" y=\"177\" class=\"lab\" text-anchor=\"middle\">22<\/text><text x=\"618\" y=\"224\" class=\"small\" text-anchor=\"middle\">Side number = 22<\/text><\/svg>", "s": "Go up the side line next."}, {"t": "Put the numbers together, bottom first then side, like 11 then 22.", "tip": "Four digits name the whole grid square. Always write bottom first, then side.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"Bottom number eleven and side number twenty-two join into four-figure reference 1122.\"><rect x=\"132\" y=\"46\" width=\"252\" height=\"210\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><line x1=\"216\" y1=\"46\" x2=\"216\" y2=\"256\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"132\" y1=\"116\" x2=\"384\" y2=\"116\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"300\" y1=\"46\" x2=\"300\" y2=\"256\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"132\" y1=\"186\" x2=\"384\" y2=\"186\" stroke=\"#52677c\" stroke-width=\"2\"/><text x=\"132\" y=\"288\" class=\"lab\" text-anchor=\"middle\">10<\/text><text x=\"216\" y=\"288\" class=\"lab\" text-anchor=\"middle\">11<\/text><text x=\"300\" y=\"288\" class=\"lab\" text-anchor=\"middle\">12<\/text><text x=\"384\" y=\"288\" class=\"lab\" text-anchor=\"middle\">13<\/text><text x=\"116\" y=\"54\" class=\"lab\" text-anchor=\"end\">23<\/text><text x=\"116\" y=\"124\" class=\"lab\" text-anchor=\"end\">22<\/text><text x=\"116\" y=\"194\" class=\"lab\" text-anchor=\"end\">21<\/text><text x=\"116\" y=\"264\" class=\"lab\" text-anchor=\"end\">20<\/text><rect x=\"254\" y=\"87\" width=\"8\" height=\"18\" fill=\"#52677c\"/><circle cx=\"258\" cy=\"77\" r=\"18\" fill=\"#d9ead9\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><path d=\"M150 231 H198 M156 231 Q174 209 192 231\" class=\"k\" style=\"stroke:#153e64;stroke-width:4\"/><rect x=\"216\" y=\"46\" width=\"84\" height=\"70\" fill=\"#ffe9a8\" fill-opacity=\"0.55\" stroke=\"#18283b\" stroke-width=\"2\"/><rect x=\"254\" y=\"86\" width=\"8\" height=\"18\" fill=\"#52677c\"/><circle cx=\"258\" cy=\"76\" r=\"17\" fill=\"#d9ead9\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><line x1=\"216\" y1=\"116\" x2=\"216\" y2=\"256\" stroke=\"#153e64\" stroke-width=\"6\"/><line x1=\"132\" y1=\"116\" x2=\"216\" y2=\"116\" stroke=\"#1b6e3c\" stroke-width=\"6\"/><circle cx=\"216\" cy=\"116\" r=\"9\" fill=\"#b3261e\"/><rect x=\"448\" y=\"46\" width=\"132\" height=\"76\" rx=\"10\" fill=\"#e6f0f8\" stroke=\"#153e64\" stroke-width=\"3\"/><text x=\"514\" y=\"76\" class=\"small\" text-anchor=\"middle\">Along first<\/text><text x=\"514\" y=\"108\" class=\"lab\" text-anchor=\"middle\">11<\/text><rect x=\"606\" y=\"46\" width=\"132\" height=\"76\" rx=\"10\" fill=\"#eef7f0\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><text x=\"672\" y=\"76\" class=\"small\" text-anchor=\"middle\">Up next<\/text><text x=\"672\" y=\"108\" class=\"lab\" text-anchor=\"middle\">22<\/text><path d=\"M514 130 L562 174 M672 130 L624 174\" class=\"k\" style=\"stroke:#18283b;stroke-width:4\"/><g class=\"a-fade\"><rect x=\"476\" y=\"180\" width=\"234\" height=\"106\" rx=\"14\" class=\"hl\"/><text x=\"593\" y=\"218\" class=\"small\" text-anchor=\"middle\">Park reference:<\/text><text x=\"593\" y=\"264\" class=\"lab\" text-anchor=\"middle\" style=\"font-size:36px\">1122<\/text><\/g><text x=\"400\" y=\"348\" class=\"lab\" text-anchor=\"middle\">Bottom first, then side: 1122.<\/text><\/svg>", "s": "Write bottom first, then side."}, {"t": "Put the compass on your start place and point to the second place.", "tip": "North is at the top of the map. Check N, E, S and W.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"An arrow on the grid points north-east from the bridge to the park beside a compass.\"><rect x=\"180\" y=\"46\" width=\"270\" height=\"216\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><line x1=\"270\" y1=\"46\" x2=\"270\" y2=\"262\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"180\" y1=\"118\" x2=\"450\" y2=\"118\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"360\" y1=\"46\" x2=\"360\" y2=\"262\" stroke=\"#52677c\" stroke-width=\"2\"/><line x1=\"180\" y1=\"190\" x2=\"450\" y2=\"190\" stroke=\"#52677c\" stroke-width=\"2\"/><text x=\"180\" y=\"294\" class=\"lab\" text-anchor=\"middle\">10<\/text><text x=\"270\" y=\"294\" class=\"lab\" text-anchor=\"middle\">11<\/text><text x=\"360\" y=\"294\" class=\"lab\" text-anchor=\"middle\">12<\/text><text x=\"450\" y=\"294\" class=\"lab\" text-anchor=\"middle\">13<\/text><text x=\"164\" y=\"54\" class=\"lab\" text-anchor=\"end\">23<\/text><text x=\"164\" y=\"126\" class=\"lab\" text-anchor=\"end\">22<\/text><text x=\"164\" y=\"198\" class=\"lab\" text-anchor=\"end\">21<\/text><text x=\"164\" y=\"270\" class=\"lab\" text-anchor=\"end\">20<\/text><rect x=\"311\" y=\"88\" width=\"8\" height=\"18\" fill=\"#52677c\"/><circle cx=\"315\" cy=\"78\" r=\"18\" fill=\"#d9ead9\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><path d=\"M201 236 H249 M207 236 Q225 214 243 236\" class=\"k\" style=\"stroke:#153e64;stroke-width:4\"/><path d=\"M236 214 L306 102 M288 108 l18 -6 l2 19\" class=\"k a-draw\" style=\"stroke:#1b6e3c;stroke-width:6;--len:190\"/><circle cx=\"620\" cy=\"144\" r=\"64\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><line x1=\"620\" y1=\"92\" x2=\"620\" y2=\"196\" class=\"k\"/><line x1=\"568\" y1=\"144\" x2=\"672\" y2=\"144\" class=\"k\"/><path d=\"M620 144 L658 106\" class=\"k\" style=\"stroke:#1b6e3c;stroke-width:6\"/><text x=\"620\" y=\"72\" class=\"lab\" text-anchor=\"middle\">N<\/text><text x=\"698\" y=\"152\" class=\"lab\" text-anchor=\"middle\">E<\/text><text x=\"620\" y=\"234\" class=\"lab\" text-anchor=\"middle\">S<\/text><text x=\"542\" y=\"152\" class=\"lab\" text-anchor=\"middle\">W<\/text><rect x=\"514\" y=\"256\" width=\"212\" height=\"52\" rx=\"10\" fill=\"#eef7f0\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><text x=\"620\" y=\"290\" class=\"lab\" text-anchor=\"middle\" style=\"fill:#1b6e3c\">North-East<\/text><text x=\"400\" y=\"352\" class=\"lab\" text-anchor=\"middle\">Start at the bridge. Point to the park.<\/text><\/svg>", "s": "Put the compass on the start place."}, {"t": "Write one thing the map shows and one thing it does not show.", "tip": "Maps show parks, roads and rivers, but not bus times, weather or noise.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"Two cards compare what a map shows and what a map does not show.\"><rect x=\"70\" y=\"54\" width=\"308\" height=\"236\" rx=\"14\" fill=\"#eef7f0\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><path d=\"M104 98 l12 14 l26 -30\" class=\"k\" style=\"stroke:#1b6e3c;stroke-width:7\"/><text x=\"160\" y=\"106\" class=\"lab\">Map shows:<\/text><text x=\"104\" y=\"158\" class=\"small\">• Park and bridge<\/text><text x=\"104\" y=\"202\" class=\"small\">• Grid squares<\/text><text x=\"104\" y=\"246\" class=\"small\">• Direction<\/text><g class=\"a-fade\"><rect x=\"422\" y=\"54\" width=\"308\" height=\"236\" rx=\"14\" fill=\"#fff\" stroke=\"#153e64\" stroke-width=\"3\"/><circle cx=\"464\" cy=\"98\" r=\"20\" fill=\"#e6f0f8\" stroke=\"#153e64\" stroke-width=\"3\"/><text x=\"464\" y=\"106\" class=\"lab\" text-anchor=\"middle\" style=\"fill:#153e64\">?<\/text><text x=\"498\" y=\"106\" class=\"lab\">Does not show:<\/text><text x=\"456\" y=\"158\" class=\"small\">• Bus times<\/text><text x=\"456\" y=\"202\" class=\"small\">• Noise or traffic<\/text><text x=\"456\" y=\"246\" class=\"small\">• How busy it is<\/text><\/g><text x=\"400\" y=\"344\" class=\"lab\" text-anchor=\"middle\">Say what the map shows and leaves out.<\/text><\/svg>", "s": "Say what the map shows and hides."}];
+var WORDS=[["grid square", "One box on a map made by the grid lines."], ["easting", "The number along the bottom of the map. Read this first."], ["northing", "The number up the side of the map. Read this second."], ["four-figure reference", "Four digits that name one grid square, like 1122."], ["compass", "The N, E, S, W cross that shows direction on a map."]];
+var i=0,watching=false,timer=null,level='steps';
+var $=function(id){return document.getElementById(id)};
+var canSpeak=('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window);
+if(!canSpeak){$('read').hidden=true}
+var dots=$('dots');STEPS.forEach(function(){dots.appendChild(document.createElement('li'))});
+var dl=$('words');WORDS.forEach(function(w){var dt=document.createElement('dt');dt.textContent=w[0];var dd=document.createElement('dd');dd.textContent=w[1];dl.appendChild(dt);dl.appendChild(dd)});
+function stopTalk(){if(canSpeak){try{window.speechSynthesis.cancel()}catch(e){}}}
+function speak(text,done){
+  if(!canSpeak){if(done)timer=setTimeout(done,6500);return}
+  stopTalk();
+  var u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=0.9;
+  var fired=false;function fin(){if(fired)return;fired=true;if(done)timer=setTimeout(done,1800)}
+  u.onend=fin;u.onerror=fin;
+  if(done){timer=setTimeout(fin,Math.max(7000,text.length*110))}
+  try{window.speechSynthesis.speak(u)}catch(e){fin()}
+}
+function show(n){
+  i=Math.max(0,Math.min(STEPS.length-1,n));
+  var s=STEPS[i];
+  $('count').textContent='Step '+(i+1)+' of '+STEPS.length;
+  $('pic').innerHTML=s.svg;
+  $('say').textContent=level==='simple'&&s.s?s.s:s.t;
+  var tip=$('tip');if(s.tip&&level==='detail'){tip.textContent=s.tip;tip.hidden=false}else{tip.hidden=true}
+  $('back').disabled=i===0;
+  $('next').textContent=i===STEPS.length-1?'Start again':'Next step';
+  Array.prototype.forEach.call(dots.children,function(d,k){d.className=k<=i?'on':''});
+}
+function textOf(s){return level==='simple'&&s.s?s.s:s.t+(s.tip&&level==='detail'?' '+s.tip:'')}
+function stopWatch(){watching=false;clearTimeout(timer);stopTalk();$('watch').setAttribute('aria-pressed','false');$('watch').textContent='Watch all steps'}
+function playFrom(n){
+  if(!watching)return;show(n);
+  speak(textOf(STEPS[i]),function(){if(!watching)return;if(i<STEPS.length-1){playFrom(i+1)}else{stopWatch()}});
+}
+$('next').onclick=function(){stopWatch();show(i===STEPS.length-1?0:i+1)};
+$('back').onclick=function(){stopWatch();show(i-1)};
+$('again').onclick=function(){stopWatch();show(i)};
+$('read').onclick=function(){stopWatch();speak(textOf(STEPS[i]))};
+$('watch').onclick=function(){
+  if(watching){stopWatch();return}
+  watching=true;this.setAttribute('aria-pressed','true');this.textContent='Stop';playFrom(i===STEPS.length-1?0:i);
+};
+$('bigger').onclick=function(){var on=this.getAttribute('aria-pressed')!=='true';this.setAttribute('aria-pressed',on);document.documentElement.style.setProperty('--fs',on?'1.3':'1')};
+var TINTS=[['white','#edf3f7','#fff','#fffdf6'],['cream','#f3ead2','#fbf5e2','#fdf9ec'],['blue','#d6e6f2','#e6f0f8','#eef5fa'],['green','#d9ead9','#e8f3e8','#f0f7f0'],['pink','#f6dbe6','#fbeaf1','#fdf3f7']],ti=0;
+$('tint').onclick=function(){ti=(ti+1)%TINTS.length;var c=TINTS[ti],r=document.documentElement.style;r.setProperty('--soft',c[1]);r.setProperty('--bg',c[2]);r.setProperty('--card',c[3]);this.textContent='Page colour: '+c[0]};
+$('still').onclick=function(){var on=this.getAttribute('aria-pressed')!=='true';this.setAttribute('aria-pressed',on);document.body.classList.toggle('still',on)};
+Array.prototype.forEach.call(document.querySelectorAll('.lvl'),function(b){b.onclick=function(){
+  stopWatch();level=b.getAttribute('data-l');
+  Array.prototype.forEach.call(document.querySelectorAll('.lvl'),function(o){o.setAttribute('aria-pressed',o===b)});
+  document.body.classList.toggle('simple',level==='simple');
+  Array.prototype.forEach.call(document.querySelectorAll('#p-steps details'),function(d){d.open=level==='detail'});
+  show(i);
+}});
+var TABS=['steps','stuck','ways'],cur='steps';
+function pick(name,focus){
+  stopWatch();cur=name;
+  TABS.forEach(function(t){var on=t===name,b=$('tab-'+t);b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;$('p-'+t).hidden=!on;if(on&&focus)b.focus()});
+}
+TABS.forEach(function(t,k){
+  $('tab-'+t).onclick=function(){pick(t)};
+  $('tab-'+t).addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();e.stopPropagation();pick(TABS[(k+(e.key==='ArrowRight'?1:TABS.length-1))%TABS.length],true)}
+  });
+});
+Array.prototype.forEach.call(document.querySelectorAll('.readp'),function(b){
+  if(!canSpeak){b.hidden=true;return}
+  b.onclick=function(){var p=$(b.getAttribute('data-for'));var parts=[];Array.prototype.forEach.call(p.querySelectorAll('.lead,.try li,.tip'),function(el){var x=el.cloneNode(true);var n=x.querySelector('.n');var lab=n?n.textContent+'. ':'';if(n)n.remove();var bb=x.querySelector('b');parts.push(lab+(bb?bb.textContent+' '+x.textContent.slice(bb.textContent.length):x.textContent))});speak(parts.join(' '))};
+});
+document.addEventListener('keydown',function(e){if(cur!=='steps')return;if(e.key==='ArrowRight'){$('next').click()}else if(e.key==='ArrowLeft'&&i>0){$('back').click()}});
+window.addEventListener('pagehide',stopTalk);
+show(0);
+})();
+</script>
+</body>
+</html>
