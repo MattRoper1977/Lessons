@@ -3212,7 +3212,7 @@ CATALOGUE_PINS = {
         "kits/help/gridmap.html": "c4661555f8d4c6a086900356c2b090148ef558edbd0dc92ff590df8090a16140",
         "kits/help/snack.html": "44aef22b1e2c7c58cae16ff747423c9236ff1edfba00977a61b52b5748285260",
         "kits/help/weigh.html": "c20d0ede328b07bb79dffdf1bd50f62ea1f40d82d49ef78ade99485367fde313",
-        "kits/help/index.html": "5469d5bdfe7ac5056e0672c6ead5d229dc0669d3a6b901a5f579289748283466",
+        "kits/help/index.html": "6bdb429e437e6cf0c95d26a00d9dedd32d59f313c8855795a34fba2a9b5bdf37",
         "help/index.html": "d67c8e340d39335e71de9684a75490c7819db9636fa13190416bdd0a2a6f4b92",
         "help/answer/index.html": "fb088bb2a003d3734864060849ffb5ca50a0e2c8e9b5c881c4753896ca8c361a",
         "help/bridge/index.html": "a41bb7327ff4973eae526d2f98c5903586a87b2d30e11e0d76b7ee74584acb77",
