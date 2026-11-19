@@ -1313,7 +1313,7 @@ CATALOGUE_PINS = {
         "tools/science_teaching_packs/refresh_packs.py": "09e86848edaf07d4064a2c0232e9078b6e33223b9c7d1b7b5c226e8dc4fbf29f",
         "Science/Teaching_Packs/GROW/Image_Credits.docx": "b7fe4b107695458bd8138170b0c98d14adddfe156871bd228db798790dbf3786",
         "Science/Teaching_Packs/GROW/Image_Credits.pdf": "651dcd9f749c6cfb5ffccd73eb9ffb14a57f8ff8a8860f348969b34114396f86",
-        "tools/science_teaching_packs/check_hub_browser.cjs": "9323d0a64514970426bf30c8b281f99d100a8849d087d8f4354c78f3fe5022f4",
+        "tools/science_teaching_packs/check_hub_browser.cjs": "6338d249ff058a168078efc9681b9fb8a31643ea0092752598a9fb8f02c8781a",
         "tools/science_teaching_packs/VISUAL_REFRESH_QA.json": "3ce5b90abaf89fc5a2a4085791bb16e09667545cf489a985c1c525bd7698fc80",
         ".github/workflows/science-teaching-packs.yml": "f3bd379cc5f1ebcb296f4819a8e2f6f7a488a4b5bd2955d409f8a7ee626715ff",
         "tools/stale_evidence_sweep.mjs": "17813c59e3752fb9843374a302895d0d4710fb2c749d29af81a77873ff9d3677",
