@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Made by Matt">
+<title>Help: weigh up a science question</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2212%22%20fill%3D%22%23153e64%22%2F%3E%3Cpath%20d%3D%22M32%2014v24M32%2046v4%22%20stroke%3D%22white%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
+<style>
+:root{--ink:#18283b;--accent:#153e64;--soft:#edf3f7;--line:#52677c;--bg:#fff;--card:#fffdf6;--mark:#b3261e;--good:#1b6e3c;--tint:#ffe9a8;--fs:1}
+*{box-sizing:border-box}
+body{margin:0;background:var(--soft);color:var(--ink);font:calc(20px*var(--fs))/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:auto;padding:14px 14px 40px}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:space-between}
+h1{font-size:calc(26px*var(--fs));margin:4px 0}
+.sub{margin:0 0 10px;color:#33475b}
+button{font:inherit;min-height:52px;padding:10px 18px;border:2px solid var(--accent);border-radius:12px;background:var(--bg);color:var(--accent);cursor:pointer;font-weight:600}
+button.primary{background:var(--accent);color:#fff}
+button[aria-pressed=true]{background:var(--accent);color:#fff}
+button:focus-visible{outline:4px solid #c9730a;outline-offset:2px}
+button:disabled{opacity:.45;cursor:default}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.card{background:var(--bg);border:2px solid var(--line);border-radius:16px;padding:14px;margin-top:10px}
+.count{font-weight:700;color:var(--accent);margin:0 0 4px}
+.pic{background:var(--card);border:1px solid #c8d3dd;border-radius:12px;display:block;width:100%;height:auto}
+.say{font-size:calc(26px*var(--fs));font-weight:650;margin:12px 0 4px}
+.tip{margin:6px 0 0;padding:8px 12px;border-left:6px solid var(--good);background:#eef7f0;border-radius:6px}
+.nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.nav .grow{flex:1}
+.dots{display:flex;gap:8px;margin:12px 0 0;padding:0;list-style:none;flex-wrap:wrap}
+.dots li{width:16px;height:16px;border-radius:50%;border:2px solid var(--accent)}
+.dots li.on{background:var(--accent)}
+details{margin-top:14px}
+summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+dl{margin:6px 0 0}dt{font-weight:700}dd{margin:0 0 8px}
+footer{margin-top:18px;color:#33475b;font-size:16px}
+svg text{font-family:system-ui,sans-serif;fill:var(--ink)}
+.k{stroke:var(--ink);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cardfill{fill:#f6e7c8;stroke:var(--ink);stroke-width:3}
+.dash{stroke:var(--mark);stroke-width:3;stroke-dasharray:9 7;fill:none}
+.red{fill:var(--mark)}.lab{font-size:22px;font-weight:700}.small{font-size:18px}
+.hl{fill:var(--tint);stroke:var(--ink);stroke-width:2}
+@keyframes slideIn{from{transform:translate(var(--dx,0),var(--dy,-60px));opacity:.2}to{transform:none;opacity:1}}
+@keyframes pop{0%,35%{opacity:0;transform:scale(.4)}70%{opacity:1;transform:scale(1.25)}100%{opacity:1;transform:scale(1)}}
+@keyframes draw{from{stroke-dashoffset:var(--len,400)}to{stroke-dashoffset:0}}
+@keyframes fade{0%,40%{opacity:0}100%{opacity:1}}
+@keyframes rise{from{transform:rotate(0)}to{transform:rotate(var(--rot,-90deg))}}
+@keyframes move{from{transform:translate(0,0)}to{transform:translate(var(--mx,0),var(--my,0))}}
+.a-slide{animation:slideIn 1.6s ease-out both}
+.a-pop{animation:pop 1.4s ease-out both;transform-box:fill-box;transform-origin:center}
+.a-pop2{animation:pop 1.4s ease-out 1.1s both;transform-box:fill-box;transform-origin:center}
+.a-draw{stroke-dasharray:var(--len,400);animation:draw 2s ease-in-out .4s both}
+.a-draw2{stroke-dasharray:var(--len,400);animation:draw 2s ease-in-out 2.2s both}
+.a-fade{animation:fade 2.2s ease-out both}.a-fade2{animation:fade 2.2s ease-out 1.6s both}.a-fade3{animation:fade 2.2s ease-out 3s both}
+.a-rise{animation:rise 2s ease-in-out .6s both;transform-box:fill-box}
+.a-move{animation:move 2.2s ease-in-out .6s both}
+@keyframes gone{to{opacity:0}}
+.a-gone{animation:gone .8s ease-in 2s both}
+@media (prefers-reduced-motion:reduce){[class*="a-"]{animation:none!important;stroke-dasharray:none!important}}
+body.still [class*="a-"]{animation:none!important;stroke-dasharray:none!important}
+.levels{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}.lvl-lab{font-weight:700}
+body.simple .say{font-size:calc(34px*var(--fs))}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.tabs button{border-radius:12px 12px 0 0}
+.tabs button[aria-selected=true]{background:var(--accent);color:#fff}
+.try{list-style:none;margin:0;padding:0;counter-reset:t}
+.try li{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-top:1px solid #c8d3dd;font-size:calc(22px*var(--fs))}
+.try li:first-child{border-top:0}
+.try .n{flex:none;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.try b{display:block}
+.lead{font-size:calc(22px*var(--fs));font-weight:650;margin:0 0 6px}
+@media print{.tools,.nav,details,.dots,.tabs,.levels{display:none}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div><h1>Help: weigh up a science question</h1><p class="sub">Seven steps to weigh up stem-cell evidence and write clear 2-mark and 4-mark answers.</p></div>
+<div class="tools">
+<button type="button" id="bigger" aria-pressed="false">Bigger words</button>
+<button type="button" id="still" aria-pressed="false">Stop the moving</button>
+<button type="button" id="tint">Page colour: white</button>
+</div>
+</header>
+<div class="levels" role="group" aria-label="Help level">
+<span class="lvl-lab">Help level:</span>
+<button type="button" class="lvl" data-l="simple" aria-pressed="false">Simple</button>
+<button type="button" class="lvl" data-l="steps" aria-pressed="true">Step by step</button>
+<button type="button" class="lvl" data-l="detail" aria-pressed="false">More detail</button>
+</div>
+<div class="tabs" role="tablist" aria-label="Kinds of help">
+<button type="button" role="tab" id="tab-steps" aria-controls="p-steps" aria-selected="true">Help with this task</button>
+<button type="button" role="tab" id="tab-stuck" aria-controls="p-stuck" aria-selected="false" tabindex="-1">I am stuck</button>
+<button type="button" role="tab" id="tab-ways" aria-controls="p-ways" aria-selected="false" tabindex="-1">Ways to answer</button>
+</div>
+<div id="p-steps" role="tabpanel" aria-labelledby="tab-steps">
+<section class="card" aria-live="polite">
+<p class="count" id="count"></p>
+<div id="pic"></div>
+<p class="say" id="say"></p>
+<p class="tip" id="tip" hidden></p>
+<div class="nav">
+<button type="button" id="back">Back</button>
+<button type="button" id="next" class="primary">Next step</button>
+<span class="grow"></span>
+<button type="button" id="again">Show again</button>
+<button type="button" id="read">Read to me</button>
+<button type="button" id="watch" aria-pressed="false">Watch all steps</button>
+</div>
+<ol class="dots" id="dots" aria-hidden="true"></ol>
+</section>
+<details class="card"><summary>Word help</summary><dl id="words"></dl></details>
+<details class="card"><summary>Still stuck?</summary><p>Not sure if a point is a risk or an ethical question? Go back to step 4, then put your hand up or show your help card.</p></details>
+</div>
+<div id="p-stuck" role="tabpanel" aria-labelledby="tab-stuck" hidden>
+<section class="card">
+<p class="lead">Being stuck is normal. Try these three things first.</p>
+<ol class="try" id="stucklist">
+<li><span class="n" aria-hidden="true">1</span><span><b>Read the task again.</b>Point to each word as you read.</span></li>
+<li><span class="n" aria-hidden="true">2</span><span><b>Look at your sheet.</b>Find the box called What you need to know. Look at the picture too.</span></li>
+<li><span class="n" aria-hidden="true">3</span><span><b>Do the first small bit.</b>Use the sentence starter or the first step.</span></li>
+</ol>
+<p class="tip">Still stuck? Put your hand up or show your help card. While you wait, do the next part that you can do.</p>
+<div class="nav"><button type="button" class="readp" data-for="p-stuck">Read to me</button></div>
+</section>
+</div>
+<div id="p-ways" role="tabpanel" aria-labelledby="tab-ways" hidden>
+<section class="card">
+<p class="lead">You can show what you know in different ways. Pick one.</p>
+<ol class="try">
+<li><span class="n" aria-hidden="true">A</span><span><b>Write it.</b>Use the sentence starter on your sheet.</span></li>
+<li><span class="n" aria-hidden="true">B</span><span><b>Draw it and label it.</b>Add three labels with key words.</span></li>
+<li><span class="n" aria-hidden="true">C</span><span><b>Say it.</b>Tell an adult your answer and they will write it down.</span></li>
+</ol>
+<p class="tip">Check with your teacher which way is right for this task.</p>
+<div class="nav"><button type="button" class="readp" data-for="p-ways">Read to me</button></div>
+</section>
+</div>
+<footer>Made by Matt · help page · nothing you do here is saved or sent anywhere.</footer>
+</main>
+<script>
+(function(){
+var STEPS=[{"t": "Find one benefit in the trial data. Quote the numbers to prove it.", "tip": "Stem cells divide by mitosis and differentiate to replace damaged cells. Quote the score rise, like 4 to 6 out of 10.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A bar chart rises from four to six out of ten beside a benefit box.\"><rect x=\"64\" y=\"42\" width=\"328\" height=\"254\" rx=\"12\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"228\" y=\"80\" class=\"lab\" text-anchor=\"middle\">Movement score (/10)<\/text><line x1=\"104\" y1=\"248\" x2=\"352\" y2=\"248\" class=\"k\"/><rect x=\"134\" y=\"168\" width=\"68\" height=\"80\" rx=\"6\" fill=\"#d6e6f2\" stroke=\"#153e64\" stroke-width=\"3\"/><text x=\"168\" y=\"156\" class=\"lab\" text-anchor=\"middle\">4<\/text><text x=\"168\" y=\"278\" class=\"small\" text-anchor=\"middle\">Before<\/text><g class=\"a-slide\" style=\"--dy:40px\"><rect x=\"252\" y=\"128\" width=\"68\" height=\"120\" rx=\"6\" fill=\"#d9ead9\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><text x=\"286\" y=\"116\" class=\"lab\" text-anchor=\"middle\" style=\"fill:#1b6e3c\">6<\/text><\/g><text x=\"286\" y=\"278\" class=\"small\" text-anchor=\"middle\">After<\/text><rect x=\"424\" y=\"68\" width=\"312\" height=\"202\" rx=\"14\" fill=\"#eef7f0\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><text x=\"580\" y=\"118\" class=\"lab\" text-anchor=\"middle\" style=\"fill:#1b6e3c\">Possible benefit<\/text><text x=\"580\" y=\"166\" class=\"small\" text-anchor=\"middle\">Replaces damaged cells<\/text><rect x=\"466\" y=\"192\" width=\"228\" height=\"52\" rx=\"8\" class=\"hl\"/><text x=\"580\" y=\"226\" class=\"lab\" text-anchor=\"middle\">Score: 4 to 6 / 10<\/text><text x=\"400\" y=\"346\" class=\"lab\" text-anchor=\"middle\">Quote the trial numbers to prove a benefit.<\/text><\/svg>", "s": "Write one benefit with the numbers."}, {"t": "Find one practical risk in the report, such as swelling or immune rejection.", "tip": "Biological risks include swelling, infection, immune rejection, or cells dividing too fast.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A red arrow points from two of twelve swelling in the report to a practical risks card.\"><rect x=\"64\" y=\"48\" width=\"326\" height=\"242\" rx=\"12\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"227\" y=\"88\" class=\"lab\" text-anchor=\"middle\">Trial report (12 people)<\/text><rect x=\"88\" y=\"110\" width=\"278\" height=\"46\" rx=\"6\" fill=\"#eef7f0\" stroke=\"#52677c\" stroke-width=\"2\"/><text x=\"227\" y=\"140\" class=\"small\" text-anchor=\"middle\">Score: 4 to 6 / 10<\/text><rect x=\"88\" y=\"176\" width=\"278\" height=\"54\" rx=\"6\" fill=\"#fde3e0\" stroke=\"#b3261e\" stroke-width=\"3\"/><text x=\"227\" y=\"210\" class=\"lab\" text-anchor=\"middle\" style=\"fill:#b3261e\">Swelling: 2 of 12<\/text><path d=\"M398 202 H458 M442 188 l16 14 l-16 14\" class=\"k a-draw\" style=\"stroke:#b3261e;stroke-width:6;--len:110\"/><rect x=\"468\" y=\"68\" width=\"268\" height=\"202\" rx=\"14\" fill=\"#fff\" stroke=\"#b3261e\" stroke-width=\"3\"/><text x=\"602\" y=\"114\" class=\"lab\" text-anchor=\"middle\" style=\"fill:#b3261e\">Practical risks<\/text><text x=\"494\" y=\"160\" class=\"small\">• 2 of 12 swelling<\/text><text x=\"494\" y=\"200\" class=\"small\">• Immune rejection<\/text><text x=\"494\" y=\"240\" class=\"small\">• Infection<\/text><text x=\"400\" y=\"346\" class=\"lab\" text-anchor=\"middle\">Risks are harms to the body.<\/text><\/svg>", "s": "Name one risk from the report."}, {"t": "Check how strong the evidence is. Look for group size and comparison group.", "tip": "With only 12 people and 0 comparison group, we cannot prove stem cells alone caused the change.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A tested group of twelve sits beside an empty comparison group with a question mark.\"><rect x=\"68\" y=\"60\" width=\"290\" height=\"214\" rx=\"14\" fill=\"#e6f0f8\" stroke=\"#153e64\" stroke-width=\"3\"/><text x=\"213\" y=\"112\" class=\"lab\" text-anchor=\"middle\">Tested group<\/text><text x=\"213\" y=\"172\" class=\"lab\" text-anchor=\"middle\" style=\"font-size:32px\">12 people<\/text><text x=\"213\" y=\"226\" class=\"small\" text-anchor=\"middle\">Checked for 6 months<\/text><rect x=\"442\" y=\"60\" width=\"290\" height=\"214\" rx=\"14\" fill=\"#fff\" stroke=\"#b3261e\" stroke-width=\"3\" stroke-dasharray=\"9 7\"/><text x=\"587\" y=\"112\" class=\"lab\" text-anchor=\"middle\">Comparison group<\/text><text x=\"587\" y=\"172\" class=\"lab\" text-anchor=\"middle\" style=\"font-size:32px;fill:#b3261e\">0 people<\/text><text x=\"587\" y=\"226\" class=\"small\" text-anchor=\"middle\">No comparison group<\/text><g class=\"a-fade\"><circle cx=\"400\" cy=\"166\" r=\"28\" fill=\"#ffe9a8\" stroke=\"#b3261e\" stroke-width=\"4\"/><text x=\"400\" y=\"177\" class=\"lab\" text-anchor=\"middle\" style=\"fill:#b3261e;font-size:28px\">?<\/text><\/g><text x=\"400\" y=\"338\" class=\"lab\" text-anchor=\"middle\">Small group and 0 comparison = weaker proof.<\/text><\/svg>", "s": "Check group size and comparison group."}, {"t": "Keep risk and ethics separate. Risk is harm; ethics asks what is right.", "tip": "Swelling and rejection are scientific risks. Embryo use and donor consent are ethical questions.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A dividing line keeps scientific risk separate from ethical questions.\"><rect x=\"64\" y=\"54\" width=\"308\" height=\"236\" rx=\"14\" fill=\"#fde3e0\" stroke=\"#b3261e\" stroke-width=\"3\"/><text x=\"218\" y=\"102\" class=\"lab\" text-anchor=\"middle\" style=\"fill:#b3261e\">Scientific risk<\/text><text x=\"218\" y=\"142\" class=\"small\" text-anchor=\"middle\">Harm to the body<\/text><text x=\"96\" y=\"194\" class=\"small\">• Swelling or pain<\/text><text x=\"96\" y=\"238\" class=\"small\">• Immune rejection<\/text><line x1=\"400\" y1=\"54\" x2=\"400\" y2=\"290\" stroke=\"#18283b\" stroke-width=\"4\" stroke-dasharray=\"10 8\"/><g class=\"a-fade\"><rect x=\"428\" y=\"54\" width=\"308\" height=\"236\" rx=\"14\" fill=\"#e6f0f8\" stroke=\"#153e64\" stroke-width=\"3\"/><text x=\"582\" y=\"102\" class=\"lab\" text-anchor=\"middle\" style=\"fill:#153e64\">Ethical question<\/text><text x=\"582\" y=\"142\" class=\"small\" text-anchor=\"middle\">What is right or fair?<\/text><text x=\"456\" y=\"194\" class=\"small\">• Uses a human embryo?<\/text><text x=\"456\" y=\"238\" class=\"small\">• Informed donor consent?<\/text><\/g><text x=\"400\" y=\"346\" class=\"lab\" text-anchor=\"middle\">Keep scientific risk and ethics apart.<\/text><\/svg>", "s": "Risk is harm. Ethics asks what is right."}, {"t": "Compare embryonic and adult stem cells on cell range and ethical choices.", "tip": "Embryonic cells form almost any body cell but use an embryo. Adult bone marrow forms blood cells from a consenting donor.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A table compares embryonic stem cells and adult marrow on range and ethics.\"><rect x=\"64\" y=\"48\" width=\"672\" height=\"114\" rx=\"12\" class=\"hl\"/><text x=\"90\" y=\"96\" class=\"lab\">Embryonic<\/text><text x=\"90\" y=\"132\" class=\"small\">stem cells<\/text><text x=\"278\" y=\"96\" class=\"lab\">Wide range<\/text><text x=\"278\" y=\"132\" class=\"small\">Almost any body cell<\/text><text x=\"516\" y=\"96\" class=\"lab\">Ethics<\/text><text x=\"516\" y=\"132\" class=\"small\">Uses a human embryo<\/text><g class=\"a-fade\"><rect x=\"64\" y=\"182\" width=\"672\" height=\"114\" rx=\"12\" fill=\"#eef7f0\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><text x=\"90\" y=\"230\" class=\"lab\">Adult marrow<\/text><text x=\"90\" y=\"266\" class=\"small\">stem cells<\/text><text x=\"278\" y=\"230\" class=\"lab\">Narrow range<\/text><text x=\"278\" y=\"266\" class=\"small\">Mainly blood cells<\/text><text x=\"516\" y=\"230\" class=\"lab\">Ethics<\/text><text x=\"516\" y=\"266\" class=\"small\">Consenting adult donor<\/text><\/g><text x=\"400\" y=\"348\" class=\"lab\" text-anchor=\"middle\">Compare range and ethics for both sources.<\/text><\/svg>", "s": "Compare embryonic and adult stem cells."}, {"t": "For a 2-mark question, write two clear points using the key words.", "tip": "Example: 1. Skin stem cells copy DNA and divide by mitosis. 2. New cells differentiate into skin cells.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A two-mark answer card gets two green ticks for two clear points.\"><rect x=\"92\" y=\"34\" width=\"616\" height=\"272\" rx=\"12\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><rect x=\"546\" y=\"50\" width=\"136\" height=\"44\" rx=\"8\" class=\"hl\"/><text x=\"614\" y=\"80\" class=\"lab\" text-anchor=\"middle\">2 marks<\/text><text x=\"122\" y=\"82\" class=\"lab\">Short answer:<\/text><rect x=\"122\" y=\"114\" width=\"490\" height=\"68\" rx=\"8\" fill=\"#eef7f0\" stroke=\"#1b6e3c\" stroke-width=\"2\"/><text x=\"142\" y=\"156\" class=\"small\">1. Stem cells copy DNA and divide by mitosis.<\/text><path d=\"M632 148 l14 16 l30 -34\" class=\"k a-draw\" style=\"stroke:#1b6e3c;stroke-width:8;--len:100\"/><rect x=\"122\" y=\"206\" width=\"490\" height=\"68\" rx=\"8\" fill=\"#eef7f0\" stroke=\"#1b6e3c\" stroke-width=\"2\"/><text x=\"142\" y=\"248\" class=\"small\">2. New cells differentiate into skin cells.<\/text><path d=\"M632 240 l14 16 l30 -34\" class=\"k a-draw2\" style=\"stroke:#1b6e3c;stroke-width:8;--len:100\"/><text x=\"400\" y=\"350\" class=\"lab\" text-anchor=\"middle\">2 marks = 2 clear science points.<\/text><\/svg>", "s": "Two marks need two clear points."}, {"t": "For a 4-mark question, write four points: benefit, risk, limit and ethics.", "tip": "Quote the trial numbers and count four distinct points before you finish.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A four-mark answer card checks off benefit, risk, limit and ethics.\"><rect x=\"84\" y=\"28\" width=\"632\" height=\"284\" rx=\"12\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><rect x=\"556\" y=\"42\" width=\"136\" height=\"42\" rx=\"8\" class=\"hl\"/><text x=\"624\" y=\"71\" class=\"lab\" text-anchor=\"middle\">4 marks<\/text><text x=\"114\" y=\"72\" class=\"lab\">Weighed answer:<\/text><rect x=\"114\" y=\"96\" width=\"510\" height=\"44\" rx=\"6\" fill=\"#eef7f0\" stroke=\"#1b6e3c\" stroke-width=\"2\"/><text x=\"132\" y=\"125\" class=\"small\">1. Benefit: movement rose 4 to 6 / 10.<\/text><path d=\"M642 118 l12 12 l24 -26\" class=\"k\" style=\"stroke:#1b6e3c;stroke-width:6\"/><rect x=\"114\" y=\"148\" width=\"510\" height=\"44\" rx=\"6\" fill=\"#fde3e0\" stroke=\"#b3261e\" stroke-width=\"2\"/><text x=\"132\" y=\"177\" class=\"small\">2. Risk: 2 of 12 had swelling; rejection risk.<\/text><path d=\"M642 170 l12 12 l24 -26\" class=\"k\" style=\"stroke:#1b6e3c;stroke-width:6\"/><g class=\"a-fade\"><rect x=\"114\" y=\"200\" width=\"510\" height=\"44\" rx=\"6\" class=\"hl\"/><text x=\"132\" y=\"229\" class=\"small\">3. Limit: small group (12) and 0 comparison.<\/text><path d=\"M642 222 l12 12 l24 -26\" class=\"k\" style=\"stroke:#1b6e3c;stroke-width:6\"/><\/g><g class=\"a-fade2\"><rect x=\"114\" y=\"252\" width=\"510\" height=\"44\" rx=\"6\" fill=\"#e6f0f8\" stroke=\"#153e64\" stroke-width=\"2\"/><text x=\"132\" y=\"281\" class=\"small\">4. Ethics: embryo use versus donor consent.<\/text><path d=\"M642 274 l12 12 l24 -26\" class=\"k\" style=\"stroke:#1b6e3c;stroke-width:6\"/><\/g><text x=\"400\" y=\"352\" class=\"lab\" text-anchor=\"middle\">Count 4 linked points for 4 marks.<\/text><\/svg>", "s": "Four marks need four linked points."}];
+var WORDS=[["stem cell", "A cell that can divide and turn into other types of body cell."], ["differentiate", "When a stem cell changes into a specialised cell for one job."], ["benefit", "A helpful result, like better movement after treatment."], ["risk", "A harm that could happen to the body, like swelling or rejection."], ["comparison group", "A second group without the treatment so scientists can test fairly."], ["ethics", "Questions about what is right or fair to do, like embryo use or consent."]];
+var i=0,watching=false,timer=null,level='steps';
+var $=function(id){return document.getElementById(id)};
+var canSpeak=('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window);
+if(!canSpeak){$('read').hidden=true}
+var dots=$('dots');STEPS.forEach(function(){dots.appendChild(document.createElement('li'))});
+var dl=$('words');WORDS.forEach(function(w){var dt=document.createElement('dt');dt.textContent=w[0];var dd=document.createElement('dd');dd.textContent=w[1];dl.appendChild(dt);dl.appendChild(dd)});
+function stopTalk(){if(canSpeak){try{window.speechSynthesis.cancel()}catch(e){}}}
+function speak(text,done){
+  if(!canSpeak){if(done)timer=setTimeout(done,6500);return}
+  stopTalk();
+  var u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=0.9;
+  var fired=false;function fin(){if(fired)return;fired=true;if(done)timer=setTimeout(done,1800)}
+  u.onend=fin;u.onerror=fin;
+  if(done){timer=setTimeout(fin,Math.max(7000,text.length*110))}
+  try{window.speechSynthesis.speak(u)}catch(e){fin()}
+}
+function show(n){
+  i=Math.max(0,Math.min(STEPS.length-1,n));
+  var s=STEPS[i];
+  $('count').textContent='Step '+(i+1)+' of '+STEPS.length;
+  $('pic').innerHTML=s.svg;
+  $('say').textContent=level==='simple'&&s.s?s.s:s.t;
+  var tip=$('tip');if(s.tip&&level==='detail'){tip.textContent=s.tip;tip.hidden=false}else{tip.hidden=true}
+  $('back').disabled=i===0;
+  $('next').textContent=i===STEPS.length-1?'Start again':'Next step';
+  Array.prototype.forEach.call(dots.children,function(d,k){d.className=k<=i?'on':''});
+}
+function textOf(s){return level==='simple'&&s.s?s.s:s.t+(s.tip&&level==='detail'?' '+s.tip:'')}
+function stopWatch(){watching=false;clearTimeout(timer);stopTalk();$('watch').setAttribute('aria-pressed','false');$('watch').textContent='Watch all steps'}
+function playFrom(n){
+  if(!watching)return;show(n);
+  speak(textOf(STEPS[i]),function(){if(!watching)return;if(i<STEPS.length-1){playFrom(i+1)}else{stopWatch()}});
+}
+$('next').onclick=function(){stopWatch();show(i===STEPS.length-1?0:i+1)};
+$('back').onclick=function(){stopWatch();show(i-1)};
+$('again').onclick=function(){stopWatch();show(i)};
+$('read').onclick=function(){stopWatch();speak(textOf(STEPS[i]))};
+$('watch').onclick=function(){
+  if(watching){stopWatch();return}
+  watching=true;this.setAttribute('aria-pressed','true');this.textContent='Stop';playFrom(i===STEPS.length-1?0:i);
+};
+$('bigger').onclick=function(){var on=this.getAttribute('aria-pressed')!=='true';this.setAttribute('aria-pressed',on);document.documentElement.style.setProperty('--fs',on?'1.3':'1')};
+var TINTS=[['white','#edf3f7','#fff','#fffdf6'],['cream','#f3ead2','#fbf5e2','#fdf9ec'],['blue','#d6e6f2','#e6f0f8','#eef5fa'],['green','#d9ead9','#e8f3e8','#f0f7f0'],['pink','#f6dbe6','#fbeaf1','#fdf3f7']],ti=0;
+$('tint').onclick=function(){ti=(ti+1)%TINTS.length;var c=TINTS[ti],r=document.documentElement.style;r.setProperty('--soft',c[1]);r.setProperty('--bg',c[2]);r.setProperty('--card',c[3]);this.textContent='Page colour: '+c[0]};
+$('still').onclick=function(){var on=this.getAttribute('aria-pressed')!=='true';this.setAttribute('aria-pressed',on);document.body.classList.toggle('still',on)};
+Array.prototype.forEach.call(document.querySelectorAll('.lvl'),function(b){b.onclick=function(){
+  stopWatch();level=b.getAttribute('data-l');
+  Array.prototype.forEach.call(document.querySelectorAll('.lvl'),function(o){o.setAttribute('aria-pressed',o===b)});
+  document.body.classList.toggle('simple',level==='simple');
+  Array.prototype.forEach.call(document.querySelectorAll('#p-steps details'),function(d){d.open=level==='detail'});
+  show(i);
+}});
+var TABS=['steps','stuck','ways'],cur='steps';
+function pick(name,focus){
+  stopWatch();cur=name;
+  TABS.forEach(function(t){var on=t===name,b=$('tab-'+t);b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;$('p-'+t).hidden=!on;if(on&&focus)b.focus()});
+}
+TABS.forEach(function(t,k){
+  $('tab-'+t).onclick=function(){pick(t)};
+  $('tab-'+t).addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();e.stopPropagation();pick(TABS[(k+(e.key==='ArrowRight'?1:TABS.length-1))%TABS.length],true)}
+  });
+});
+Array.prototype.forEach.call(document.querySelectorAll('.readp'),function(b){
+  if(!canSpeak){b.hidden=true;return}
+  b.onclick=function(){var p=$(b.getAttribute('data-for'));var parts=[];Array.prototype.forEach.call(p.querySelectorAll('.lead,.try li,.tip'),function(el){var x=el.cloneNode(true);var n=x.querySelector('.n');var lab=n?n.textContent+'. ':'';if(n)n.remove();var bb=x.querySelector('b');parts.push(lab+(bb?bb.textContent+' '+x.textContent.slice(bb.textContent.length):x.textContent))});speak(parts.join(' '))};
+});
+document.addEventListener('keydown',function(e){if(cur!=='steps')return;if(e.key==='ArrowRight'){$('next').click()}else if(e.key==='ArrowLeft'&&i>0){$('back').click()}});
+window.addEventListener('pagehide',stopTalk);
+show(0);
+})();
+</script>
+</body>
+</html>
