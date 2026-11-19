@@ -15,8 +15,6 @@ on:
       - index.html
   push:
     branches: [main]
-    paths:
-      - index.html
   schedule:
     - cron: '53 6 * * *'
   workflow_dispatch:
@@ -90,7 +88,7 @@ class TriggerControls(unittest.TestCase):
         r = self.report()
         self.assertTrue(d.check(self.root, old, copy.deepcopy(r)))
         new = d.render(old, r['expected_triggers'])
-        self.assertNotIn('lessons/one.html', d.read_paths(new, 'push'))
+        self.assertEqual(d.unfiltered_errors(new, 'push'), [])
         self.assertNotIn('**', new)
 
     def test_deleted_pinned_file_keeps_coverage_and_fails(self):
@@ -126,11 +124,24 @@ class TriggerControls(unittest.TestCase):
             self.report()
 
     def test_missing_or_ambiguous_events_are_unmeasured(self):
-        for bad in (FIXTURE.replace('  push:', '  other:'),
+        for bad in (FIXTURE.replace('  pull_request:', '  other:'),
                     FIXTURE.replace('    paths:', '    paths-ignore:', 1),
                     'on:\n  push:\n' + FIXTURE):
             with self.assertRaises(ValueError):
                 d.render(bad, self.report()['expected_triggers'])
+        with self.assertRaises(ValueError):
+            d.unfiltered_errors(FIXTURE.replace('  push:', '  other:'), 'push')
+
+    def test_push_must_stay_unfiltered(self):
+        r = self.report()
+        good = d.render(FIXTURE, r['expected_triggers'])
+        self.assertEqual(d.check(self.root, good, copy.deepcopy(r)), [])
+        for bad in (good.replace('  push:\n    branches: [main]\n',
+                                 '  push:\n    branches: [main]\n    paths:\n      - index.html\n'),
+                    good.replace('  push:\n    branches: [main]\n',
+                                 '  push:\n    branches: [main]\n    paths-ignore:\n      - docs/**\n'),
+                    good.replace('  push:\n    branches: [main]\n', '  push:\n    branches: [other]\n')):
+            self.assertTrue(d.check(self.root, bad, copy.deepcopy(r)))
 
 
 if __name__ == '__main__':
