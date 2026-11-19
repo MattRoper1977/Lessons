@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Made by Matt">
+<title>Help: one bit at a time</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2212%22%20fill%3D%22%23153e64%22%2F%3E%3Cpath%20d%3D%22M32%2014v24M32%2046v4%22%20stroke%3D%22white%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
+<style>
+:root{--ink:#18283b;--accent:#153e64;--soft:#edf3f7;--line:#52677c;--bg:#fff;--card:#fffdf6;--mark:#b3261e;--good:#1b6e3c;--tint:#ffe9a8;--fs:1}
+*{box-sizing:border-box}
+body{margin:0;background:var(--soft);color:var(--ink);font:calc(20px*var(--fs))/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:auto;padding:14px 14px 40px}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:space-between}
+h1{font-size:calc(26px*var(--fs));margin:4px 0}
+.sub{margin:0 0 10px;color:#33475b}
+button{font:inherit;min-height:52px;padding:10px 18px;border:2px solid var(--accent);border-radius:12px;background:var(--bg);color:var(--accent);cursor:pointer;font-weight:600}
+button.primary{background:var(--accent);color:#fff}
+button[aria-pressed=true]{background:var(--accent);color:#fff}
+button:focus-visible{outline:4px solid #c9730a;outline-offset:2px}
+button:disabled{opacity:.45;cursor:default}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.card{background:var(--bg);border:2px solid var(--line);border-radius:16px;padding:14px;margin-top:10px}
+.count{font-weight:700;color:var(--accent);margin:0 0 4px}
+.pic{background:var(--card);border:1px solid #c8d3dd;border-radius:12px;display:block;width:100%;height:auto}
+.say{font-size:calc(26px*var(--fs));font-weight:650;margin:12px 0 4px}
+.tip{margin:6px 0 0;padding:8px 12px;border-left:6px solid var(--good);background:#eef7f0;border-radius:6px}
+.nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.nav .grow{flex:1}
+.dots{display:flex;gap:8px;margin:12px 0 0;padding:0;list-style:none;flex-wrap:wrap}
+.dots li{width:16px;height:16px;border-radius:50%;border:2px solid var(--accent)}
+.dots li.on{background:var(--accent)}
+details{margin-top:14px}
+summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+dl{margin:6px 0 0}dt{font-weight:700}dd{margin:0 0 8px}
+footer{margin-top:18px;color:#33475b;font-size:16px}
+svg text{font-family:system-ui,sans-serif;fill:var(--ink)}
+.k{stroke:var(--ink);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cardfill{fill:#f6e7c8;stroke:var(--ink);stroke-width:3}
+.dash{stroke:var(--mark);stroke-width:3;stroke-dasharray:9 7;fill:none}
+.red{fill:var(--mark)}.lab{font-size:22px;font-weight:700}.small{font-size:18px}
+.hl{fill:var(--tint);stroke:var(--ink);stroke-width:2}
+@keyframes slideIn{from{transform:translate(var(--dx,0),var(--dy,-60px));opacity:.2}to{transform:none;opacity:1}}
+@keyframes pop{0%,35%{opacity:0;transform:scale(.4)}70%{opacity:1;transform:scale(1.25)}100%{opacity:1;transform:scale(1)}}
+@keyframes draw{from{stroke-dashoffset:var(--len,400)}to{stroke-dashoffset:0}}
+@keyframes fade{0%,40%{opacity:0}100%{opacity:1}}
+@keyframes rise{from{transform:rotate(0)}to{transform:rotate(var(--rot,-90deg))}}
+@keyframes move{from{transform:translate(0,0)}to{transform:translate(var(--mx,0),var(--my,0))}}
+.a-slide{animation:slideIn 1.6s ease-out both}
+.a-pop{animation:pop 1.4s ease-out both;transform-box:fill-box;transform-origin:center}
+.a-pop2{animation:pop 1.4s ease-out 1.1s both;transform-box:fill-box;transform-origin:center}
+.a-draw{stroke-dasharray:var(--len,400);animation:draw 2s ease-in-out .4s both}
+.a-draw2{stroke-dasharray:var(--len,400);animation:draw 2s ease-in-out 2.2s both}
+.a-fade{animation:fade 2.2s ease-out both}.a-fade2{animation:fade 2.2s ease-out 1.6s both}.a-fade3{animation:fade 2.2s ease-out 3s both}
+.a-rise{animation:rise 2s ease-in-out .6s both;transform-box:fill-box}
+.a-move{animation:move 2.2s ease-in-out .6s both}
+@keyframes gone{to{opacity:0}}
+.a-gone{animation:gone .8s ease-in 2s both}
+@media (prefers-reduced-motion:reduce){[class*="a-"]{animation:none!important;stroke-dasharray:none!important}}
+body.still [class*="a-"]{animation:none!important;stroke-dasharray:none!important}
+.levels{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}.lvl-lab{font-weight:700}
+body.simple .say{font-size:calc(34px*var(--fs))}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.tabs button{border-radius:12px 12px 0 0}
+.tabs button[aria-selected=true]{background:var(--accent);color:#fff}
+.try{list-style:none;margin:0;padding:0;counter-reset:t}
+.try li{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-top:1px solid #c8d3dd;font-size:calc(22px*var(--fs))}
+.try li:first-child{border-top:0}
+.try .n{flex:none;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.try b{display:block}
+.lead{font-size:calc(22px*var(--fs));font-weight:650;margin:0 0 6px}
+@media print{.tools,.nav,details,.dots,.tabs,.levels{display:none}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div><h1>Help: one bit at a time</h1><p class="sub">Six small steps to break a big task into short goals. Watch each step, then do it.</p></div>
+<div class="tools">
+<button type="button" id="bigger" aria-pressed="false">Bigger words</button>
+<button type="button" id="still" aria-pressed="false">Stop the moving</button>
+<button type="button" id="tint">Page colour: white</button>
+</div>
+</header>
+<div class="levels" role="group" aria-label="Help level">
+<span class="lvl-lab">Help level:</span>
+<button type="button" class="lvl" data-l="simple" aria-pressed="false">Simple</button>
+<button type="button" class="lvl" data-l="steps" aria-pressed="true">Step by step</button>
+<button type="button" class="lvl" data-l="detail" aria-pressed="false">More detail</button>
+</div>
+<div class="tabs" role="tablist" aria-label="Kinds of help">
+<button type="button" role="tab" id="tab-steps" aria-controls="p-steps" aria-selected="true">Help with this task</button>
+<button type="button" role="tab" id="tab-stuck" aria-controls="p-stuck" aria-selected="false" tabindex="-1">I am stuck</button>
+<button type="button" role="tab" id="tab-ways" aria-controls="p-ways" aria-selected="false" tabindex="-1">Ways to answer</button>
+</div>
+<div id="p-steps" role="tabpanel" aria-labelledby="tab-steps">
+<section class="card" aria-live="polite">
+<p class="count" id="count"></p>
+<div id="pic"></div>
+<p class="say" id="say"></p>
+<p class="tip" id="tip" hidden></p>
+<div class="nav">
+<button type="button" id="back">Back</button>
+<button type="button" id="next" class="primary">Next step</button>
+<span class="grow"></span>
+<button type="button" id="again">Show again</button>
+<button type="button" id="read">Read to me</button>
+<button type="button" id="watch" aria-pressed="false">Watch all steps</button>
+</div>
+<ol class="dots" id="dots" aria-hidden="true"></ol>
+</section>
+<details class="card"><summary>Word help</summary><dl id="words"></dl></details>
+<details class="card"><summary>Still stuck?</summary><p>Even the first part feels too big? Ask an adult to draw a line under just one question for you, or show your help card.</p></details>
+</div>
+<div id="p-stuck" role="tabpanel" aria-labelledby="tab-stuck" hidden>
+<section class="card">
+<p class="lead">Being stuck is normal. Try these three things first.</p>
+<ol class="try" id="stucklist">
+<li><span class="n" aria-hidden="true">1</span><span><b>Read the task again.</b>Point to each word as you read.</span></li>
+<li><span class="n" aria-hidden="true">2</span><span><b>Look at your sheet.</b>Find the box called What you need to know. Look at the picture too.</span></li>
+<li><span class="n" aria-hidden="true">3</span><span><b>Do the first small bit.</b>Use the sentence starter or the first step.</span></li>
+</ol>
+<p class="tip">Still stuck? Put your hand up or show your help card. While you wait, do the next part that you can do.</p>
+<div class="nav"><button type="button" class="readp" data-for="p-stuck">Read to me</button></div>
+</section>
+</div>
+<div id="p-ways" role="tabpanel" aria-labelledby="tab-ways" hidden>
+<section class="card">
+<p class="lead">You can show what you know in different ways. Pick one.</p>
+<ol class="try">
+<li><span class="n" aria-hidden="true">A</span><span><b>Write it.</b>Use the sentence starter on your sheet.</span></li>
+<li><span class="n" aria-hidden="true">B</span><span><b>Draw it and label it.</b>Add three labels with key words.</span></li>
+<li><span class="n" aria-hidden="true">C</span><span><b>Say it.</b>Tell an adult your answer and they will write it down.</span></li>
+</ol>
+<p class="tip">Check with your teacher which way is right for this task.</p>
+<div class="nav"><button type="button" class="readp" data-for="p-ways">Read to me</button></div>
+</section>
+</div>
+<footer>Made by Matt · help page · nothing you do here is saved or sent anywhere.</footer>
+</main>
+<script>
+(function(){
+var STEPS=[{"t": "Read the task at the top of your sheet so you know what the whole job is.", "tip": "You do not need to do it all at once. Just find out what the task is about.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A pointer moves across the task at the top of a three-part sheet.\"><rect x=\"150\" y=\"32\" width=\"500\" height=\"274\" rx=\"10\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><rect x=\"174\" y=\"52\" width=\"452\" height=\"64\" rx=\"8\" class=\"hl\"/><text x=\"196\" y=\"92\" class=\"lab\">Task: Answer parts 1 to 3.<\/text><g class=\"a-move\" style=\"--mx:310px\"><path d=\"M206 164 l0 -34 l14 12 l12 -4 l-10 26 z\" fill=\"#153e64\"/><\/g><text x=\"192\" y=\"206\" class=\"small\">1.<\/text><line x1=\"224\" y1=\"199\" x2=\"590\" y2=\"199\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><text x=\"192\" y=\"246\" class=\"small\">2.<\/text><line x1=\"224\" y1=\"239\" x2=\"590\" y2=\"239\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><text x=\"192\" y=\"286\" class=\"small\">3.<\/text><line x1=\"224\" y1=\"279\" x2=\"590\" y2=\"279\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><text x=\"400\" y=\"348\" class=\"lab\" text-anchor=\"middle\">Read the task first.<\/text><\/svg>", "s": "Read the task at the top."}, {"t": "Put a plain sheet of paper over the bottom of your worksheet so you can only see part 1.", "tip": "Covering the rest stops the page looking too busy.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A plain sheet of paper slides up to cover everything below part one.\"><rect x=\"150\" y=\"26\" width=\"500\" height=\"320\" rx=\"10\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><rect x=\"174\" y=\"48\" width=\"452\" height=\"72\" rx=\"8\" fill=\"#eef7f0\" stroke=\"#1b6e3c\" stroke-width=\"2\"/><text x=\"196\" y=\"92\" class=\"lab\">1.<\/text><line x1=\"236\" y1=\"84\" x2=\"584\" y2=\"84\" stroke=\"#52677c\" stroke-width=\"6\" stroke-linecap=\"round\"/><text x=\"196\" y=\"182\" class=\"lab\">2.<\/text><line x1=\"236\" y1=\"174\" x2=\"584\" y2=\"174\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><text x=\"196\" y=\"262\" class=\"lab\">3.<\/text><line x1=\"236\" y1=\"254\" x2=\"584\" y2=\"254\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><g class=\"a-slide\" style=\"--dy:95px\"><rect x=\"132\" y=\"138\" width=\"536\" height=\"218\" rx=\"10\" class=\"cardfill\"/><text x=\"400\" y=\"234\" class=\"lab\" text-anchor=\"middle\">Plain paper covers the rest<\/text><text x=\"400\" y=\"272\" class=\"small\" text-anchor=\"middle\">Only look at part 1.<\/text><\/g><\/svg>", "s": "Cover the rest with plain paper."}, {"t": "Put all your focus on part 1 and write, draw or say your answer for that part only.", "tip": "Do not worry about part 2 yet. Just finish this small bit.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"An answer line is drawn in part one while the rest stays covered.\"><rect x=\"140\" y=\"26\" width=\"520\" height=\"320\" rx=\"10\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><rect x=\"166\" y=\"48\" width=\"468\" height=\"106\" rx=\"8\" class=\"hl\"/><text x=\"190\" y=\"88\" class=\"lab\">1.<\/text><line x1=\"230\" y1=\"80\" x2=\"594\" y2=\"80\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><path d=\"M230 124 H560\" class=\"k a-draw\" style=\"stroke:#153e64;stroke-width:8;--len:340\"/><rect x=\"126\" y=\"176\" width=\"548\" height=\"176\" rx=\"10\" class=\"cardfill\"/><text x=\"400\" y=\"256\" class=\"lab\" text-anchor=\"middle\">Do just part 1 now.<\/text><text x=\"400\" y=\"292\" class=\"small\" text-anchor=\"middle\">Leave the rest covered.<\/text><\/svg>", "s": "Do just part 1 now."}, {"t": "When part 1 is finished, put a clear tick beside it so you can see your progress.", "tip": "Every tick shows real work you have done.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A green tick is drawn beside finished part one.\"><rect x=\"140\" y=\"26\" width=\"520\" height=\"320\" rx=\"10\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><rect x=\"166\" y=\"48\" width=\"468\" height=\"106\" rx=\"8\" fill=\"#eef7f0\" stroke=\"#1b6e3c\" stroke-width=\"2\"/><text x=\"190\" y=\"88\" class=\"lab\">1.<\/text><line x1=\"230\" y1=\"80\" x2=\"512\" y2=\"80\" stroke=\"#18283b\" stroke-width=\"6\" stroke-linecap=\"round\"/><line x1=\"230\" y1=\"118\" x2=\"474\" y2=\"118\" stroke=\"#153e64\" stroke-width=\"7\" stroke-linecap=\"round\"/><rect x=\"548\" y=\"72\" width=\"58\" height=\"58\" rx=\"8\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><path d=\"M560 102 l14 16 l28 -36\" class=\"k a-draw\" style=\"stroke:#1b6e3c;stroke-width:9;--len:100\"/><rect x=\"126\" y=\"176\" width=\"548\" height=\"176\" rx=\"10\" class=\"cardfill\"/><text x=\"400\" y=\"268\" class=\"lab\" text-anchor=\"middle\" style=\"fill:#1b6e3c\">Part 1 is ticked and done.<\/text><\/svg>", "s": "Tick part 1 when done."}, {"t": "Slide your cover paper down one step to uncover part 2. Now do part 2 the same way.", "tip": "Keep part 3 covered until part 2 has a tick.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"The cover paper slides down to show part two while keeping part three covered.\"><rect x=\"150\" y=\"24\" width=\"500\" height=\"326\" rx=\"10\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"196\" y=\"86\" class=\"lab\">1.<\/text><line x1=\"236\" y1=\"78\" x2=\"532\" y2=\"78\" stroke=\"#18283b\" stroke-width=\"6\" stroke-linecap=\"round\"/><path d=\"M560 78 l12 14 l26 -30\" class=\"k\" style=\"stroke:#1b6e3c;stroke-width:6\"/><rect x=\"174\" y=\"124\" width=\"452\" height=\"74\" rx=\"8\" class=\"hl\"/><text x=\"196\" y=\"170\" class=\"lab\">2.<\/text><line x1=\"236\" y1=\"162\" x2=\"584\" y2=\"162\" stroke=\"#52677c\" stroke-width=\"6\" stroke-linecap=\"round\"/><text x=\"196\" y=\"264\" class=\"lab\">3.<\/text><line x1=\"236\" y1=\"256\" x2=\"584\" y2=\"256\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><g class=\"a-slide\" style=\"--dy:-94px\"><rect x=\"132\" y=\"216\" width=\"536\" height=\"142\" rx=\"10\" class=\"cardfill\"/><text x=\"400\" y=\"280\" class=\"lab\" text-anchor=\"middle\">Slide paper down to part 2<\/text><text x=\"400\" y=\"314\" class=\"small\" text-anchor=\"middle\">Keep part 3 covered.<\/text><\/g><\/svg>", "s": "Slide the paper down to part 2."}, {"t": "When you have three ticks on your sheet, pause and show an adult your work.", "tip": "An adult can check your three parts and help you pick your next small goal.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"Three ticked parts on a sheet point to a card saying Show an adult.\"><rect x=\"72\" y=\"38\" width=\"356\" height=\"304\" rx=\"10\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"104\" y=\"106\" class=\"lab\">1.<\/text><line x1=\"142\" y1=\"98\" x2=\"336\" y2=\"98\" stroke=\"#18283b\" stroke-width=\"7\" stroke-linecap=\"round\"/><path d=\"M362 98 l12 14 l26 -30\" class=\"k\" style=\"stroke:#1b6e3c;stroke-width:7\"/><text x=\"104\" y=\"196\" class=\"lab\">2.<\/text><line x1=\"142\" y1=\"188\" x2=\"336\" y2=\"188\" stroke=\"#18283b\" stroke-width=\"7\" stroke-linecap=\"round\"/><path d=\"M362 188 l12 14 l26 -30\" class=\"k\" style=\"stroke:#1b6e3c;stroke-width:7\"/><text x=\"104\" y=\"286\" class=\"lab\">3.<\/text><line x1=\"142\" y1=\"278\" x2=\"336\" y2=\"278\" stroke=\"#18283b\" stroke-width=\"7\" stroke-linecap=\"round\"/><path d=\"M362 278 l12 14 l26 -30\" class=\"k\" style=\"stroke:#1b6e3c;stroke-width:7\"/><path d=\"M442 188 H504 M488 172 l16 16 l-16 16\" class=\"k a-draw\" style=\"stroke:#1b6e3c;stroke-width:7;--len:120\"/><rect x=\"520\" y=\"96\" width=\"218\" height=\"184\" rx=\"14\" fill=\"#eef7f0\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><text x=\"629\" y=\"152\" class=\"lab\" text-anchor=\"middle\" style=\"fill:#1b6e3c\">3 parts done!<\/text><text x=\"629\" y=\"198\" class=\"lab\" text-anchor=\"middle\">Show an adult<\/text><text x=\"629\" y=\"236\" class=\"small\" text-anchor=\"middle\">Get your next goal.<\/text><\/svg>", "s": "Three ticks done? Show an adult."}];
+var WORDS=[["part", "One small piece of a longer task."], ["cover", "Put a plain piece of paper over the parts you are not doing yet."], ["goal", "One small job you aim to finish next."], ["tick", "A quick mark to show you finished a part."], ["uncover", "Slide the paper down to show the next part."]];
+var i=0,watching=false,timer=null,level='steps';
+var $=function(id){return document.getElementById(id)};
+var canSpeak=('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window);
+if(!canSpeak){$('read').hidden=true}
+var dots=$('dots');STEPS.forEach(function(){dots.appendChild(document.createElement('li'))});
+var dl=$('words');WORDS.forEach(function(w){var dt=document.createElement('dt');dt.textContent=w[0];var dd=document.createElement('dd');dd.textContent=w[1];dl.appendChild(dt);dl.appendChild(dd)});
+function stopTalk(){if(canSpeak){try{window.speechSynthesis.cancel()}catch(e){}}}
+function speak(text,done){
+  if(!canSpeak){if(done)timer=setTimeout(done,6500);return}
+  stopTalk();
+  var u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=0.9;
+  var fired=false;function fin(){if(fired)return;fired=true;if(done)timer=setTimeout(done,1800)}
+  u.onend=fin;u.onerror=fin;
+  if(done){timer=setTimeout(fin,Math.max(7000,text.length*110))}
+  try{window.speechSynthesis.speak(u)}catch(e){fin()}
+}
+function show(n){
+  i=Math.max(0,Math.min(STEPS.length-1,n));
+  var s=STEPS[i];
+  $('count').textContent='Step '+(i+1)+' of '+STEPS.length;
+  $('pic').innerHTML=s.svg;
+  $('say').textContent=level==='simple'&&s.s?s.s:s.t;
+  var tip=$('tip');if(s.tip&&level==='detail'){tip.textContent=s.tip;tip.hidden=false}else{tip.hidden=true}
+  $('back').disabled=i===0;
+  $('next').textContent=i===STEPS.length-1?'Start again':'Next step';
+  Array.prototype.forEach.call(dots.children,function(d,k){d.className=k<=i?'on':''});
+}
+function textOf(s){return level==='simple'&&s.s?s.s:s.t+(s.tip&&level==='detail'?' '+s.tip:'')}
+function stopWatch(){watching=false;clearTimeout(timer);stopTalk();$('watch').setAttribute('aria-pressed','false');$('watch').textContent='Watch all steps'}
+function playFrom(n){
+  if(!watching)return;show(n);
+  speak(textOf(STEPS[i]),function(){if(!watching)return;if(i<STEPS.length-1){playFrom(i+1)}else{stopWatch()}});
+}
+$('next').onclick=function(){stopWatch();show(i===STEPS.length-1?0:i+1)};
+$('back').onclick=function(){stopWatch();show(i-1)};
+$('again').onclick=function(){stopWatch();show(i)};
+$('read').onclick=function(){stopWatch();speak(textOf(STEPS[i]))};
+$('watch').onclick=function(){
+  if(watching){stopWatch();return}
+  watching=true;this.setAttribute('aria-pressed','true');this.textContent='Stop';playFrom(i===STEPS.length-1?0:i);
+};
+$('bigger').onclick=function(){var on=this.getAttribute('aria-pressed')!=='true';this.setAttribute('aria-pressed',on);document.documentElement.style.setProperty('--fs',on?'1.3':'1')};
+var TINTS=[['white','#edf3f7','#fff','#fffdf6'],['cream','#f3ead2','#fbf5e2','#fdf9ec'],['blue','#d6e6f2','#e6f0f8','#eef5fa'],['green','#d9ead9','#e8f3e8','#f0f7f0'],['pink','#f6dbe6','#fbeaf1','#fdf3f7']],ti=0;
+$('tint').onclick=function(){ti=(ti+1)%TINTS.length;var c=TINTS[ti],r=document.documentElement.style;r.setProperty('--soft',c[1]);r.setProperty('--bg',c[2]);r.setProperty('--card',c[3]);this.textContent='Page colour: '+c[0]};
+$('still').onclick=function(){var on=this.getAttribute('aria-pressed')!=='true';this.setAttribute('aria-pressed',on);document.body.classList.toggle('still',on)};
+Array.prototype.forEach.call(document.querySelectorAll('.lvl'),function(b){b.onclick=function(){
+  stopWatch();level=b.getAttribute('data-l');
+  Array.prototype.forEach.call(document.querySelectorAll('.lvl'),function(o){o.setAttribute('aria-pressed',o===b)});
+  document.body.classList.toggle('simple',level==='simple');
+  Array.prototype.forEach.call(document.querySelectorAll('#p-steps details'),function(d){d.open=level==='detail'});
+  show(i);
+}});
+var TABS=['steps','stuck','ways'],cur='steps';
+function pick(name,focus){
+  stopWatch();cur=name;
+  TABS.forEach(function(t){var on=t===name,b=$('tab-'+t);b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;$('p-'+t).hidden=!on;if(on&&focus)b.focus()});
+}
+TABS.forEach(function(t,k){
+  $('tab-'+t).onclick=function(){pick(t)};
+  $('tab-'+t).addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();e.stopPropagation();pick(TABS[(k+(e.key==='ArrowRight'?1:TABS.length-1))%TABS.length],true)}
+  });
+});
+Array.prototype.forEach.call(document.querySelectorAll('.readp'),function(b){
+  if(!canSpeak){b.hidden=true;return}
+  b.onclick=function(){var p=$(b.getAttribute('data-for'));var parts=[];Array.prototype.forEach.call(p.querySelectorAll('.lead,.try li,.tip'),function(el){var x=el.cloneNode(true);var n=x.querySelector('.n');var lab=n?n.textContent+'. ':'';if(n)n.remove();var bb=x.querySelector('b');parts.push(lab+(bb?bb.textContent+' '+x.textContent.slice(bb.textContent.length):x.textContent))});speak(parts.join(' '))};
+});
+document.addEventListener('keydown',function(e){if(cur!=='steps')return;if(e.key==='ArrowRight'){$('next').click()}else if(e.key==='ArrowLeft'&&i>0){$('back').click()}});
+window.addEventListener('pagehide',stopTalk);
+show(0);
+})();
+</script>
+</body>
+</html>
