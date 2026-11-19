@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Made by Matt">
+<title>Help: follow a guide in order</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2212%22%20fill%3D%22%23153e64%22%2F%3E%3Cpath%20d%3D%22M32%2014v24M32%2046v4%22%20stroke%3D%22white%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
+<style>
+:root{--ink:#18283b;--accent:#153e64;--soft:#edf3f7;--line:#52677c;--bg:#fff;--card:#fffdf6;--mark:#b3261e;--good:#1b6e3c;--tint:#ffe9a8;--fs:1}
+*{box-sizing:border-box}
+body{margin:0;background:var(--soft);color:var(--ink);font:calc(20px*var(--fs))/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:auto;padding:14px 14px 40px}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:space-between}
+h1{font-size:calc(26px*var(--fs));margin:4px 0}
+.sub{margin:0 0 10px;color:#33475b}
+button{font:inherit;min-height:52px;padding:10px 18px;border:2px solid var(--accent);border-radius:12px;background:var(--bg);color:var(--accent);cursor:pointer;font-weight:600}
+button.primary{background:var(--accent);color:#fff}
+button[aria-pressed=true]{background:var(--accent);color:#fff}
+button:focus-visible{outline:4px solid #c9730a;outline-offset:2px}
+button:disabled{opacity:.45;cursor:default}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.card{background:var(--bg);border:2px solid var(--line);border-radius:16px;padding:14px;margin-top:10px}
+.count{font-weight:700;color:var(--accent);margin:0 0 4px}
+.pic{background:var(--card);border:1px solid #c8d3dd;border-radius:12px;display:block;width:100%;height:auto}
+.say{font-size:calc(26px*var(--fs));font-weight:650;margin:12px 0 4px}
+.tip{margin:6px 0 0;padding:8px 12px;border-left:6px solid var(--good);background:#eef7f0;border-radius:6px}
+.nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.nav .grow{flex:1}
+.dots{display:flex;gap:8px;margin:12px 0 0;padding:0;list-style:none;flex-wrap:wrap}
+.dots li{width:16px;height:16px;border-radius:50%;border:2px solid var(--accent)}
+.dots li.on{background:var(--accent)}
+details{margin-top:14px}
+summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+dl{margin:6px 0 0}dt{font-weight:700}dd{margin:0 0 8px}
+footer{margin-top:18px;color:#33475b;font-size:16px}
+svg text{font-family:system-ui,sans-serif;fill:var(--ink)}
+.k{stroke:var(--ink);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cardfill{fill:#f6e7c8;stroke:var(--ink);stroke-width:3}
+.dash{stroke:var(--mark);stroke-width:3;stroke-dasharray:9 7;fill:none}
+.red{fill:var(--mark)}.lab{font-size:22px;font-weight:700}.small{font-size:18px}
+.hl{fill:var(--tint);stroke:var(--ink);stroke-width:2}
+@keyframes slideIn{from{transform:translate(var(--dx,0),var(--dy,-60px));opacity:.2}to{transform:none;opacity:1}}
+@keyframes pop{0%,35%{opacity:0;transform:scale(.4)}70%{opacity:1;transform:scale(1.25)}100%{opacity:1;transform:scale(1)}}
+@keyframes draw{from{stroke-dashoffset:var(--len,400)}to{stroke-dashoffset:0}}
+@keyframes fade{0%,40%{opacity:0}100%{opacity:1}}
+@keyframes rise{from{transform:rotate(0)}to{transform:rotate(var(--rot,-90deg))}}
+@keyframes move{from{transform:translate(0,0)}to{transform:translate(var(--mx,0),var(--my,0))}}
+.a-slide{animation:slideIn 1.6s ease-out both}
+.a-pop{animation:pop 1.4s ease-out both;transform-box:fill-box;transform-origin:center}
+.a-pop2{animation:pop 1.4s ease-out 1.1s both;transform-box:fill-box;transform-origin:center}
+.a-draw{stroke-dasharray:var(--len,400);animation:draw 2s ease-in-out .4s both}
+.a-draw2{stroke-dasharray:var(--len,400);animation:draw 2s ease-in-out 2.2s both}
+.a-fade{animation:fade 2.2s ease-out both}.a-fade2{animation:fade 2.2s ease-out 1.6s both}.a-fade3{animation:fade 2.2s ease-out 3s both}
+.a-rise{animation:rise 2s ease-in-out .6s both;transform-box:fill-box}
+.a-move{animation:move 2.2s ease-in-out .6s both}
+@keyframes gone{to{opacity:0}}
+.a-gone{animation:gone .8s ease-in 2s both}
+@media (prefers-reduced-motion:reduce){[class*="a-"]{animation:none!important;stroke-dasharray:none!important}}
+body.still [class*="a-"]{animation:none!important;stroke-dasharray:none!important}
+.levels{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}.lvl-lab{font-weight:700}
+body.simple .say{font-size:calc(34px*var(--fs))}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.tabs button{border-radius:12px 12px 0 0}
+.tabs button[aria-selected=true]{background:var(--accent);color:#fff}
+.try{list-style:none;margin:0;padding:0;counter-reset:t}
+.try li{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-top:1px solid #c8d3dd;font-size:calc(22px*var(--fs))}
+.try li:first-child{border-top:0}
+.try .n{flex:none;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.try b{display:block}
+.lead{font-size:calc(22px*var(--fs));font-weight:650;margin:0 0 6px}
+@media print{.tools,.nav,details,.dots,.tabs,.levels{display:none}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div><h1>Help: follow a guide in order</h1><p class="sub">Use your finger or a marker to keep your place.</p></div>
+<div class="tools">
+<button type="button" id="bigger" aria-pressed="false">Bigger words</button>
+<button type="button" id="still" aria-pressed="false">Stop the moving</button>
+<button type="button" id="tint">Page colour: white</button>
+</div>
+</header>
+<div class="levels" role="group" aria-label="Help level">
+<span class="lvl-lab">Help level:</span>
+<button type="button" class="lvl" data-l="simple" aria-pressed="false">Simple</button>
+<button type="button" class="lvl" data-l="steps" aria-pressed="true">Step by step</button>
+<button type="button" class="lvl" data-l="detail" aria-pressed="false">More detail</button>
+</div>
+<div class="tabs" role="tablist" aria-label="Kinds of help">
+<button type="button" role="tab" id="tab-steps" aria-controls="p-steps" aria-selected="true">Help with this task</button>
+<button type="button" role="tab" id="tab-stuck" aria-controls="p-stuck" aria-selected="false" tabindex="-1">I am stuck</button>
+<button type="button" role="tab" id="tab-ways" aria-controls="p-ways" aria-selected="false" tabindex="-1">Ways to answer</button>
+</div>
+<div id="p-steps" role="tabpanel" aria-labelledby="tab-steps">
+<section class="card" aria-live="polite">
+<p class="count" id="count"></p>
+<div id="pic"></div>
+<p class="say" id="say"></p>
+<p class="tip" id="tip" hidden></p>
+<div class="nav">
+<button type="button" id="back">Back</button>
+<button type="button" id="next" class="primary">Next step</button>
+<span class="grow"></span>
+<button type="button" id="again">Show again</button>
+<button type="button" id="read">Read to me</button>
+<button type="button" id="watch" aria-pressed="false">Watch all steps</button>
+</div>
+<ol class="dots" id="dots" aria-hidden="true"></ol>
+</section>
+<details class="card"><summary>Word help</summary><dl id="words"></dl></details>
+<details class="card"><summary>Still stuck?</summary><p>Point to your card and ask, 'Can you show me where to start?'</p></details>
+</div>
+<div id="p-stuck" role="tabpanel" aria-labelledby="tab-stuck" hidden>
+<section class="card">
+<p class="lead">Being stuck is normal. Try these three things first.</p>
+<ol class="try" id="stucklist">
+<li><span class="n" aria-hidden="true">1</span><span><b>Read the task again.</b>Point to each word as you read.</span></li>
+<li><span class="n" aria-hidden="true">2</span><span><b>Look at your sheet.</b>Find the box called What you need to know. Look at the picture too.</span></li>
+<li><span class="n" aria-hidden="true">3</span><span><b>Do the first small bit.</b>Use the sentence starter or the first step.</span></li>
+</ol>
+<p class="tip">Still stuck? Put your hand up or show your help card. While you wait, do the next part that you can do.</p>
+<div class="nav"><button type="button" class="readp" data-for="p-stuck">Read to me</button></div>
+</section>
+</div>
+<div id="p-ways" role="tabpanel" aria-labelledby="tab-ways" hidden>
+<section class="card">
+<p class="lead">You can show what you know in different ways. Pick one.</p>
+<ol class="try">
+<li><span class="n" aria-hidden="true">A</span><span><b>Write it.</b>Use the sentence starter on your sheet.</span></li>
+<li><span class="n" aria-hidden="true">B</span><span><b>Draw it and label it.</b>Add three labels with key words.</span></li>
+<li><span class="n" aria-hidden="true">C</span><span><b>Say it.</b>Tell an adult your answer and they will write it down.</span></li>
+</ol>
+<p class="tip">Check with your teacher which way is right for this task.</p>
+<div class="nav"><button type="button" class="readp" data-for="p-ways">Read to me</button></div>
+</section>
+</div>
+<footer>Made by Matt · help page · nothing you do here is saved or sent anywhere.</footer>
+</main>
+<script>
+(function(){
+var STEPS=[{"t": "Look through the whole guide before you move anything.", "tip": "You can ask someone to read it with you.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"Three guide cards sit in a row as a pointer glides across their top edges.\"><rect x=\"76\" y=\"114\" width=\"192\" height=\"176\" rx=\"12\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"172\" y=\"154\" class=\"lab\" text-anchor=\"middle\">Step 1<\/text><line x1=\"106\" y1=\"194\" x2=\"238\" y2=\"194\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><line x1=\"106\" y1=\"232\" x2=\"216\" y2=\"232\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><rect x=\"304\" y=\"114\" width=\"192\" height=\"176\" rx=\"12\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"400\" y=\"154\" class=\"lab\" text-anchor=\"middle\">Step 2<\/text><line x1=\"334\" y1=\"194\" x2=\"466\" y2=\"194\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><line x1=\"334\" y1=\"232\" x2=\"444\" y2=\"232\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><rect x=\"532\" y=\"114\" width=\"192\" height=\"176\" rx=\"12\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"628\" y=\"154\" class=\"lab\" text-anchor=\"middle\">Step 3<\/text><line x1=\"562\" y1=\"194\" x2=\"694\" y2=\"194\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><line x1=\"562\" y1=\"232\" x2=\"672\" y2=\"232\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><g class=\"a-slide\" style=\"--dx:-440px;--dy:0px\"><path d=\"M628 102 l-12 -20 h7 v-24 h10 v24 h7 z\" fill=\"#153e64\"/><\/g><text x=\"400\" y=\"344\" class=\"lab\" text-anchor=\"middle\">Look at every card before you start.<\/text><\/svg>", "s": "Look through the whole guide."}, {"t": "Find the part that tells you what comes first.", "tip": "A word, number or picture might give you the clue.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"Two guide cards sit side by side and a green ring marks the word First.\"><rect x=\"108\" y=\"64\" width=\"248\" height=\"222\" rx=\"14\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"232\" y=\"116\" class=\"lab\" text-anchor=\"middle\">Next<\/text><line x1=\"146\" y1=\"168\" x2=\"318\" y2=\"168\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><line x1=\"146\" y1=\"212\" x2=\"290\" y2=\"212\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><rect x=\"444\" y=\"64\" width=\"248\" height=\"222\" rx=\"14\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><rect x=\"498\" y=\"84\" width=\"140\" height=\"50\" rx=\"10\" class=\"hl\"/><text x=\"568\" y=\"117\" class=\"lab\" text-anchor=\"middle\">First<\/text><ellipse cx=\"568\" cy=\"109\" rx=\"80\" ry=\"34\" fill=\"none\" stroke=\"#1b6e3c\" stroke-width=\"5\" class=\"a-pop\"/><line x1=\"482\" y1=\"168\" x2=\"654\" y2=\"168\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><line x1=\"482\" y1=\"212\" x2=\"626\" y2=\"212\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><text x=\"400\" y=\"344\" class=\"lab\" text-anchor=\"middle\">Look for the clue that says First.<\/text><\/svg>", "s": "Find the first part."}, {"t": "Point to the action and the thing you need.", "tip": "In 'put one token in the box', the action is 'put'.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"The action word Put is underlined above a token beside an empty box.\"><rect x=\"130\" y=\"34\" width=\"540\" height=\"78\" rx=\"12\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"256\" y=\"82\" class=\"lab\" textLength=\"38\" lengthAdjust=\"spacingAndGlyphs\">Put<\/text><text x=\"302\" y=\"82\" class=\"lab\">one token in the box.<\/text><path d=\"M256 92 H294\" class=\"k a-draw\" style=\"stroke:#b3261e;stroke-width:6;--len:50\"/><polygon points=\"224,160 238,194 274,194 246,216 256,252 224,230 192,252 202,216 174,194 210,194\" class=\"hl\"/><text x=\"224\" y=\"290\" class=\"small\" text-anchor=\"middle\">Thing: token<\/text><rect x=\"430\" y=\"156\" width=\"210\" height=\"106\" rx=\"12\" fill=\"#eef7f0\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"535\" y=\"217\" class=\"lab\" text-anchor=\"middle\">Box<\/text><text x=\"400\" y=\"348\" class=\"lab\" text-anchor=\"middle\">Find the action word and the thing.<\/text><\/svg>", "s": "Find the action and the thing."}, {"t": "Do or show just the part you are pointing to.", "tip": "For a story, say or show what happens in this picture.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"One token slides cleanly into a box.\"><rect x=\"380\" y=\"96\" width=\"290\" height=\"170\" rx=\"14\" fill=\"#eef7f0\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"525\" y=\"246\" class=\"small\" text-anchor=\"middle\">Box<\/text><g class=\"a-slide\" style=\"--dx:-290px;--dy:0px\"><polygon points=\"525,118 538,150 572,150 544,170 554,204 525,184 496,204 506,170 478,150 512,150\" class=\"hl\"/><\/g><path d=\"M180 176 H344 M328 162 l16 14 l-16 14\" class=\"k\" style=\"stroke:#153e64;stroke-width:5\"/><text x=\"400\" y=\"338\" class=\"lab\" text-anchor=\"middle\">Do just this one part now.<\/text><\/svg>", "s": "Do this part."}, {"t": "Move your marker to the next part and follow it.", "tip": "Keep going in order until you reach the last part.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A marker slides from the first card to the second card in order.\"><rect x=\"76\" y=\"72\" width=\"192\" height=\"168\" rx=\"12\" fill=\"#eef7f0\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><text x=\"172\" y=\"120\" class=\"lab\" text-anchor=\"middle\">Part 1<\/text><path d=\"M148 176 l16 18 l34 -40\" class=\"k\" style=\"stroke:#1b6e3c;stroke-width:8\"/><rect x=\"304\" y=\"72\" width=\"192\" height=\"168\" rx=\"12\" class=\"hl\"/><text x=\"400\" y=\"120\" class=\"lab\" text-anchor=\"middle\">Part 2<\/text><line x1=\"334\" y1=\"170\" x2=\"466\" y2=\"170\" stroke=\"#18283b\" stroke-width=\"6\" stroke-linecap=\"round\"/><rect x=\"532\" y=\"72\" width=\"192\" height=\"168\" rx=\"12\" fill=\"#fff\" stroke=\"#9fb0c0\" stroke-width=\"3\"/><text x=\"628\" y=\"120\" class=\"lab\" text-anchor=\"middle\">Part 3<\/text><line x1=\"562\" y1=\"170\" x2=\"694\" y2=\"170\" stroke=\"#9fb0c0\" stroke-width=\"6\" stroke-linecap=\"round\"/><g class=\"a-slide\" style=\"--dx:-228px;--dy:0px\"><polygon points=\"400,254 382,288 418,288\" fill=\"#153e64\"/><\/g><text x=\"400\" y=\"346\" class=\"lab\" text-anchor=\"middle\">Move your marker to the next card.<\/text><\/svg>", "s": "Move on and follow the next part."}, {"t": "Compare your finished work with the guide and fix anything missing.", "tip": "If the guide shows two items, check you can see both.", "svg": "<svg class=\"pic\" viewBox=\"0 0 800 380\" role=\"img\" aria-label=\"A guide card sits beside a tray as one missing triangle slides into place.\"><rect x=\"74\" y=\"64\" width=\"276\" height=\"218\" rx=\"14\" fill=\"#fff\" stroke=\"#18283b\" stroke-width=\"3\"/><text x=\"212\" y=\"106\" class=\"lab\" text-anchor=\"middle\">Guide<\/text><polygon points=\"154,142 166,172 198,172 172,190 182,222 154,202 126,222 136,190 110,172 142,172\" class=\"hl\"/><polygon points=\"274,144 236,216 312,216\" fill=\"#d6e6f2\" stroke=\"#153e64\" stroke-width=\"3\"/><rect x=\"448\" y=\"64\" width=\"278\" height=\"218\" rx=\"14\" fill=\"#eef7f0\" stroke=\"#1b6e3c\" stroke-width=\"3\"/><text x=\"587\" y=\"106\" class=\"lab\" text-anchor=\"middle\">My tray<\/text><polygon points=\"528,142 540,172 572,172 546,190 556,222 528,202 500,222 510,190 484,172 516,172\" class=\"hl\"/><g class=\"a-slide\" style=\"--dx:0px;--dy:-64px\"><polygon points=\"648,144 610,216 686,216\" fill=\"#d6e6f2\" stroke=\"#153e64\" stroke-width=\"3\"/><\/g><text x=\"400\" y=\"342\" class=\"lab\" text-anchor=\"middle\">Fix anything missing so both match.<\/text><\/svg>", "s": "Check your work against the guide."}];
+var WORDS=[["guide", "Words or pictures that show what to do."], ["order", "Which part comes first, next and last."], ["action", "Something you do, such as put, point or draw."], ["check", "Look again to see if things match."]];
+var i=0,watching=false,timer=null,level='steps';
+var $=function(id){return document.getElementById(id)};
+var canSpeak=('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window);
+if(!canSpeak){$('read').hidden=true}
+var dots=$('dots');STEPS.forEach(function(){dots.appendChild(document.createElement('li'))});
+var dl=$('words');WORDS.forEach(function(w){var dt=document.createElement('dt');dt.textContent=w[0];var dd=document.createElement('dd');dd.textContent=w[1];dl.appendChild(dt);dl.appendChild(dd)});
+function stopTalk(){if(canSpeak){try{window.speechSynthesis.cancel()}catch(e){}}}
+function speak(text,done){
+  if(!canSpeak){if(done)timer=setTimeout(done,6500);return}
+  stopTalk();
+  var u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=0.9;
+  var fired=false;function fin(){if(fired)return;fired=true;if(done)timer=setTimeout(done,1800)}
+  u.onend=fin;u.onerror=fin;
+  if(done){timer=setTimeout(fin,Math.max(7000,text.length*110))}
+  try{window.speechSynthesis.speak(u)}catch(e){fin()}
+}
+function show(n){
+  i=Math.max(0,Math.min(STEPS.length-1,n));
+  var s=STEPS[i];
+  $('count').textContent='Step '+(i+1)+' of '+STEPS.length;
+  $('pic').innerHTML=s.svg;
+  $('say').textContent=level==='simple'&&s.s?s.s:s.t;
+  var tip=$('tip');if(s.tip&&level==='detail'){tip.textContent=s.tip;tip.hidden=false}else{tip.hidden=true}
+  $('back').disabled=i===0;
+  $('next').textContent=i===STEPS.length-1?'Start again':'Next step';
+  Array.prototype.forEach.call(dots.children,function(d,k){d.className=k<=i?'on':''});
+}
+function textOf(s){return level==='simple'&&s.s?s.s:s.t+(s.tip&&level==='detail'?' '+s.tip:'')}
+function stopWatch(){watching=false;clearTimeout(timer);stopTalk();$('watch').setAttribute('aria-pressed','false');$('watch').textContent='Watch all steps'}
+function playFrom(n){
+  if(!watching)return;show(n);
+  speak(textOf(STEPS[i]),function(){if(!watching)return;if(i<STEPS.length-1){playFrom(i+1)}else{stopWatch()}});
+}
+$('next').onclick=function(){stopWatch();show(i===STEPS.length-1?0:i+1)};
+$('back').onclick=function(){stopWatch();show(i-1)};
+$('again').onclick=function(){stopWatch();show(i)};
+$('read').onclick=function(){stopWatch();speak(textOf(STEPS[i]))};
+$('watch').onclick=function(){
+  if(watching){stopWatch();return}
+  watching=true;this.setAttribute('aria-pressed','true');this.textContent='Stop';playFrom(i===STEPS.length-1?0:i);
+};
+$('bigger').onclick=function(){var on=this.getAttribute('aria-pressed')!=='true';this.setAttribute('aria-pressed',on);document.documentElement.style.setProperty('--fs',on?'1.3':'1')};
+var TINTS=[['white','#edf3f7','#fff','#fffdf6'],['cream','#f3ead2','#fbf5e2','#fdf9ec'],['blue','#d6e6f2','#e6f0f8','#eef5fa'],['green','#d9ead9','#e8f3e8','#f0f7f0'],['pink','#f6dbe6','#fbeaf1','#fdf3f7']],ti=0;
+$('tint').onclick=function(){ti=(ti+1)%TINTS.length;var c=TINTS[ti],r=document.documentElement.style;r.setProperty('--soft',c[1]);r.setProperty('--bg',c[2]);r.setProperty('--card',c[3]);this.textContent='Page colour: '+c[0]};
+$('still').onclick=function(){var on=this.getAttribute('aria-pressed')!=='true';this.setAttribute('aria-pressed',on);document.body.classList.toggle('still',on)};
+Array.prototype.forEach.call(document.querySelectorAll('.lvl'),function(b){b.onclick=function(){
+  stopWatch();level=b.getAttribute('data-l');
+  Array.prototype.forEach.call(document.querySelectorAll('.lvl'),function(o){o.setAttribute('aria-pressed',o===b)});
+  document.body.classList.toggle('simple',level==='simple');
+  Array.prototype.forEach.call(document.querySelectorAll('#p-steps details'),function(d){d.open=level==='detail'});
+  show(i);
+}});
+var TABS=['steps','stuck','ways'],cur='steps';
+function pick(name,focus){
+  stopWatch();cur=name;
+  TABS.forEach(function(t){var on=t===name,b=$('tab-'+t);b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;$('p-'+t).hidden=!on;if(on&&focus)b.focus()});
+}
+TABS.forEach(function(t,k){
+  $('tab-'+t).onclick=function(){pick(t)};
+  $('tab-'+t).addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();e.stopPropagation();pick(TABS[(k+(e.key==='ArrowRight'?1:TABS.length-1))%TABS.length],true)}
+  });
+});
+Array.prototype.forEach.call(document.querySelectorAll('.readp'),function(b){
+  if(!canSpeak){b.hidden=true;return}
+  b.onclick=function(){var p=$(b.getAttribute('data-for'));var parts=[];Array.prototype.forEach.call(p.querySelectorAll('.lead,.try li,.tip'),function(el){var x=el.cloneNode(true);var n=x.querySelector('.n');var lab=n?n.textContent+'. ':'';if(n)n.remove();var bb=x.querySelector('b');parts.push(lab+(bb?bb.textContent+' '+x.textContent.slice(bb.textContent.length):x.textContent))});speak(parts.join(' '))};
+});
+document.addEventListener('keydown',function(e){if(cur!=='steps')return;if(e.key==='ArrowRight'){$('next').click()}else if(e.key==='ArrowLeft'&&i>0){$('back').click()}});
+window.addEventListener('pagehide',stopTalk);
+show(0);
+})();
+</script>
+</body>
+</html>
