@@ -23,7 +23,7 @@ const load=filename=>JSON.parse(fs.readFileSync(filename,'utf8'));
  }
  const browser=await chromium.launch({headless:true});
  const context=await browser.newContext({acceptDownloads:true});
- const results={base,source:process.env.SCIENCE_PACK_SOURCE_SHA||process.env.GITHUB_SHA||null,publicationRun:process.env.SCIENCE_PACK_PUBLICATION_RUN||null,viewports:[],downloadBytes:[]};
+ const results={base,source:process.env.SCIENCE_PACK_SOURCE_SHA||process.env.GITHUB_SHA||null,publicationRun:process.env.SCIENCE_PACK_PUBLICATION_RUN||null,viewports:[],downloadBytes:[],gatewayRetries:[]};
  try{
   for(const width of [390,1280]){
    const page=await context.newPage();
@@ -92,7 +92,18 @@ const load=filename=>JSON.parse(fs.readFileSync(filename,'utf8'));
   }
   // Every individual file and every archive must match this exact source build.
   for(const [relative,item] of downloads){
-   const response=await context.request.get(new URL(relative,base).href,{timeout:120000});
+   // The live host occasionally answers one of these hundreds of requests with a
+   // 502/503/504 (a different file each time; every red run since 18 Nov was a 503).
+   // Retry ONLY those gateway codes, at most 3 more times with backoff. Any other
+   // status (404 included) fails at once, a gateway error that persists still fails,
+   // and every retry is recorded in the results file so it stays visible.
+   let response;
+   for(let attempt=1;;attempt++){
+    response=await context.request.get(new URL(relative,base).href,{timeout:120000});
+    if(![502,503,504].includes(response.status()) || attempt>=4) break;
+    results.gatewayRetries.push({file:relative,attempt,status:response.status()});
+    await new Promise(r=>setTimeout(r,2000*2**(attempt-1)));
+   }
    assert.equal(response.status(),200,'Download response: '+relative);
    const bytes=await response.body();
    assert.equal(bytes.length,item.bytes,'Download length: '+relative);
@@ -118,5 +129,5 @@ const load=filename=>JSON.parse(fs.readFileSync(filename,'utf8'));
   fs.writeFileSync(path.join(output,'results.json'),JSON.stringify(results,null,2)+'\n');
   await browser.close();
  }
- console.log(JSON.stringify({status:results.status,base,viewports:results.viewports.map(v=>v.width),exactDownloads:results.downloadBytes.length}));
+ console.log(JSON.stringify({status:results.status,base,viewports:results.viewports.map(v=>v.width),exactDownloads:results.downloadBytes.length,gatewayRetries:results.gatewayRetries.length}));
 })().catch(error=>{console.error(error);process.exitCode=1});
