@@ -3209,6 +3209,9 @@ CATALOGUE_PINS = {
         "kits/help/calm.html": "40bbff6e1de46494150ef02bdcac4fa4ea2b532d39121654837f945ccd6e9493",
         "kits/help/check.html": "bac08ebef04d121986af314b9d7ba80f822ac04cdd63ce8a0c0e3dd79898c350",
         "kits/help/pace.html": "9b0436b073ef5865623e752ff06d554a50111c98f7441ce7afebc420fc298a3d",
+        "kits/help/gridmap.html": "c4661555f8d4c6a086900356c2b090148ef558edbd0dc92ff590df8090a16140",
+        "kits/help/snack.html": "44aef22b1e2c7c58cae16ff747423c9236ff1edfba00977a61b52b5748285260",
+        "kits/help/weigh.html": "c20d0ede328b07bb79dffdf1bd50f62ea1f40d82d49ef78ade99485367fde313",
         "kits/class_tools/Catch_up_Tracker.html": "1518e7226071beb7fb3b6eb67220bb381df633f4c84b9cb81e82029dd4b8f251",
         "kits/class_tools/Class_names.html": "7465659a2aabfb2ba9afce1fe4ec48f6781e0c4dcbc1b7d177b7687b2a8eecb5",
         "kits/class_tools/Class_record.html": "047396e5aca97cfcc195be3972ab44c9389327578d83a1e94d1f508a93c3f845",
@@ -3967,7 +3970,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "b84976b65c31432068ef0d325eac4d3c654c53aca80888be59f5616c73b54081",
+    "lessons": "3d1b1c43e3f71561872f0239295fbdb03efd0586dc3c333822e5655c7eff836a",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
