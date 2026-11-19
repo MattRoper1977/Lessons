@@ -118,7 +118,7 @@ APPS_HUB_REVIEWED_WORDING_SHA256 = "9e5a4ac6c1e9bfb04a1c0186a82fce96aa03565a02dc
 
 # BEGIN REVIEWED CATALOGUE PINS
 CATALOGUE_PINS = {
-    "visible_body_sha256": "204ce8e89ab6d0299e38e0d291417a1f8b539d7c2dc982edac7d41edfb14b2cd",
+    "visible_body_sha256": "65c630ee60d2fac8a0392b7e1a7326acd5ad8d7f6b4de746838fd9ded04b93e8",
     "files": {
         "_sownb/CALENDAR_SPINE.json": "607ebb2e358b4c872de473444bdee1cd112677759af392e68137ecfb7023e489",
         "_sx3/SX3_PASSES_LEDGER.md": "5ea492a8cbc2d6f1108ceedeec6d0b80bc662467183f30e69850e7cfd2c0cc25",
@@ -132,7 +132,7 @@ CATALOGUE_PINS = {
         "assets/catalogue/lesson-order.json": "88bb27217ee2e985136e6f031fc136292688fe72c21ff32bb3c3892b46053032",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
-        "index.html": "daf4703a160678b9076ed3bc7487e841327162d237559356a01335a3051e3e3c",
+        "index.html": "693f0303ff1358046b7a532ca6e96c0ef9ef4f2b110b5ca6cb7f59aa803611bd",
         "Science/index.html": "ea568633299e42a45340143d5eeaab2de179e95a04ed43d5515ae870dbb3344a",
         "Humanities/index.html": "db6cbda3dc980608b4304d20fa6ff7bcf295fd0cae5a062bd53ebe94790fbc81",
         "humanities.html": "bfb8f9383680b9c6d849931652db29289b92d5ed18c5f9616cfc0ede0614fa5c",
@@ -4011,7 +4011,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "3eb7f9a768e8b1e817674ffb57f931095e9b0e8da4d6bbd71499c578bd44555e",
+    "lessons": "f58a62fb52b18e243844e1302c35f3ba9354685601d1d6b771f7a14c8eb74e35",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
