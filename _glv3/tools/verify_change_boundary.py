@@ -375,6 +375,11 @@ WEBSITE_EDITIONS_BATCH_55_REVIEW_BASE = 'c5b9bda0ad100fe7391d4c2c666231745ad16ab
 # it replaces carried; no companion file moves. Base is the merge base with main; blobs read there,
 # written with admit_sx3_release.write(). Every member also carries a CATALOGUE_PINS admission.
 WEBSITE_EDITIONS_BATCH_61_REVIEW_BASE = '8ba948e0454d02a6df9944050c707192cd6bd5cc'
+# Website editions batch 62 (owner-requested 15 Nov 2026: the redesigned lesson boards replace the earlier pages at their
+# landed paths). Each member keeps its way home, its term and week line and every local link the page
+# it replaces carried; no companion file moves. Base is the merge base with main; blobs read there,
+# written with admit_sx3_release.write(). Every member also carries a CATALOGUE_PINS admission.
+WEBSITE_EDITIONS_BATCH_62_REVIEW_BASE = '02d0937ab2cabc4b2cfa6997cf1fc52e4ecb74d4'
 # BEGIN DECLARED TRANSACTIONS
 # BEGIN S3 OFFLINE EDITION REPLACEMENTS
 CX2_S3_REPLACEMENTS = {'Science/Teaching_Packs/web-slides.html': {'beforeGitBlob': '6596d65c7a9bd5bb1875c5b46bbc331df8652144', 'afterSha256': 'f31f09d03f5d8c417af1745b38309fa537afb8bb4c6a08f387db3349d9e1cba2', 'bytes': 18607}}
@@ -602,6 +607,9 @@ WEBSITE_EDITIONS_BATCH_55_REPLACEMENTS = {'Art/Build/CREATIVE_ARTS_A2_W07/Public
 # BEGIN WEBSITE_EDITIONS_BATCH_61 REPLACEMENTS
 WEBSITE_EDITIONS_BATCH_61_REPLACEMENTS = {'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W02/SCI_BUILD_A2_W02_L2.html': {'beforeGitBlob': '5fbb332d8071a76b16c99c4b7139c97ea5c91e48', 'afterSha256': '5260f6c0872e76779c6401fee95b837a94942f566a69149412437a9d0058ec7e', 'bytes': 457773}, 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1.html': {'beforeGitBlob': '4cef25d86471fabdd972351d3aa3a218801790b0', 'afterSha256': '241394fc26a767c96f795a20794c828d0f9bea3aceaf00304c6136567ab080b7', 'bytes': 446863}, 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L2.html': {'beforeGitBlob': 'c8490a6b182b29a11e5355df5be8615e3d2b656f', 'afterSha256': '0b356c21e8e74a87e1596d39e0880e7e7baa12758fde20c87c9d07710c85a241', 'bytes': 444971}, 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1.html': {'beforeGitBlob': 'a29f5e4882eb57fc35e0fda126c9ee028dd87c86', 'afterSha256': '4c7f224753926759f68d0db3535a00290e726ec51897bec593fae72b0d16529e', 'bytes': 444763}, 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L2.html': {'beforeGitBlob': 'c27e878147df835aaf56b135b38211d638f08542', 'afterSha256': '5376608497cbd8b59fb3f084e4567e319019cefc15ba04914763ea8718ebf706', 'bytes': 447603}}
 # END WEBSITE_EDITIONS_BATCH_61 REPLACEMENTS
+# BEGIN WEBSITE_EDITIONS_BATCH_62 REPLACEMENTS
+WEBSITE_EDITIONS_BATCH_62_REPLACEMENTS = {'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W02/SCI_BUILD_A2_W02_L2.html': {'beforeGitBlob': '1b358a5c99b9974762c4912630600852e70839a7', 'afterSha256': 'a1b8b698a2261cfc437a048beaf88317b8f5a435e711ebebd6a315165b9ed7a1', 'bytes': 472726}, 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1.html': {'beforeGitBlob': 'c9fdb49d547d155f9df96cf513beb01e6a5516c5', 'afterSha256': '59a42497b715c6811c2e750f3442aba584b8813071bafc2dc5fb06c04be03fa3', 'bytes': 463404}, 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L2.html': {'beforeGitBlob': 'df27303f3b135c074a49c8d698db889e55c0e3f2', 'afterSha256': '235c5a877e6ed4531bd24ad1c899cca4fa478d7b3f4804467ff362e36c4624f4', 'bytes': 462775}, 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1.html': {'beforeGitBlob': 'e55c29b74f17f5fec61a8ea1d367aa2bc3a154c4', 'afterSha256': '83b95150cbf652a7fe0876d4f7ac087c3cba0589249befab7c29782785fffe73', 'bytes': 461134}, 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L2.html': {'beforeGitBlob': 'ce5f8e21cc6d9f1e72284424ed3299b5743c5c80', 'afterSha256': 'e13dfc71676dac32457354f1cc0c53d331ffd9833f00b8f7264d29a853470f99', 'bytes': 463626}}
+# END WEBSITE_EDITIONS_BATCH_62 REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -779,6 +787,7 @@ REPLACEMENT_TRANSACTIONS = {
     'Website editions batch 24': (WEBSITE_EDITIONS_BATCH_24_REVIEW_BASE, WEBSITE_EDITIONS_BATCH_24_REPLACEMENTS),
     'Website editions batch 55': (WEBSITE_EDITIONS_BATCH_55_REVIEW_BASE, WEBSITE_EDITIONS_BATCH_55_REPLACEMENTS),
     'Website editions batch 61': (WEBSITE_EDITIONS_BATCH_61_REVIEW_BASE, WEBSITE_EDITIONS_BATCH_61_REPLACEMENTS),
+    'Website editions batch 62': (WEBSITE_EDITIONS_BATCH_62_REVIEW_BASE, WEBSITE_EDITIONS_BATCH_62_REPLACEMENTS),
 }
 # RULING um add.5 (24 Oct 2026): the retired member type is admitted only inside a transaction listed here against the
 # lettered ruling that retired it. Today that is um only. Any other transaction that carries a retired member fails
