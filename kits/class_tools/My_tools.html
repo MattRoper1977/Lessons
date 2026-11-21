@@ -516,7 +516,7 @@ body.board-open>main{visibility:hidden}
 
 <section class="tool-group"><h2>Today</h2><div class="tiles"><a class="tile" href="Quick_capture.html"><b>Quick capture</b><span>Exit tally, evidence photos and the IEDP helper.</span></a><a class="tile" id="tomorrowTile" href="https://drive.google.com/drive/u/0/search?q=type%3Afolder%20Tomorrow" target="_blank" rel="noopener"><b>Tomorrow pack</b><span id="tomorrowHint">_OUTBOX / Tomorrow. Find the folder in Drive, or save its direct link below.</span></a><a class="tile" href="Lesson_extras.html"><b>Lesson extras</b><span>Visitor sheet and cover pack from a lesson file, made on this device.</span></a><a class="tile" href="Practical_log.html"><b>Practical log</b><span>Tick who did each experiment (pupil codes only).</span></a><a class="tile" href="Requests.html"><b>Request box</b><span>Ask for something; the agents pick it up.</span></a></div></section>
 <details class="note"><summary>Set Tomorrow folder link</summary><p>The direct Tomorrow folder link was not available in the reference. Until set, the tile searches Drive for folders called Tomorrow. Choose the one inside _OUTBOX.</p><form id="tomorrowForm"><label for="tomorrowUrl">Paste the Drive _OUTBOX / Tomorrow folder link</label><input id="tomorrowUrl" type="url" placeholder="https://drive.google.com/drive/folders/…" autocomplete="off"><div class="row"><button type="submit">Save folder link</button></div></form><p id="folderStatus" role="status"></p></details>
-<section class="tool-group"><h2>This week</h2><div class="tiles"><a class="tile" href="Catch_up_Tracker.html"><b>Catch-up tracker</b><span>Who missed what, and the right catch-up sheet.</span></a><a class="tile" href="Quick_capture.html#absence-panel"><b>Absent catch-up</b><span>Preview missed lessons and save a catch-up request.</span></a><a class="tile" href="Missed_last_week.html"><b>Missed last week</b><span>Catch-up sheets for the lessons that did not run, and when to use them.</span></a></div></section>
+<section class="tool-group"><h2>This week</h2><div class="tiles"><a class="tile" href="Catch_up_Tracker.html"><b>Catch-up tracker</b><span>Who missed what, and the right catch-up sheet.</span></a><a class="tile" href="Quick_capture.html#absence-panel"><b>Absent catch-up</b><span>Preview missed lessons and save a catch-up request.</span></a><a class="tile" href="Missed_last_week.html"><b>Missed last week</b><span>Catch-up sheets for the lessons that did not run, and when to use them.</span></a><a class="tile" href="Pupil_overview.html"><b>Pupil overview</b><span>Everything saved per pupil, and one-page IEDP review prints.</span></a></div></section>
 <section class="tool-group"><h2>Private</h2><div class="tiles"><a class="tile" href="Class_names.html"><b>Class names</b><span>Your private names list for the laptop.</span></a><a class="tile" href="https://drive.google.com/drive/search?q=MBM%20private%20tracker" target="_blank" rel="noopener"><b>Private folder</b><span>Tracker, targets text, practical record. Never share.</span></a></div></section>
 
 <section class="tool-group" id="driveChecksSection">
@@ -659,7 +659,11 @@ const KEYS = {
   term: 'mbm_term_config_v1',
   theme: 'mbm_tools_theme_v1',
   commPart: 'mbm_tools_comm_part_v1',
-  board: 'mbm_board_timer_v1'
+  board: 'mbm_board_timer_v1',
+  lessonToday: 'mbm_lesson_today_v1',
+  adaptLog: 'mbm_adapt_log_v1',
+  targetWords: 'mbm_pupil_target_words_v1',
+  subjectSettings: 'mbm_pupil_subject_v1'
 };
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -3008,6 +3012,35 @@ function buildFullSafeBackup(roster = buildRoster()){
   const rawAwards = read(KEYS.awards, null);
   const tracker = ensureTrackerState(roster);
 
+  const rawLessonToday = read(KEYS.lessonToday, null);
+  let cleanLessonToday = null;
+  if (rawLessonToday && typeof rawLessonToday === 'object' && !Array.isArray(rawLessonToday) && rawLessonToday.items && typeof rawLessonToday.items === 'object' && !Array.isArray(rawLessonToday.items)) {
+    const cleanItems = {};
+    Object.entries(rawLessonToday.items).forEach(([k, v]) => {
+      if (!v || typeof v !== 'object') return;
+      const copy = { ...v };
+      if (typeof copy.adult === 'string') copy.adult = redactPublic(copy.adult, roster);
+      if (typeof copy.note === 'string') copy.note = redactPublic(copy.note, roster);
+      cleanItems[k] = copy;
+    });
+    cleanLessonToday = { ...rawLessonToday, version: rawLessonToday.version || 1, items: cleanItems };
+  }
+
+  const rawAdaptLog = read(KEYS.adaptLog, null);
+  const cleanAdaptLog = (rawAdaptLog && typeof rawAdaptLog === 'object' && !Array.isArray(rawAdaptLog) && Array.isArray(rawAdaptLog.rows)) ? rawAdaptLog : null;
+
+  const rawTargetWords = read(KEYS.targetWords, null);
+  let cleanTargetWords = null;
+  if (rawTargetWords && typeof rawTargetWords === 'object' && !Array.isArray(rawTargetWords)) {
+    cleanTargetWords = {};
+    Object.entries(rawTargetWords).forEach(([k, v]) => {
+      if (typeof v === 'string' && v.trim()) cleanTargetWords[k] = redactPublic(v, roster);
+    });
+  }
+
+  const rawSubjectSettings = read(KEYS.subjectSettings, null);
+  const cleanSubjectSettings = (rawSubjectSettings && typeof rawSubjectSettings === 'object' && !Array.isArray(rawSubjectSettings) && rawSubjectSettings.items && typeof rawSubjectSettings.items === 'object' && !Array.isArray(rawSubjectSettings.items)) ? rawSubjectSettings : null;
+
   return {
     schema: 'mbm_my_tools_safe_backup_v1',
     exportedAt: new Date().toISOString(),
@@ -3028,7 +3061,11 @@ function buildFullSafeBackup(roster = buildRoster()){
       covAbs: deepRedactObjectPublic(read(KEYS.covAbs, {}) || {}, roster),
       targets: cleanTargets,
       practical: cleanPractical,
-      awards: rawAwards ? deepRedactObjectPublic(rawAwards, roster) : null
+      awards: rawAwards ? deepRedactObjectPublic(rawAwards, roster) : null,
+      lessonToday: cleanLessonToday,
+      adaptLog: cleanAdaptLog,
+      targetWords: cleanTargetWords,
+      subjectSettings: cleanSubjectSettings
     }
   };
 }
@@ -3081,6 +3118,10 @@ $('importSafeBackupFile').onchange = e => {
       if (d.targets && typeof d.targets === 'object') write(KEYS.targets, d.targets);
       if (Array.isArray(d.practical)) write(KEYS.practical, d.practical);
       if (d.awards && typeof d.awards === 'object') write(KEYS.awards, d.awards);
+      if (d.lessonToday && typeof d.lessonToday === 'object' && !Array.isArray(d.lessonToday) && d.lessonToday.items && typeof d.lessonToday.items === 'object' && !Array.isArray(d.lessonToday.items)) write(KEYS.lessonToday, d.lessonToday);
+      if (d.adaptLog && typeof d.adaptLog === 'object' && !Array.isArray(d.adaptLog) && Array.isArray(d.adaptLog.rows)) write(KEYS.adaptLog, d.adaptLog);
+      if (d.targetWords && typeof d.targetWords === 'object' && !Array.isArray(d.targetWords)) write(KEYS.targetWords, d.targetWords);
+      if (d.subjectSettings && typeof d.subjectSettings === 'object' && !Array.isArray(d.subjectSettings) && d.subjectSettings.items && typeof d.subjectSettings.items === 'object' && !Array.isArray(d.subjectSettings.items)) write(KEYS.subjectSettings, d.subjectSettings);
       // Merge public group & adapt into local profile while preserving any local private .note!
       if (d.profilePublic?.pupils) {
         const curProf = read(KEYS.profile, {}) || {};

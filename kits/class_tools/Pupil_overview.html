@@ -1,0 +1,1102 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Lesson resource">
+<meta name="creator" content="Lesson resource">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'self' data:; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Pupil overview · Made by Matt</title>
+<style>
+:root{
+  --ink:#1d2433;
+  --muted:#475569;
+  --accent:#163e70;
+  --soft:#eef3fa;
+  --card:#ffffff;
+  --line:#c9d3e3;
+  --ok:#174d2b;
+  --ok-bg:#ecfdf5;
+  --ok-bd:#16a34a;
+  --warn:#703600;
+  --warn-bg:#fffbeb;
+  --warn-bd:#d97706;
+  --bad:#7f1d1d;
+  --bad-bg:#fef2f2;
+  --bad-bd:#dc2626;
+  --abs:#334155;
+  --abs-bg:#f1f5f9;
+  --abs-bd:#64748b;
+  --build:#21465f;
+  --grow:#174d3d;
+  --launch:#50336f;
+  --focus:#073d83;
+  --bg:#f8fafc;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --ink:#e8edf5;
+    --muted:#b6c2d2;
+    --accent:#bedaff;
+    --soft:#1c2433;
+    --card:#151c28;
+    --line:#3a4658;
+    --ok:#a9e9bf;
+    --ok-bg:#0d291a;
+    --ok-bd:#34d399;
+    --warn:#ffdaaa;
+    --warn-bg:#2e1d08;
+    --warn-bd:#f59e0b;
+    --bad:#fecaca;
+    --bad-bg:#2f1215;
+    --bad-bd:#f87171;
+    --abs:#cbd5e1;
+    --abs-bg:#1e293b;
+    --abs-bd:#94a3b8;
+    --build:#b9dcf5;
+    --grow:#a8e4ce;
+    --launch:#e0cafa;
+    --focus:#bedaff;
+    --bg:#11161f;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 "Segoe UI",Arial,sans-serif;overflow-wrap:break-word}
+main,section,div,header,nav,article{min-width:0}
+main{max-width:1040px;margin:0 auto;padding:18px 16px 44px}
+header.page-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;margin-bottom:8px}
+.back-link{display:inline-flex;align-items:center;min-height:48px;color:var(--accent);font-weight:700;text-decoration:none}
+.back-link:hover{text-decoration:underline}
+.brand-mark{font-size:15px;font-weight:700;color:var(--muted)}
+h1{font-size:26px;margin:4px 0 6px;color:var(--accent)}
+p{margin:8px 0}
+.note{background:var(--soft);border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;font-size:16px}
+.controls{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin:14px 0;padding:12px 14px;background:var(--card);border:1.5px solid var(--line);border-radius:12px}
+.ctrl-group{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;max-width:100%}
+.ctrl-group label{font-weight:700;font-size:16px}
+select{font:inherit;font-size:16.5px;min-height:48px;padding:8px 12px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);max-width:100%}
+label.tick{display:inline-flex;align-items:center;gap:8px;min-height:48px;font-size:16.5px;font-weight:600;cursor:pointer}
+label.tick input[type=checkbox]{width:24px;height:24px;min-width:24px;min-height:24px;flex:none}
+button{font:inherit;font-size:16.5px;font-weight:700;min-height:48px;min-width:48px;padding:10px 16px;border-radius:10px;border:2px solid var(--accent);background:#163e70;color:#ffffff;cursor:pointer;white-space:normal;max-width:100%}
+button.ghost{background:transparent;color:var(--accent)}
+button:disabled{opacity:.55;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+#summary{font-weight:700;font-size:17px;margin:12px 0;color:var(--ink)}
+.pupil-list{display:grid;gap:14px}
+.pupil-card{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:10px}
+.card-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;border-bottom:1.5px solid var(--line);padding-bottom:10px}
+.card-title-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.card-head h2{margin:0;font-size:21px;color:var(--accent)}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:14.5px;font-weight:700;border:1.5px solid var(--line);background:var(--soft);color:var(--ink)}
+.pill-build{border-color:var(--build);color:var(--build)}
+.pill-grow{border-color:var(--grow);color:var(--grow)}
+.pill-launch{border-color:var(--launch);color:var(--launch)}
+.ov-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px}
+.ov-sec{display:grid;gap:4px;align-content:start}
+.ov-sec.full{grid-column:1 / -1}
+.ov-label{font-size:14.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+.ov-empty{color:var(--muted);font-size:15.5px;margin:0}
+.ov-text{margin:0;font-size:16px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-block;padding:4px 9px;border-radius:8px;border:1.5px solid var(--line);background:var(--soft);font-size:15px;font-weight:600;color:var(--ink)}
+.chip-got{background:var(--ok-bg);border-color:var(--ok-bd);color:var(--ok)}
+.chip-nearly{background:var(--warn-bg);border-color:var(--warn-bd);color:var(--warn)}
+.chip-again{background:var(--bad-bg);border-color:var(--bad-bd);color:var(--bad)}
+.chip-absent{background:var(--abs-bg);border-color:var(--abs-bd);color:var(--abs)}
+.chip-owed{background:var(--warn-bg);border-color:var(--warn-bd);color:var(--warn)}
+.ov-list{margin:0;padding-left:20px;font-size:16px}
+.ov-list li{margin:2px 0}
+.empty-box{background:var(--card);border:2px dashed var(--line);border-radius:12px;padding:18px;font-size:17px}
+.print-only{display:none}
+
+@media (max-width: 720px){
+  .ov-grid{grid-template-columns:minmax(0,1fr)}
+  .controls{flex-direction:column;align-items:stretch}
+  .ctrl-group{width:100%}
+  .ctrl-group select{flex:1 1 auto;width:100%}
+  .controls button{width:100%}
+  .card-head button{width:100%}
+}
+@media (prefers-reduced-motion: reduce){
+  *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+}
+
+@page{size:A4 portrait;margin:9mm 10mm}
+@media print{
+  html,body{width:auto!important;height:auto!important;background:#ffffff!important;color:#000000!important;margin:0!important;padding:0!important}
+  main,.noprint{display:none!important}
+  #reviewPrintArea{display:block!important}
+  article.review-sheet{
+    width:190mm;
+    height:274mm;
+    max-height:274mm;
+    overflow:hidden;
+    box-sizing:border-box;
+    page-break-after:always;
+    break-after:page;
+    display:flex;
+    flex-direction:column;
+    gap:2.4mm;
+    color:#000000;
+    background:#ffffff;
+    font:9.3pt/1.24 "Segoe UI",Arial,sans-serif;
+  }
+  article.review-sheet:last-child{
+    page-break-after:auto;
+    break-after:auto;
+  }
+  .pr-head{border-bottom:1.6px solid #10243a;padding-bottom:1.6mm}
+  .pr-toprow{display:flex;justify-content:space-between;align-items:center;font-size:9pt;font-weight:700;color:#223a54}
+  .pr-meta{display:flex;flex-wrap:wrap;gap:2mm 5mm;align-items:baseline;margin-top:1mm}
+  .pr-meta h1{margin:0;font-size:13.5pt;color:#10243a}
+  .pr-meta span{font-size:9.5pt;color:#10243a}
+  .pr-sec-title{margin:0 0 1mm 0;font-size:9.8pt;font-weight:800;color:#10243a;text-transform:uppercase;letter-spacing:.25px}
+  .pr-table{width:100%;border-collapse:collapse;table-layout:fixed}
+  .pr-table th,.pr-table td{border:1px solid #10243a;padding:1.1mm 1.5mm;vertical-align:top;text-align:left;font-size:8.8pt;line-height:1.2}
+  .pr-table th{background:#edf2f7;font-weight:800;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .pr-table td.pr-chk-cell{text-align:center;vertical-align:middle}
+  .pr-col-t{width:41%}
+  .pr-col-m{width:8%}
+  .pr-col-w{width:13%}
+  .pr-col-n{width:9%}
+  .pr-col-e{width:29%}
+  .pr-box{display:inline-block;width:3.8mm;height:3.8mm;border:1.3px solid #10243a;border-radius:.6mm;vertical-align:middle}
+  .pr-ev-line{border-bottom:1px solid #64748b;height:5.4mm;margin-top:.5mm}
+  .pr-more{margin:.8mm 0 0 0;font-size:8.5pt;font-style:italic;color:#334155}
+  .pr-two{display:grid;grid-template-columns:1fr 1fr;gap:3mm}
+  .pr-panel{border:1.2px solid #10243a;border-radius:1.8mm;padding:1.8mm 2.2mm;display:flex;flex-direction:column;gap:1mm}
+  .pr-panel p{margin:0;font-size:8.7pt;line-height:1.25}
+  .pr-ruled-wrap{display:flex;flex-direction:column;gap:2.2mm;flex:1 1 auto}
+  .pr-ruled-grid{display:grid;grid-template-columns:1fr 1fr;gap:3mm}
+  .pr-ruled-box{border:1.2px solid #10243a;border-radius:1.8mm;padding:1.6mm 2.2mm}
+  .pr-write-line{border-bottom:1px solid #475569;height:6.2mm}
+  .pr-priv-note{border:1.3px dashed #334e68;border-radius:1.6mm;padding:1.4mm 2.2mm;font-size:8.6pt;margin:0}
+  .pr-foot{margin-top:auto;border-top:1px solid #9ab0c9;padding-top:1mm;display:flex;justify-content:space-between;font-size:8pt;color:#334e68}
+}
+</style>
+</head>
+<body>
+<main>
+  <header class="page-head noprint">
+    <a class="back-link" href="My_tools.html">&larr; My tools</a>
+    <span class="brand-mark">Made by Matt · Class tools</span>
+  </header>
+  <h1>Pupil overview</h1>
+  <p class="note">Read-only overview of everything already saved on this device for each pupil: help lines, subject settings, IEDP targets, exit results, catch-up owed, and adapted packs printed. Nothing on this page writes to storage or leaves this device.</p>
+
+  <section class="controls noprint" aria-label="Filter and print controls">
+    <div class="ctrl-group">
+      <label for="showTags">Show:</label>
+      <select id="showTags" aria-label="Show pupils as">
+        <option value="initials">Initials</option>
+        <option value="first">First name</option>
+        <option value="number">Number</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <label for="pathFilter">Pathway:</label>
+      <select id="pathFilter" aria-label="Filter by pathway">
+        <option value="ALL">All</option>
+        <option value="BUILD">BUILD</option>
+        <option value="GROW">GROW</option>
+        <option value="LAUNCH">LAUNCH</option>
+      </select>
+    </div>
+    <label class="tick">
+      <input type="checkbox" id="onlyOwed">
+      <span>Only pupils with catch-up owed</span>
+    </label>
+    <button type="button" id="printAllBtn">Print every IEDP review</button>
+  </section>
+
+  <p id="summary" aria-live="polite"></p>
+  <section id="pupilList" class="pupil-list" aria-label="Pupil overview cards"></section>
+</main>
+
+<section id="reviewPrintArea" class="print-only" aria-label="IEDP review print area"></section>
+
+<script>
+(function () {
+  'use strict';
+
+  const STORAGE_KEYS = {
+    profile: 'mbm_pupil_profile_v1',
+    pupilKey: 'mbm_pupil_key_v1',
+    showLegacy: 'mbm_qc_show_as_v1',
+    classNames: 'mbm_class_names_v1',
+    exitTally: 'mbm_exit_tally_v1',
+    tracker: 'mbm_catchup_tracker_v1',
+    iedp: 'mbm_iedp_targets_v1',
+    lessonToday: 'mbm_lesson_today_v1',
+    adaptLog: 'mbm_adapt_log_v1',
+    targetWords: 'mbm_pupil_target_words_v1',
+    subjectSettings: 'mbm_pupil_subject_v1'
+  };
+
+  const ROUTE_LABELS = {
+    CATCHUP: 'Catch-up',
+    FIXIT: 'Fix-it',
+    EXIT_AGAIN: 'Exit question again',
+    RECALL_STRETCH: 'Recall and stretch',
+    DEFAULT: 'Usual'
+  };
+  const ROUTE_ORDER = ['CATCHUP', 'FIXIT', 'EXIT_AGAIN', 'RECALL_STRETCH', 'DEFAULT'];
+
+  const HELP_ID_LABELS = {
+    nownext: 'Now and next card',
+    concise: 'Concise instructions',
+    reader: 'Reader',
+    move: 'Movement break',
+    time: 'Extra time',
+    words: 'Word bank',
+    large: 'Enlarged print',
+    starter: 'Sentence starters',
+    fewer: 'Fewer questions',
+    tint: 'Coloured paper',
+    worked: 'Worked step first',
+    help: 'Help card',
+    checklist: 'Task checklist',
+    calm: 'Calm card',
+    timer: 'Timer strip',
+    space: 'Extra writing space',
+    recall: 'Recall start',
+    staff: 'Room plan',
+    other: 'Other help'
+  };
+
+  const EXIT_LABELS = {
+    got: 'Got it',
+    nearly: 'Nearly',
+    again: 'Not yet',
+    absent: 'Absent'
+  };
+  const EXIT_ORDER = ['got', 'nearly', 'again', 'absent'];
+
+  const DAY_ORDER = { mon: 1, monday: 1, tue: 2, tuesday: 2, wed: 3, wednesday: 3, thu: 4, thursday: 4, fri: 5, friday: 5 };
+  const DAY_SHORT = { mon: 'Mon', monday: 'Mon', tue: 'Tue', tuesday: 'Tue', wed: 'Wed', wednesday: 'Wed', thu: 'Thu', thursday: 'Thu', fri: 'Fri', friday: 'Fri' };
+
+  function el(tag, cls, text) {
+    const node = document.createElement(tag);
+    if (cls) node.className = cls;
+    if (text !== undefined && text !== null) node.textContent = String(text);
+    return node;
+  }
+
+  function readJson(key) {
+    try {
+      if (!window.localStorage) return null;
+      const raw = window.localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function readRaw(key) {
+    try {
+      if (!window.localStorage) return '';
+      return window.localStorage.getItem(key) || '';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function normPupilNum(raw) {
+    if (typeof raw === 'number' && Number.isFinite(raw) && raw >= 1) {
+      return Math.floor(raw);
+    }
+    const s = String(raw == null ? '' : raw).trim();
+    if (!s) return null;
+    const m = s.match(/^(?:pupil\s*|p)?0*(\d+)$/i);
+    if (!m) return null;
+    const n = parseInt(m[1], 10);
+    return (Number.isFinite(n) && n >= 1) ? n : null;
+  }
+
+  function normPath(raw) {
+    const u = String(raw || '').trim().toUpperCase();
+    if (u === 'BASE' || u === 'BUILD') return 'BUILD';
+    if (u === 'TRACK' || u === 'GROW') return 'GROW';
+    if (u === 'SUMMIT' || u === 'LAUNCH') return 'LAUNCH';
+    return '';
+  }
+
+  function deriveTier(rec, group) {
+    if (rec && ['Supported', 'Independent', 'Aspire'].includes(rec.tier)) return rec.tier;
+    const g = normPath((rec && rec.group) || group);
+    return g === 'BUILD' ? 'Supported' : g === 'LAUNCH' ? 'Aspire' : 'Independent';
+  }
+
+  function parseTs(v) {
+    if (typeof v === 'number' && Number.isFinite(v)) return v;
+    if (typeof v === 'string' && v.trim()) {
+      const num = Number(v);
+      if (Number.isFinite(num)) return num;
+      const parsed = Date.parse(v);
+      if (Number.isFinite(parsed)) return parsed;
+    }
+    return 0;
+  }
+
+  function parseIsoDateMs(iso) {
+    const m = String(iso || '').trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) return NaN;
+    return new Date(parseInt(m[1], 10), parseInt(m[2], 10) - 1, parseInt(m[3], 10), 12, 0, 0, 0).getTime();
+  }
+
+  function shortDay(raw) {
+    const k = String(raw || '').trim().toLowerCase();
+    return DAY_SHORT[k] || String(raw || '').trim();
+  }
+
+  function dayRank(raw) {
+    const k = String(raw || '').trim().toLowerCase();
+    return DAY_ORDER[k] || 0;
+  }
+
+  function formatWeekLesson(code, fallbackWeek) {
+    const s = String(code || '').trim();
+    const wl = s.match(/_W0*(\d+)_L0*(\d+)\b/i);
+    if (wl) return 'W' + parseInt(wl[1], 10) + ' L' + parseInt(wl[2], 10);
+    const l = s.match(/_L0*(\d+)\b/i);
+    const wStr = String(fallbackWeek || '').trim();
+    const wm = wStr.match(/W0*(\d+)\b/i) || wStr.match(/(\d+)/);
+    const wPart = wm ? ('W' + parseInt(wm[1], 10)) : '';
+    const lPart = l ? ('L' + parseInt(l[1], 10)) : '';
+    if (wPart && lPart) return wPart + ' ' + lPart;
+    return wPart || lPart || s;
+  }
+
+  function titleCaseSubject(s) {
+    const cleaned = String(s || '').trim();
+    if (!cleaned) return '';
+    return cleaned.split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  }
+
+  function resolveLabelMap(rawKey) {
+    if (!rawKey || typeof rawKey !== 'object') return {};
+    if (rawKey.labels && typeof rawKey.labels === 'object') return rawKey.labels;
+    if (rawKey.pupils && typeof rawKey.pupils === 'object') return rawKey.pupils;
+    return rawKey;
+  }
+
+  function buildInitialsMap(keyByNum) {
+    const rows = Object.entries(keyByNum)
+      .filter(([, v]) => String(v || '').trim())
+      .map(([id, v]) => {
+        const words = String(v).trim().split(/\s+/)
+          .map(w => Array.from(w.replace(/[^\p{L}\p{M}]/gu, '').toLocaleUpperCase('en-GB')))
+          .filter(w => w.length);
+        return {
+          n: parseInt(id, 10),
+          tag: words.slice(0, 3).map(x => x[0]).join(''),
+          last: words.length ? words[words.length - 1] : [],
+          at: 1
+        };
+      })
+      .filter(r => r.tag);
+
+    for (let step = 0; step < 105; step++) {
+      const counts = new Map();
+      rows.forEach(r => counts.set(r.tag, (counts.get(r.tag) || 0) + 1));
+      const clashes = rows.filter(r => counts.get(r.tag) > 1);
+      if (!clashes.length) break;
+      clashes.forEach(r => {
+        r.tag += r.at < r.last.length ? r.last[r.at++] : String(r.n);
+      });
+    }
+    const out = {};
+    rows.forEach(r => { out[r.n] = r.tag; });
+    return out;
+  }
+
+  function formatPupilLabel(n, keyByNum, initialsByNum, showMode) {
+    const raw = String(keyByNum[n] || '').trim();
+    if (!raw || showMode === 'number') return 'Pupil ' + n;
+    if (/^pupil\s+\d+$/i.test(raw)) return 'Pupil ' + n;
+    if (showMode === 'first') {
+      const first = raw.split(/\s+/)[0] || raw;
+      return 'Pupil ' + n + ' · ' + first;
+    }
+    const ini = initialsByNum[n];
+    return ini ? ('Pupil ' + n + ' · ' + ini) : ('Pupil ' + n);
+  }
+
+  function loadAllData() {
+    const profRaw = readJson(STORAGE_KEYS.profile);
+    const profile = (profRaw && typeof profRaw === 'object') ? profRaw : {};
+    const rawPupils = (profile.pupils && typeof profile.pupils === 'object') ? profile.pupils : {};
+
+    const keyRaw = readJson(STORAGE_KEYS.pupilKey);
+    const flatKey = resolveLabelMap(keyRaw);
+    const keyByNum = {};
+    Object.keys(flatKey).forEach(k => {
+      if (k === 'version' || k === 'show') return;
+      const n = normPupilNum(k);
+      if (n !== null && typeof flatKey[k] === 'string' && flatKey[k].trim()) {
+        if (!keyByNum[n]) keyByNum[n] = flatKey[k].trim();
+      }
+    });
+    if (!Object.keys(keyByNum).length) {
+      const cn = readRaw(STORAGE_KEYS.classNames);
+      if (cn) {
+        cn.split(/\r?\n/).map(s => s.trim()).filter(Boolean).forEach((line, idx) => {
+          const n = idx + 1;
+          if (!keyByNum[n] && !/^(?:pupil\s*|p)?\d+$/i.test(line)) keyByNum[n] = line;
+        });
+      }
+    }
+
+    const legacyShowRaw = readJson(STORAGE_KEYS.showLegacy);
+    const legacyShow = ['initials', 'first', 'number'].includes(legacyShowRaw) ? legacyShowRaw : 'initials';
+    const initialShow = ['initials', 'first', 'number'].includes(profile.show) ? profile.show : legacyShow;
+
+    const exitRaw = readJson(STORAGE_KEYS.exitTally);
+    const exitStore = (exitRaw && typeof exitRaw === 'object' && !Array.isArray(exitRaw)) ? exitRaw : {};
+
+    const trackerRaw = readJson(STORAGE_KEYS.tracker);
+    const trackerStore = (trackerRaw && typeof trackerRaw === 'object') ? trackerRaw : {};
+    const trackerMarks = (trackerStore.marks && typeof trackerStore.marks === 'object') ? trackerStore.marks : {};
+
+    const iedpRaw = readJson(STORAGE_KEYS.iedp);
+    let iedpMap = (iedpRaw && typeof iedpRaw === 'object' && !Array.isArray(iedpRaw)) ? iedpRaw : {};
+    if (iedpMap.targets && typeof iedpMap.targets === 'object') iedpMap = iedpMap.targets;
+    else if (iedpMap.pupils && typeof iedpMap.pupils === 'object') iedpMap = iedpMap.pupils;
+
+    const todayRaw = readJson(STORAGE_KEYS.lessonToday);
+    const todayItems = (todayRaw && typeof todayRaw === 'object' && todayRaw.items && typeof todayRaw.items === 'object') ? todayRaw.items : {};
+
+    const logRaw = readJson(STORAGE_KEYS.adaptLog);
+    const logRows = (logRaw && typeof logRaw === 'object' && Array.isArray(logRaw.rows)) ? logRaw.rows : [];
+
+    const twRaw = readJson(STORAGE_KEYS.targetWords);
+    const targetWordsStore = (twRaw && typeof twRaw === 'object' && !Array.isArray(twRaw)) ? twRaw : {};
+
+    const subjRaw = readJson(STORAGE_KEYS.subjectSettings);
+    const subjectItems = (subjRaw && typeof subjRaw === 'object' && subjRaw.items && typeof subjRaw.items === 'object') ? subjRaw.items : {};
+
+    // Normalised per-pupil profile records
+    const profileByNum = {};
+    Object.keys(rawPupils).forEach(k => {
+      const rec = rawPupils[k];
+      const n = normPupilNum(k);
+      if (n !== null && rec && typeof rec === 'object' && !profileByNum[n]) {
+        profileByNum[n] = rec;
+      }
+    });
+
+    // Tracker group hints if profile lacks group
+    const trackerGroupByNum = {};
+    if (trackerStore.pupils && typeof trackerStore.pupils === 'object') {
+      ['BUILD', 'GROW', 'LAUNCH'].forEach(g => {
+        const arr = Array.isArray(trackerStore.pupils[g]) ? trackerStore.pupils[g] : [];
+        arr.forEach(item => {
+          const n = normPupilNum(item);
+          if (n !== null && !trackerGroupByNum[n]) trackerGroupByNum[n] = g;
+        });
+      });
+    }
+
+    // Collect every pupil number appearing across all stores
+    const numSet = new Set();
+    Object.keys(profileByNum).forEach(k => numSet.add(parseInt(k, 10)));
+    Object.keys(keyByNum).forEach(k => numSet.add(parseInt(k, 10)));
+    Object.keys(exitStore).forEach(k => {
+      const rec = exitStore[k];
+      if (!rec || typeof rec !== 'object') return;
+      const parts = k.split('|');
+      const n = parts.length >= 4 ? normPupilNum(parts[3]) : normPupilNum(rec.n != null ? rec.n : rec.pupil);
+      if (n !== null) numSet.add(n);
+    });
+    Object.keys(trackerMarks).forEach(k => {
+      const m = trackerMarks[k];
+      if (!m || typeof m !== 'object') return;
+      const parts = k.split('|');
+      const n = parts.length >= 4 ? normPupilNum(parts[3]) : null;
+      if (n !== null) numSet.add(n);
+    });
+    Object.keys(iedpMap).forEach(k => {
+      if (k === 'version' || k === 'show') return;
+      const n = normPupilNum(k);
+      if (n !== null) numSet.add(n);
+    });
+    Object.keys(todayItems).forEach(k => {
+      const sep = k.lastIndexOf('|');
+      if (sep > 0) {
+        const n = normPupilNum(k.slice(sep + 1));
+        if (n !== null) numSet.add(n);
+      }
+    });
+    logRows.forEach(r => {
+      if (!r || typeof r !== 'object') return;
+      const n = normPupilNum(r.n);
+      if (n !== null) numSet.add(n);
+    });
+    Object.keys(targetWordsStore).forEach(k => {
+      if (k === 'version') return;
+      const n = normPupilNum(k);
+      if (n !== null) numSet.add(n);
+    });
+    Object.keys(subjectItems).forEach(k => {
+      const sep = k.indexOf('|');
+      if (sep > 0) {
+        const n = normPupilNum(k.slice(0, sep));
+        if (n !== null) numSet.add(n);
+      }
+    });
+
+    const pupilNums = [...numSet].filter(n => Number.isFinite(n) && n >= 1).sort((a, b) => a - b);
+    const initialsByNum = buildInitialsMap(keyByNum);
+
+    const now = new Date();
+    const todayMidMs = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0, 0).getTime();
+    const cutoff28Ms = todayMidMs - 28 * 86400000;
+    const nowMs = Date.now();
+
+    const pupils = pupilNums.map(n => {
+      const rec = profileByNum[n] || {};
+      const group = normPath(rec.group) || trackerGroupByNum[n] || '';
+      const tier = deriveTier(rec, group);
+
+      // Standing help lines + tags (deduped)
+      const helpLines = [];
+      const helpSeen = {};
+      [].concat(
+        Array.isArray(rec.adapt) ? rec.adapt.slice(0, 4) : [],
+        Array.isArray(rec.tags) ? rec.tags.slice(0, 8) : []
+      ).forEach(raw => {
+        const v = String(raw || '').trim();
+        const k = v.toLowerCase();
+        if (v && !helpSeen[k]) { helpSeen[k] = 1; helpLines.push(v); }
+      });
+
+      // Subject settings from mbm_pupil_subject_v1
+      const subjectSettings = [];
+      Object.keys(subjectItems).forEach(k => {
+        const sep = k.indexOf('|');
+        if (sep <= 0) return;
+        if (normPupilNum(k.slice(0, sep)) !== n) return;
+        const item = subjectItems[k];
+        if (!item || typeof item !== 'object') return;
+        const subjName = titleCaseSubject(k.slice(sep + 1));
+        const parts = [];
+        if (typeof item.tier === 'string' && item.tier.trim()) parts.push(item.tier.trim());
+        if (Array.isArray(item.add)) {
+          item.add.forEach(a => {
+            const s = String(a || '').trim();
+            if (s) parts.push(s);
+          });
+        }
+        if (subjName && parts.length) {
+          subjectSettings.push({ subject: subjName, text: subjName + ': ' + parts.join(', ') });
+        }
+      });
+      subjectSettings.sort((a, b) => a.subject.localeCompare(b.subject));
+
+      // Pupil-friendly target words
+      let targetWord = '';
+      Object.keys(targetWordsStore).forEach(k => {
+        if (k === 'version' || targetWord) return;
+        if (normPupilNum(k) === n && typeof targetWordsStore[k] === 'string' && targetWordsStore[k].trim()) {
+          targetWord = targetWordsStore[k].trim();
+        }
+      });
+
+      // IEDP targets (every non-empty line)
+      const iedpTargets = [];
+      Object.keys(iedpMap).forEach(k => {
+        if (k === 'version' || k === 'show') return;
+        if (normPupilNum(k) !== n) return;
+        const val = iedpMap[k];
+        if (Array.isArray(val)) {
+          val.forEach(line => {
+            const s = String(line || '').trim();
+            if (s) iedpTargets.push(s);
+          });
+        } else if (typeof val === 'string') {
+          val.split(/\r?\n/).forEach(line => {
+            const s = line.trim();
+            if (s) iedpTargets.push(s);
+          });
+        }
+      });
+
+      // Exit results (all, sorted newest first; last 8 for overview, last 4 weeks counts for review)
+      const exitRecords = [];
+      Object.keys(exitStore).forEach(k => {
+        const er = exitStore[k];
+        if (!er || typeof er !== 'object') return;
+        const parts = k.split('|');
+        const pn = parts.length >= 4 ? normPupilNum(parts[3]) : normPupilNum(er.n != null ? er.n : er.pupil);
+        if (pn !== n) return;
+        const st = String(er.state || '').trim().toLowerCase();
+        if (!EXIT_LABELS[st]) return;
+        const ts = parseTs(er.ts);
+        const wRaw = parts.length >= 1 ? parts[0] : '';
+        const wm = String(wRaw).match(/W0*(\d+)\b/i) || String(wRaw).match(/(\d+)/);
+        const wNum = wm ? parseInt(wm[1], 10) : 0;
+        const dayStr = shortDay((parts.length >= 2 && parts[1]) ? parts[1] : er.day);
+        const perNum = parseInt(String(parts[2] || '').replace(/\D+/g, ''), 10) || 0;
+        const wl = formatWeekLesson(er.code, wRaw);
+        exitRecords.push({
+          state: st,
+          label: EXIT_LABELS[st],
+          wl: wl,
+          day: dayStr,
+          ts: ts,
+          wNum: wNum,
+          dRank: dayRank(dayStr),
+          perNum: perNum
+        });
+      });
+      exitRecords.sort((a, b) => {
+        if (b.ts !== a.ts) return b.ts - a.ts;
+        if (b.wNum !== a.wNum) return b.wNum - a.wNum;
+        if (b.dRank !== a.dRank) return b.dRank - a.dRank;
+        return b.perNum - a.perNum;
+      });
+      const exitLast8 = exitRecords.slice(0, 8);
+      const exit4wCounts = { got: 0, nearly: 0, again: 0, absent: 0 };
+      exitRecords.forEach(er => {
+        if (!er.ts || (nowMs - er.ts <= 28 * 86400000 && er.ts <= nowMs + 86400000)) {
+          exit4wCounts[er.state] = (exit4wCounts[er.state] || 0) + 1;
+        }
+      });
+
+      // Catch-up tracker marks (owed vs done)
+      const catchupOwed = [];
+      let catchupDoneCount = 0;
+      Object.keys(trackerMarks).forEach(k => {
+        const m = trackerMarks[k];
+        if (!m || typeof m !== 'object') return;
+        const parts = k.split('|');
+        const pn = parts.length >= 4 ? normPupilNum(parts[3]) : null;
+        if (pn !== n) return;
+        const st = String(m.state || '').trim().toLowerCase();
+        if (m.done === true || st === 'done') {
+          catchupDoneCount += 1;
+          return;
+        }
+        if (st === 'missed' || st === 'partial') {
+          const wRaw = String(parts[0] || m.week || '').trim();
+          const wm = wRaw.match(/W0*(\d+)\b/i) || wRaw.match(/(\d+)/);
+          const wNum = wm ? parseInt(wm[1], 10) : 0;
+          const wLabel = wm ? ('W' + wNum) : wRaw;
+          const subj = String(m.subj || '').trim() || 'Lesson';
+          const rawLes = String(m.lesson != null ? m.lesson : '').trim();
+          const lm = rawLes.match(/L0*(\d+)\b/i) || rawLes.match(/^0*(\d+)$/);
+          const lesLabel = lm ? ('L' + parseInt(lm[1], 10)) : rawLes;
+          catchupOwed.push({
+            subj: subj,
+            week: wLabel,
+            wNum: wNum,
+            lesson: lesLabel,
+            state: st,
+            text: [subj, wLabel, lesLabel].filter(Boolean).join(' · ') + (st === 'partial' ? ' (partial)' : '')
+          });
+        }
+      });
+      catchupOwed.sort((a, b) => a.wNum - b.wNum || a.subj.localeCompare(b.subj));
+
+      // Adaptation log (last 28 days)
+      const routeCounts = { CATCHUP: 0, FIXIT: 0, EXIT_AGAIN: 0, RECALL_STRETCH: 0, DEFAULT: 0 };
+      const lineCounts = {};
+      let packCount28 = 0;
+      let lastPackDate = '';
+      logRows.forEach(r => {
+        if (!r || typeof r !== 'object') return;
+        if (normPupilNum(r.n) !== n) return;
+        const dStr = String(r.d || '').trim();
+        const dMs = parseIsoDateMs(dStr);
+        if (Number.isFinite(dMs) && dMs < cutoff28Ms) return;
+        packCount28 += 1;
+        if (dStr && (!lastPackDate || dStr > lastPackDate)) lastPackDate = dStr;
+        const rt = ROUTE_LABELS[r.route] ? r.route : 'DEFAULT';
+        routeCounts[rt] = (routeCounts[rt] || 0) + 1;
+        if (Array.isArray(r.lines)) {
+          r.lines.forEach(id => {
+            const key = String(id || '').trim();
+            if (key) lineCounts[key] = (lineCounts[key] || 0) + 1;
+          });
+        }
+      });
+
+      // Private note ONLY when printNote === true (never shown on screen overview!)
+      const printableNote = (rec.printNote === true && typeof rec.note === 'string' && rec.note.trim())
+        ? rec.note.trim()
+        : '';
+
+      return {
+        n: n,
+        group: group,
+        tier: tier,
+        helpLines: helpLines,
+        subjectSettings: subjectSettings,
+        targetWord: targetWord,
+        iedpTargets: iedpTargets,
+        exitLast8: exitLast8,
+        exit4wCounts: exit4wCounts,
+        catchupOwed: catchupOwed,
+        catchupDoneCount: catchupDoneCount,
+        packCount28: packCount28,
+        lastPackDate: lastPackDate,
+        routeCounts: routeCounts,
+        lineCounts: lineCounts,
+        printableNote: printableNote
+      };
+    });
+
+    return {
+      initialShow: initialShow,
+      keyByNum: keyByNum,
+      initialsByNum: initialsByNum,
+      pupils: pupils
+    };
+  }
+
+  function formatDatePrinted() {
+    try {
+      return new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    } catch (_) {
+      const d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+  }
+
+  function buildReviewSheet(pupil, labelText, dateStr) {
+    const art = el('article', 'review-sheet');
+
+    // Header
+    const head = el('header', 'pr-head');
+    const top = el('div', 'pr-toprow');
+    top.appendChild(el('span', null, 'Made by Matt · IEDP review'));
+    top.appendChild(el('span', null, 'Teacher copy'));
+    head.appendChild(top);
+
+    const meta = el('div', 'pr-meta');
+    meta.appendChild(el('h1', null, labelText));
+    meta.appendChild(el('span', null, 'Group: ' + (pupil.group || 'Unassigned')));
+    meta.appendChild(el('span', null, 'Tier: ' + pupil.tier));
+    meta.appendChild(el('span', null, 'Date printed: ' + dateStr));
+    head.appendChild(meta);
+    art.appendChild(head);
+
+    // IEDP targets table (max 8 shown; more -> "and N more")
+    const tgtWrap = el('section');
+    tgtWrap.appendChild(el('h2', 'pr-sec-title', 'IEDP targets'));
+    const tbl = el('table', 'pr-table');
+    const cg = document.createElement('colgroup');
+    ['pr-col-t', 'pr-col-m', 'pr-col-w', 'pr-col-n', 'pr-col-e'].forEach(c => {
+      const col = document.createElement('col');
+      col.className = c;
+      cg.appendChild(col);
+    });
+    tbl.appendChild(cg);
+
+    const thead = document.createElement('thead');
+    const hr = document.createElement('tr');
+    ['IEDP target', 'Met', 'Working towards', 'Not yet', 'Evidence'].forEach(h => hr.appendChild(el('th', null, h)));
+    thead.appendChild(hr);
+    tbl.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    const shownTargets = pupil.iedpTargets.slice(0, 8);
+    if (!shownTargets.length) {
+      const tr = document.createElement('tr');
+      const td = el('td', null, 'No IEDP targets saved on this device.');
+      td.colSpan = 5;
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    } else {
+      shownTargets.forEach(t => {
+        const tr = document.createElement('tr');
+        tr.appendChild(el('td', null, t));
+        for (let i = 0; i < 3; i++) {
+          const td = el('td', 'pr-chk-cell');
+          td.appendChild(el('span', 'pr-box'));
+          tr.appendChild(td);
+        }
+        const ev = el('td');
+        ev.appendChild(el('div', 'pr-ev-line'));
+        tr.appendChild(ev);
+        tbody.appendChild(tr);
+      });
+    }
+    tbl.appendChild(tbody);
+    tgtWrap.appendChild(tbl);
+    if (pupil.iedpTargets.length > 8) {
+      tgtWrap.appendChild(el('p', 'pr-more', 'and ' + (pupil.iedpTargets.length - 8) + ' more'));
+    }
+    art.appendChild(tgtWrap);
+
+    // Last 4 weeks two-column summary
+    const two = el('section', 'pr-two');
+
+    const leftPanel = el('div', 'pr-panel');
+    leftPanel.appendChild(el('h2', 'pr-sec-title', 'Help used in the last 4 weeks'));
+    if (pupil.packCount28 === 0) {
+      leftPanel.appendChild(el('p', null, 'No adapted packs logged in the last 4 weeks.'));
+    } else {
+      leftPanel.appendChild(el('p', null, 'Packs printed: ' + pupil.packCount28 + (pupil.lastPackDate ? ' (last: ' + pupil.lastPackDate + ')' : '')));
+      const lineEntries = Object.entries(pupil.lineCounts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+      const lineTxt = lineEntries.length
+        ? lineEntries.map(([id, cnt]) => (HELP_ID_LABELS[id] ? (HELP_ID_LABELS[id] + ' (' + id + ')') : id) + ' ×' + cnt).join(', ')
+        : 'Standard pack (no extra help lines)';
+      leftPanel.appendChild(el('p', null, 'Help lines: ' + lineTxt));
+      const routeTxt = ROUTE_ORDER.map(r => ROUTE_LABELS[r] + ': ' + (pupil.routeCounts[r] || 0)).join(' · ');
+      leftPanel.appendChild(el('p', null, 'Routes: ' + routeTxt));
+    }
+    if (pupil.subjectSettings.length) {
+      leftPanel.appendChild(el('p', null, 'Subject settings: ' + pupil.subjectSettings.map(s => s.text).join(' · ')));
+    }
+    two.appendChild(leftPanel);
+
+    const rightPanel = el('div', 'pr-panel');
+    rightPanel.appendChild(el('h2', 'pr-sec-title', 'Exit results in the last 4 weeks'));
+    const exParts = EXIT_ORDER.map(st => EXIT_LABELS[st] + ': ' + (pupil.exit4wCounts[st] || 0));
+    rightPanel.appendChild(el('p', null, exParts.join(' · ')));
+
+    const cuTitle = el('h2', 'pr-sec-title', 'Catch-up');
+    cuTitle.style.marginTop = '1.2mm';
+    rightPanel.appendChild(cuTitle);
+    rightPanel.appendChild(el('p', null, 'Done: ' + pupil.catchupDoneCount + ' · Owed: ' + pupil.catchupOwed.length));
+    if (pupil.catchupOwed.length) {
+      const maxShow = 4;
+      const shown = pupil.catchupOwed.slice(0, maxShow).map(c => c.text).join('; ');
+      const extra = pupil.catchupOwed.length > maxShow ? (' (+' + (pupil.catchupOwed.length - maxShow) + ' more)') : '';
+      rightPanel.appendChild(el('p', null, 'Owed: ' + shown + extra));
+    }
+    if (pupil.targetWord) {
+      rightPanel.appendChild(el('p', null, 'Pupil target: ' + pupil.targetWord));
+    }
+    two.appendChild(rightPanel);
+    art.appendChild(two);
+
+    // Ruled reflection boxes
+    const ruledWrap = el('section', 'pr-ruled-wrap');
+    const ruledGrid = el('div', 'pr-ruled-grid');
+
+    const pvBox = el('div', 'pr-ruled-box');
+    pvBox.appendChild(el('h2', 'pr-sec-title', 'Pupil view'));
+    for (let i = 0; i < 3; i++) pvBox.appendChild(el('div', 'pr-write-line'));
+    ruledGrid.appendChild(pvBox);
+
+    const nsBox = el('div', 'pr-ruled-box');
+    nsBox.appendChild(el('h2', 'pr-sec-title', 'Next steps'));
+    for (let i = 0; i < 3; i++) nsBox.appendChild(el('div', 'pr-write-line'));
+    ruledGrid.appendChild(nsBox);
+
+    ruledWrap.appendChild(ruledGrid);
+
+    const adBox = el('div', 'pr-ruled-box');
+    adBox.appendChild(el('h2', 'pr-sec-title', 'Adaptations to keep / change'));
+    for (let i = 0; i < 3; i++) adBox.appendChild(el('div', 'pr-write-line'));
+    ruledWrap.appendChild(adBox);
+
+    art.appendChild(ruledWrap);
+
+    // Private note ONLY when printNote === true
+    if (pupil.printableNote) {
+      art.appendChild(el('p', 'pr-priv-note', 'Teacher note (marked for print): ' + pupil.printableNote));
+    }
+
+    const foot = el('footer', 'pr-foot');
+    foot.appendChild(el('span', null, 'Made by Matt · Teacher copy · Private pupil data stays on this device'));
+    foot.appendChild(el('span', null, 'IEDP review · ' + dateStr));
+    art.appendChild(foot);
+
+    return art;
+  }
+
+  const showSel = document.getElementById('showTags');
+  const pathSel = document.getElementById('pathFilter');
+  const onlyOwedCb = document.getElementById('onlyOwed');
+  const printAllBtn = document.getElementById('printAllBtn');
+  const summaryEl = document.getElementById('summary');
+  const listEl = document.getElementById('pupilList');
+  const printArea = document.getElementById('reviewPrintArea');
+
+  let state = loadAllData();
+  let currentShow = state.initialShow;
+  let visiblePupils = [];
+
+  showSel.value = currentShow;
+
+  function triggerReviewPrint(pupilsToPrint) {
+    if (!pupilsToPrint || !pupilsToPrint.length) return;
+    printArea.textContent = '';
+    const dateStr = formatDatePrinted();
+    pupilsToPrint.forEach(p => {
+      const lbl = formatPupilLabel(p.n, state.keyByNum, state.initialsByNum, currentShow);
+      printArea.appendChild(buildReviewSheet(p, lbl, dateStr));
+    });
+    window.print();
+  }
+
+  window.addEventListener('afterprint', () => {
+    printArea.textContent = '';
+  });
+
+  function render() {
+    const pathVal = pathSel.value;
+    const onlyOwed = onlyOwedCb.checked;
+
+    visiblePupils = state.pupils.filter(p => {
+      if (pathVal !== 'ALL' && p.group !== pathVal) return false;
+      if (onlyOwed && p.catchupOwed.length === 0) return false;
+      return true;
+    });
+
+    const owedCount = visiblePupils.filter(p => p.catchupOwed.length > 0).length;
+    if (!state.pupils.length) {
+      summaryEl.textContent = '0 pupils · 0 with catch-up owed';
+    } else {
+      summaryEl.textContent = visiblePupils.length + ' pupil' + (visiblePupils.length === 1 ? '' : 's') + ' · ' + owedCount + ' with catch-up owed';
+    }
+    printAllBtn.disabled = visiblePupils.length === 0;
+
+    listEl.textContent = '';
+    if (!state.pupils.length) {
+      listEl.appendChild(el('div', 'empty-box', 'Nothing saved yet on this device. Save pupil help lines, targets, tallies, or print adapted packs in the class tools and they will appear here.'));
+      return;
+    }
+    if (!visiblePupils.length) {
+      listEl.appendChild(el('div', 'empty-box', 'No pupils match the current filter.'));
+      return;
+    }
+
+    visiblePupils.forEach(p => {
+      const labelText = formatPupilLabel(p.n, state.keyByNum, state.initialsByNum, currentShow);
+      const card = el('article', 'pupil-card');
+
+      const head = el('div', 'card-head');
+      const titleWrap = el('div', 'card-title-wrap');
+      titleWrap.appendChild(el('h2', null, labelText));
+      const grpCls = p.group === 'BUILD' ? 'pill pill-build' : p.group === 'GROW' ? 'pill pill-grow' : p.group === 'LAUNCH' ? 'pill pill-launch' : 'pill';
+      titleWrap.appendChild(el('span', grpCls, p.group || 'No group'));
+      titleWrap.appendChild(el('span', 'pill', p.tier));
+      head.appendChild(titleWrap);
+
+      const printBtn = el('button', null, 'Print IEDP review');
+      printBtn.type = 'button';
+      printBtn.addEventListener('click', () => triggerReviewPrint([p]));
+      head.appendChild(printBtn);
+      card.appendChild(head);
+
+      const grid = el('div', 'ov-grid');
+
+      // Help lines & tags
+      const helpSec = el('div', 'ov-sec');
+      helpSec.appendChild(el('div', 'ov-label', 'Help lines and tags'));
+      if (p.helpLines.length) {
+        const chips = el('div', 'chips');
+        p.helpLines.forEach(h => chips.appendChild(el('span', 'chip', h)));
+        helpSec.appendChild(chips);
+      } else {
+        helpSec.appendChild(el('p', 'ov-empty', 'Nothing saved yet'));
+      }
+      grid.appendChild(helpSec);
+
+      // Subject settings & pupil-friendly target
+      const subjSec = el('div', 'ov-sec');
+      subjSec.appendChild(el('div', 'ov-label', 'Subject settings and pupil target'));
+      if (p.subjectSettings.length) {
+        const chips = el('div', 'chips');
+        p.subjectSettings.forEach(s => chips.appendChild(el('span', 'chip', s.text)));
+        subjSec.appendChild(chips);
+      } else {
+        subjSec.appendChild(el('p', 'ov-empty', 'No subject settings saved yet'));
+      }
+      if (p.targetWord) {
+        subjSec.appendChild(el('p', 'ov-text', 'Pupil target: ' + p.targetWord));
+      } else {
+        subjSec.appendChild(el('p', 'ov-empty', 'No pupil target words saved yet'));
+      }
+      grid.appendChild(subjSec);
+
+      // IEDP targets (every non-empty line)
+      const iedpSec = el('div', 'ov-sec full');
+      iedpSec.appendChild(el('div', 'ov-label', 'IEDP targets'));
+      if (p.iedpTargets.length) {
+        const ul = el('ul', 'ov-list');
+        p.iedpTargets.forEach(line => ul.appendChild(el('li', null, line)));
+        iedpSec.appendChild(ul);
+      } else {
+        iedpSec.appendChild(el('p', 'ov-empty', 'Nothing saved yet'));
+      }
+      grid.appendChild(iedpSec);
+
+      // Exit results (last 8, newest first)
+      const exitSec = el('div', 'ov-sec full');
+      exitSec.appendChild(el('div', 'ov-label', 'Exit results (last 8, newest first)'));
+      if (p.exitLast8.length) {
+        const chips = el('div', 'chips');
+        p.exitLast8.forEach(er => {
+          const bits = [er.label];
+          if (er.wl) bits.push(er.wl);
+          if (er.day) bits.push(er.day);
+          chips.appendChild(el('span', 'chip chip-' + er.state, bits.join(' · ')));
+        });
+        exitSec.appendChild(chips);
+      } else {
+        exitSec.appendChild(el('p', 'ov-empty', 'Nothing saved yet'));
+      }
+      grid.appendChild(exitSec);
+
+      // Catch-up owed
+      const cuSec = el('div', 'ov-sec');
+      cuSec.appendChild(el('div', 'ov-label', 'Catch-up owed'));
+      if (p.catchupOwed.length) {
+        const chips = el('div', 'chips');
+        p.catchupOwed.forEach(c => chips.appendChild(el('span', 'chip chip-owed', c.text)));
+        cuSec.appendChild(chips);
+      } else {
+        cuSec.appendChild(el('p', 'ov-empty', 'None owed'));
+      }
+      grid.appendChild(cuSec);
+
+      // What the print gave them (last 28 days)
+      const logSec = el('div', 'ov-sec');
+      logSec.appendChild(el('div', 'ov-label', 'What the print gave them (last 28 days)'));
+      if (p.packCount28 === 0) {
+        logSec.appendChild(el('p', 'ov-empty', 'Nothing saved yet'));
+      } else {
+        logSec.appendChild(el('p', 'ov-text', p.packCount28 + ' pack' + (p.packCount28 === 1 ? '' : 's') + ' printed' + (p.lastPackDate ? ' · Last pack: ' + p.lastPackDate : '')));
+        const routeParts = ROUTE_ORDER.map(r => ROUTE_LABELS[r] + ': ' + (p.routeCounts[r] || 0));
+        logSec.appendChild(el('p', 'ov-text', 'Routes: ' + routeParts.join(' · ')));
+        const lineEntries = Object.entries(p.lineCounts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+        if (lineEntries.length) {
+          const lineChips = el('div', 'chips');
+          lineEntries.forEach(([id, cnt]) => {
+            const name = HELP_ID_LABELS[id] ? (HELP_ID_LABELS[id] + ' (' + id + ')') : id;
+            lineChips.appendChild(el('span', 'chip', name + ' ×' + cnt));
+          });
+          logSec.appendChild(lineChips);
+        }
+      }
+      grid.appendChild(logSec);
+
+      card.appendChild(grid);
+      listEl.appendChild(card);
+    });
+  }
+
+  showSel.addEventListener('change', () => {
+    currentShow = showSel.value;
+    render();
+  });
+  pathSel.addEventListener('change', render);
+  onlyOwedCb.addEventListener('change', render);
+  printAllBtn.addEventListener('click', () => triggerReviewPrint(visiblePupils));
+
+  window.addEventListener('storage', () => {
+    state = loadAllData();
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
