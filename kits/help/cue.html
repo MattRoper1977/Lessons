@@ -169,6 +169,7 @@ function show(n){
   $('back').disabled=i===0;
   $('next').textContent=i===STEPS.length-1?'Start again':'Next step';
   Array.prototype.forEach.call(dots.children,function(d,k){d.className=k<=i?'on':''});
+  if(window.__helpAfter)window.__helpAfter(i);
 }
 function textOf(s){return level==='simple'&&s.s?s.s:s.t+(s.tip&&level==='detail'?' '+s.tip:'')}
 function stopWatch(){watching=false;clearTimeout(timer);stopTalk();$('watch').setAttribute('aria-pressed','false');$('watch').textContent='Watch all steps'}
@@ -212,7 +213,1548 @@ Array.prototype.forEach.call(document.querySelectorAll('.readp'),function(b){
 });
 document.addEventListener('keydown',function(e){if(cur!=='steps')return;if(e.key==='ArrowRight'){$('next').click()}else if(e.key==='ArrowLeft'&&i>0){$('back').click()}});
 window.addEventListener('pagehide',stopTalk);
+window.__help={steps:STEPS,words:WORDS,show:show,get:function(){return i},speak:canSpeak?speak:null,textOf:textOf,stop:stopWatch,setTab:function(n){cur=n},getLevel:function(){return level}};
 show(0);
+})();
+</script>
+<script type="application/json" id="help-paths">
+{"slug":"cue","default":"track","paths":{"base":[{"s":"Check the start and stop signs.","t":"Point to the start sign and the stop sign before beginning.","tip":"Keep sound low; ear defenders or a quiet seated role are always welcome.","use":0},{"s":"Follow one steady count calmly.","t":"Follow one short steady count, giving every quiet rest a full beat.","tip":"You can tap softly on a mat, point, or hold a cue card.","use":4},{"s":"Wait calmly for next start.","t":"If you miss a beat, wait silently for the next start sign.","tip":"Never rush extra taps; watching the pulse keeps the whole group steady.","use":3},{"s":"Stop cleanly at the sign.","t":"Stop together with still hands when the stop sign is shown.","tip":"A silent sign or pointing role counts the same, and passing is allowed.","use":5}],"track":null,"summit":[{"s":"Agree clear visible cue roles.","t":"Agree clear cue roles where every partner can see each visual sign.","tip":"Keep sound low and treat seated or silent visual cue roles as equal.","use":0},{"s":"Lead a clear steady entry.","t":"Lead a steady start cue so the whole group enters together.","tip":"Hold the cue steady before beat one rather than rushing the start.","use":3},{"s":"Hold the pulse across rests.","t":"Hold an even pulse across every beat and quiet rest throughout.","tip":"If anyone misses a beat, track silently and rejoin on the next entry.","use":4},{"s":"Spot any timing shift calmly.","t":"Spot any early, late, or rushed timing shift during the rehearsal.","tip":"Use what you actually observed in the rehearsal rather than guessing.","use":5},{"s":"Test one cue placement change.","t":"Test one cue position change while keeping pulse and pattern constant.","tip":"Leave work flat on desks and ask before moving any shared cards.","use":6},{"s":"Record the adjustment and reason.","t":"Record the best cue position and explain its observed timing effect.","tip":"Note when the other position could fit, mark help used, and clip your sketch.","use":1}]},"stuck":{"base":["Switch to a silent role: point to each beat box or hold one cue card.","If you miss a beat, stay still and watch for the next start sign.","Show your help card, use ear defenders, or tap Two minute reset."],"track":["Count one quiet beat in your head during every rest so you do not speed up.","If a cue is hard to see, wait for the stop sign and move it clearly.","Show your help card, choose a quiet seated role, or tap Two minute reset."],"summit":["Change only one cue position at a time while keeping pulse and pattern steady.","Watch just the start or just the stop first to spot one timing shift.","Show your help card, pass on loud parts, or tap Two minute reset."]},"ask":{"base":["Which sign tells the group when to start?","What do you do calmly if you miss a beat?","Which quiet or silent role feels best for you today?"],"track":["How can you keep every quiet rest as long as a tap?","Which cue was easiest to spot from your seat?","What changed when you moved that cue into clearer sight?"],"summit":["What stayed constant while you tested two cue positions?","What timing shift did you observe during the rehearsal?","When might the other cue position still work better?"]},"dont":{"base":["Tap loudly or rush the beat while I am counting.","Force me to make sound; seated or silent cue roles count equally and passing is allowed.","Move my sketch or cards without asking; if scribing, write my exact words only."],"track":["Tell me which cue worked best or move shared cards without asking first.","Restart on every tiny slip; let me track silently to the next start sign.","Reword my reflection; if scribing, write my exact words only."],"summit":["Change the pulse or pattern while testing a cue position.","Guess whether timing improved without checking an observed rehearsal clue.","Reword my evaluation; write exact pupil words only and record help used honestly."]},"done":{"base":"I followed the start and stop signs calmly in my chosen role and kept my cue sketch.","track":"I kept an even pulse across beats and rests, recovered silently, and noted one helpful cue.","summit":"I tested two cue positions fairly, explained the observed timing effect, and clipped my notes."}}
+</script>
+<script>
+/* help_plus v1.1. Self-contained upgrade for help pages without altering live words.
+   Supports Step 1 template features and optional pathway JSON (<script type="application/json" id="help-paths">), including optional "ways" and "all" fields.
+   No external requests, no fonts, no cookies, no persistent storage. Tab-only sessionStorage in try/catch. */
+(function(){
+'use strict';
+var H=window.__help;
+if(!H||!H.steps||!H.show||!H.get)return;
+var $=function(id){return document.getElementById(id)};
+var STEPS=H.steps;
+var BASE_STEPS=STEPS.slice();
+
+/* ---------- read optional pathway JSON ---------- */
+var PATH_DATA=null, PATH_KEYS=['base','track','summit'], PATH_LABELS=['BASE','TRACK','SUMMIT'];
+var DEFAULT_PATH=0;
+(function(){
+  var el=$('help-paths');
+  if(!el)return;
+  try{
+    var raw=JSON.parse(el.textContent||'');
+    if(!raw||typeof raw!=='object'||!raw.paths)return;
+    var resolved={};
+    var hasPaths=false;
+    PATH_KEYS.forEach(function(key){
+      var list=raw.paths[key];
+      if(list===null||typeof list==='undefined'){
+        resolved[key]=BASE_STEPS.slice();
+      }else if(Array.isArray(list)&&list.length){
+        hasPaths=true;
+        resolved[key]=list.map(function(x){
+          var idx=(x&&typeof x.use==='number'&&x.use>=0&&x.use<BASE_STEPS.length)?x.use:0;
+          var src=BASE_STEPS[idx]||BASE_STEPS[0]||{};
+          var same=!x.t&&!x.s;
+          return {
+            t:x.t||src.t||'',
+            s:x.s||(same?src.s:'')||x.t||src.t||'',
+            tip:('tip' in x)?(x.tip||''):(same?(src.tip||''):''),
+            svg:x.svg||src.svg||''
+          };
+        });
+      }else{
+        resolved[key]=BASE_STEPS.slice();
+      }
+    });
+    var defKey=String(raw['default']||'track').toLowerCase();
+    var defIdx=PATH_KEYS.indexOf(defKey);
+    DEFAULT_PATH=hasPaths?(defIdx>=0?defIdx+1:2):0;
+    PATH_DATA={
+      slug:raw.slug||'',
+      def:DEFAULT_PATH,
+      hasPaths:hasPaths,
+      steps:resolved,
+      stuck:raw.stuck||null,
+      ways:raw.ways||null,
+      ask:raw.ask||null,
+      dont:raw.dont||null,
+      done:raw.done||null,
+      markColours:!!raw.markColours
+    };
+  }catch(e){PATH_DATA=null;}
+})();
+function hasPathways(){return !!(PATH_DATA&&PATH_DATA.hasPaths)}
+function pickList(obj,key){
+  if(!obj||typeof obj!=='object')return null;
+  if(key&&Array.isArray(obj[key])&&obj[key].length)return obj[key];
+  if(Array.isArray(obj.all)&&obj.all.length)return obj.all;
+  return null;
+}
+function pickStr(obj,key){
+  if(!obj||typeof obj!=='object')return '';
+  if(key&&typeof obj[key]==='string'&&obj[key])return obj[key];
+  if(typeof obj.all==='string'&&obj.all)return obj.all;
+  return '';
+}
+
+/* ---------- page identity ---------- */
+var pathParts=(location.pathname||'').replace(/\/+$/,'').split('/');
+var lastSeg=pathParts.pop()||'';
+if(lastSeg.toLowerCase()==='index.html'&&pathParts.length)lastSeg=pathParts.pop()||'';
+var slug=(PATH_DATA&&PATH_DATA.slug)||lastSeg.replace(/\.html$/i,'').toLowerCase()||'page';
+var isCalm=(slug==='calm');
+var markWBP=(slug==='bridge'||slug==='follow'||(PATH_DATA&&PATH_DATA.markColours));
+var h1El=document.querySelector('h1');
+var title=(function(t){t=String(t||'').replace(/^Help:\s*/i,'').trim();return t?t.charAt(0).toUpperCase()+t.slice(1):'This task'})(h1El?h1El.textContent:'');
+var subEl=document.querySelector('.sub');
+var sub=subEl?subEl.textContent.trim():'';
+
+/* ---------- tab-only sessionStorage helpers ---------- */
+function ssGet(k){try{return window.sessionStorage.getItem(k)}catch(e){return null}}
+function ssSet(k,v){try{window.sessionStorage.setItem(k,v)}catch(e){}}
+function ssDel(k){try{window.sessionStorage.removeItem(k)}catch(e){}}
+var KEY_STEP='hp_step_'+slug;
+var KEY_TICKS='hp_ticks_'+slug;
+var KEY_CALM='hp_calm_ret';
+
+/* ---------- state & constants ---------- */
+var LV={s:'simple',t:'steps',m:'detail'};
+var LVR={simple:'s',steps:'t',detail:'m'};
+var CL='wcbgp';
+var CLN=['white','cream','blue','green','pink'];
+var CLL=['White','Cream','Blue','Green','Pink'];
+var CLSW=['#ffffff','#fbf5e2','#e6f0f8','#e8f3e8','#fbeaf1'];
+var S={level:'t',colour:'w',read:false,big:false,still:false,mode:'',path:0,step:0,hasStep:false};
+var activePath=hasPathways()?PATH_DATA.def:0;
+var applying=false;
+var ticks={};
+var curTab='steps';
+var canSpeak=('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window)&&!!window.speechSynthesis&&typeof window.speechSynthesis.speak==='function';
+var userTappedSpeech=false;
+var watching=false;
+var watchTimer=null;
+var paceDur=0,paceRem=0,paceId=null,pacePaused=false,paceHalfDone=false;
+
+var ICO_SPK='<svg class="hp-ico" aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';
+
+function esc(t){return String(t||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+/* ---------- hash code parse & build (RULING_H2 R1, R2) ---------- */
+function freshState(){return {level:'t',colour:'w',read:false,big:false,still:false,mode:'',path:0,step:0,hasStep:false}}
+function parseHash(raw){
+  var st=freshState();
+  var h=String(raw||'').replace(/^#/,'').toLowerCase().trim();
+  if(!h)return st;
+  var m=h.match(/-(\d{1,2})$/);
+  if(m){
+    var n=parseInt(m[1],10);
+    if(n>=1&&n<=9){st.step=n-1;st.hasStep=true;}
+    else if(n>9){st.step=n-1;st.hasStep=true;}
+    h=h.slice(0,-m[0].length);
+  }
+  h=h.replace(/[^a-z0-9]/g,'');
+  if(!h)return st;
+  if(h[0]&&LV[h[0]])st.level=h[0];
+  if(h[1]&&CL.indexOf(h[1])>=0)st.colour=h[1];
+  h.slice(2).split('').forEach(function(c){
+    if(c==='r')st.read=true;
+    else if(c==='x')st.big=true;
+    else if(c==='q')st.still=true;
+    else if(c==='a')st.mode='adult';
+    else if(c==='o'){if(st.mode!=='adult')st.mode='own';}
+    else if(c==='1'||c==='2'||c==='3')st.path=parseInt(c,10);
+  });
+  return st;
+}
+function buildCode(withStep){
+  var p=(hasPathways()&&S.path)?String(S.path):'';
+  var c=S.level+S.colour+p+(S.read?'r':'')+(S.big?'x':'')+(S.still?'q':'')+(S.mode==='adult'?'a':S.mode==='own'?'o':'');
+  return withStep?(c+'-'+(H.get()+1)):c;
+}
+function displayHash(){
+  return S.level+S.colour+(S.read?'r':'')+(S.big?'x':'')+(S.still?'q':'');
+}
+function shortAddr(withStep){
+  return 'madebymatt.uk/Lessons/help/'+slug+'#'+buildCode(withStep);
+}
+
+/* ---------- load & save tab-only session memory ---------- */
+function loadTicks(){
+  ticks={};
+  var raw=ssGet(KEY_TICKS);
+  if(!raw)return;
+  try{
+    var o=JSON.parse(raw);
+    if(o&&typeof o==='object'){
+      if(hasPathways()&&o._p!==activePath){ticks={};return;}
+      Object.keys(o).forEach(function(k){if(k!=='_p'&&o[k])ticks[k]=true});
+    }
+  }catch(e){ticks={}}
+}
+function saveTicks(){
+  var keys=Object.keys(ticks).filter(function(k){return ticks[k]});
+  if(!keys.length){ssDel(KEY_TICKS);return;}
+  var out={};
+  if(hasPathways())out._p=activePath;
+  keys.forEach(function(k){out[k]=true});
+  ssSet(KEY_TICKS,JSON.stringify(out));
+}
+function loadCalmReturn(){
+  var raw=ssGet(KEY_CALM);
+  if(!raw)return null;
+  try{
+    var o=JSON.parse(raw);
+    if(o&&o.file&&/^[a-z0-9_-]+\.html$/i.test(o.file))return o;
+  }catch(e){}
+  return null;
+}
+function saveCalmReturn(){
+  var file=lastSeg&&/\.html$/i.test(lastSeg)?lastSeg:(slug+'.html');
+  ssSet(KEY_CALM,JSON.stringify({
+    file:file,
+    slug:slug,
+    title:title,
+    path:S.path,
+    mode:S.mode,
+    step:H.get()+1
+  }));
+}
+
+/* ---------- speech & Watch all steps (Decision 10, 23 & RULING R8) ---------- */
+var talkSeq=0;
+function stopTalk(){
+  talkSeq++;
+  if(canSpeak){try{window.speechSynthesis.cancel()}catch(e){}}
+}
+function curLvl(){return (H.getLevel&&LVR[H.getLevel()])||S.level}
+function stepText(s){return curLvl()==='s'&&s.s?s.s:s.t}
+function stepReadText(s){
+  if(!s)return '';
+  var lv=curLvl();
+  if(lv==='s'&&s.s)return s.s;
+  return s.t+(lv==='m'&&s.tip?' '+s.tip:'');
+}
+function hpSpeak(text,onDone){
+  clearTimeout(watchTimer);
+  var clean=String(text||'').replace(/\s+/g,' ').trim();
+  if(!clean){if(onDone)watchTimer=setTimeout(onDone,6500);return;}
+  if(!canSpeak){if(onDone)watchTimer=setTimeout(onDone,6500);return;}
+  stopTalk();
+  var seq=talkSeq;
+  var u=new SpeechSynthesisUtterance(clean);
+  u.lang='en-GB';
+  u.rate=0.9;
+  var fired=false,started=Date.now();
+  function fin(isErr){
+    if(fired||seq!==talkSeq)return;
+    fired=true;
+    clearTimeout(watchTimer);
+    if(isErr){
+      var nv=$('hp-novoice');
+      if(nv){nv.hidden=false;nv.textContent='Read aloud did not start on this device. You can ask an adult to read the steps with you.';}
+    }
+    if(onDone){
+      var elapsed=Date.now()-started;
+      var wait=isErr?Math.max(6500,6500-elapsed):1800;
+      watchTimer=setTimeout(function(){if(seq===talkSeq)onDone();},wait);
+    }
+  }
+  u.onend=function(){fin(false)};
+  u.onerror=function(ev){
+    var err=ev&&ev.error;
+    if(err==='canceled'||err==='interrupted')return;
+    fin(true);
+  };
+  if(onDone){
+    watchTimer=setTimeout(function(){fin(false)},Math.max(7000,clean.length*110));
+  }
+  try{window.speechSynthesis.speak(u)}catch(e){fin(true)}
+}
+function hpStopWatch(){
+  watching=false;
+  clearTimeout(watchTimer);
+  watchTimer=null;
+  stopTalk();
+  if(H.stop)H.stop();
+  var wb=$('watch');
+  if(wb){wb.setAttribute('aria-pressed','false');wb.textContent='Watch all steps';}
+}
+function hpPlayFrom(n){
+  if(!watching||S.still){hpStopWatch();return;}
+  H.show(n);
+  var idx=H.get();
+  hpSpeak(stepReadText(STEPS[idx]),function(){
+    if(!watching||S.still){hpStopWatch();return;}
+    if(idx<STEPS.length-1)hpPlayFrom(idx+1);
+    else hpStopWatch();
+  });
+}
+function updateReadHighlight(){
+  var rb=$('read'),cue=$('hp-read-cue'),nv=$('hp-novoice');
+  if(nv)nv.hidden=canSpeak;
+  if(rb&&!canSpeak)rb.hidden=true;
+  var showHi=(S.read&&canSpeak&&!userTappedSpeech&&H.get()===0);
+  if(rb){
+    rb.classList.toggle('hp-read-hi',showHi);
+    if(showHi)rb.setAttribute('aria-describedby','hp-read-cue');
+    else rb.removeAttribute('aria-describedby');
+  }
+  if(cue)cue.hidden=!showHi;
+}
+function updateWatchDisabled(){
+  var wb=$('watch');
+  if(!wb)return;
+  if(S.still){
+    if(watching)hpStopWatch();
+    wb.disabled=true;
+    wb.title='Auto-advance is off while Stop the moving is on.';
+  }else{
+    wb.disabled=false;
+    wb.title='';
+  }
+}
+
+/* ---------- styles ---------- */
+var css=document.createElement('style');
+css.textContent=[
+'main{max-width:960px}',
+'button{max-width:100%;overflow-wrap:break-word}',
+'p,li,dt,dd,span,h1,h2,h3,a{overflow-wrap:break-word}',
+'.hp-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 6px}',
+'.hp-link{min-height:44px;padding:6px 12px;border:2px solid var(--accent);border-radius:10px;background:var(--bg);color:var(--accent);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-size:calc(17px*var(--fs))}',
+'.hp-link.hp-calm{border-color:var(--good);color:var(--good)}',
+'.hp-link:focus-visible,.tip a:focus-visible,details.hp-set summary:focus-visible,#count:focus{outline:4px solid #c9730a;outline-offset:2px}',
+'.tip a{color:var(--accent);font-weight:700}',
+'details.hp-set{margin:0 0 0 auto}',
+'details.hp-set[open]{flex:1 0 100%;margin-left:0}',
+'details.hp-set summary{list-style:none;min-height:44px;padding:6px 14px;border:2px solid var(--accent);border-radius:10px;background:var(--bg);color:var(--accent);display:inline-flex;align-items:center;gap:6px;font-size:calc(17px*var(--fs))}',
+'details.hp-set summary::-webkit-details-marker{display:none}',
+'details.hp-set[open] summary{background:var(--accent);color:#fff}',
+'.hp-set-in{margin-top:8px;padding:12px;border:2px solid var(--accent);border-radius:12px;background:var(--bg);display:flex;flex-direction:column;gap:10px}',
+'.hp-set-in .tools,.hp-set-in .levels,.hp-colours,.hp-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0}',
+'.hp-set-in button{min-height:44px;padding:6px 12px;font-size:calc(17px*var(--fs))}',
+'.hp-col-btn{display:inline-flex;align-items:center;gap:6px}',
+'.hp-sw{width:18px;height:18px;border-radius:50%;border:2px solid var(--ink);display:inline-block;flex:none}',
+'.hp-opt-tag{font-size:13px;font-weight:700;padding:1px 6px;border-radius:6px;border:1px solid currentColor;margin-left:2px}',
+'.hp-meta{padding-top:6px;border-top:1px solid #c8d3dd;justify-content:space-between}',
+'.hp-code-box{font-size:calc(17px*var(--fs));color:var(--ink)}',
+'.paths{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 6px}',
+'.paths button{min-height:44px;padding:6px 14px;font-size:calc(17px*var(--fs))}',
+'.tabs{margin-top:4px;gap:6px}',
+'.tabs button{min-height:44px;padding:8px 12px;font-size:calc(17px*var(--fs))}',
+'.hp-ico{flex:none;vertical-align:middle}',
+'.hp-rbtn{display:inline-flex;align-items:center;gap:6px}',
+'.hp-grid{display:flex;flex-direction:column;gap:10px}',
+'.hp-left,.hp-right{min-width:0}',
+'.hp-stepbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:4px}',
+'.hp-stepbar .count{margin:0;border-radius:6px}',
+'.hp-stepbar #read{min-height:44px;padding:6px 12px;font-size:calc(17px*var(--fs))}',
+'#read.hp-read-hi{background:var(--accent);color:#fff;border-color:var(--ink);box-shadow:0 0 0 4px var(--tint);animation:hpPulse 1.8s ease-in-out infinite}',
+'@keyframes hpPulse{0%,100%{box-shadow:0 0 0 3px var(--tint)}50%{box-shadow:0 0 0 7px var(--tint)}}',
+'body.still #read.hp-read-hi{animation:none!important}',
+'@media (prefers-reduced-motion:reduce){#read.hp-read-hi{animation:none!important}}',
+'.hp-read-cue{margin:4px 0 6px;padding:6px 10px;border-left:5px solid var(--accent);background:var(--tint);border-radius:6px;font-size:calc(16px*var(--fs));font-weight:650}',
+'.hp-novoice{margin:6px 0 0;padding:8px 10px;border-left:5px solid var(--line);background:var(--soft);border-radius:6px;font-size:calc(16px*var(--fs))}',
+'.hp-finish{margin:8px 0 0;padding:10px 12px;border:2px solid var(--good);border-left-width:6px;border-radius:10px;background:#eef7f0;color:var(--ink);font-weight:700;font-size:calc(18px*var(--fs))}',
+'.dots{margin-top:10px;gap:8px}',
+'.dots li,.dots li.on{width:auto;height:auto;border:0;border-radius:0;background:none!important;padding:0;list-style:none}',
+'.dots button.dot{min-width:44px;min-height:44px;padding:0 10px;border-radius:22px;font-size:calc(17px*var(--fs));font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:4px;background:var(--bg);color:var(--accent);border:2px solid var(--accent)}',
+'.dots button.dot.done{border-color:var(--good);background:#eef7f0;color:var(--good)}',
+'.dots button.dot.cur{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 0 0 3px var(--tint)}',
+'.dots button.dot.cur.done{background:var(--accent);color:#fff;border-color:var(--good)}',
+'.hp-dnav{margin-top:10px}',
+'.hp-dnav button{min-height:44px;padding:6px 14px;font-size:calc(17px*var(--fs))}',
+'.hp-break-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 10px}',
+'.nn{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 10px}',
+'.nn div{border:2px solid var(--line);border-radius:12px;padding:10px;background:var(--card)}',
+'.nn b{display:block;font-size:calc(16px*var(--fs));text-transform:uppercase;letter-spacing:.04em;color:var(--accent)}',
+'.own-list{list-style:none;margin:0;padding:0}',
+'.own-list li{display:flex;gap:12px;align-items:flex-start;padding:10px 6px;border-top:1px solid #c8d3dd}',
+'.own-list li:first-child{border-top:0}',
+'.own-list li.now{background:var(--tint);border-radius:8px}',
+'.own-list input{width:32px;height:32px;flex:none;margin-top:2px;cursor:pointer}',
+'.own-list label{cursor:pointer;min-height:44px;display:block;flex:1}',
+'.own-list .chk{display:block;margin-top:6px;padding:6px 10px;border-left:6px solid var(--accent);background:var(--soft);font-weight:700;border-radius:4px}',
+'.hp-pace{margin-top:12px;padding:12px;border:2px solid var(--line);border-radius:12px;background:var(--card)}',
+'.hp-pace-btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}',
+'.hp-pace-btns button{min-height:44px;padding:6px 14px;font-size:calc(17px*var(--fs))}',
+'.hp-pace-track{position:relative;height:20px;border:2px solid var(--accent);border-radius:10px;background:var(--bg);overflow:hidden;margin-top:10px}',
+'.hp-pace-fill{height:100%;width:0%;background:var(--accent);transition:width .6s linear}',
+'.hp-pace-marks{display:flex;justify-content:space-between;font-size:calc(15px*var(--fs));font-weight:600;color:#33475b;margin-top:4px}',
+'.hp-pace-static{display:none;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}',
+'.hp-pace-static span{text-align:center;padding:8px 4px;border:2px solid var(--line);border-radius:8px;background:var(--bg);font-size:calc(15px*var(--fs));font-weight:650}',
+'body.still .hp-pace-anim{display:none}',
+'body.still .hp-pace-static{display:grid}',
+'.hp-pace-msg{margin:8px 0 0;font-size:calc(16px*var(--fs));font-weight:600;color:var(--ink)}',
+'.hp-ladder{margin-top:12px;padding:12px;border:2px solid var(--line);border-radius:12px;background:var(--soft)}',
+'.hp-ladder h3{margin:0 0 6px;font-size:calc(19px*var(--fs));color:var(--accent)}',
+'.hp-ladder ol{margin:0;padding-left:26px}',
+'.hp-ladder li{margin:4px 0}',
+'.take{border:3px dashed var(--accent);border-radius:14px;padding:12px;margin-top:12px;background:var(--bg)}',
+'.take h3{margin:0 0 6px;font-size:calc(19px*var(--fs));color:var(--accent)}',
+'.take-chk{list-style:none;margin:6px 0;padding:0}',
+'.take-chk li{display:flex;gap:8px;align-items:flex-start;margin:4px 0}',
+'.take-chk input{width:24px;height:24px;flex:none;margin-top:2px}',
+'.hp-circle-strip{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0}',
+'.hp-cnum{display:inline-flex;width:30px;height:30px;border-radius:50%;border:2px solid var(--line);align-items:center;justify-content:center;font-weight:700;font-size:15px}',
+'.hp-cnum.cur{border:3px solid var(--mark);background:var(--tint);color:var(--ink)}',
+'.take .hp-addr{display:block;font-size:calc(20px*var(--fs));font-weight:800;word-break:break-word;margin:6px 0}',
+'.slip h3{margin:12px 0 4px;font-size:calc(19px*var(--fs));color:var(--accent)}',
+'.slip ol,.slip ul{margin:0 0 6px;padding-left:26px}',
+'.slip li{margin:3px 0}',
+'.hp-dont{margin:10px 0;padding:10px 14px;border:3px solid var(--mark);border-radius:10px;background:#fff5f5}',
+'.hp-dont h3{margin:0 0 4px;color:var(--mark)}',
+'.slip .rec label{display:inline-flex;gap:6px;align-items:center;margin:0 14px 6px 0}',
+'.slip .rec input{width:24px;height:24px}',
+'.hp-print-root{display:none}',
+'@media (min-width:900px){',
+'  body:not(.hp-big) main{padding:8px 14px 28px}',
+'  body:not(.hp-big) header h1{font-size:24px;margin:2px 0}',
+'  body:not(.hp-big) header .sub{font-size:17px;margin:0 0 4px}',
+'  body:not(.hp-big) #p-steps>.card{padding:12px;margin-top:6px}',
+'  body:not(.hp-big) .hp-grid{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:14px;align-items:start}',
+'  body:not(.hp-big) .hp-right .say{font-size:22px;line-height:1.35;margin:4px 0}',
+'  body:not(.hp-big).simple .hp-right .say{font-size:28px}',
+'  body:not(.hp-big) .hp-right .tip{font-size:17px;padding:6px 10px}',
+'  body:not(.hp-big) .hp-right .nav{margin-top:10px;gap:8px}',
+'  body:not(.hp-big) .hp-right .nav button{min-height:46px;padding:8px 14px;font-size:18px}',
+'  body:not(.hp-big) .hp-right .nav .grow{display:none}',
+'}',
+'body.hp-big .nn{grid-template-columns:1fr}',
+'@media (max-width:640px){',
+'  .nn{grid-template-columns:1fr}',
+'  .hp-pace-static{grid-template-columns:1fr 1fr}',
+'  details.hp-set{margin-left:0}',
+'}',
+'@media (max-width:480px){',
+'  main{padding:10px 10px 32px}',
+'  button{padding:8px 12px}',
+'  body.hp-big h1{font-size:26px}',
+'  body.hp-big .say{font-size:26px}',
+'  body.hp-big.simple .say{font-size:30px}',
+'}',
+'@media print{',
+'  @page{size:A4;margin:10mm}',
+'  body{background:#fff!important;color:#000!important}',
+'  body.hp-printing main{display:none!important}',
+'  body.hp-printing .hp-print-root{display:block!important;background:#fff!important;color:#000!important;font-size:10.5pt!important;line-height:1.28!important}',
+'  body.hp-printing .hp-print-root *{background:transparent!important;color:#000!important;font-size:inherit!important;line-height:inherit!important;box-shadow:none!important}',
+'  body.hp-printing .hp-print-root .card{border:0!important;padding:0!important;margin:0!important}',
+'  body.hp-printing .hp-print-root .lead{font-size:12pt!important;font-weight:700!important;margin:0 0 4pt!important}',
+'  body.hp-printing .hp-print-root h3{font-size:10.5pt!important;font-weight:700!important;margin:6pt 0 2pt!important;color:#000!important}',
+'  body.hp-printing .hp-print-root p,body.hp-printing .hp-print-root li{margin:1.5pt 0!important}',
+'  body.hp-printing .hp-print-root .hp-dont{border:2pt solid #b3261e!important;padding:5pt 8pt!important;margin:5pt 0!important;background:#fff!important}',
+'  body.hp-printing .hp-print-root .hp-dont h3{color:#b3261e!important;margin:0 0 2pt!important}',
+'  body.hp-printing .hp-print-root .take{border:1.5pt dashed #000!important;padding:5pt 8pt!important;margin-top:6pt!important}',
+'  body.hp-printing .hp-print-root .hp-addr{font-size:12pt!important;font-weight:700!important}',
+'  body.hp-printing .hp-print-root .hp-cnum{width:20pt!important;height:20pt!important;border:1pt solid #000!important;font-size:10pt!important}',
+'  body.hp-printing .hp-print-root .hp-cnum.cur{border:2pt solid #b3261e!important;font-weight:800!important}',
+'  body.hp-printing .hp-print-root .nav,body.hp-printing .hp-print-root button{display:none!important}',
+'  .hp-top,.paths{display:none!important}',
+'}'
+].join('');
+document.head.appendChild(css);
+
+/* ---------- top bar & settings drawer ---------- */
+var main=document.querySelector('main');
+var topBar=document.createElement('div');
+topBar.className='hp-top';
+
+var allLink=document.createElement('a');
+allLink.className='hp-link';
+allLink.id='hp-all';
+allLink.href='index.html';
+allLink.innerHTML='&larr; All help pages';
+topBar.appendChild(allLink);
+
+var calmLink=null;
+var backTaskLink=null;
+if(!isCalm){
+  calmLink=document.createElement('a');
+  calmLink.className='hp-link hp-calm';
+  calmLink.id='hp-calm';
+  calmLink.href='calm.html';
+  calmLink.textContent='Two minute reset';
+  calmLink.addEventListener('click',function(){saveCalmReturn();});
+  topBar.appendChild(calmLink);
+}else{
+  var retInfo=loadCalmReturn();
+  if(retInfo){
+    backTaskLink=document.createElement('a');
+    backTaskLink.className='hp-link hp-calm';
+    backTaskLink.id='hp-back-task';
+    backTaskLink.href=retInfo.file;
+    backTaskLink.innerHTML='&larr; Back to my task';
+    backTaskLink.addEventListener('click',function(){ssDel(KEY_CALM);});
+    topBar.appendChild(backTaskLink);
+  }
+}
+
+var drawer=document.createElement('details');
+drawer.className='hp-set';
+drawer.id='hp-settings';
+drawer.innerHTML='<summary>My settings</summary><div class="hp-set-in"></div>';
+var setIn=drawer.querySelector('.hp-set-in');
+topBar.appendChild(drawer);
+main.insertBefore(topBar,main.firstChild);
+
+/* move existing tools + levels into My settings */
+var toolsEl=document.querySelector('header .tools');
+var levelsEl=document.querySelector('.levels');
+var tintBtn=$('tint');
+if(tintBtn)tintBtn.hidden=true;
+
+/* Read each step toggle in tools */
+var autoReadBtn=document.createElement('button');
+autoReadBtn.type='button';
+autoReadBtn.id='hp-auto-read';
+autoReadBtn.setAttribute('aria-pressed','false');
+autoReadBtn.textContent='Read each step';
+if(toolsEl){
+  toolsEl.appendChild(autoReadBtn);
+  setIn.appendChild(toolsEl);
+}
+
+/* five direct colour buttons (White default, Cream, Blue, Green, Pink) */
+var colWrap=document.createElement('div');
+colWrap.className='hp-colours';
+colWrap.setAttribute('role','group');
+colWrap.setAttribute('aria-label','Page colour');
+var colLab=document.createElement('span');
+colLab.className='lvl-lab';
+colLab.textContent=markWBP?'Page colour (White, Blue or Pink options):':'Page colour:';
+colWrap.appendChild(colLab);
+
+var colBtns=[];
+CLN.forEach(function(name,idx){
+  var b=document.createElement('button');
+  b.type='button';
+  b.className='hp-col-btn';
+  b.setAttribute('data-c',CL[idx]);
+  b.setAttribute('aria-pressed',idx===0?'true':'false');
+  var tag='';
+  if(markWBP&&(idx===0||idx===2||idx===4)){
+    tag=idx===0?'<span class="hp-opt-tag">default</span>':'<span class="hp-opt-tag">option</span>';
+  }
+  b.innerHTML='<span class="hp-sw" style="background:'+CLSW[idx]+'" aria-hidden="true"></span><span>'+CLL[idx]+'</span>'+tag;
+  b.onclick=function(){
+    setColour(CL[idx]);
+    if(!applying)syncUrl();
+  };
+  colWrap.appendChild(b);
+  colBtns.push(b);
+});
+setIn.appendChild(colWrap);
+
+if(levelsEl)setIn.appendChild(levelsEl);
+
+/* code display + Reset page inside My settings */
+var metaRow=document.createElement('div');
+metaRow.className='hp-meta';
+metaRow.innerHTML='<span class="hp-code-box">Settings code: <b id="hp-code">#tw</b></span><button type="button" id="hp-reset">Reset page</button>';
+setIn.appendChild(metaRow);
+
+/* ---------- pathway bar visibly above card when pathway lists present ---------- */
+var pathWrap=null, pathBtns=[];
+var tabsEl=document.querySelector('.tabs');
+if(hasPathways()){
+  pathWrap=document.createElement('div');
+  pathWrap.className='paths';
+  pathWrap.setAttribute('role','group');
+  pathWrap.setAttribute('aria-label','My pathway');
+  var pLab=document.createElement('span');
+  pLab.className='lvl-lab';
+  pLab.textContent='My pathway:';
+  pathWrap.appendChild(pLab);
+  PATH_LABELS.forEach(function(label,idx){
+    var b=document.createElement('button');
+    b.type='button';
+    b.className='pth';
+    b.setAttribute('data-p',String(idx+1));
+    b.setAttribute('aria-pressed','false');
+    b.textContent=label;
+    b.onclick=function(){
+      setPathway(idx+1,true);
+    };
+    pathWrap.appendChild(b);
+    pathBtns.push(b);
+  });
+  tabsEl.parentNode.insertBefore(pathWrap,tabsEl);
+}
+
+/* ---------- restructure step card for side-by-side at 900px+ ---------- */
+var stepCard=document.querySelector('#p-steps > section.card');
+var countEl=$('count'), picEl=$('pic'), sayEl=$('say'), tipEl=$('tip');
+var navEl=stepCard.querySelector('.nav');
+var readBtn=$('read'), dotsEl=$('dots');
+var gridEl=document.createElement('div');
+gridEl.className='hp-grid';
+var leftCol=document.createElement('div');
+leftCol.className='hp-left';
+var rightCol=document.createElement('div');
+rightCol.className='hp-right';
+
+var stepBar=document.createElement('div');
+stepBar.className='hp-stepbar';
+countEl.setAttribute('tabindex','-1');
+stepBar.appendChild(countEl);
+if(readBtn){
+  readBtn.classList.add('hp-rbtn');
+  readBtn.innerHTML=ICO_SPK+'<span>Read to me</span>';
+  stepBar.appendChild(readBtn);
+}
+var readCue=document.createElement('p');
+readCue.id='hp-read-cue';
+readCue.className='hp-read-cue';
+readCue.hidden=true;
+readCue.textContent='Tap Read to me to start. Later steps will read when shown.';
+
+var finishBanner=document.createElement('p');
+finishBanner.id='hp-finish';
+finishBanner.className='hp-finish';
+finishBanner.setAttribute('role','status');
+finishBanner.hidden=true;
+finishBanner.textContent=isCalm?'Reset finished \u2014 choose Back to my task when ready, or show your help card.':'All steps finished \u2014 return to your sheet.';
+
+var noVoiceNote=document.createElement('p');
+noVoiceNote.id='hp-novoice';
+noVoiceNote.className='hp-novoice';
+noVoiceNote.hidden=canSpeak;
+noVoiceNote.textContent='Read aloud is not available on this device. You can ask an adult to read the steps with you.';
+
+leftCol.appendChild(picEl);
+rightCol.appendChild(stepBar);
+rightCol.appendChild(readCue);
+rightCol.appendChild(sayEl);
+rightCol.appendChild(tipEl);
+rightCol.appendChild(finishBanner);
+rightCol.appendChild(noVoiceNote);
+rightCol.appendChild(navEl);
+gridEl.appendChild(leftCol);
+gridEl.appendChild(rightCol);
+stepCard.insertBefore(gridEl,dotsEl);
+
+/* ---------- Word help & Still stuck? Read to me buttons ---------- */
+var detailCards=Array.prototype.slice.call(document.querySelectorAll('#p-steps > details.card'));
+function addDetailRead(det,getText,cls){
+  if(!det||!canSpeak)return;
+  var wrap=document.createElement('div');
+  wrap.className='nav hp-dnav';
+  var b=document.createElement('button');
+  b.type='button';
+  b.className='hp-rbtn '+cls;
+  b.innerHTML=ICO_SPK+'<span>Read to me</span>';
+  b.onclick=function(){
+    hpStopWatch();
+    userTappedSpeech=true;
+    updateReadHighlight();
+    hpSpeak(getText());
+  };
+  wrap.appendChild(b);
+  det.appendChild(wrap);
+}
+if(detailCards[0]){
+  addDetailRead(detailCards[0],function(){
+    var parts=['Word help.'];
+    if(H.words&&H.words.length){
+      H.words.forEach(function(w){parts.push(w[0]+': '+w[1]);});
+    }else{
+      var dl=$('words');
+      if(dl)parts.push(dl.textContent);
+    }
+    return parts.join(' ');
+  },'hp-read-words');
+}
+if(detailCards[1]){
+  addDetailRead(detailCards[1],function(){
+    var p=detailCards[1].querySelector('p');
+    return 'Still stuck? '+(p?p.textContent:'');
+  },'hp-read-still');
+}
+
+/* ---------- upgrade I am stuck & Ways to answer ---------- */
+var stuckListEl=$('stucklist');
+var ORIG_STUCK_HTML=stuckListEl?stuckListEl.innerHTML:'';
+var stuckLeadEl=document.querySelector('#p-stuck .lead');
+var ORIG_STUCK_LEAD=stuckLeadEl?stuckLeadEl.textContent:'';
+var stuckTipEl=document.querySelector('#p-stuck .tip');
+var ORIG_STUCK_TIP=stuckTipEl?stuckTipEl.textContent:'';
+var waysListEl=document.querySelector('#p-ways .try');
+var ORIG_WAYS_HTML=waysListEl?waysListEl.innerHTML:'';
+var waysLeadEl=document.querySelector('#p-ways .lead');
+var ORIG_WAYS_LEAD=waysLeadEl?waysLeadEl.textContent:'';
+var waysTipEl=document.querySelector('#p-ways .tip');
+var ORIG_WAYS_TIP=waysTipEl?waysTipEl.textContent:'';
+
+function calmBackHref(){
+  var ret=loadCalmReturn();
+  if(ret){
+    var rc=S.level+S.colour+(ret.path?String(ret.path):'')+(S.read?'r':'')+(S.big?'x':'')+(S.still?'q':'')+(ret.mode==='adult'?'a':ret.mode==='own'?'o':'')+(ret.step?'-'+ret.step:'');
+    return ret.file+'#'+rc;
+  }
+  return 'index.html#'+displayHash();
+}
+function bindBackInline(root){
+  if(!root)return;
+  Array.prototype.forEach.call(root.querySelectorAll('.hp-back-inline'),function(a){
+    a.onclick=function(){if(loadCalmReturn())ssDel(KEY_CALM);};
+  });
+}
+function formatTryList(lines,useLetters){
+  return lines.map(function(line,idx){
+    var s=String(line||'').trim();
+    var dot=s.indexOf('. ');
+    var body=dot>0?('<b>'+esc(s.slice(0,dot+1))+'</b> '+esc(s.slice(dot+2))):esc(s);
+    var badge=useLetters?String.fromCharCode(65+idx):String(idx+1);
+    return '<li><span class="n" aria-hidden="true">'+badge+'</span><span>'+body+'</span></li>';
+  }).join('');
+}
+
+function addReturnAndRead(panelId){
+  var p=$(panelId);
+  if(!p)return;
+  var nav=p.querySelector('.nav');
+  if(!nav)return;
+  var rb=nav.querySelector('.readp');
+  if(rb){
+    rb.classList.add('hp-rbtn');
+    rb.innerHTML=ICO_SPK+'<span>Read to me</span>';
+    if(!canSpeak){
+      rb.hidden=true;
+    }else{
+      rb.onclick=function(){
+        hpStopWatch();
+        userTappedSpeech=true;
+        updateReadHighlight();
+        var parts=[];
+        Array.prototype.forEach.call(p.querySelectorAll('.lead,.try li,.tip'),function(el){
+          var x=el.cloneNode(true);
+          var n=x.querySelector('.n');
+          var lab=n?n.textContent+'. ':'';
+          if(n)n.remove();
+          var bb=x.querySelector('b');
+          var txt=bb?(bb.textContent+' '+x.textContent.slice(bb.textContent.length)):x.textContent;
+          parts.push(lab+txt.trim());
+        });
+        hpSpeak(parts.join(' '));
+      };
+    }
+  }
+  var ret=document.createElement('button');
+  ret.type='button';
+  ret.className='primary hp-ret';
+  ret.textContent='Return to step '+(H.get()+1);
+  ret.onclick=function(){
+    pickTab('steps',false);
+    H.show(H.get());
+    countEl.focus();
+    if(stepCard.scrollIntoView)stepCard.scrollIntoView({block:'nearest'});
+  };
+  nav.insertBefore(ret,nav.firstChild);
+}
+addReturnAndRead('p-stuck');
+addReturnAndRead('p-ways');
+
+function activePathKey(){
+  return hasPathways()?(PATH_KEYS[(activePath||PATH_DATA.def)-1]||'track'):'';
+}
+
+function applyPathStuck(){
+  if(!PATH_DATA||!stuckListEl)return;
+  var lines=pickList(PATH_DATA.stuck,activePathKey());
+  if(lines){
+    stuckListEl.innerHTML=formatTryList(lines,false);
+    if(isCalm){
+      if(stuckLeadEl)stuckLeadEl.textContent='Still feeling overwhelmed? Try these three calm steps.';
+      if(stuckTipEl){
+        stuckTipEl.innerHTML='Take your time. When you feel steadier, choose <a class="hp-back-inline" href="'+esc(calmBackHref())+'">Back to my task</a> or show your help card.';
+        bindBackInline(stuckTipEl);
+      }
+    }else{
+      if(stuckLeadEl)stuckLeadEl.textContent=ORIG_STUCK_LEAD;
+      if(stuckTipEl)stuckTipEl.textContent='No adult free? Show your help card, try the next bit you can do, or tap Two minute reset.';
+    }
+  }else{
+    stuckListEl.innerHTML=ORIG_STUCK_HTML;
+    if(stuckLeadEl)stuckLeadEl.textContent=ORIG_STUCK_LEAD;
+    if(stuckTipEl)stuckTipEl.textContent=ORIG_STUCK_TIP;
+  }
+}
+
+function applyPathWays(){
+  if(!waysListEl)return;
+  var lines=PATH_DATA?pickList(PATH_DATA.ways,activePathKey()):null;
+  if(lines){
+    waysListEl.innerHTML=formatTryList(lines,true);
+    if(isCalm){
+      if(waysLeadEl)waysLeadEl.textContent='You do not need to speak right now. Pick a quiet choice.';
+      if(waysTipEl){
+        waysTipEl.innerHTML='Take your time. Choose <a class="hp-back-inline" href="'+esc(calmBackHref())+'">Back to my task</a> whenever you feel ready.';
+        bindBackInline(waysTipEl);
+      }
+    }else{
+      if(waysLeadEl)waysLeadEl.textContent=ORIG_WAYS_LEAD;
+      if(waysTipEl)waysTipEl.textContent=ORIG_WAYS_TIP;
+    }
+  }else{
+    waysListEl.innerHTML=ORIG_WAYS_HTML;
+    if(waysLeadEl)waysLeadEl.textContent=ORIG_WAYS_LEAD;
+    if(waysTipEl)waysTipEl.textContent=ORIG_WAYS_TIP;
+    var waysItems=waysListEl.querySelectorAll('li');
+    var waysCOpt=waysItems.length>=3?waysItems[2]:null;
+    if(hasPathways()&&waysCOpt){
+      var sp=waysCOpt.querySelector('span:last-child');
+      if(sp)sp.innerHTML='<b>Say it.</b> Tell an adult your answer. If they write it for you, they write your exact words.';
+    }
+  }
+}
+
+/* ---------- clickable 44px+ numbered step dots ---------- */
+dotsEl.removeAttribute('aria-hidden');
+dotsEl.setAttribute('aria-label','Go to a step');
+function buildDots(){
+  dotsEl.innerHTML='';
+  STEPS.forEach(function(s,k){
+    var li=document.createElement('li');
+    var b=document.createElement('button');
+    b.type='button';
+    b.className='dot';
+    b.setAttribute('data-step',String(k));
+    b.textContent=String(k+1);
+    b.setAttribute('aria-label','Go to step '+(k+1));
+    b.onclick=function(){
+      hpStopWatch();
+      if(S.read&&!userTappedSpeech){userTappedSpeech=true;updateReadHighlight();}
+      H.show(k);
+    };
+    li.appendChild(b);
+    dotsEl.appendChild(li);
+  });
+  paintDots(H.get());
+}
+function paintDots(k){
+  Array.prototype.forEach.call(dotsEl.querySelectorAll('button.dot'),function(b,j){
+    var isCur=(j===k);
+    var isDone=!!ticks[j];
+    b.classList.toggle('cur',isCur);
+    b.classList.toggle('done',isDone);
+    b.setAttribute('aria-current',isCur?'step':'false');
+    b.textContent=(j+1)+(isDone?' \u2713':'');
+    var lab='Go to step '+(j+1);
+    if(isCur)lab+=', current step';
+    if(isDone)lab+=', ticked done';
+    b.setAttribute('aria-label',lab);
+  });
+}
+
+/* ---------- override live step buttons for safe speech + Watch all steps ---------- */
+$('next').onclick=function(){
+  hpStopWatch();
+  if(S.read&&!userTappedSpeech){userTappedSpeech=true;updateReadHighlight();}
+  H.show(H.get()===STEPS.length-1?0:H.get()+1);
+};
+$('back').onclick=function(){
+  hpStopWatch();
+  if(S.read&&!userTappedSpeech){userTappedSpeech=true;updateReadHighlight();}
+  H.show(H.get()-1);
+};
+$('again').onclick=function(){
+  hpStopWatch();
+  H.show(H.get());
+};
+if(readBtn){
+  readBtn.onclick=function(){
+    hpStopWatch();
+    userTappedSpeech=true;
+    updateReadHighlight();
+    hpSpeak(stepReadText(STEPS[H.get()]));
+  };
+}
+$('watch').onclick=function(){
+  if(S.still){hpStopWatch();return;}
+  if(watching){hpStopWatch();return;}
+  watching=true;
+  userTappedSpeech=true;
+  updateReadHighlight();
+  this.setAttribute('aria-pressed','true');
+  this.textContent='Stop';
+  hpPlayFrom(H.get()===STEPS.length-1?0:H.get());
+};
+
+/* ---------- add On my own & With an adult tabs ---------- */
+function addTab(id,label){
+  var b=document.createElement('button');
+  b.type='button';
+  b.setAttribute('role','tab');
+  b.id='tab-'+id;
+  b.setAttribute('aria-controls','p-'+id);
+  b.setAttribute('aria-selected','false');
+  b.tabIndex=-1;
+  b.textContent=label;
+  tabsEl.appendChild(b);
+  var p=document.createElement('div');
+  p.id='p-'+id;
+  p.setAttribute('role','tabpanel');
+  p.setAttribute('aria-labelledby','tab-'+id);
+  p.hidden=true;
+  var foot=document.querySelector('footer');
+  foot.parentNode.insertBefore(p,foot);
+  return p;
+}
+var pOwn=addTab('own','On my own');
+var pAdult=addTab('adult','With an adult');
+
+var ALL_TABS=['steps','stuck','ways','own','adult'];
+function pickTab(name,focusBtn){
+  if(ALL_TABS.indexOf(name)<0)name='steps';
+  hpStopWatch();
+  curTab=name;
+  ALL_TABS.forEach(function(t){
+    var on=(t===name), b=$('tab-'+t);
+    b.setAttribute('aria-selected',on?'true':'false');
+    b.tabIndex=on?0:-1;
+    $('p-'+t).hidden=!on;
+    if(on&&focusBtn)b.focus();
+  });
+  if(H.setTab)H.setTab(name);
+  if(!applying){
+    S.mode=(name==='adult'?'adult':name==='own'?'own':'');
+    syncUrl();
+  }
+}
+ALL_TABS.forEach(function(t,k){
+  var oldB=$('tab-'+t);
+  var b=oldB.cloneNode(true);
+  oldB.parentNode.replaceChild(b,oldB);
+  b.onclick=function(){pickTab(t,false);};
+  b.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
+      e.preventDefault();
+      e.stopPropagation();
+      var nextIdx=(k+(e.key==='ArrowRight'?1:ALL_TABS.length-1))%ALL_TABS.length;
+      pickTab(ALL_TABS[nextIdx],true);
+    }
+  });
+});
+
+/* ---------- guard Left/Right step keys outside step card (Decision 24) ---------- */
+window.addEventListener('keydown',function(e){
+  if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
+  var t=e.target;
+  /* let tablist arrow handler work normally */
+  if(t&&t.getAttribute&&t.getAttribute('role')==='tab')return;
+  if(curTab!=='steps'||e.altKey||e.ctrlKey||e.metaKey){
+    e.stopPropagation();
+    return;
+  }
+  var tag=t&&t.tagName?t.tagName.toUpperCase():'';
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||(t&&t.isContentEditable)){
+    e.stopPropagation();
+    return;
+  }
+  /* block inside My settings, any <details> drawer, top bar, pathway bar, or anything outside step card (except body/html when settings closed) */
+  if(drawer.open){
+    e.stopPropagation();
+    return;
+  }
+  var isRoot=(t===document.body||t===document.documentElement||t===window||t===document);
+  var inCard=!!(t&&t.closest&&t.closest('#p-steps > section.card'));
+  var inDrawer=!!(t&&t.closest&&t.closest('details'));
+  if((!isRoot&&!inCard)||inDrawer){
+    e.stopPropagation();
+    return;
+  }
+  /* do not loop past the final step with ArrowRight */
+  if(e.key==='ArrowRight'&&H.get()>=STEPS.length-1){
+    e.preventDefault();
+    e.stopPropagation();
+  }
+},true);
+
+/* ---------- On my own tab (Decisions 5, 6, 7, 15) ---------- */
+function stopPace(){
+  clearInterval(paceId);
+  paceId=null;
+  paceDur=0;
+  paceRem=0;
+  pacePaused=false;
+  paceHalfDone=false;
+  updatePaceUI();
+}
+function startPace(mins){
+  clearInterval(paceId);
+  paceId=null;
+  paceDur=mins*60;
+  paceRem=paceDur;
+  pacePaused=false;
+  paceHalfDone=false;
+  if(S.still){
+    updatePaceUI('Motion is stopped: use the static checkpoints above at your own pace.');
+    return;
+  }
+  updatePaceUI('Pace bar running ('+mins+' min). Work at a steady pace.');
+  paceId=setInterval(function(){
+    if(pacePaused||S.still)return;
+    paceRem=Math.max(0,paceRem-1);
+    var pct=paceDur?Math.min(100,Math.round(((paceDur-paceRem)/paceDur)*100)):0;
+    var fill=$('own-pace-fill');
+    if(fill)fill.style.width=pct+'%';
+    if(!paceHalfDone&&paceRem<=paceDur/2&&paceRem>0){
+      paceHalfDone=true;
+      var msg=$('own-pace-msg');
+      if(msg)msg.textContent='About halfway through your pace time.';
+    }
+    if(paceRem<=0){
+      clearInterval(paceId);
+      paceId=null;
+      pacePaused=false;
+      updatePaceUI('Pace time finished. Check your step or take a quick break.');
+    }
+  },1000);
+}
+function togglePacePause(){
+  if(!paceId)return;
+  pacePaused=!pacePaused;
+  updatePaceUI(pacePaused?'Pace bar paused.':'Pace bar running. Work at a steady pace.');
+}
+function updatePaceUI(msgText){
+  var fill=$('own-pace-fill'), pb=$('own-pause'), cb=$('own-clear'), msg=$('own-pace-msg');
+  var pct=(paceDur>0&&!S.still)?Math.min(100,Math.round(((paceDur-paceRem)/paceDur)*100)):0;
+  if(fill)fill.style.width=pct+'%';
+  if(pb){
+    pb.hidden=(!paceId||S.still);
+    pb.textContent=pacePaused?'Resume':'Pause';
+    pb.setAttribute('aria-pressed',pacePaused?'true':'false');
+  }
+  if(cb)cb.hidden=(paceDur===0);
+  if(msg){
+    if(typeof msgText==='string'){msg.textContent=msgText;}
+    else if(S.still){msg.textContent='Motion is stopped: use the static checkpoints above at your own pace.';}
+    else if(paceDur===0){msg.textContent='Pick 2, 5 or 8 minutes for a quiet visual pace bar.';}
+  }
+}
+
+function circleStripHtml(curStep){
+  var out=[];
+  for(var j=0;j<STEPS.length;j++){
+    out.push('<span class="hp-cnum'+(j===curStep?' cur':'')+'">'+(j+1)+'</span>');
+  }
+  return out.join('');
+}
+
+function buildOwn(){
+  var k=H.get();
+  var chkEvery=STEPS.length<=4?2:3;
+  var breakHtml='';
+  if(!isCalm){
+    breakHtml='<div class="hp-break-row"><a class="hp-link hp-calm hp-break-link" href="calm.html#'+esc(displayHash())+'">Need a break? Two minute reset</a></div>';
+  }else{
+    breakHtml='<div class="hp-break-row"><a class="hp-link hp-calm hp-back-inline" href="'+esc(calmBackHref())+'">&larr; Back to my task</a></div>';
+  }
+  var ownLead=isCalm?'Work through your calm steps at your own pace. Tick each one if helpful.':'Work through your steps. Tick each one when it is done.';
+  var ladderHtml=isCalm
+    ?('<div class="hp-ladder"><h3>Need a little more quiet time? Try these four steps</h3><ol>'+
+        '<li>Look at the calm picture again or tap Read to me.</li>'+
+        '<li>Open the I am stuck tab for three quiet grounding steps.</li>'+
+        '<li>Stay seated with both feet flat and take one slow breath.</li>'+
+        '<li>Place your help card face up, or choose Back to my task when ready.</li>'+
+      '</ol></div>')
+    :('<div class="hp-ladder"><h3>No adult free? Try these four steps</h3><ol>'+
+        '<li>Look at the step picture again or tap Read to me.</li>'+
+        '<li>Open the I am stuck tab and try one idea.</li>'+
+        '<li>Mark a question mark (?) beside the hard bit and try the next part you can do.</li>'+
+        '<li>Turn your help card face up, or clip your sheet in your folder, and tap Two minute reset if it feels too much.</li>'+
+      '</ol></div>');
+  var takeHtml=isCalm
+    ?('<div class="take"><h3>Ready to carry on or pause here?</h3>'+
+        '<ul class="take-chk">'+
+          '<li><input type="checkbox" id="tk1"><label for="tk1">My quiet space and a slow breath</label></li>'+
+          '<li><input type="checkbox" id="tk2"><label for="tk2">My help card face up if I want quiet help</label></li>'+
+          '<li><input type="checkbox" id="tk3"><label for="tk3">Remember my calm step: <b id="own-cstep">Step '+(k+1)+' of '+STEPS.length+'</b></label></li>'+
+          '<li><input type="checkbox" id="tk4"><label for="tk4">Use Back to my task when I feel steadier</label></li>'+
+        '</ul>'+
+        '<div class="hp-circle-strip" id="own-cstrip" aria-hidden="true">'+circleStripHtml(k)+'</div>'+
+        '<p>Currently on calm step <b id="own-cnum">'+(k+1)+'</b>.</p>'+
+        '<span class="hp-addr">'+esc(shortAddr(true))+'</span>'+
+        '<div class="nav"><button type="button" id="own-print" class="primary">Print my calm card</button>'+
+        (canSpeak?'<button type="button" id="own-read" class="hp-rbtn">'+ICO_SPK+'<span>Read to me</span></button>':'')+
+        '</div>'+
+      '</div>')
+    :('<div class="take"><h3>Leaving the room or stopping for now?</h3>'+
+        '<ul class="take-chk">'+
+          '<li><input type="checkbox" id="tk1"><label for="tk1">My task sheet and pen or pencil</label></li>'+
+          '<li><input type="checkbox" id="tk2"><label for="tk2">My help card and any tools I need</label></li>'+
+          '<li><input type="checkbox" id="tk3"><label for="tk3">Circle my step number on my paper sheet: <b id="own-cstep">Step '+(k+1)+' of '+STEPS.length+'</b></label></li>'+
+          '<li><input type="checkbox" id="tk4"><label for="tk4">Copy or print this address to come back to the same step</label></li>'+
+        '</ul>'+
+        '<div class="hp-circle-strip" id="own-cstrip" aria-hidden="true">'+circleStripHtml(k)+'</div>'+
+        '<p>No printer or laptop? Circle step <b id="own-cnum">'+(k+1)+'</b> on your paper sheet.</p>'+
+        '<span class="hp-addr">'+esc(shortAddr(true))+'</span>'+
+        '<div class="nav"><button type="button" id="own-print" class="primary">Print my take-with-me card</button>'+
+        (canSpeak?'<button type="button" id="own-read" class="hp-rbtn">'+ICO_SPK+'<span>Read to me</span></button>':'')+
+        '</div>'+
+      '</div>');
+  pOwn.innerHTML=
+    '<section class="card">'+
+    '<p class="lead">'+ownLead+'</p>'+
+    breakHtml+
+    '<div class="nn"><div><b>Now</b><span id="own-now"></span></div><div><b>Next</b><span id="own-next"></span></div></div>'+
+    '<ol class="own-list" id="own-list"></ol>'+
+    '<div class="hp-pace">'+
+      '<div class="hp-pace-btns"><span class="lvl-lab">Quiet pace bar:</span>'+
+      '<button type="button" data-m="2">2 min</button>'+
+      '<button type="button" data-m="5">5 min</button>'+
+      '<button type="button" data-m="8">8 min</button>'+
+      '<button type="button" id="own-pause" hidden>Pause</button>'+
+      '<button type="button" id="own-clear" hidden>Clear</button></div>'+
+      '<div class="hp-pace-anim"><div class="hp-pace-track" aria-hidden="true"><div class="hp-pace-fill" id="own-pace-fill"></div></div>'+
+      '<div class="hp-pace-marks" aria-hidden="true"><span>Start</span><span>Halfway</span><span>Check in</span></div></div>'+
+      '<div class="hp-pace-static" aria-label="Static pace checkpoints"><span>1. Start</span><span>2. Keep going</span><span>3. Halfway</span><span>4. Check in</span></div>'+
+      '<p class="hp-pace-msg" id="own-pace-msg" aria-live="polite"></p>'+
+    '</div>'+
+    ladderHtml+
+    takeHtml+
+    '</section>';
+
+  var bl=pOwn.querySelector('.hp-break-link');
+  if(bl)bl.addEventListener('click',function(){saveCalmReturn();});
+  bindBackInline(pOwn);
+
+  var ol=$('own-list');
+  var chkTxt=isCalm?'Pause here for one slow breath before the next step.':'Check in: show an adult what you have done so far, or check your sheet.';
+  STEPS.forEach(function(s,j){
+    var li=document.createElement('li');
+    var cid='own-c'+j;
+    var chk=((j+1)%chkEvery===0&&j<STEPS.length-1)?'<span class="chk">'+chkTxt+'</span>':'';
+    li.innerHTML='<input type="checkbox" id="'+cid+'"'+(ticks[j]?' checked':'')+'><label for="'+cid+'"><b>Step '+(j+1)+'.</b> '+esc(stepText(s))+chk+'</label>';
+    li.querySelector('input').onchange=function(){
+      if(this.checked)ticks[j]=true;
+      else delete ticks[j];
+      saveTicks();
+      paintDots(H.get());
+      if(this.checked&&j<STEPS.length-1){
+        H.show(j+1);
+      }else{
+        markOwn();
+      }
+    };
+    ol.appendChild(li);
+  });
+
+  Array.prototype.forEach.call(pOwn.querySelectorAll('[data-m]'),function(b){
+    b.onclick=function(){startPace(parseInt(b.getAttribute('data-m'),10));};
+  });
+  $('own-pause').onclick=togglePacePause;
+  $('own-clear').onclick=stopPace;
+  $('own-print').onclick=printTakeCard;
+  var ownRead=$('own-read');
+  if(ownRead){
+    ownRead.onclick=function(){
+      hpStopWatch();
+      userTappedSpeech=true;
+      updateReadHighlight();
+      var parts=['On my own. Now: '+($('own-now')?$('own-now').textContent:'')+'. Next: '+($('own-next')?$('own-next').textContent:'')+'.'];
+      STEPS.forEach(function(s,j){parts.push('Step '+(j+1)+'. '+stepText(s));});
+      parts.push(isCalm
+        ?'Need a little more quiet time? Look at the calm picture again. Open I am stuck for three quiet grounding steps. Stay seated with both feet flat and take one slow breath. Place your help card face up, or choose Back to my task when ready.'
+        :'No adult free? Look at the step picture again. Open I am stuck. Mark a question mark beside the hard bit and try the next part you can do. Turn your help card face up or tap Two minute reset.');
+      hpSpeak(parts.join(' '));
+    };
+  }
+  markOwn();
+  updatePaceUI();
+}
+
+function markOwn(){
+  var k=H.get();
+  var ol=$('own-list');
+  if(ol){
+    Array.prototype.forEach.call(ol.children,function(li,j){
+      li.classList.toggle('now',j===k);
+    });
+  }
+  var nowEl=$('own-now'), nxtEl=$('own-next');
+  if(nowEl)nowEl.textContent='Step '+(k+1)+': '+(STEPS[k]?stepText(STEPS[k]):'');
+  if(nxtEl)nxtEl.textContent=STEPS[k+1]?('Step '+(k+2)+': '+stepText(STEPS[k+1])):(isCalm?'Reset finished \u2014 choose Back to my task when ready.':'All steps finished \u2014 return to your sheet.');
+  var cs=$('own-cstep'), cn=$('own-cnum'), strip=$('own-cstrip');
+  if(cs)cs.textContent='Step '+(k+1)+' of '+STEPS.length;
+  if(cn)cn.textContent=String(k+1);
+  if(strip)strip.innerHTML=circleStripHtml(k);
+}
+
+/* ---------- With an adult tab & TA slip (Decision 8 & Step 1/2) ---------- */
+var DEFAULT_ASK=[
+  'What is the task asking you to do?',
+  'Which step are you on? Show me.',
+  'What could you try first?',
+  'How do you know? Point to it.'
+];
+var DEFAULT_DONT=[
+  'Never do the task for me or give me the answer.',
+  'Never give more than one step or two questions at once.',
+  'For the evidence folder or award, never reword my ideas; if scribing, write my exact words and tick the help used.'
+];
+var DEFAULT_DONE='I worked through the steps in my own way (writing, drawing and labelling, or saying my own words) and checked my sheet.';
+
+function buildAdult(){
+  var key=activePathKey();
+  var pLabel=hasPathways()?PATH_LABELS[(activePath||PATH_DATA.def)-1]:'';
+  var ask=(PATH_DATA&&pickList(PATH_DATA.ask,key))||DEFAULT_ASK;
+  var dont=(PATH_DATA&&pickList(PATH_DATA.dont,key))||DEFAULT_DONT;
+  var done=(PATH_DATA&&pickStr(PATH_DATA.done,key))||DEFAULT_DONE;
+  var breakLine=isCalm
+    ?'I stop answering, cover my face, or say it is too much. Stay calm, pause, and give quiet space.'
+    :'I stop answering, cover my face, or say it is too much. Open <a class="hp-slip-calm" href="calm.html#'+esc(displayHash())+'">Two minute reset</a> together (keeps my page colour).';
+  var helpOrderHtml=isCalm
+    ?('<li>Wait 10 seconds in quiet space. Let breathing slow.</li>'+
+      '<li>Keep your voice low and point gently to the current calm step.</li>'+
+      '<li>Ask one short, calm question from the list below.</li>'+
+      '<li>Offer a quiet signal: point, nod, or place the help card face up.</li>'+
+      '<li>When ready, offer Back to my task or one more quiet minute.</li>')
+    :('<li>Wait 10 seconds. Let me think.</li>'+
+      '<li>Point to the step or the box on my sheet.</li>'+
+      '<li>Ask one open question from the list below.</li>'+
+      '<li>Model the first small bit on a different example only, then hand back the sheet.</li>'+
+      '<li>Offer a way to answer: write, draw and label, or say it to you.</li>');
+  var didHead=isCalm?'What helped (optional note)':'What we did (tick, then return with work)';
+
+  pAdult.innerHTML=
+    '<section class="card slip" id="slip">'+
+    '<p class="lead">For the adult working with me</p>'+
+    '<h3>'+(isCalm?'The reset':'The task')+'</h3>'+
+    '<p><b>'+esc(title)+'</b>'+(sub?' \u2014 '+esc(sub):'')+(pLabel?' &middot; <b>Pathway: '+esc(pLabel)+'</b>':'')+'</p>'+
+    '<h3>The steps</h3>'+
+    '<ol>'+STEPS.map(function(s){return '<li>'+esc(stepText(s))+'</li>'}).join('')+'</ol>'+
+    '<h3>Help in this order (least help first)</h3>'+
+    '<ol>'+helpOrderHtml+'</ol>'+
+    '<h3>Questions to ask</h3>'+
+    '<ul>'+ask.map(function(q){return '<li>'+esc(q)+'</li>'}).join('')+'</ul>'+
+    '<div class="hp-dont"><h3>Please do not</h3><ul>'+dont.map(function(d){return '<li>'+esc(d)+'</li>'}).join('')+'</ul></div>'+
+    '<h3>Stop and take a break if</h3>'+
+    '<ul><li>'+breakLine+'</li></ul>'+
+    '<h3>Done when</h3>'+
+    '<p>'+esc(done)+'</p>'+
+    '<h3>'+didHead+'</h3>'+
+    '<p class="rec">'+
+      '<label><input type="checkbox">On my own</label>'+
+      '<label><input type="checkbox">With a prompt</label>'+
+      '<label><input type="checkbox">Adult showed me</label>'+
+    '</p>'+
+    '<p>Got to step ____ of '+STEPS.length+'. Next time start at step ____.</p>'+
+    '<div class="take">Come back to this step: <span class="hp-addr">'+esc(shortAddr(true))+'</span></div>'+
+    '<div class="nav">'+
+      '<button type="button" id="slip-print" class="primary">Print this slip</button>'+
+      (canSpeak?'<button type="button" id="slip-read" class="hp-rbtn">'+ICO_SPK+'<span>Read to me</span></button>':'')+
+    '</div>'+
+    '</section>';
+
+  var sc=pAdult.querySelector('.hp-slip-calm');
+  if(sc)sc.addEventListener('click',function(){saveCalmReturn();});
+  $('slip-print').onclick=function(){doPrint($('slip'));};
+  var sr=$('slip-read');
+  if(sr){
+    sr.onclick=function(){
+      hpStopWatch();
+      userTappedSpeech=true;
+      updateReadHighlight();
+      var clone=$('slip').cloneNode(true);
+      var nv=clone.querySelector('.nav');
+      if(nv)nv.remove();
+      hpSpeak(clone.textContent);
+    };
+  }
+}
+
+/* ---------- clean white-paper A4 print ---------- */
+var printRoot=document.createElement('div');
+printRoot.id='hp-print-root';
+printRoot.className='hp-print-root';
+document.body.appendChild(printRoot);
+
+function doPrint(sourceEl){
+  if(!sourceEl)return;
+  var clone=sourceEl.cloneNode(true);
+  var origInputs=sourceEl.querySelectorAll('input[type="checkbox"]');
+  var cloneInputs=clone.querySelectorAll('input[type="checkbox"]');
+  Array.prototype.forEach.call(origInputs,function(inp,idx){
+    if(cloneInputs[idx]&&inp.checked)cloneInputs[idx].setAttribute('checked','checked');
+  });
+  printRoot.innerHTML='';
+  printRoot.appendChild(clone);
+  document.body.classList.add('hp-printing');
+  var cleaned=false;
+  function cleanup(){
+    if(cleaned)return;
+    cleaned=true;
+    document.body.classList.remove('hp-printing');
+    printRoot.innerHTML='';
+  }
+  window.addEventListener('afterprint',cleanup,{once:true});
+  setTimeout(function(){
+    try{window.print();}catch(e){}
+    setTimeout(cleanup,300);
+  },40);
+}
+
+function printTakeCard(){
+  var k=H.get();
+  var d=document.createElement('section');
+  d.className='card take';
+  var checklist=isCalm
+    ?'<p><b>Calm check:</b> [ ] Quiet space &middot; [ ] Help card &middot; [ ] Slow breath &middot; [ ] Back to my task when ready</p>'
+    :'<p><b>Before I leave the room:</b> [ ] Task sheet and pen &middot; [ ] Help card &middot; [ ] Step circled &middot; [ ] Address copied</p>';
+  d.innerHTML=
+    '<p class="lead">'+(isCalm?'My calm card':'My take-with-me card')+'</p>'+
+    '<p><b>'+esc(title)+'</b>'+(hasPathways()?' &middot; Pathway: '+esc(PATH_LABELS[(activePath||PATH_DATA.def)-1]):'')+'</p>'+
+    '<p>I am on step <b>'+(k+1)+'</b> of '+STEPS.length+'.'+(isCalm?'':' Circle your step:')+'</p>'+
+    '<div class="hp-circle-strip">'+circleStripHtml(k)+'</div>'+
+    checklist+
+    '<p><b>This step:</b> '+esc(STEPS[k]?stepText(STEPS[k]):'')+'</p>'+
+    '<p>Type this address to come back to step '+(k+1)+':</p>'+
+    '<span class="hp-addr">'+esc(shortAddr(true))+'</span>';
+  doPrint(d);
+}
+
+/* ---------- apply settings & sync UI ---------- */
+function setColour(codeChar){
+  var want=CL.indexOf(codeChar);
+  if(want<0)want=0;
+  S.colour=CL[want];
+  if(tintBtn){
+    var guard=0;
+    while(tintBtn.textContent.toLowerCase().indexOf(CLN[want])<0&&guard++<8){
+      tintBtn.click();
+    }
+  }
+  colBtns.forEach(function(b,idx){
+    b.setAttribute('aria-pressed',idx===want?'true':'false');
+  });
+}
+
+function setPathway(p,fromUser){
+  if(!hasPathways())return;
+  var target=(p>=1&&p<=3)?p:PATH_DATA.def;
+  var changed=(target!==activePath);
+  activePath=target;
+  if(fromUser||S.path){S.path=target;}
+  var key=PATH_KEYS[target-1]||'track';
+  var list=PATH_DATA.steps[key]||BASE_STEPS;
+  STEPS.length=0;
+  list.forEach(function(s){STEPS.push(s)});
+  pathBtns.forEach(function(b){
+    b.setAttribute('aria-pressed',parseInt(b.getAttribute('data-p'),10)===target?'true':'false');
+  });
+  if(fromUser||changed){
+    ticks={};
+    saveTicks();
+  }
+  applyPathStuck();
+  applyPathWays();
+  buildDots();
+  if(fromUser){
+    hpStopWatch();
+    H.show(0);
+    buildOwn();
+    buildAdult();
+    syncUrl();
+  }
+}
+
+function applyAllSettings(){
+  applying=true;
+  var lb=document.querySelector('.lvl[data-l="'+LV[S.level]+'"]');
+  if(lb)lb.click();
+  setColour(S.colour);
+  var bigBtn=$('bigger');
+  if(bigBtn){
+    var bigOn=bigBtn.getAttribute('aria-pressed')==='true';
+    if(S.big!==bigOn)bigBtn.click();
+    document.body.classList.toggle('hp-big',S.big);
+  }
+  var stillBtn=$('still');
+  if(stillBtn){
+    var stillOn=stillBtn.getAttribute('aria-pressed')==='true';
+    if(S.still!==stillOn)stillBtn.click();
+  }
+  autoReadBtn.setAttribute('aria-pressed',S.read?'true':'false');
+  updateWatchDisabled();
+  updateReadHighlight();
+  updatePaceUI();
+  if(hasPathways()){
+    setPathway(S.path||PATH_DATA.def,false);
+  }else if(PATH_DATA){
+    applyPathStuck();
+    applyPathWays();
+  }
+  applying=false;
+}
+
+function syncUrl(){
+  var c=buildCode(false);
+  try{history.replaceState(null,'','#'+c);}catch(e){}
+  var codeEl=$('hp-code');
+  if(codeEl)codeEl.textContent='#'+c;
+  var addr=shortAddr(true);
+  Array.prototype.forEach.call(document.querySelectorAll('.hp-addr'),function(a){a.textContent=addr;});
+  var dh=displayHash();
+  allLink.href='index.html#'+dh;
+  if(calmLink)calmLink.href='calm.html#'+dh;
+  Array.prototype.forEach.call(document.querySelectorAll('.hp-break-link,.hp-slip-calm'),function(a){
+    a.href='calm.html#'+dh;
+  });
+  var cbHref=calmBackHref();
+  Array.prototype.forEach.call(document.querySelectorAll('.hp-back-inline'),function(a){
+    a.href=cbHref;
+  });
+  if(backTaskLink){
+    var ret=loadCalmReturn();
+    if(ret){
+      backTaskLink.href=cbHref;
+    }
+  }
+}
+
+/* ---------- hook into live page show(n) ---------- */
+var bootDone=false;
+window.__helpAfter=function(k){
+  if(H.getLevel&&LVR[H.getLevel()])S.level=LVR[H.getLevel()];
+  var isLast=(k>=STEPS.length-1);
+  finishBanner.hidden=!isLast;
+  var nb=$('next');
+  if(nb){
+    nb.classList.toggle('primary',!isLast);
+  }
+  paintDots(k);
+  Array.prototype.forEach.call(document.querySelectorAll('.hp-ret'),function(b){
+    b.textContent='Return to step '+(k+1);
+  });
+  markOwn();
+  var addr=shortAddr(true);
+  Array.prototype.forEach.call(document.querySelectorAll('.hp-addr'),function(a){a.textContent=addr;});
+  if(bootDone){
+    ssSet(KEY_STEP,String(k));
+    updateReadHighlight();
+    if(S.read&&userTappedSpeech&&!watching&&canSpeak){
+      hpSpeak(stepReadText(STEPS[k]));
+    }
+  }
+};
+
+/* ---------- watch user presses on existing & added setting buttons ---------- */
+Array.prototype.forEach.call(document.querySelectorAll('.lvl'),function(b){
+  b.addEventListener('click',function(){
+    if(applying)return;
+    S.level=LVR[b.getAttribute('data-l')]||'t';
+    buildOwn();
+    buildAdult();
+    syncUrl();
+  });
+});
+if(tintBtn){
+  tintBtn.addEventListener('click',function(){
+    if(applying)return;
+    var t=tintBtn.textContent.toLowerCase();
+    CLN.forEach(function(name,idx){
+      if(t.indexOf(name)>=0){
+        S.colour=CL[idx];
+        colBtns.forEach(function(cb,j){cb.setAttribute('aria-pressed',j===idx?'true':'false');});
+      }
+    });
+    syncUrl();
+  });
+}
+$('bigger').addEventListener('click',function(){
+  if(applying)return;
+  S.big=this.getAttribute('aria-pressed')==='true';
+  document.body.classList.toggle('hp-big',S.big);
+  syncUrl();
+});
+$('still').addEventListener('click',function(){
+  if(applying)return;
+  S.still=this.getAttribute('aria-pressed')==='true';
+  updateWatchDisabled();
+  if(S.still&&paceId){
+    clearInterval(paceId);
+    paceId=null;
+    pacePaused=false;
+  }
+  updatePaceUI();
+  syncUrl();
+});
+autoReadBtn.onclick=function(){
+  S.read=!S.read;
+  this.setAttribute('aria-pressed',S.read?'true':'false');
+  if(S.read){
+    userTappedSpeech=true;
+    updateReadHighlight();
+  }else{
+    stopTalk();
+    updateReadHighlight();
+  }
+  syncUrl();
+};
+$('hp-reset').onclick=function(){
+  hpStopWatch();
+  stopPace();
+  userTappedSpeech=false;
+  ticks={};
+  bootDone=false;
+  S=freshState();
+  applyAllSettings();
+  if(hasPathways())setPathway(PATH_DATA.def,false);
+  S.path=0;
+  H.show(0);
+  pickTab('steps',false);
+  buildOwn();
+  buildAdult();
+  if(backTaskLink)backTaskLink.hidden=true;
+  ssDel(KEY_STEP);
+  ssDel(KEY_TICKS);
+  ssDel(KEY_CALM);
+  syncUrl();
+  updateReadHighlight();
+  bootDone=true;
+};
+
+/* ---------- initial boot ---------- */
+S=parseHash(location.hash);
+if(hasPathways())activePath=S.path||PATH_DATA.def;
+loadTicks();
+applyAllSettings();
+buildDots();
+var startStep=S.step;
+if(!S.hasStep){
+  var saved=parseInt(ssGet(KEY_STEP),10);
+  if(!isNaN(saved)&&saved>=0&&saved<STEPS.length)startStep=saved;
+}
+H.show(Math.max(0,Math.min(STEPS.length-1,startStep)));
+buildOwn();
+buildAdult();
+if(S.mode==='adult')pickTab('adult',false);
+else if(S.mode==='own')pickTab('own',false);
+else pickTab('steps',false);
+syncUrl();
+updateReadHighlight();
+bootDone=true;
+
+/* ---------- hashchange listener ---------- */
+window.addEventListener('hashchange',function(){
+  var next=parseHash(location.hash);
+  hpStopWatch();
+  bootDone=false;
+  S=next;
+  userTappedSpeech=false;
+  applyAllSettings();
+  buildDots();
+  H.show(Math.max(0,Math.min(STEPS.length-1,S.step)));
+  buildOwn();
+  buildAdult();
+  if(S.mode==='adult')pickTab('adult',false);
+  else if(S.mode==='own')pickTab('own',false);
+  else pickTab('steps',false);
+  syncUrl();
+  updateReadHighlight();
+  bootDone=true;
+});
+window.addEventListener('pagehide',function(){hpStopWatch();stopPace();});
 })();
 </script>
 </body>
