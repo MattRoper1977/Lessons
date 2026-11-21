@@ -26,7 +26,11 @@ to act on judgement it has not been given:
     the deck's own projection (build_lesson_order.strand_proof), and, since Matt's ruling on the
     batch-2 limbs (2026-09-22), a Science deck through its pinned SCIENCE_WEEK_BINDINGS row
     (science_row_proof, the same three conditions) or its own "Autumn 2 · Week n" label equal to
-    that row (science_label_proof); a deck it cannot prove is refused,
+    that row (science_label_proof), and, since the label-map ruling (ruling thread, 2026-11-04,
+    _sx3/DECISION_label_map_limb.md), any page whose recorded title-slide quote, after the one
+    committed word map tools/catalogue/LABEL_MAP.json, sits verbatim in its visible text with its
+    half-term, its week and every Science term·week token intact (label_map_proof, tried last);
+    a deck it cannot prove is refused,
     because re-stamping would freeze in a week binding nothing can demonstrate. This is the
     latent loss _sx3/FENCE.json exists to fence, so a fenced path is refused outright.
   * the entry's recorded term/weeks must still agree with SCIENCE_WEEK_BINDINGS, and style is
@@ -175,7 +179,10 @@ def load_proofs():
     sys.path.insert(0, str(ROOT / 'tools/catalogue'))
     import build_lesson_order
     d = build_lesson_order.derive()
-    return set(d['refreshedSourceProofs']), d.get('scienceRefusals', {})
+    reasons = {p: dict(why) for p, why in d.get('scienceRefusals', {}).items()}
+    for p, why in d.get('labelMapRefusals', {}).items():
+        reasons.setdefault(p, {})['labelmap'] = why
+    return set(d['refreshedSourceProofs']), reasons
 
 
 def digest_of_tree(path):
@@ -535,6 +542,73 @@ def self_test():
           limb is None and 'not tried' not in why.get('label', '') and 'Aut1·W8' in why.get('label', ''))
     check('and a null weeks field is an empty row, never a crash (science_row_keys)',
           blo.science_row_keys({'weeks': None}) == [] and blo.title_claim_conflict({'weeks': None}, []) is None)
+
+    # The label-map limb (ruling thread, 2026-11-04, _sx3/DECISION_label_map_limb.md): the pure judge,
+    # the map loader, and the wiring through derive() on a real page's bytes moved in memory.
+    from build_lesson_order import label_map_proof, map_labels, load_label_map
+    pw = [('BUILD', 'BASE'), ('GROW', 'TRACK'), ('LAUNCH', 'SUMMIT')]
+    q = 'Progress SoW · Humanities Aut 1 · 2026–27 · BUILD · Week 1'
+    ok, why = label_map_proof([q], 'x ' + q.replace('BUILD', 'BASE') + ' y', pw)
+    check('LABEL-MAP: the recorded quote, mapped BUILD->BASE, verbatim in the visible text proves the page', ok)
+    ok, why = label_map_proof([q], 'x ' + q.replace('BUILD', 'BASE').replace('Aut 1', 'Aut 2') + ' y', pw)
+    check('LABEL-MAP RED PROOF: the page\'s half-term moved (Aut 1 -> Aut 2) -> refuse', not ok and 'not in the current visible text' in why)
+    ok, why = label_map_proof(['BUILD · Science · Week 3 Aut1·W3 — Backbones'], 'BASE · Science · Week 3 Aut1·W4 — Backbones', pw)
+    check('LABEL-MAP RED PROOF: the page\'s week token moved (W3 -> W4) -> refuse', not ok and 'not in the current visible text' in why)
+    ok, why = label_map_proof(['BUILD · Science · Week 3 Aut1·W3 — Backbones'], 'BASE · Science · Week 3 Aut1·W3 — Backbones', pw, ['Aut1·W3', 'Aut1·W4'])
+    check('LABEL-MAP RED PROOF: a Science row token absent from the text -> refuse', not ok and "['Aut1·W4'] absent" in why)
+    ok, why = label_map_proof([q], 'x ' + q.replace('BUILD', 'BASE') + ' y', [])
+    check('LABEL-MAP RED PROOF: an EMPTY map is the verbatim limb -- BASE for BUILD is refused', not ok and 'not in the current visible text' in why)
+    ok, why = label_map_proof([q], 'x ' + q + ' y', [])
+    check('LABEL-MAP: an empty map still proves a page whose quote is verbatim (today\'s quote limb, unchanged)', ok and 'empty map' in why)
+    ok, why = label_map_proof([q], 'x ' + q.replace('BUILD', 'SUMMIT') + ' y', pw)
+    check('LABEL-MAP RED PROOF: a word the map does not name this way (BUILD -> SUMMIT) does not apply', not ok)
+    ok, why = label_map_proof([q], 'x ' + q.replace('BUILD', 'BASE') + ' y', [('GROW', 'TRACK')])
+    check('LABEL-MAP RED PROOF: an entry that is not in the map (BUILD) is never applied', not ok)
+    ok, why = label_map_proof([q], 'x ' + q.replace('BUILD', 'BASE') + ' y', [('BUILD', 'BASE'), ('BASE', 'TRACK')])
+    check('LABEL-MAP: one pass -- no entry\'s output is fed to another', ok and map_labels('BUILD BASE', [('BUILD', 'BASE'), ('BASE', 'TRACK')]) == 'BASE TRACK')
+    check('LABEL-MAP: whole words only -- REBUILD is not BUILD', map_labels('REBUILD BUILD', pw) == 'REBUILD BASE')
+    ok, why = label_map_proof(['Science · BUILD · a lesson'], 'Science · BASE · a lesson', pw)
+    check('LABEL-MAP RED PROOF: a quote naming no half-term proves nothing', not ok and 'names no half-term' in why)
+    ok, why = label_map_proof([q], 'x ' + q.replace('Aut 1', 'Spr 1') + ' y', [('Aut', 'Spr')])
+    check('LABEL-MAP RED PROOF: a map that would move the half-term is refused by the judge itself', not ok and 'calendar binding' in why)
+    ok, why = label_map_proof([], 'anything', pw)
+    check('LABEL-MAP RED PROOF: no recorded quote -> refuse', not ok and 'no recorded' in why)
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        mp = Path(td) / 'LABEL_MAP.json'
+        check('LABEL-MAP: an absent map file is an empty map', load_label_map(mp) == [])
+        mp.write_text(json.dumps({'map': [{'from': 'BUILD', 'to': 'BASE'}, {'from': 'Made by Us', 'to': 'Made by Matt'}]}))
+        check('LABEL-MAP: the loader reads word entries, spaces allowed', load_label_map(mp) == [('BUILD', 'BASE'), ('Made by Us', 'Made by Matt')])
+        for bad_row in ({'from': 'Aut1', 'to': 'Aut2'}, {'from': 'Autumn', 'to': 'Spring'}, {'from': 'Week', 'to': 'Wk'},
+                        {'from': 'W', 'to': 'Week'}, {'from': 'BUILD', 'to': 'BUILD'}, {'from': 'B1', 'to': 'B2'}, {'from': '', 'to': 'X'}):
+            mp.write_text(json.dumps({'map': [bad_row]}))
+            try:
+                load_label_map(mp); refused = False
+            except AssertionError:
+                refused = True
+            check('LABEL-MAP RED PROOF: the loader refuses %r' % bad_row, refused)
+    check('LABEL-MAP: the committed map carries the three pathway entries and nothing that names a calendar',
+          load_label_map() == pw)
+    # The wiring, through derive() on moved bytes of a real digest-bound page no other limb proves.
+    hum = 'Build/Slideshows/BUILD_HUM_W1_Human_Timeline.html'
+    raw = (ROOT / hum).read_text()
+    relabelled = re.sub(r'(class="sow-strip">[^<]*?)BUILD', r'\1BASE', raw.replace('<title>BUILD', '<title>BASE', 1), count=1)
+    week_moved = re.sub(r'(class="sow-strip">[^<]*?)Aut\s1', r'\1Aut 2', raw, count=1)  # the label's space is U+00A0
+    check('LABEL-MAP wiring: the trial mutations are non-vacuous', relabelled != raw and week_moved != raw)
+    d1 = blo.derive({hum: relabelled.encode()})
+    check('LABEL-MAP wiring, derive(): the relabelled page is proved by the label-map limb and by nothing else',
+          d1.get('labelMapProofs') == [hum] and hum in d1['refreshedSourceProofs'] and hum not in d1['unresolvedTiming'])
+    d2 = blo.derive({hum: week_moved.encode()})
+    check('LABEL-MAP wiring RED PROOF, derive(): the page whose Aut 1 became Aut 2 is refused, by name',
+          hum in d2['unresolvedTiming'] and 'not in the current visible text' in d2.get('labelMapRefusals', {}).get(hum, ''))
+    dg = hashlib.sha256(relabelled.encode()).hexdigest()
+    e, r, n = restamp_plan(evidence, {hum: dg}, {hum: dg}.get, set(d1['refreshedSourceProofs']), bdoc['entries'], fenced_paths(), {}, held_paths())
+    check('LABEL-MAP wiring, restamp_plan: the relabelled page is re-stamped', not e and [x[0] for x in r] == [hum])
+    dg = hashlib.sha256(week_moved.encode()).hexdigest()
+    _, reasons2 = set(d2['refreshedSourceProofs']), {p: {'labelmap': w} for p, w in d2.get('labelMapRefusals', {}).items()}
+    e, r, n = restamp_plan(evidence, {hum: dg}, {hum: dg}.get, set(d2['refreshedSourceProofs']), bdoc['entries'], fenced_paths(), reasons2, held_paths())
+    check('LABEL-MAP wiring RED PROOF, restamp_plan: the week-moved page is refused with the limb\'s reason',
+          len(e) == 1 and not r and 'labelmap -- the mapped quote is not in the current visible text' in e[0])
 
     # CORRECTION #40, the committed planted-failure proof: last, so no rebinding can follow it.
     if not planted:
