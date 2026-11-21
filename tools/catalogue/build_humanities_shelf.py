@@ -83,10 +83,10 @@ def family(path: str) -> str:
         return 'current'
     # R-RAISE applied to Autumn 1 (ruling thread 2026-11-17, on the owner's standing word of 2026-11-16 that every website
     # lesson of Autumn 1 and 2 is in the board look): an Autumn 1 pack lesson of weeks 1 to 7 rebuilt on the Week 8 model page
-    # (<PW>_RE_A1_Wnn.html, HUM_LAUNCH_A1_Wnn.html or HUM_GROW_A1_Wnn.html), beside its pack page in one of the five named
+    # (<PW>_RE_A1_Wnn.html, HUM_LAUNCH_A1_Wnn.html, HUM_GROW_A1_Wnn.html or HUM_BUILD_A1_Wnn.html), beside its pack page in one of the five named
     # pack folders, that the strand record carries is current. Folders are named one by one; no other folder or name matches.
     if re.match(r'Humanities/Teaching_Packs/(RE_Autumn_(BUILD|GROW|LAUNCH)_Reviewed|HUM_Autumn_1_LAUNCH_Reviewed|HUM_Autumn_1_BUILD_GROW_Fallback)/(BUILD|GROW|LAUNCH)/Autumn_1/W0[1-7]/', path) \
-            and re.fullmatch(r'((BUILD|GROW|LAUNCH)_RE|HUM_(GROW|LAUNCH))_A1_W0[1-7]\.html', Path(path).name) and path in STRAND_PATHS:
+            and re.fullmatch(r'((BUILD|GROW|LAUNCH)_RE|HUM_(BUILD|GROW|LAUNCH))_A1_W0[1-7]\.html', Path(path).name) and path in STRAND_PATHS:
         return 'current'
     return 'reference'
 
