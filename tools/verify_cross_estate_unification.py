@@ -132,7 +132,7 @@ CATALOGUE_PINS = {
         "assets/catalogue/lesson-order.json": "e69ba00292d6b2a0f5e33e711269d1290b00a364e081a08f6a9f84e3e090fbd9",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
-        "index.html": "693f0303ff1358046b7a532ca6e96c0ef9ef4f2b110b5ca6cb7f59aa803611bd",
+        "index.html": "37c58d618211658a21c76b5955815422287c27a25cc1dc8bdf98e193c48a25e0",
         "Science/index.html": "ea568633299e42a45340143d5eeaab2de179e95a04ed43d5515ae870dbb3344a",
         "Humanities/index.html": "39f3c5d5a3560b6ad2821908699d5b74d0318a9334c3e8e1f26702424c24bdc1",
         "humanities.html": "bfb8f9383680b9c6d849931652db29289b92d5ed18c5f9616cfc0ede0614fa5c",
