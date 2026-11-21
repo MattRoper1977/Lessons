@@ -129,7 +129,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles_browser.cjs": "0c193780f901cf4d3b7013819a7488567bf7ce40a75d05dbe43c7a6971877344",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
         "tools/sw2/check_tokens_inert.cjs": "c45f009235c70d84a7e1ee8fc08fb0e6aa5e7efcc162714eff3c844cce68e9f1",
-        "assets/catalogue/lesson-order.json": "bf0f8a8c7e6fcf9fdd0a5c15ad5f9f0d790e8fb686c0ce05057097d4ba132b51",
+        "assets/catalogue/lesson-order.json": "da1906574fbf81a2fb834dde35c83f63ba46912d693fcdf77879a190ad9ec9d7",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "693f0303ff1358046b7a532ca6e96c0ef9ef4f2b110b5ca6cb7f59aa803611bd",
@@ -235,7 +235,7 @@ CATALOGUE_PINS = {
         "Science/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html": "178c695fe2dc166a80abfd26e41174e28ecfa39d4700db0870d7ee27bbffd6e8",
         "Science/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html": "509f38056bd09e903c70b0426ac55ab7ff73f7da10261a97eec11d49d7b27d1c",
         ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
-        "_glv3/tools/verify_change_boundary.py": "0da5664b9db34e58cfbbb5a8e28748b97079a7d1c350d2f5c7fde73a0a0f9b5f",
+        "_glv3/tools/verify_change_boundary.py": "485a6490b9952a45bf843a9c08c5c7c4a611efc1d10250d2ae75f51f3d303962",
         "_glv3/tools/browser_verify.mjs": "737ad30f297e061407161743f017614179cc6c56f1c9a3904bbe7c98df38c888",
         "_glv3/tools/chip_gate.mjs": "6e5d07c0c4a4855442c09c4c6ae259acfbbe123c8bbb9e643eb21c980c562a67",
         "_glv3/tools/catalogue_membership.mjs": "4d7ab03e23ee0d3c3fc934f4f0a901afc61169754db099f4f5c24dd9cce058ec",
@@ -247,7 +247,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "c7d353162037ab9e55a1028bd1f45be9fee2a1b982ab16317e2240bbbc3c7723",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "43eaff1100ff12ec9ba111f5074c90fa5c334f01dce851075240d20fa39fb1da",
         "tools/catalogue/TERM_REVIEW.json": "202e6fb09a1b163114d806f085e4712f9bfde4d1a55a89fcef4392d24a366847",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -594,7 +594,7 @@ CATALOGUE_PINS = {
         "Science/Launch/Autumn2_W7_2026-27/SHA256SUMS.txt": "c03b36ddb50b9d4e626a13c67c33f7d399f6f8d9e94a94133b1efcb42af9bdd2",
         "Science/Launch/W14-W15_2026-27/SHA256SUMS.txt": "0bb93ca935491473b9df0d0f5605f3ea67057c6a00eb78c4925e154b71c8d5eb",
         "Science/Launch/W8-W13_2026-27/SHA256SUMS.txt": "e8c3db8150760d44c9dbac0472200ac8b4043771db89c92dd5665a0232a5c1e1",
-        "tools/catalogue/SCIENCE_CHASSIS_CENSUS.json": "df545ce0be81cb676b507eb329d304cd9ef7b66f648ef92a5d3bdff2fb43318a",
+        "tools/catalogue/SCIENCE_CHASSIS_CENSUS.json": "31ab7fa52accb88cc43962c4987fd1c4b363884c152e4baaf61e618718f64ff2",
         "tools/rx3_recommended.py": "5f3d591ecc376f43ed82b4f759155df5fdc85ba315bd9e60c11439cf92c564d7",
         "tools/catalogue/check_title_slide.py": "49815bce6b54d97aed864e403d10bd49d19d886bf5a39cbe7583375ee47ab77e",
         "tools/catalogue/title_slide.py": "3e4e7e8dfa590f3e0a8e24f49939edd9be2d59e4f955aea0935caa003f104788",
@@ -1631,8 +1631,8 @@ CATALOGUE_PINS = {
         "Science/visual-learning/science-visual-payloads.js": "3f607c6cab15c006a5ac5d74821e01f0edd60c2e081fa1bcaad531ff765a16a0",
         "BUILD_ASDAN/Autumn2_W1-W6_2026-27/SHA256SUMS.txt": "211b71462d1e9d0907f7ee6adf1d00c49622ed814fb03eb1c15713e1a3c11a06",
         "BUILD_ASDAN/Autumn2_W1-W6_2026-27/START_HERE_BUILD_ASDAN_AUT2.html": "a319d8f005c7185e5aace0adfa34ceebb9212623bb73719850cbad46deffe7a8",
-        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1.html": "86bd2bae3e1d38debce07fcbbf4fa4078c08c61e02fa775d9440102d0cfe13df",
-        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1.html": "f417bcce648bc936c4809bcad2faea562b4f9aec07c9a2b389503aba75bff09f",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L1.html": "241394fc26a767c96f795a20794c828d0f9bea3aceaf00304c6136567ab080b7",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1.html": "4c7f224753926759f68d0db3535a00290e726ec51897bec593fae72b0d16529e",
         "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L1.html": "157461d424a5df82f7f270eae6aecdcbdb115143c2cc1ec0106c4e3233b526f7",
         "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L1.html": "ae4ce9d31dbd2c609082a915f1c5c37b8571c088508c3b15b4d57284fb63df88",
         "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L1.html": "e308849cc681773bd2e7927265e6f06ba9244d6f0374d24a78d0bb985716f7ae",
@@ -1662,9 +1662,9 @@ CATALOGUE_PINS = {
         "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W07/SCI_LAUNCH_A2_W07_L3_Pupil_Checkpoint.html": "1b808f8225ddd5b872227223fe044964dbc5ce05dbc21a41576bf5c33d09a87e",
         "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W01/SCI_BUILD_A2_W01_L1.html": "11fff666cdffa2dd7513535d67a9d35938aadc94a34305b5dc27ef7ac5743d66",
         "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W02/SCI_BUILD_A2_W02_L1.html": "d6f185df7bb651f93b05a3f909c04d17ce9c3936074af523a124e8c961345383",
-        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W02/SCI_BUILD_A2_W02_L2.html": "a88ecaf17eb28e3174bf773162ee6e75eec5e4c9fc9bcc785f10404c06171b5d",
-        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L2.html": "c30baf3b6deedd974ebc0efb2fdaa1363174fd0b37cab0eb35ba4c06da1cffc0",
-        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L2.html": "9dddb1210b23c03a9ea82e20c7542c6a327ad6611c22cc6cd62b215329c2ff52",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W02/SCI_BUILD_A2_W02_L2.html": "5260f6c0872e76779c6401fee95b837a94942f566a69149412437a9d0058ec7e",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W03/SCI_BUILD_A2_W03_L2.html": "0b356c21e8e74a87e1596d39e0880e7e7baa12758fde20c87c9d07710c85a241",
+        "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L2.html": "5376608497cbd8b59fb3f084e4567e319019cefc15ba04914763ea8718ebf706",
         "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W05/SCI_BUILD_A2_W05_L2.html": "3da96d21f0101c5d569b073e4a227c366395cd9bc5681910d115da8e6f801143",
         "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W06/SCI_BUILD_A2_W06_L2.html": "348d92141d0b59b5c56aa6b3ddc4cfbc435d4f91c33116c26eb7b097734f3c5f",
         "Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W07/SCI_BUILD_A2_W07_L2.html": "734a3e1c94b1750ed5f0e785dfcf6020c69ccf39658774f221f27e1c24d7607b",
@@ -4043,7 +4043,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "07ca2a186e3ca358eb02e7fe5de68607c79b070004e8e493b1a1b81e6e750bd9",
+    "lessons": "108612c1ef6982505601099eb547186cd85415b454d300ca2895ebc49a028926",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
