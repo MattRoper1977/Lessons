@@ -3238,7 +3238,7 @@ CATALOGUE_PINS = {
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W07/VOC_LAUNCH_A2_W07.html": "55d8cb0f8116c810d8426fedb6a43b91ce15d1aef683a6a38b6c736024314d63",
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L1/VOC_LAUNCH_A2_W08_L1.html": "f36d7fb4e5819639767cd627a1779709d3d7f00152c668d39c6462e44788065a",
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L2/VOC_LAUNCH_A2_W08_L2.html": "a75a50b647563adb992d86017284ba4999be3d2f3452661f57a6a27b182e0dc8",
-        "kits/help/answer.html": "c7e5be00ced0762e52edc9a0efe1cbadc132c3a9c8e12ff1dad863c38cd447c5",
+        "kits/help/answer.html": "144cb4e1482ffa58f9f79f340b778f773dbf370fd9b9cbb5fa8e6c2f3f32c8dc",
         "kits/help/bridge.html": "5c9c08a5df787dc63b9ff6c8a5934a7364f145074392ef246d2856b4fa44e3e0",
         "kits/help/kitchen.html": "a186092140dcbd5091a74ccf667001d96b21ac925a350b84d02abe5659af52ae",
         "kits/help/safer.html": "770598ea64cf70b0653fd3ad1e1264e2c18c4383c5c8784703e6ce0786f5e6e6",
@@ -3273,8 +3273,8 @@ CATALOGUE_PINS = {
         "kits/help/follow.html": "a61af395a26099e4d2c2d6e4f695ed6ceca5cf8530b645807360b4e246167d21",
         "kits/help/model.html": "07ab98301aac18a2f1e8f3534a13c040198af9cdca40fc97dec6afcd9e8dc3b9",
         "kits/help/private.html": "d672375e7bf85dbe74fb055d17f962c67179d0cf88254a0c1146abc4f6c628fb",
-        "kits/help/record.html": "81afa63219619a65f83eff898df5b4c11d313e0ecc549644224c9440a953d5af",
-        "kits/help/source.html": "6ead6e411ef4871a6b5f3ebb9d1b4a05ba1c56425a5a13e0f1c8aca8e1211d99",
+        "kits/help/record.html": "59930189850d7ab90c5cd250fd1ec13b15495759393355fc4106367ae6d4a114",
+        "kits/help/source.html": "1e2e3af88c619f6f7472b7a13972dba8bef2e825b2ea6c519a142db2853dbc8c",
         "kits/help/testclue.html": "40840aef0b895bbc51eff41a1496d2406069967e6ed0cdd70cff75abd40c41f4",
         "kits/class_tools/Catch_up_Tracker.html": "c4ed136ef403c8084bef6de8fdcdb2caebdd9ad025beddf766094368dd562270",
         "kits/class_tools/Class_names.html": "7465659a2aabfb2ba9afce1fe4ec48f6781e0c4dcbc1b7d177b7687b2a8eecb5",
@@ -4043,7 +4043,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "bdd8ae5ab5e52d0673943085c5e4d6276d0bd04386e48d6fe0695de61946b892",
+    "lessons": "848a6785cd95ed64beb1ec5b749231d1dfbc28e3f84e2d615c1a744332d88549",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
