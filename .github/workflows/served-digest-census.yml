@@ -25,6 +25,10 @@ on:
         description: Lessons commit to build from; blank means the branch this job is run on. Give the carrier pin here to measure what a Site-triggered publication builds.
         required: false
         default: ''
+      apps_ref:
+        description: MEASUREMENT-ONLY BRANCH, never merged (names flight N1-Apps, ruling thread 21 Nov 2026). Apps commit to build from; blank keeps the pinned Apps source below. Give an Apps branch head here, with the carrier as lessons_ref, to measure what the Apps caller's own publication builds.
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -53,7 +57,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: MattRoper1977/Matt-s-Apps-
-          ref: dd908441664339a27dc59f5bd0364024c7a1c231
+          ref: ${{ inputs.apps_ref || 'dd908441664339a27dc59f5bd0364024c7a1c231' }}
           path: .sources/Apps
           persist-credentials: false
 
