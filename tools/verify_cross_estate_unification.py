@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "fca91fb12a8ae291f0a9ace237eb58674e4a2f6d9a92c879a1094913501dee94"
+    "resources.json": "78938a8e6d915a25bfaefcfe4b48b325cea57873ea7dedd5f3bd4f79b5993ed8"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -123,11 +123,11 @@ CATALOGUE_PINS = {
         "_sownb/CALENDAR_SPINE.json": "607ebb2e358b4c872de473444bdee1cd112677759af392e68137ecfb7023e489",
         "_sx3/SX3_PASSES_LEDGER.md": "5ea492a8cbc2d6f1108ceedeec6d0b80bc662467183f30e69850e7cfd2c0cc25",
         "tools/sx3/pre_ci_catalogue_sweep.sh": "9848b9e4e9ccab0bd8225d26d7ffa4683c59c249bff688f33c5d665671d9f818",
-        "assets/catalogue/display-titles.json": "1aeb2476f0dad53484551775f71a64bddbb39ce4a082e09499f2685f7d3ade71",
+        "assets/catalogue/display-titles.json": "08cde156762dbb5760abb9ac691bc45f5ef8e8103bba17ec0f3ce5de6081cb32",
         "tools/catalogue/build_display_titles.py": "02c273ff45b553708e6cd770d6ecb0647d925548be911c6b7fe1370061f458e8",
         "tools/catalogue/check_display_titles.cjs": "ef27c6fabcafd05015ba988ee99b0906cabe1a519c1049635ee92b7e7c361ce1",
         "tools/catalogue/check_display_titles_browser.cjs": "0c193780f901cf4d3b7013819a7488567bf7ce40a75d05dbe43c7a6971877344",
-        "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
+        "tools/verify_lessons_chips.mjs": "f1053d15a0b9bac0c851f237a4b7e96bf2518fc4908c8c39e14fee481365767b",
         "tools/sw2/check_tokens_inert.cjs": "c45f009235c70d84a7e1ee8fc08fb0e6aa5e7efcc162714eff3c844cce68e9f1",
         "assets/catalogue/lesson-order.json": "e69ba00292d6b2a0f5e33e711269d1290b00a364e081a08f6a9f84e3e090fbd9",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
@@ -139,12 +139,12 @@ CATALOGUE_PINS = {
         "pack.html": "42935782c353525d28b9263a90a8c48e4b5ca764226444edfa68d6f664862be1",
         "assets/catalogue/pack.js": "48396bdf604a2eeb3e63f5ab18988fb2c87d0260586a18dd2f53824af3cd03de",
         "assets/catalogue/pack.css": "ba6c5c84bcff84c023f2f10ac345a159f48ea97b2e8eb542cb3e56435204d63a",
-        "assets/catalogue/pack-notes.json": "f0a440b51785ecedb045666f1a5e44c082ff6f91786940636495837639609ec2",
+        "assets/catalogue/pack-notes.json": "23e80f145de85bd871ff1008c7d7a2b5441bd6a238225c15a2862cd77149b081",
         "tools/sw2/pack_notes.py": "a81a187002a69bcecca28c9c3130f546e1aae279d5af92cf750a6f9fb04c8fe6",
         "tools/sw2/stamp_pack_page.py": "7d751c25a0a00a1602388537df236c0f79dee6facd31be15fc6e7bce38512149",
         "tools/sw2/check_pack_page.cjs": "89f6a087381c5a34342dc5738f67ad0a3d9f4bc8cfb684da451125617a606235",
         "subject.html": "38d423d526616f32212e124cbfcb5f8c2b71dcabfaace3ba61fb5425be4f1d15",
-        "assets/catalogue/hub.js": "adcc40c3d75a752ed7bc520edc45cd6ab61295a00b7136eff7d965c786c7b8c7",
+        "assets/catalogue/hub.js": "5b0d53bca57283c7df3d86cfd1487182348d346165070f5cea22b0926026c2ea",
         "assets/catalogue/hub.css": "1f9ac46a1d7876963e5d143e18d8375f798a1344d16c806e3b14fb1d8e145d64",
         "data/calendar-spine.json": "d199474b13c9d340add2c87165396d83712b0f1c9f8bd03b7b12e8fdf6af0d61",
         "Humanities/David_Cover_Autumn1_W3-W7/index.html": "4e25eb9ca8f9f93c720d88d945f3d6d79580f3362a88698fe7af75d146f01e96",
@@ -247,7 +247,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "b325bb13bb4db6c67c40d9b284b396327db06141e0dbbb321974ec523674bdfd",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "32a898ded1df5dbef21549602d3e79488bc0747207312300581c0ffc76f095bf",
         "tools/catalogue/TERM_REVIEW.json": "202e6fb09a1b163114d806f085e4712f9bfde4d1a55a89fcef4392d24a366847",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -3707,7 +3707,7 @@ CATALOGUE_PINS = {
 # catalogue refresh interleaves (additive: with them taken out, the 734 are in their reviewed order, unedited).
 CATALOGUE_ORIGINAL_ROWS = 755
 # Re-cut 2026-11-08 (ruling thread, label rule): the same 755 rows with the place word removed from their subject, family, title and desc values; no row added, removed or reordered. Previous digest d4714b20.
-CATALOGUE_ORIGINAL_ROWS_SHA256 = "15150552200dcf96089afd27ec81b5712a63aef929d07e62544dda6fa53b703b"
+CATALOGUE_ORIGINAL_ROWS_SHA256 = "4474989c663548b142fa1c5eed6a2a6abe269d7746d9aaf04212d8dc604d8d4f"
 # The appended rows are the 49 reviewed hub rows followed, since UX2 D3
 # (2026-09-08), by the companion-pack entries DERIVED from
 # data/companion-packs.json by tools/ux2/companion_catalogue.py. The count and
@@ -3738,7 +3738,7 @@ CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
 # Re-cut 2026-11-17 (ruling thread, group D pilot, on the owner's standing word of 2026-11-16): 4 reviewed rows for the Life Skills money skills Autumn 2 lessons are added as new listed pages (a2new-lifeskills-money-build-a2-w04, a2new-lifeskills-money-build-a2-w05, a2new-lifeskills-money-build-a2-w06, a2new-lifeskills-money-build-a2-w07); no other row added, removed, reordered or edited (with the 4 dropped the 865 rows digest to bca6a5ac). Previous count 865, previous digest bca6a5ac.
 # Re-cut 2026-11-17 (ruling thread, group D pilot, on the owner's standing word of 2026-11-16): 5 reviewed rows for the Life Skills Autumn 1 lessons are added as new listed pages (a1list-lifeskills-home-build-a1-w01, a1list-lifeskills-home-build-a1-w02, a1list-lifeskills-home-build-a1-w03, a1list-lifeskills-home-build-a1-w04, a1list-lifeskills-home-build-a1-w05); no other row added, removed, reordered or edited (with the 5 dropped the 869 rows digest to 1febc1ed). Previous count 869, previous digest 1febc1ed.
 # Re-cut 2026-11-17 (ruling thread, "R-RAISE for Autumn 1", on the owner's standing word of 2026-11-16): 7 reviewed rows for the Humanities Autumn 1 pack lessons of weeks 1 to 7 rebuilt on the Week 8 model page are added straight before the Autumn 2 block (a1-humanities-build-w01-the-local-history-timeline, a1-humanities-build-w02-history-detectives, a1-humanities-build-w03-why-people-came, a1-humanities-build-w04-people-who-shaped-our-lives, a1-humanities-build-w05-big-deal-or-small-deal, a1-humanities-build-w06-plan-the-story, a1-humanities-build-w07-tell-the-story); no other row added, removed, reordered or edited (with the 7 dropped the 874 rows digest to 120eb426). Previous count 874, previous digest 120eb426.
-CATALOGUE_SHELF_ROWS_SHA256 = "84fc6ef49ceb6e2b516b9d0cee939fbb1a8969251c6e2c01242399bf96f4e016"
+CATALOGUE_SHELF_ROWS_SHA256 = "742eb27be8bdd3b5b88740d9c9d36c5e70ab7811b14997546faa3af73e7a69c4"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
@@ -4418,7 +4418,7 @@ M1_RENAME_EXACT_SHA256 = {
     "tools/sx3/check_landing_titles.py": "446ca22a7adf531211bc346aea29029593e5141c699185582d12d65951409e55",
     "tools/sx3/test_admit_landing_decks.py": "536d68a8292e096a02aea30131f7e555b7591eff0f21748c8ef7d10e5e2278a7",
     "tools/ux2/add_edu_q1_companions.py": "b176374b6be6b49575e6daf42b720cc40e2df7642cf683f639ebb3bea09c5d63",
-    "tools/ux2/lesson-outcome-baseline.json": "6590bec9c3ad848e87f8fd1237abb140d0e566e33bedfece69391a980c29ff7f",
+    "tools/ux2/lesson-outcome-baseline.json": "d055cd6c5cef8a895351ee27ecc0ff9d71fc6a0d0016585a4326e7cd473758de",
     "tools/ux2/place_companion_packs.py": "3b6396a5397b6eceaa42885986f9fb7b5acc37d653ff7c2e1c6e31a25c9379bc",
     "tools/verify_fieldops_served.mjs": "af04a4099c6bb89d7787b8057f80a4aa842495b90da18b357e5b5b977344b0d7"
 }

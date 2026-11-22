@@ -133,6 +133,14 @@ jobs:
         run: |
           python3 tools/ux2/companion_catalogue.py --self-test
           python3 tools/ux2/companion_catalogue.py --check
+      - name: Public wording map is applied, old addresses resolve, and only declared fields moved from the pinned base (N3a)
+        id: public-names
+        if: ${{ !cancelled() }}
+        run: |
+          git fetch --depth=1 origin ed7cd6f6f21a7567bf9230e8011d8d6b455a8ae3
+          python3 tools/catalogue/apply_public_names.py --check
+          python3 tools/catalogue/build_old_ids.py --check
+          python3 tools/catalogue/test_public_names_map.py
       - name: Every Pack row lists its whole pack, and a page with its pack beside it links every member (tq-1, tq-2)
         id: pack-completeness
         # tq add.1: older pages reach their pack through the hub pack page and are reported hub-only.
