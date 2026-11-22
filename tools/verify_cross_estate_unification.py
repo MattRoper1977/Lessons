@@ -113,8 +113,8 @@ PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it wri
 # named byte set is checked, including additions, on every Lessons gate run.
 # Apps retains its original authored-wording comparison. This block is updated
 # in both gate copies by tools/catalogue/pin_catalogue_contract.py after review.
-# SW2 A hub wording explicitly approved by Matt, 2026-09-14; manifest/tool bytes stay pinned.
-APPS_HUB_REVIEWED_WORDING_SHA256 = "9e5a4ac6c1e9bfb04a1c0186a82fce96aa03565a02dc3f18ee1569fb4b5664bf"
+# SW2 A hub wording explicitly approved by Matt, 2026-09-14; manifest/tool bytes stay pinned. Names flight N1 (2026-11-21, ruling thread): only the place leaves the maker line and footer.
+APPS_HUB_REVIEWED_WORDING_SHA256 = "a199b801acd0b9ec09a2c42309f857d02cc3e253e79b6a496f8256ac80d2f8b7"
 
 # BEGIN REVIEWED CATALOGUE PINS
 CATALOGUE_PINS = {
@@ -749,7 +749,7 @@ CATALOGUE_PINS = {
         "tools/liveteach/lt-pick.test.js": "2dc2ed2e3cd21c315f4dd3d7b9000cf6a4b05b299cba8941a5f64db138e76c98",
         "LIVETEACH_LT1_CONTACT_SHEET.md": "364c10fc887179c0ae28bec0919146c64f4ba5960026b213d732263c047cf98c",
         "LIVETEACH_RESIDUE.md": "5a18069638e4bbfb6a4da111f68e4ac3a17f5de4c8aead731d718f794d89e400",
-        "404.html": "e899e06d5908fd29dbf3a1011f8e7e7c5c46b216a73a19835c4197b6431c58cc",
+        "404.html": "08abbae83ea2e304b14ff8470651fb75de7f5c0edd2a6364ad739afcffaac53c",
         "Build/README.txt": "84aa743004ececee3d3e9aedc295f0afc0f686124dd1b2f2f422b38c7b282a61",
         "Games/Cup_Final.html": "ba96143c03cde6a4b6c0e54b7e0b478877fde1070ef03051c7965c5dc6d1aa68",
         "Grow/README.txt": "9c2c46c4ebfb56c1ae99c7c20ee2bb73a623a3525c8f3daedf718599b7e7cfc6",
@@ -4043,7 +4043,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "01bea6495b4cecb14cc9d8df977010dd6dca40a455ab819973f046ef2ff84352",
+    "lessons": "bef156b3df7e16ec4fb1c9aa02b50ab941d5f2afd5c9b6b574046e92929301b6",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
