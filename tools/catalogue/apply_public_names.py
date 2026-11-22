@@ -30,6 +30,11 @@ JSON_FILES = (
     "assets/catalogue/pack-notes.json",
     "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json",
     "tools/ux2/lesson-outcome-baseline.json",
+    # N3b: the shelf sources and the files derived from them carry the same titles and batch labels.
+    "assets/catalogue/humanities-shelf.json",
+    "assets/catalogue/science-shelf.json",
+    "assets/catalogue/lesson-order.json",
+    "assets/catalogue/terms-and-styles.json",
 )
 PYTHON_FILES = ("tools/catalogue/pin_catalogue_contract.py",)
 

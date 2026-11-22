@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "78938a8e6d915a25bfaefcfe4b48b325cea57873ea7dedd5f3bd4f79b5993ed8"
+    "resources.json": "3aab55dde9fda68e32d83f0ce8e70f0529d02526655172aa73feede846e098db"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -123,16 +123,16 @@ CATALOGUE_PINS = {
         "_sownb/CALENDAR_SPINE.json": "607ebb2e358b4c872de473444bdee1cd112677759af392e68137ecfb7023e489",
         "_sx3/SX3_PASSES_LEDGER.md": "5ea492a8cbc2d6f1108ceedeec6d0b80bc662467183f30e69850e7cfd2c0cc25",
         "tools/sx3/pre_ci_catalogue_sweep.sh": "9848b9e4e9ccab0bd8225d26d7ffa4683c59c249bff688f33c5d665671d9f818",
-        "assets/catalogue/display-titles.json": "08cde156762dbb5760abb9ac691bc45f5ef8e8103bba17ec0f3ce5de6081cb32",
+        "assets/catalogue/display-titles.json": "2ec908e356ed84df1df92ed73ee6f4854fe62741080b046dff9c217ea5877937",
         "tools/catalogue/build_display_titles.py": "02c273ff45b553708e6cd770d6ecb0647d925548be911c6b7fe1370061f458e8",
         "tools/catalogue/check_display_titles.cjs": "ef27c6fabcafd05015ba988ee99b0906cabe1a519c1049635ee92b7e7c361ce1",
         "tools/catalogue/check_display_titles_browser.cjs": "0c193780f901cf4d3b7013819a7488567bf7ce40a75d05dbe43c7a6971877344",
-        "tools/verify_lessons_chips.mjs": "f1053d15a0b9bac0c851f237a4b7e96bf2518fc4908c8c39e14fee481365767b",
+        "tools/verify_lessons_chips.mjs": "f9e4dfb96f72cd8a34502660f987aa7fb7dc4421065e6702ca56e60e9f979c2d",
         "tools/sw2/check_tokens_inert.cjs": "c45f009235c70d84a7e1ee8fc08fb0e6aa5e7efcc162714eff3c844cce68e9f1",
-        "assets/catalogue/lesson-order.json": "e69ba00292d6b2a0f5e33e711269d1290b00a364e081a08f6a9f84e3e090fbd9",
+        "assets/catalogue/lesson-order.json": "d0562c8381449a2f0c9abd4b43f53b186cbfc5487f6fbb277ddd36c66b65800c",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
-        "index.html": "37c58d618211658a21c76b5955815422287c27a25cc1dc8bdf98e193c48a25e0",
+        "index.html": "f2670c320ee2f0614b8eac236be73f25c319a87703855e5d129150c5d924c460",
         "Science/index.html": "ea568633299e42a45340143d5eeaab2de179e95a04ed43d5515ae870dbb3344a",
         "Humanities/index.html": "39f3c5d5a3560b6ad2821908699d5b74d0318a9334c3e8e1f26702424c24bdc1",
         "humanities.html": "bfb8f9383680b9c6d849931652db29289b92d5ed18c5f9616cfc0ede0614fa5c",
@@ -144,18 +144,18 @@ CATALOGUE_PINS = {
         "tools/sw2/stamp_pack_page.py": "7d751c25a0a00a1602388537df236c0f79dee6facd31be15fc6e7bce38512149",
         "tools/sw2/check_pack_page.cjs": "89f6a087381c5a34342dc5738f67ad0a3d9f4bc8cfb684da451125617a606235",
         "subject.html": "38d423d526616f32212e124cbfcb5f8c2b71dcabfaace3ba61fb5425be4f1d15",
-        "assets/catalogue/hub.js": "5b0d53bca57283c7df3d86cfd1487182348d346165070f5cea22b0926026c2ea",
+        "assets/catalogue/hub.js": "912bd92c15148e3beea77a278876bd20ee6c936ccac87674aded5eccc36b9e4b",
         "assets/catalogue/hub.css": "1f9ac46a1d7876963e5d143e18d8375f798a1344d16c806e3b14fb1d8e145d64",
         "data/calendar-spine.json": "d199474b13c9d340add2c87165396d83712b0f1c9f8bd03b7b12e8fdf6af0d61",
         "Humanities/David_Cover_Autumn1_W3-W7/index.html": "4e25eb9ca8f9f93c720d88d945f3d6d79580f3362a88698fe7af75d146f01e96",
         "assets/catalogue/catalogue.css": "59abee137c41a8a015e42cf0b32d20b7f4e5fc8e3d236a1cd735322386bf8569",
         "assets/catalogue/catalogue.js": "a0fd3efc8356377effad7249be7222984ce92947a8143259148851dc399de5c7",
-        "assets/catalogue/lesson-navigation.js": "42e579bbef3940c24ca4360319290820305a777330b8bff79152b2cb6aa077e3",
+        "assets/catalogue/lesson-navigation.js": "2c141b38670d56c574f15061abff7041643e129f9003517ce41a902f662b65ab",
         "assets/catalogue/science-shelf.css": "b2b1eb328662d841add139ccfff107f985f17373f1ee82b8762475663097ab60",
         "assets/catalogue/science-shelf.js": "a59fe0c988a5de7d614afc6a36d7dacf14c6e3fa92c732740442e4914d00f356",
-        "assets/catalogue/terms-and-styles.json": "d3aa2262ebe80b3d8df42599299564c43d1e4087e8f81ed17984e3c0419bf60d",
-        "assets/catalogue/science-shelf.json": "6bfcac8579a72f8413e158b49460a8b853f284b8dc64bd4da4442c37e92edadf",
-        "assets/catalogue/humanities-shelf.json": "d45b8cd6e999a39fe865100740f7324978561d35d437b88b08c793975137c1ca",
+        "assets/catalogue/terms-and-styles.json": "6b775bbdb582ec37e6aa1209d49a1c9c27c6e42f8fb535921eff24689a672bdb",
+        "assets/catalogue/science-shelf.json": "56390dfd787e1d24c3b0b5f2a2177e4256a05ee3b6c02e204dfe986a7c27d9e8",
+        "assets/catalogue/humanities-shelf.json": "e3209837165898039eaf2b2d2091f5468fa622f916c4c36f9abdddaa6a243d31",
         "tools/catalogue/build_catalogue.py": "249e82b795e0fa5f1eaeb7afd00883a963d63742b50b783fa88f808737ab230d",
         "tools/catalogue/build_science_shelf.py": "396b6aeb7cb3cabe037b7af27877ae7a090e5aa1bce284409e400549d5204c24",
         "tools/catalogue/build_humanities_shelf.py": "428b4b9ecb1491f366d02217ae9f82f8b8b938f709b30c3257ad9596f6822d0f",
@@ -247,7 +247,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "32a898ded1df5dbef21549602d3e79488bc0747207312300581c0ffc76f095bf",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "9c42e0e3229d7d3dfe8f3a389f3e837bbb060cdd73336627bf2d69c431bcaf06",
         "tools/catalogue/TERM_REVIEW.json": "202e6fb09a1b163114d806f085e4712f9bfde4d1a55a89fcef4392d24a366847",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -3707,7 +3707,7 @@ CATALOGUE_PINS = {
 # catalogue refresh interleaves (additive: with them taken out, the 734 are in their reviewed order, unedited).
 CATALOGUE_ORIGINAL_ROWS = 755
 # Re-cut 2026-11-08 (ruling thread, label rule): the same 755 rows with the place word removed from their subject, family, title and desc values; no row added, removed or reordered. Previous digest d4714b20.
-CATALOGUE_ORIGINAL_ROWS_SHA256 = "4474989c663548b142fa1c5eed6a2a6abe269d7746d9aaf04212d8dc604d8d4f"
+CATALOGUE_ORIGINAL_ROWS_SHA256 = "08fb7b0be928ca54765fa399e843bd0882d5522f18797d99b206eef94d6aaad0"
 # The appended rows are the 49 reviewed hub rows followed, since UX2 D3
 # (2026-09-08), by the companion-pack entries DERIVED from
 # data/companion-packs.json by tools/ux2/companion_catalogue.py. The count and
@@ -3738,7 +3738,7 @@ CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
 # Re-cut 2026-11-17 (ruling thread, group D pilot, on the owner's standing word of 2026-11-16): 4 reviewed rows for the Life Skills money skills Autumn 2 lessons are added as new listed pages (a2new-lifeskills-money-build-a2-w04, a2new-lifeskills-money-build-a2-w05, a2new-lifeskills-money-build-a2-w06, a2new-lifeskills-money-build-a2-w07); no other row added, removed, reordered or edited (with the 4 dropped the 865 rows digest to bca6a5ac). Previous count 865, previous digest bca6a5ac.
 # Re-cut 2026-11-17 (ruling thread, group D pilot, on the owner's standing word of 2026-11-16): 5 reviewed rows for the Life Skills Autumn 1 lessons are added as new listed pages (a1list-lifeskills-home-build-a1-w01, a1list-lifeskills-home-build-a1-w02, a1list-lifeskills-home-build-a1-w03, a1list-lifeskills-home-build-a1-w04, a1list-lifeskills-home-build-a1-w05); no other row added, removed, reordered or edited (with the 5 dropped the 869 rows digest to 1febc1ed). Previous count 869, previous digest 1febc1ed.
 # Re-cut 2026-11-17 (ruling thread, "R-RAISE for Autumn 1", on the owner's standing word of 2026-11-16): 7 reviewed rows for the Humanities Autumn 1 pack lessons of weeks 1 to 7 rebuilt on the Week 8 model page are added straight before the Autumn 2 block (a1-humanities-build-w01-the-local-history-timeline, a1-humanities-build-w02-history-detectives, a1-humanities-build-w03-why-people-came, a1-humanities-build-w04-people-who-shaped-our-lives, a1-humanities-build-w05-big-deal-or-small-deal, a1-humanities-build-w06-plan-the-story, a1-humanities-build-w07-tell-the-story); no other row added, removed, reordered or edited (with the 7 dropped the 874 rows digest to 120eb426). Previous count 874, previous digest 120eb426.
-CATALOGUE_SHELF_ROWS_SHA256 = "742eb27be8bdd3b5b88740d9c9d36c5e70ab7811b14997546faa3af73e7a69c4"
+CATALOGUE_SHELF_ROWS_SHA256 = "8e33d41480691e16cba034ad6988ca6f36b2fcd80c41450210b7cf34773b2237"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable
