@@ -977,7 +977,7 @@ section.print-only { display: none; }
     return keyObj;
   }
 
-  /* mbm-adapt-v3 START · My pupils print engine v3.6 (Made by Matt). Reads device stores and #mbm-lesson-cards; writes only mbm_lesson_today_v1, mbm_adapt_log_v1, mbm_pupil_target_words_v1 and mbm_pupil_subject_v1. Runs offline only. */
+  /* mbm-adapt-v3 START · My pupils print engine v3.7.2 (Made by Matt). Reads device stores and #mbm-lesson-cards; writes only mbm_lesson_today_v1, mbm_adapt_log_v1, mbm_pupil_target_words_v1, mbm_pupil_subject_v1 and mbm_print_prefs_v1 (true/false only). Runs offline only. */
   const ADAPT_V3_CSS = [
     '#dynamicPupilPrint .ad2-banner{border:2px solid #10243a;border-radius:2mm;padding:1.4mm 2.5mm;margin:0 0 2mm 0;font-size:13pt;font-weight:700;display:flex;gap:4mm;flex-wrap:wrap}',
     '#dynamicPupilPrint .ad2-banner .ad2-next{font-weight:400}',
@@ -1133,7 +1133,31 @@ section.print-only { display: none; }
     '.ad3-view-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}',
     '.ad3-view-title{margin:0;font-size:16px;font-weight:800;color:#10243a;overflow-wrap:anywhere}',
     '.ad3-view-btns{display:flex;gap:8px;flex-wrap:wrap}',
-    '.ad3-view-scroll{max-height:52vh;overflow:auto;background:#dde5ef;border:1.5px solid #9ab0c9;border-radius:8px;padding:12px;box-sizing:border-box;max-width:100%}'
+    '.ad3-view-scroll{max-height:52vh;overflow:auto;background:#dde5ef;border:1.5px solid #9ab0c9;border-radius:8px;padding:12px;box-sizing:border-box;max-width:100%}',
+    '#dynamicPupilPrint article.ad3-blank-paper .ad3-blank-line{font-size:10.5pt;color:#64748b;margin:0}',
+    '.ad3-duplex-lbl{display:inline-flex;align-items:center;gap:6px;font-size:14.5px;font-weight:600;color:#10243a;cursor:pointer;user-select:none}',
+    '.ad3-duplex-tick{width:16px;height:16px;accent-color:#10243a;cursor:pointer}',
+    '#dynamicPupilPrint .ad3-ahc-paper .paper-body{gap:1.4mm}',
+    '#dynamicPupilPrint .ad3-ahc-sec{margin:0}',
+    '#dynamicPupilPrint .ad3-ahc-sec h2{margin:0 0 0.5mm 0;font-size:11.5pt;color:#10243a}',
+    '#dynamicPupilPrint .ad3-ahc-sec p{margin:0 0 0.5mm 0}',
+    '#dynamicPupilPrint .ad3-ahc-list,#dynamicPupilPrint .ad3-ahc-ol{margin:0;padding-left:4.5mm}',
+    '#dynamicPupilPrint .ad3-ahc-list li,#dynamicPupilPrint .ad3-ahc-ol li{margin:0 0 0.35mm 0}',
+    '#dynamicPupilPrint .ad3-ahc-tell{border:1.5px solid #10243a;border-radius:2mm;padding:1.6mm 2.2mm;margin-top:0.4mm}',
+    '#dynamicPupilPrint .ad3-ahc-tell .ad3-ticks{margin:1mm 0 1.2mm 0;gap:5mm;font-size:10.5pt !important;line-height:1.2 !important}',
+    '#dynamicPupilPrint .ad3-ahc-tell .ad3-tick-lbl{font-size:10.5pt !important;line-height:1.2 !important}',
+    '#dynamicPupilPrint .ad3-ahc-tell .ad2-tick{width:4mm;height:4mm;margin-right:1.8mm;vertical-align:-0.5mm}',
+    '#dynamicPupilPrint .ad3-ahc-pass{display:flex;align-items:flex-end;gap:2mm;margin:0.8mm 0 0 0}',
+    '#dynamicPupilPrint .ad3-ahc-pass-line{flex:1;border-bottom:1.5px solid #10243a;height:5mm}',
+    '.ad3-count-line{margin:2px 0 0 0;font-size:15px;font-weight:700;color:#10243a}',
+    '#dynamicPupilPrint .ad3-ownplan-paper .paper-body{gap:2mm}',
+    '#dynamicPupilPrint .ad3-own-sec{margin:0}',
+    '#dynamicPupilPrint .ad3-own-sec h2{margin:0 0 0.8mm 0;font-size:15pt;color:#10243a}',
+    '#dynamicPupilPrint .ad3-own-sec p{margin:0}',
+    '#dynamicPupilPrint .ad3-own-words,#dynamicPupilPrint .ad3-own-stuck{margin:0;padding-left:5.5mm}',
+    '#dynamicPupilPrint .ad3-own-words li,#dynamicPupilPrint .ad3-own-stuck li{margin:0 0 0.8mm 0}',
+    '#dynamicPupilPrint.adapt-large .ad3-own-sec h2,#dynamicPupilPrint .adapt-large .ad3-own-sec h2{font-size:19pt !important;line-height:1.25 !important}',
+    '#dynamicPupilPrint .ad3-check-box{padding:2mm 2.8mm}'
   ].join('\n');
   (function () {
     if (document.getElementById('mbm-adapt-v3-css')) return;
@@ -1169,7 +1193,9 @@ section.print-only { display: none; }
     { id: 'handson', re: /\bhands[\s-]?on\b|\bpractical\b|\bkin(?:a?e)sthetic\b|\blearn\s+by\s+doing\b|\bdo\s+it\s+with\s+(?:my|their|his|her)\s+hands\b/, label: 'Hands-on task' },
     { id: 'label', re: /\blabell?ing\b|\blabel\b(?!\s+(?:paper|on\s+(?:the\s+)?books?|books?|sheets?|folders?|trays?|files?|boxes?|notebooks?|workbooks?)\b)/, label: 'Labelling task' },
     { id: 'stretchend', re: /finish\s+with\s+(?:a\s+)?stretch|extension\s+at\s+(?:the\s+)?end|harder\s+extension|\bns\+(?!\w)|stretch\s+(?:question|task|box|at\s+(?:the\s+)?end)|extension\s+(?:task|question|box)/, label: 'Finish with a stretch' },
-    { id: 'catchupall', re: /\bcatch[\s-]?up\s+(?:every|each|most)\s+lessons?\b|\bquick\s+catch[\s-]?up\b|\bforgets?\s+(?:previous|earlier)\s+(?:lessons?|work)\b/, label: 'Catch-up every lesson' }
+    { id: 'catchupall', re: /\bcatch[\s-]?up\s+(?:every|each|most)\s+lessons?\b|\bquick\s+catch[\s-]?up\b|\bforgets?\s+(?:previous|earlier)\s+(?:lessons?|work)\b/, label: 'Catch-up every lesson' },
+    { id: 'adulthelp', re: /\badult\s+helper(?:\s+card)?\b|\bhelper\s+card\b/, label: 'Adult helper card' },
+    { id: 'ownwork', re: /\bworks?\s+(?:on\s+(?:my|his|her|their)\s+own|alone|outside\s+the\s+(?:lesson|room)|out\s+of\s+class)\b|\bstand[\s-]?alone\s+(?:packs?|sheets?)\b/, label: 'Works on my own' }
   ];
   const ADAPT_V2_STAFF = /sit|seat|front|near (the )?(door|adult|teacher|board)|ear ?defend|scribe|\bta\b|adult support|1:1|one.to.one|check.?in|prompt|praise|reward|meet and greet|laptop|computer|tablet|headphone|hearing|glasses|medical|toilet|separate room|small group|pair|buddy/;
 
@@ -1177,7 +1203,8 @@ section.print-only { display: none; }
     mbm_lesson_today_v1: 1,
     mbm_adapt_log_v1: 1,
     mbm_pupil_target_words_v1: 1,
-    mbm_pupil_subject_v1: 1
+    mbm_pupil_subject_v1: 1,
+    mbm_print_prefs_v1: 1
   };
   const AD3_TODAY_CHOICES = [
     'Enlarged print',
@@ -1201,6 +1228,8 @@ section.print-only { display: none; }
     'Labelling task',
     'Finish with a stretch',
     'Catch-up every lesson',
+    'Adult helper card',
+    'Works on my own',
     'Cream background',
     'Blue background',
     'Green background',
@@ -2578,6 +2607,9 @@ section.print-only { display: none; }
       eqb.appendChild(ad3MakeWriteLines(3));
     }
     ebx.appendChild(eqb);
+    const stUl = ad2El('ul', 'ad2-steps');
+    stUl.appendChild(ad2Tick('I reached the extension today.'));
+    ebx.appendChild(stUl);
     return ebx;
   }
 
@@ -2877,6 +2909,7 @@ section.print-only { display: none; }
 
     /* Step 1: try the v3.2 one-column layout (16pt words / 13.5pt meanings) first. */
     const p1 = ad2Paper('pupil', who, 'My word bank for this lesson', code);
+    p1.art.classList.add('ad3-keep-paper');
     if (thisWords.length) {
       const dl = ad2El('dl', 'ad2-words');
       thisWords.forEach(item => {
@@ -2921,7 +2954,7 @@ section.print-only { display: none; }
       const pageNum = pages.length + 1;
       const title = pageNum === 1 ? 'My word bank for this lesson' : ('My word bank (' + pageNum + ')');
       curPage = ad2Paper('pupil', who, title, code);
-      curPage.art.classList.add('ad3-wb-2col', 'ad3-meas-auto');
+      curPage.art.classList.add('ad3-wb-2col', 'ad3-meas-auto', 'ad3-keep-paper');
       if (pageNum === 1) addMeasExtras(curPage.art);
       meas.inner.appendChild(curPage.art);
       pages.push(curPage.art);
@@ -3073,9 +3106,278 @@ section.print-only { display: none; }
     return null;
   }
 
+  function ad3EngineItemKind(el) {
+    if (!el || el.nodeType !== 1) return '';
+    if (el.classList.contains('ad2-banner')) return 'banner';
+    if (el.classList.contains('ad2-note')) {
+      const t = String(el.textContent || '').trim();
+      if (/^Movement break:/i.test(t)) return 'move';
+      if (/^Timer:/i.test(t)) return 'timer';
+      if (/^Reader:/i.test(t)) return 'reader';
+    }
+    return '';
+  }
+
+  function ad3FindEngineItems(art) {
+    const out = { move: [], timer: [], reader: [], banner: [] };
+    if (!art) return [];
+    art.querySelectorAll('.ad2-note, .ad2-banner').forEach(el => {
+      const k = ad3EngineItemKind(el);
+      if (k && out[k]) out[k].push(el);
+    });
+    return out.move.concat(out.timer, out.reader, out.banner);
+  }
+
+  function ad3PlaceRelocatedItem(item, papers, idx) {
+    const prev = idx > 0 ? papers[idx - 1] : null;
+    const next = idx + 1 < papers.length ? papers[idx + 1] : null;
+    const target = prev || next;
+    if (!target) return false;
+    const kind = ad3EngineItemKind(item);
+    const normTxt = String(item.textContent || '').replace(/\s+/g, ' ').trim();
+    const sel = kind === 'banner' ? '.ad2-banner' : '.ad2-note';
+    const dup = [...target.querySelectorAll(sel)].some(existing =>
+      String(existing.textContent || '').replace(/\s+/g, ' ').trim() === normTxt
+    );
+    if (dup) {
+      item.remove();
+      return true;
+    }
+    const targetBody = target.querySelector('.paper-body') || target;
+    if (prev) {
+      if (kind === 'move') {
+        targetBody.appendChild(item);
+      } else {
+        const last = targetBody.lastElementChild;
+        if (last && ad3EngineItemKind(last) === 'move') {
+          last.before(item);
+        } else {
+          targetBody.appendChild(item);
+        }
+      }
+    } else {
+      targetBody.prepend(item);
+    }
+    return true;
+  }
+
+  function ad3RelocateEngineItems(holder, measurePaper, maxSheetMm) {
+    const papers = [...holder.querySelectorAll('article.paper.pupil-paper')];
+    for (let idx = 0; idx < papers.length; idx++) {
+      const art = papers[idx];
+      if (art.querySelector('.activity-box')) continue;
+      if (measurePaper(art) <= maxSheetMm) continue;
+      const items = ad3FindEngineItems(art);
+      for (let ii = 0; ii < items.length; ii++) {
+        if (measurePaper(art) <= maxSheetMm) break;
+        if (!ad3PlaceRelocatedItem(items[ii], papers, idx)) break;
+      }
+    }
+  }
+
+  function ad3AddGraphSlipWarning(holder) {
+    const slips = [...holder.querySelectorAll('article.paper.staff-paper')];
+    const slip = slips.find(a => /^Teacher slip: what this pack does/i.test(String(a.querySelector('.paperhead h1')?.textContent || '').trim()));
+    if (!slip) return;
+    const tbl = slip.querySelector('table.ad2-slip');
+    if (!tbl) return;
+    const msg = 'Check the Graph page: it may run on to a second sheet with large print.';
+    const already = [...tbl.querySelectorAll('td')].some(td => String(td.textContent || '').trim() === msg);
+    if (already) return;
+    const tr = ad2El('tr');
+    tr.appendChild(ad2El('td', '', 'Graph page'));
+    tr.appendChild(ad2El('td', '', msg));
+    (tbl.querySelector('tbody') || tbl).appendChild(tr);
+  }
+
+  function ad3StaffPaperMeta(art) {
+    const topLeft = String(art.querySelector('.paper-pathway')?.textContent || '').trim();
+    const footSpan = art.querySelector('.paperfoot span');
+    const code = String(footSpan ? footSpan.textContent : '').replace(/^Made by Matt\s*\u00b7\s*/i, '').trim();
+    return { topLeft: topLeft, code: code };
+  }
+
+  function ad3FitStaffPapers(holder, measurePaper, maxSheetMm) {
+    const queue = [...holder.querySelectorAll('article.paper.staff-paper')];
+    let qi = 0;
+    let safety = 0;
+    while (qi < queue.length && safety < 50) {
+      safety += 1;
+      const art = queue[qi];
+      const h1Text = String(art.querySelector('.paperhead h1')?.textContent || '').trim();
+      const isScript = /^Reading script for the adult/i.test(h1Text);
+      const isHelper = /^Adult helper card: how to help with this lesson/i.test(h1Text);
+      if ((!isScript && !isHelper) || measurePaper(art) <= maxSheetMm) {
+        qi += 1;
+        continue;
+      }
+
+      const meta = ad3StaffPaperMeta(art);
+      const contTitle = isScript
+        ? 'Reading script for the adult (continued)'
+        : 'Adult helper card: how to help with this lesson (continued)';
+      const cont = ad2Paper('staff', meta.topLeft, contTitle, meta.code);
+
+      if (isScript) {
+        const wrap = art.querySelector('.ad2-script');
+        if (!wrap || wrap.children.length <= 1) {
+          qi += 1;
+          continue;
+        }
+        const contWrap = ad2El('div', 'ad2-script');
+        cont.body.appendChild(contWrap);
+        while (wrap.children.length > 1 && measurePaper(art) > maxSheetMm) {
+          contWrap.prepend(wrap.lastElementChild);
+        }
+        if (wrap.children.length > 1 && wrap.lastElementChild && wrap.lastElementChild.tagName === 'H3') {
+          contWrap.prepend(wrap.lastElementChild);
+        }
+        if (contWrap.children.length) {
+          art.after(cont.art);
+          queue.splice(qi + 1, 0, cont.art);
+        }
+      } else {
+        const body = art.querySelector('.paper-body');
+        if (!body || body.children.length <= 1) {
+          qi += 1;
+          continue;
+        }
+        while (body.children.length > 1 && measurePaper(art) > maxSheetMm) {
+          cont.body.prepend(body.lastElementChild);
+        }
+        if (cont.body.children.length) {
+          art.after(cont.art);
+          queue.splice(qi + 1, 0, cont.art);
+        }
+      }
+      qi += 1;
+    }
+  }
+
+  function ad3FitAnyStaffPaper(holder, measurePaper, maxSheetMm) {
+    const queue = [...holder.querySelectorAll('article.paper.staff-paper')];
+    let qi = 0;
+    let safety = 0;
+    while (qi < queue.length && safety < 100) {
+      safety += 1;
+      const art = queue[qi];
+      if (measurePaper(art) <= maxSheetMm) {
+        qi += 1;
+        continue;
+      }
+      const body = art.querySelector('.paper-body');
+      if (!body) {
+        qi += 1;
+        continue;
+      }
+
+      const h1Text = String(art.querySelector('.paperhead h1')?.textContent || '').trim();
+      const meta = ad3StaffPaperMeta(art);
+      const baseTitle = h1Text.replace(/\s*\(continued\)\s*$/i, '').trim();
+      const contTitle = baseTitle + ' (continued)';
+      const cont = ad2Paper('staff', meta.topLeft, contTitle, meta.code);
+      const isSlip = /^Teacher slip: what this pack does/i.test(h1Text);
+      const tbl = isSlip ? body.querySelector('table.ad2-slip') : null;
+
+      if (isSlip && tbl) {
+        while (tbl.nextElementSibling && measurePaper(art) > maxSheetMm) {
+          cont.body.prepend(body.lastElementChild);
+        }
+        if (measurePaper(art) > maxSheetMm) {
+          const allRows = [...tbl.querySelectorAll('tr')].filter(
+            tr => tr.parentNode === tbl || (tr.parentNode && tr.parentNode.parentNode === tbl)
+          );
+          const headerRow = allRows.find(tr => tr.querySelector('th')) || null;
+          const dataRows = allRows.filter(tr => tr !== headerRow);
+          if (dataRows.length > 1) {
+            const contTbl = ad2El('table', 'ad2-slip');
+            let clonedHeader = null;
+            if (headerRow) {
+              clonedHeader = headerRow.cloneNode(true);
+              contTbl.appendChild(clonedHeader);
+            }
+            while (dataRows.length > 1 && measurePaper(art) > maxSheetMm) {
+              const tailRow = dataRows.pop();
+              if (clonedHeader) {
+                clonedHeader.after(tailRow);
+              } else {
+                contTbl.prepend(tailRow);
+              }
+            }
+            if (contTbl.children.length > (clonedHeader ? 1 : 0)) {
+              cont.body.prepend(contTbl);
+            }
+          }
+        }
+      } else {
+        while (body.children.length > 1 && measurePaper(art) > maxSheetMm) {
+          cont.body.prepend(body.lastElementChild);
+        }
+      }
+
+      if (cont.body.children.length) {
+        art.after(cont.art);
+        queue.splice(qi + 1, 0, cont.art);
+      }
+      qi += 1;
+    }
+  }
+
+  const AD3_TIGHTEN = true;
+
+  function ad3TightenSkip(el) {
+    if (!el || el.nodeType !== 1) return true;
+    if (el.matches('.write-line, .answer-space, .ad3-label-box, .ad3-ho-photo, .standalone-graph-holder, .ad3-help-line, img, svg, figure')) return true;
+    if (el.closest('.standalone-graph-holder, svg')) return true;
+    return false;
+  }
+
+  function ad3TryTighten(art, meas, maxSheetMm) {
+    if (!art || !meas) return false;
+    const realBody = art.querySelector('.paper-body');
+    if (!realBody) return false;
+    const cl = art.cloneNode(true);
+    cl.classList.add('ad3-meas-auto');
+    meas.inner.appendChild(cl);
+    try {
+      const clBody = cl.querySelector('.paper-body');
+      if (!clBody) return false;
+      const clEls = [clBody, ...clBody.querySelectorAll('*')];
+      const realEls = [realBody, ...realBody.querySelectorAll('*')];
+      if (clEls.length !== realEls.length) return false;
+
+      const props = ['marginTop', 'marginBottom', 'paddingTop', 'paddingBottom', 'rowGap'];
+      const changes = [];
+      for (let i = 0; i < clEls.length; i++) {
+        const el = clEls[i];
+        if (ad3TightenSkip(el)) continue;
+        const cs = window.getComputedStyle(el);
+        for (let pi = 0; pi < props.length; pi++) {
+          const prop = props[pi];
+          const px = parseFloat(cs[prop]);
+          if (Number.isFinite(px) && px > 0.1) {
+            changes.push([i, prop, (px * 0.7).toFixed(2) + 'px']);
+          }
+        }
+      }
+      if (!changes.length) return false;
+      changes.forEach(([idx, prop, val]) => {
+        clEls[idx].style[prop] = val;
+      });
+      if (meas.heightMm(cl) <= maxSheetMm) {
+        changes.forEach(([idx, prop, val]) => {
+          realEls[idx].style[prop] = val;
+        });
+        return true;
+      }
+      return false;
+    } finally {
+      cl.remove();
+    }
+  }
+
   function ad3FitGuard(holder, plan) {
     const startPapers = [...holder.querySelectorAll('article.paper.pupil-paper')];
-    if (!startPapers.length) return;
     const ids = {};
     (plan || []).forEach(p => { ids[p.id] = p; });
     const isFewer = !!ids.fewer;
@@ -3093,6 +3395,10 @@ section.print-only { display: none; }
         return h;
       }
 
+      if (startPapers.length) {
+        ad3RelocateEngineItems(holder, measurePaper, maxSheetMm);
+      }
+
       const queue = startPapers.slice();
       let qi = 0;
       let didSplit = false;
@@ -3102,6 +3408,10 @@ section.print-only { display: none; }
         safety += 1;
         const art = queue[qi];
         if (measurePaper(art) <= maxSheetMm) {
+          qi += 1;
+          continue;
+        }
+        if (art.querySelector('.standalone-graph-holder')) {
           qi += 1;
           continue;
         }
@@ -3122,6 +3432,14 @@ section.print-only { display: none; }
         if (measurePaper(art) <= maxSheetMm) {
           qi += 1;
           continue;
+        }
+
+        if (AD3_TIGHTEN && !art.querySelector('.standalone-graph-holder')) {
+          const overMm = measurePaper(art) - maxSheetMm;
+          if (overMm > 0 && overMm <= 12 && ad3TryTighten(art, meas, maxSheetMm)) {
+            qi += 1;
+            continue;
+          }
         }
 
         if (ad3IsExitSlipPaper(art)) {
@@ -3314,15 +3632,249 @@ section.print-only { display: none; }
           continue;
         }
 
+        if (art.classList.contains('ad3-ownplan-paper')) {
+          const secs = [...body.children];
+          if (secs.length > 1) {
+            const cont = ad3MakeContinuedPaper(art);
+            while (body.children.length > 1 && measurePaper(art) > maxSheetMm) {
+              cont.body.prepend(body.lastElementChild);
+            }
+            if (cont.body.children.length) {
+              art.after(cont.art);
+              queue.splice(qi + 1, 0, cont.art);
+              didSplit = true;
+            }
+            qi += 1;
+            continue;
+          }
+          const onlySec = secs[0];
+          const list = onlySec ? onlySec.querySelector('ul, ol') : null;
+          if (list && list.children.length > 1) {
+            const cont = ad3MakeContinuedPaper(art);
+            const contSec = ad2El('div', 'ad3-own-sec');
+            const contList = ad2El(list.tagName.toLowerCase(), list.className);
+            contSec.appendChild(contList);
+            cont.body.appendChild(contSec);
+            while (list.children.length > 1 && measurePaper(art) > maxSheetMm) {
+              contList.prepend(list.lastElementChild);
+            }
+            if (contList.children.length) {
+              art.after(cont.art);
+              queue.splice(qi + 1, 0, cont.art);
+              didSplit = true;
+            }
+            qi += 1;
+            continue;
+          }
+        }
+
         qi += 1;
+      }
+
+      if (startPapers.length) {
+        for (let pass = 0; pass < 2; pass++) {
+          const anyOverNoBox = [...holder.querySelectorAll('article.paper.pupil-paper')].some(
+            p => !p.querySelector('.activity-box') && ad3FindEngineItems(p).length && measurePaper(p) > maxSheetMm
+          );
+          if (!anyOverNoBox) break;
+          ad3RelocateEngineItems(holder, measurePaper, maxSheetMm);
+        }
+        const needGraphWarn = [...holder.querySelectorAll('article.paper.pupil-paper')].some(
+          p => p.querySelector('.standalone-graph-holder') && !ad3FindEngineItems(p).length && measurePaper(p) > maxSheetMm
+        );
+        if (needGraphWarn) {
+          ad3AddGraphSlipWarning(holder);
+        }
       }
 
       if (didSplit) {
         ad3RenumberPupilPages(holder);
       }
+
+      ad3FitStaffPapers(holder, measurePaper, maxSheetMm);
+      ad3FitAnyStaffPaper(holder, measurePaper, maxSheetMm);
     } finally {
       meas.cleanup();
     }
+  }
+
+  const AD3_ADULT_STAFF_RE = /adult\s+support|1:1|one[\s.-]?to[\s.-]?one|\bscribe\b|\bta\b/i;
+
+  function ad3NeedAdultHelperCard(plan, ids, ctx) {
+    if (ids.adulthelp || ids.reader) return true;
+    if (typeof ctx.todayAdult === 'string' && ctx.todayAdult.trim()) return true;
+    return (plan || []).some(p => p.id === 'staff' && AD3_ADULT_STAFF_RE.test(String(p.from || '')));
+  }
+
+  function ad3BuildAdultHelperCard(ctx, who, code, plan) {
+    const p = ad2Paper('staff', who, 'Adult helper card: how to help with this lesson', code);
+    p.art.classList.add('ad3-ahc-paper');
+    const sc = ctx.selfCard;
+
+    if (sc) {
+      const s1 = ad2El('div', 'ad3-ahc-sec');
+      s1.appendChild(ad2El('h2', '', 'The one thing to learn today'));
+      s1.appendChild(ad2El('p', '', String(sc.key_fact || '').trim() || 'See What you need to know on the sheet.'));
+      p.body.appendChild(s1);
+
+      const s2 = ad2El('div', 'ad3-ahc-sec');
+      s2.appendChild(ad2El('h2', '', 'Words to point to'));
+      const words = Array.isArray(sc.key_words) ? sc.key_words.slice(0, 5) : [];
+      if (words.length) {
+        const ul = ad2El('ul', 'ad3-ahc-list');
+        words.forEach(w => {
+          const word = w && typeof w.word === 'string' ? w.word.trim() : '';
+          const meaning = w && typeof w.meaning === 'string' ? w.meaning.trim() : '';
+          if (word) ul.appendChild(ad2El('li', '', word + (meaning ? (': ' + meaning) : '')));
+        });
+        s2.appendChild(ul);
+      } else {
+        s2.appendChild(ad2El('p', '', 'Use the key words box on the pupil\'s sheet.'));
+      }
+      p.body.appendChild(s2);
+
+      const s3 = ad2El('div', 'ad3-ahc-sec');
+      s3.appendChild(ad2El('h2', '', 'If they are stuck, re-teach it in three lines'));
+      const reteach = (sc.fix_it && Array.isArray(sc.fix_it.reteach)) ? sc.fix_it.reteach : [];
+      if (reteach.length) {
+        const ol = ad2El('ol', 'ad3-ahc-ol');
+        reteach.forEach(line => {
+          if (typeof line === 'string' && line.trim()) ol.appendChild(ad2El('li', '', line.trim()));
+        });
+        s3.appendChild(ol);
+      }
+      p.body.appendChild(s3);
+
+      const s4 = ad2El('div', 'ad3-ahc-sec');
+      s4.appendChild(ad2El('h2', '', 'Check it landed'));
+      const chk = (sc.fix_it && sc.fix_it.check && typeof sc.fix_it.check === 'object') ? sc.fix_it.check : null;
+      if (chk && chk.q) {
+        s4.appendChild(ad2El('p', '', String(chk.q).trim()));
+        const ap = ad2El('p');
+        ap.appendChild(ad2El('strong', '', 'Answer: '));
+        ap.appendChild(document.createTextNode(String(chk.a || '').trim()));
+        s4.appendChild(ap);
+      }
+      p.body.appendChild(s4);
+    } else {
+      const sNo = ad2El('div', 'ad3-ahc-sec');
+      sNo.appendChild(ad2El('p', '', "No lesson card for this lesson yet. Use the key words box on the pupil's sheet."));
+      p.body.appendChild(sNo);
+    }
+
+    const s5 = ad2El('div', 'ad3-ahc-sec');
+    s5.appendChild(ad2El('h2', '', 'How to help'));
+    const howUl = ad2El('ul', 'ad3-ahc-list');
+    [
+      'Read the instruction once. Then wait ten seconds.',
+      'Ask "What is the first step?" before you show it.',
+      'Point to the key word or the picture. Do not give the answer.',
+      'Praise the method, not the speed.',
+      'Step back as soon as the pencil is moving.'
+    ].forEach(line => howUl.appendChild(ad2El('li', '', line)));
+    s5.appendChild(howUl);
+    p.body.appendChild(s5);
+
+    const s6 = ad2El('div', 'ad3-ahc-sec');
+    s6.appendChild(ad2El('h2', '', "This pupil's help today"));
+    const helpList = [];
+    (plan || []).forEach(pl => {
+      const lbl = (pl.label && pl.label !== 'Teacher slip' && pl.label.toLowerCase() !== String(pl.from || '').toLowerCase())
+        ? (pl.label + ' (' + pl.from + ')')
+        : String(pl.from || pl.label || '').trim();
+      if (lbl && helpList.indexOf(lbl) < 0) helpList.push(lbl);
+    });
+    if (ctx.todayAdult) helpList.push('Working with: ' + ctx.todayAdult);
+    if (!helpList.length) helpList.push('Standard pack');
+    s6.appendChild(ad2El('p', '', helpList.join(' \u00b7 ')));
+    p.body.appendChild(s6);
+
+    const s7 = ad2El('div', 'ad3-ahc-sec ad3-ahc-tell');
+    s7.appendChild(ad2El('h2', '', 'Tell the teacher'));
+    const ticks = ad2El('div', 'ad3-ticks');
+    ['Did it alone', 'Did it with prompts', 'Needed me to model it'].forEach(lbl => {
+      const sp = ad2El('span', 'ad3-tick-lbl');
+      sp.appendChild(ad2El('span', 'ad2-tick'));
+      sp.appendChild(document.createTextNode(lbl));
+      ticks.appendChild(sp);
+    });
+    s7.appendChild(ticks);
+    const passP = ad2El('p', 'ad3-ahc-pass');
+    passP.appendChild(ad2El('span', '', 'One thing to pass on:'));
+    passP.appendChild(ad2El('span', 'ad3-ahc-pass-line'));
+    s7.appendChild(passP);
+    p.body.appendChild(s7);
+
+    return p.art;
+  }
+
+  function ad3BuildOwnPlanPage(ctx, ids, who, code, tierBoxHeaders) {
+    const p = ad2Paper('pupil', who, 'My plan for this lesson', code);
+    p.art.classList.add('ad3-ownplan-paper', 'ad3-keep-paper');
+    const sc = ctx.selfCard;
+
+    if (sc && typeof sc.key_fact === 'string' && sc.key_fact.trim()) {
+      const s1 = ad2El('div', 'ad3-own-sec');
+      s1.appendChild(ad2El('h2', '', 'The one thing to learn'));
+      s1.appendChild(ad2El('p', '', sc.key_fact.trim()));
+      p.body.appendChild(s1);
+    }
+
+    if (!ids.words && sc && Array.isArray(sc.key_words) && sc.key_words.length) {
+      const words = sc.key_words.slice(0, 6);
+      const ul = ad2El('ul', 'ad3-own-words');
+      words.forEach(w => {
+        const word = w && typeof w.word === 'string' ? w.word.trim() : '';
+        const meaning = w && typeof w.meaning === 'string' ? w.meaning.trim() : '';
+        if (word) ul.appendChild(ad2El('li', '', word + (meaning ? (': ' + meaning) : '')));
+      });
+      if (ul.children.length) {
+        const s2 = ad2El('div', 'ad3-own-sec');
+        s2.appendChild(ad2El('h2', '', 'My key words'));
+        s2.appendChild(ul);
+        p.body.appendChild(s2);
+      }
+    }
+
+    if (!ids.nownext && !ids.checklist && tierBoxHeaders && tierBoxHeaders.length) {
+      const s3 = ad2El('div', 'ad3-own-sec');
+      s3.appendChild(ad2El('h2', '', 'What I will do'));
+      const ul = ad2El('ul', 'ad2-steps');
+      tierBoxHeaders.forEach(hdr => ul.appendChild(ad2Tick(hdr)));
+      s3.appendChild(ul);
+      p.body.appendChild(s3);
+    }
+
+    const s4 = ad2El('div', 'ad3-own-sec');
+    s4.appendChild(ad2El('h2', '', 'If I am stuck'));
+    const stuckOl = ad2El('ol', 'ad3-own-stuck');
+    [
+      'Read the "What you need to know" box again.',
+      'Look at the worked step or the picture.',
+      'Leave a gap, do the next question, then come back.',
+      'Ask an adult, or put your help card up.'
+    ].forEach(line => stuckOl.appendChild(ad2El('li', '', line)));
+    s4.appendChild(stuckOl);
+    p.body.appendChild(s4);
+
+    return p.art;
+  }
+
+  function ad3BuildCheckBox(ids) {
+    const cbx = ad2El('section', 'activity-box ad3-check-box');
+    const cbh = ad2El('div', 'box-header');
+    cbh.appendChild(ad2El('span', 'box-num', 'Check'));
+    cbh.appendChild(ad2El('h2', '', 'Check my work'));
+    cbx.appendChild(cbh);
+    const ul = ad2El('ul', 'ad2-steps');
+    ul.appendChild(ad2Tick(ids.book ? 'I answered every question in my book.' : 'I answered every question.'));
+    ul.appendChild(ad2Tick('I used the key words.'));
+    ul.appendChild(ad2Tick('My long answers say "because".'));
+    if (ids.stretchend) {
+      ul.appendChild(ad2Tick('I tried the extension.'));
+    }
+    cbx.appendChild(ul);
+    return cbx;
   }
 
   function ad2Apply(dyn, plan, ctx) {
@@ -3339,8 +3891,52 @@ section.print-only { display: none; }
       const low = ids.tint.from.toLowerCase();
       dyn.classList.add(low.includes('blue') ? 'adapt-tint-blue' : low.includes('green') ? 'adapt-tint-green' : low.includes('pink') ? 'adapt-tint-pink' : 'adapt-tint-cream');
     }
-    if (ids.large || ids.concise || ids.words || ids.worked || ids.starter || ids.starterlong || ids.reader || ids.move || ids.time || ids.nownext || ids.recall || (ctx.arrival && ctx.arrival.route === 'CATCHUP' && !ctx.arrival.catchupAllEmpty)) {
+    if (ids.large || ids.concise || ids.words || ids.worked || ids.starter || ids.starterlong || ids.reader || ids.move || ids.time || ids.nownext || ids.recall || ids.ownwork || (ctx.arrival && ctx.arrival.route === 'CATCHUP' && !ctx.arrival.catchupAllEmpty)) {
       dyn.classList.add('ad2-flow');
+    }
+
+    const tierBoxHeaders = [];
+    if (ids.ownwork) {
+      const hasCatchupPaper = pupilPapers.some(
+        p => p.classList.contains('ad3-arrival-paper')
+          && String(p.querySelector('.paperhead h1')?.textContent || '').trim() === 'My catch-up'
+      );
+      const collected = [];
+      pupilPapers.forEach(p => {
+        if (p.classList.contains('ad3-arrival-paper') || p.classList.contains('ad3-handson-paper') || p.classList.contains('ad3-label-paper')) return;
+        p.querySelectorAll('.activity-box').forEach(bx => {
+          if (bx.classList.contains('ad3-stretch-box') || bx.classList.contains('ad3-check-box') || bx.classList.contains('ad3-recall-box')) return;
+          const h2 = String(bx.querySelector('.box-header h2')?.textContent || '').trim();
+          const bn = String(bx.querySelector('.box-header .box-num')?.textContent || '').trim();
+          const lbl = h2 ? (bn ? (bn + ': ' + h2) : h2) : bn;
+          if (lbl) {
+            collected.push({ lbl: lbl, isRoute: /^Route\s+[AB]\b/i.test(h2) });
+          }
+        });
+      });
+      if (hasCatchupPaper) {
+        tierBoxHeaders.push('My catch-up');
+        collected.forEach(item => {
+          if (!item.isRoute) tierBoxHeaders.push(item.lbl);
+        });
+      } else {
+        const routeCount = collected.filter(item => item.isRoute).length;
+        if (routeCount >= 2) {
+          let addedArrival = false;
+          collected.forEach(item => {
+            if (item.isRoute) {
+              if (!addedArrival) {
+                tierBoxHeaders.push('Arrival task: do Route A or Route B, not both');
+                addedArrival = true;
+              }
+            } else {
+              tierBoxHeaders.push(item.lbl);
+            }
+          });
+        } else {
+          collected.forEach(item => tierBoxHeaders.push(item.lbl));
+        }
+      }
     }
 
     if (ctx.selfCard) {
@@ -3497,6 +4093,22 @@ section.print-only { display: none; }
       }
     }
 
+    if (ids.ownwork) {
+      let checkAfterBox = null;
+      const nonExitPapers = pupilPapers.filter(p => !ad3IsExitSlipPaper(p) && !p.classList.contains('ad3-handson-paper') && !p.classList.contains('ad3-label-paper'));
+      for (let pi = nonExitPapers.length - 1; pi >= 0 && !checkAfterBox; pi--) {
+        const boxes = [...nonExitPapers[pi].querySelectorAll('.activity-box')];
+        if (boxes.length) checkAfterBox = boxes[boxes.length - 1];
+      }
+      if (checkAfterBox) {
+        checkAfterBox.after(ad3BuildCheckBox(ids));
+      } else {
+        const exitPaper = pupilPapers.find(p => ad3IsExitSlipPaper(p));
+        const exitBox = exitPaper ? exitPaper.querySelector('.activity-box') : null;
+        if (exitBox) exitBox.before(ad3BuildCheckBox(ids));
+      }
+    }
+
     if (ids.handson && validHandsOn) {
       const hoArt = ad3BuildHandsOnPage(validHandsOn, who, code, !!ids.book);
       const indPaper = pupilPapers.find(p => ad3IsIndependentPaper(p, lessonTitle));
@@ -3550,7 +4162,7 @@ section.print-only { display: none; }
     const willHaveRecallPage = !!(ids.recall && ctx.prev0Card && arr.route !== 'CATCHUP');
     const willHaveWbPage = !!(ids.words && (wbThisWords.length || wbPrevWords.length));
     const willHaveLabelPage = !!(ids.label && validLabel);
-    const willHaveFront = !!(ids.nownext || ids.checklist || willHaveRecallPage || willHaveWbPage || willHaveLabelPage);
+    const willHaveFront = !!(ids.ownwork || ids.nownext || ids.checklist || willHaveRecallPage || willHaveWbPage || willHaveLabelPage);
     let wbPages = [];
 
     if (ids.book || willHaveWbPage) {
@@ -3561,7 +4173,7 @@ section.print-only { display: none; }
           pupilPapers = [...dyn.querySelectorAll('article.paper')];
         }
         if (willHaveWbPage) {
-          const wbIsFirst = !ids.nownext && !ids.checklist && !willHaveRecallPage;
+          const wbIsFirst = !ids.ownwork && !ids.nownext && !ids.checklist && !willHaveRecallPage;
           wbPages = ad3BuildWordBankPages(who, code, wbThisWords, wbPrevWords, meas, {
             isFirstPupilPage: wbIsFirst,
             helpAddr: helpAddr,
@@ -3599,6 +4211,7 @@ section.print-only { display: none; }
 
     if (ids.nownext) {
       const p = ad2Paper('pupil', who, 'My now and next card', code);
+      p.art.classList.add('ad3-keep-paper');
       const nn = ad2El('div', 'ad2-nn');
       const nowBox = ad2El('div');
       nowBox.appendChild(ad2El('h2', '', 'NOW'));
@@ -3659,6 +4272,7 @@ section.print-only { display: none; }
     }
     if (cards.length) {
       const p = ad2Paper('pupil', who, 'My cards (cut out and keep on the desk)', code);
+      p.art.classList.add('ad3-keep-paper');
       const grid = ad2El('div', 'ad2-cards');
       cards.forEach(c => grid.appendChild(c));
       p.body.appendChild(grid);
@@ -3702,6 +4316,13 @@ section.print-only { display: none; }
       else front.unshift(rp.art);
     }
 
+    if (ids.ownwork) {
+      const ownPlanArt = ad3BuildOwnPlanPage(ctx, ids, who, code, tierBoxHeaders);
+      if (ids.nownext) front.splice(1, 0, ownPlanArt);
+      else front.unshift(ownPlanArt);
+    }
+
+    const needHelperCard = ad3NeedAdultHelperCard(plan, ids, ctx);
     const needSlip = !!(
       plan.length ||
       ctx.note ||
@@ -3763,6 +4384,8 @@ section.print-only { display: none; }
           : (arr.catchupAllEmpty
             ? 'No catch-up card for the last lessons yet.'
             : ('Arrival route set to catch-up for ' + (arr.cards || []).map(c => ad3PrevLessonLabel(c)).join(', ') + '.')),
+        adulthelp: 'Printed after this slip.',
+        ownwork: 'Plan page at the front, check strip at the end.',
         staff: 'Not on paper. Plan it in the room.',
         other: 'Not matched to a printed resource. Plan it yourself, or type a clearer help line in the class tools.'
       };
@@ -3772,6 +4395,12 @@ section.print-only { display: none; }
         tr.appendChild(ad2El('td', '', (pl.label !== 'Teacher slip' ? pl.label + ': ' : '') + (what[pl.id] || '')));
         table.appendChild(tr);
       });
+      if (needHelperCard && !ids.adulthelp) {
+        const ahRow = ad2El('tr');
+        ahRow.appendChild(ad2El('td', '', 'Adult helper card'));
+        ahRow.appendChild(ad2El('td', '', 'Printed after this slip.'));
+        table.appendChild(ahRow);
+      }
       const arrRow = ad2El('tr');
       arrRow.appendChild(ad2El('td', '', 'Arrival route'));
       const arrDesc = arr.catchupAll
@@ -3887,6 +4516,9 @@ section.print-only { display: none; }
       if (ctx.note) slip.body.appendChild(ad2El('p', 'ad2-note', 'Your note (you ticked print this note): ' + ctx.note));
       slip.body.appendChild(ad2El('p', 'ad2-note', 'Pupil information stays on this device. Nothing about this pupil is saved in the lesson file or sent anywhere.'));
       back.push(slip.art);
+      if (needHelperCard) {
+        back.push(ad3BuildAdultHelperCard(ctx, who, code, plan));
+      }
     }
 
     if (ids.reader && needSlip) {
@@ -3899,6 +4531,7 @@ section.print-only { display: none; }
       }
       pupilPapers.forEach(a => {
         a.querySelectorAll('.activity-box').forEach(bx => {
+          if (bx.classList.contains('ad3-check-box')) return;
           wrap.appendChild(ad2El('h3', '', ad2StepName(a.querySelector('.paperhead h1')?.textContent, lessonTitle) + ' · ' + (bx.querySelector('.box-header h2')?.textContent || '')));
           bx.querySelectorAll('.wynk-list li').forEach(li => wrap.appendChild(ad2El('p', '', 'Read: ' + li.textContent.trim())));
           bx.querySelectorAll('li.inst-line').forEach(li => {
@@ -4060,22 +4693,108 @@ section.print-only { display: none; }
     };
   }
 
-  window.buildAdaptedPupilPrint = function(pupilId, labelStr, tierName, adaptTags, printNote) {
-    const dyn = document.getElementById('dynamicPupilPrint');
-    if (!dyn) return;
-    dyn.className = 'print-only';
-    dyn.innerHTML = '';
-    const res = ad3Fill(dyn, pupilId, labelStr, tierName, adaptTags, printNote);
-    if (!res) return;
-    ad3WriteAdaptLog([res.logRow]);
-    triggerPrintSection('dynamic-pupil');
-  };
+  function ad3ReadPrintPrefs() {
+    const v = ad3LoadJson('mbm_print_prefs_v1');
+    return { duplex: !!(v && typeof v === 'object' && !Array.isArray(v) && v.duplex === true) };
+  }
 
-  window.buildAllAdaptedPupilPrint = function(list) {
-    const dyn = document.getElementById('dynamicPupilPrint');
-    if (!dyn || !Array.isArray(list) || !list.length) return;
-    dyn.className = 'print-only ad2-flow';
-    dyn.innerHTML = '';
+  function ad3SavePrintPrefs(on) {
+    return ad3SaveJson('mbm_print_prefs_v1', {
+      duplex: !!on,
+      saved: new Date().toISOString()
+    });
+  }
+
+  function ad3MakeDuplexTick() {
+    const lbl = ad2El('label', 'ad3-duplex-lbl');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.className = 'ad3-duplex-tick';
+    cb.checked = ad3ReadPrintPrefs().duplex;
+    cb.addEventListener('change', () => {
+      const on = !!cb.checked;
+      ad3SavePrintPrefs(on);
+      document.querySelectorAll('input.ad3-duplex-tick').forEach(el => {
+        el.checked = on;
+      });
+    });
+    lbl.appendChild(cb);
+    lbl.appendChild(document.createTextNode(' Printing on both sides'));
+    return lbl;
+  }
+
+  function ad3PaperRuns(unit) {
+    const papers = [...unit.querySelectorAll('article.paper')];
+    const runs = [];
+    papers.forEach(p => {
+      const kind = p.classList.contains('staff-paper')
+        ? 'staff'
+        : (p.classList.contains('pupil-paper') ? 'pupil' : '');
+      if (!kind) return;
+      if (!runs.length || runs[runs.length - 1].kind !== kind) {
+        runs.push({ kind: kind, first: p, count: 1 });
+      } else {
+        runs[runs.length - 1].count += 1;
+      }
+    });
+    return runs;
+  }
+
+  function ad3MakeBlankPaper() {
+    const p = ad2Paper('pupil', '', '', '');
+    p.art.classList.remove('pupil-paper');
+    p.art.classList.add('ad3-blank-paper');
+    const pathSpan = p.art.querySelector('.paper-pathway');
+    if (pathSpan) pathSpan.remove();
+    const h1 = p.art.querySelector('.paperhead h1');
+    if (h1) h1.remove();
+    const foot = p.art.querySelector('.paperfoot');
+    if (foot) foot.remove();
+    p.body.appendChild(ad2El('p', 'ad3-blank-line', 'Blank on purpose (printing on both sides)'));
+    return p.art;
+  }
+
+  function ad3DuplexBlankTargets(units) {
+    const targets = [];
+    let placed = 0;
+    (units || []).forEach(u => {
+      let prevKind = '';
+      let prevKeep = false;
+      [...u.querySelectorAll('article.paper')].forEach(p => {
+        if (p.classList.contains('ad3-blank-paper')) return;
+        const kind = p.classList.contains('staff-paper')
+          ? 'staff'
+          : (p.classList.contains('pupil-paper') ? 'pupil' : '');
+        if (!kind) return;
+        const keep = p.classList.contains('ad3-keep-paper');
+        const newRun = kind !== prevKind;
+        const needFront = newRun || keep || prevKeep;
+        if (needFront && placed % 2 === 1) {
+          targets.push(p);
+          placed += 1;
+        }
+        placed += 1;
+        prevKind = kind;
+        prevKeep = keep;
+      });
+    });
+    return targets;
+  }
+
+  function ad3DuplexBlankCount(units) {
+    return ad3DuplexBlankTargets(units).length;
+  }
+
+  function ad3ApplyDuplex(dyn) {
+    if (!dyn || !ad3ReadPrintPrefs().duplex) return;
+    const boxUnits = [...dyn.children].filter(ch => ch.classList && ch.classList.contains('ad2-one'));
+    const units = boxUnits.length ? boxUnits : [dyn];
+    ad3DuplexBlankTargets(units).forEach(p => {
+      p.before(ad3MakeBlankPaper());
+    });
+  }
+
+  function ad3BuildJobUnits(list) {
     const cards = ad3LoadCards();
     const shared = {
       cards: cards,
@@ -4090,17 +4809,41 @@ section.print-only { display: none; }
       iedpStore: ad3LoadJson('mbm_iedp_targets_v1'),
       targetStore: ad3LoadTargetWords()
     };
+    const units = [];
     const logRows = [];
-    list.forEach(item => {
+    (list || []).forEach(item => {
       const box = ad2El('div', 'ad2-one');
       const res = ad3Fill(box, item.id, item.disp, item.tier, item.tags, item.note, shared, item.handoverCu ? { handoverCu: true } : null);
       if (res) {
         logRows.push(res.logRow);
-        dyn.appendChild(box);
+        units.push(box);
       }
     });
-    if (!logRows.length) return;
-    ad3WriteAdaptLog(logRows);
+    return { units: units, logRows: logRows };
+  }
+
+  window.buildAdaptedPupilPrint = function(pupilId, labelStr, tierName, adaptTags, printNote) {
+    const dyn = document.getElementById('dynamicPupilPrint');
+    if (!dyn) return;
+    dyn.className = 'print-only';
+    dyn.innerHTML = '';
+    const res = ad3Fill(dyn, pupilId, labelStr, tierName, adaptTags, printNote);
+    if (!res) return;
+    ad3WriteAdaptLog([res.logRow]);
+    ad3ApplyDuplex(dyn);
+    triggerPrintSection('dynamic-pupil');
+  };
+
+  window.buildAllAdaptedPupilPrint = function(list) {
+    const dyn = document.getElementById('dynamicPupilPrint');
+    if (!dyn || !Array.isArray(list) || !list.length) return;
+    dyn.className = 'print-only ad2-flow';
+    dyn.innerHTML = '';
+    const built = ad3BuildJobUnits(list);
+    if (!built.logRows.length) return;
+    built.units.forEach(u => dyn.appendChild(u));
+    ad3WriteAdaptLog(built.logRows);
+    ad3ApplyDuplex(dyn);
     triggerPrintSection('dynamic-pupil');
   };
 
@@ -4209,7 +4952,7 @@ section.print-only { display: none; }
     const adultLbl = ad2El('label');
     adultLbl.setAttribute('for', adultId);
     adultLbl.appendChild(document.createTextNode('Working with (adult) '));
-    adultLbl.appendChild(ad2El('span', 'ad3-hint', '— teacher slip only'));
+    adultLbl.appendChild(ad2El('span', 'ad3-hint', '— staff pages only'));
     const adultIn = ad2El('input', 'ad3-input');
     adultIn.type = 'text';
     adultIn.id = adultId;
@@ -4412,7 +5155,8 @@ section.print-only { display: none; }
       cu: cuParsed.list,
       cuSet: cuParsed.set,
       only: only,
-      view: view
+      view: view,
+      showNames: false
     };
   }
 
@@ -4472,10 +5216,40 @@ section.print-only { display: none; }
     styleEl.textContent = '@media screen {\n' + cssLines.join('\n') + '\n}';
   }
 
+  function ad3MakeNamesToggleBtn(privateMode) {
+    const btn = ad2El('button', 'act', privateMode ? 'Show names' : 'Hide names');
+    btn.type = 'button';
+    btn.addEventListener('click', () => {
+      if (!ad3ActiveHandover) return;
+      ad3ActiveHandover.showNames = !ad3ActiveHandover.showNames;
+      renderMyPupilsTab();
+    });
+    return btn;
+  }
+
+  function ad3MakeDismissBtn(privateMode) {
+    const btn = ad2El('button', 'act', 'Not now');
+    btn.type = 'button';
+    btn.addEventListener('click', () => {
+      ad3ActiveHandover = null;
+      ad3RemoveViewStyle();
+      renderMyPupilsTab();
+      if (privateMode) {
+        const dlg = document.getElementById('mypupils');
+        if (dlg && dlg.open) {
+          if (typeof dlg.close === 'function') dlg.close();
+          else dlg.removeAttribute('open');
+        }
+      }
+    });
+    return btn;
+  }
+
   function renderMyPupilsTab() {
     const host = document.getElementById('myPupilsBody');
     if (!host) return;
     const handover = ad3ActiveHandover;
+    const privateMode = !!(handover && !handover.showNames);
     const keyObj = ad3LoadJson('mbm_pupil_key_v1');
     const profObj = ad3LoadJson('mbm_pupil_profile_v1');
     const labels = resolveLabelMap(keyObj);
@@ -4525,6 +5299,12 @@ section.print-only { display: none; }
       ad3LastNotice = '';
     }
 
+    const cards = ad3LoadCards();
+    const noCardMsg = 'No lesson card for this lesson yet. Catch-up, recall, stretch, hands-on and labelling pages will not print. Everything else will.';
+    if (!cards.self) {
+      host.appendChild(ad2El('p', 'ad3-ho-warn', noCardMsg));
+    }
+
     if (!entries.length) {
       ad3RemoveViewStyle();
       if (handover) {
@@ -4532,19 +5312,21 @@ section.print-only { display: none; }
         bar.setAttribute('role', 'region');
         bar.setAttribute('aria-label', 'Lesson packs from My tools');
         bar.appendChild(ad2El('p', 'ad3-ho-title', 'Packs for this lesson: 0 pupils'));
+        if (!cards.self) {
+          bar.appendChild(ad2El('p', 'ad3-ho-warn', noCardMsg));
+        }
         const bRow = ad2El('div', 'ad3-ho-btns');
         const pBtn = ad2El('button', 'act primary', handover.only ? 'Print this pack' : 'Print 0 packs (one job)');
         pBtn.type = 'button';
         pBtn.disabled = true;
-        const dismissBtn = ad2El('button', 'act', 'Not now');
-        dismissBtn.type = 'button';
-        dismissBtn.addEventListener('click', () => {
-          ad3ActiveHandover = null;
-          ad3RemoveViewStyle();
-          renderMyPupilsTab();
-        });
+        const countBtn = ad2El('button', 'act', 'Count sheets');
+        countBtn.type = 'button';
+        countBtn.disabled = true;
         bRow.appendChild(pBtn);
-        bRow.appendChild(dismissBtn);
+        bRow.appendChild(countBtn);
+        bRow.appendChild(ad3MakeNamesToggleBtn(privateMode));
+        bRow.appendChild(ad3MakeDismissBtn(privateMode));
+        bRow.appendChild(ad3MakeDuplexTick());
         bar.appendChild(bRow);
         host.appendChild(bar);
       }
@@ -4566,7 +5348,6 @@ section.print-only { display: none; }
       return;
     }
 
-    const cards = ad3LoadCards();
     const lessonCode = ad3GetLessonCode(cards);
     const brandSubject = ad3GetBrandSubject();
     const todayStore = ad3LoadTodayStore();
@@ -4579,11 +5360,13 @@ section.print-only { display: none; }
     const all = [];
     const toPrint = [];
     const catchupTags = [];
+    const noCatchupTags = [];
     const skippedTags = [];
     const noPathwayTags = [];
 
     entries.forEach(({ normId, rec }) => {
       const disp = ad3PupilDisp(labels, normId);
+      const shownDisp = privateMode ? ('Pupil ' + normId) : disp;
       const baseTier = ad2Tier(rec);
       const todayItem = ad3GetTodayItem(todayStore, lessonCode, normId);
       const subjectItem = ad3GetSubjectItem(subjectStore, normId, brandSubject);
@@ -4601,19 +5384,24 @@ section.print-only { display: none; }
 
       all.push(printItem);
       if (isSkipped) {
-        skippedTags.push(disp);
+        skippedTags.push(shownDisp);
       } else {
         toPrint.push(printItem);
-        if (arrival.route === 'CATCHUP') catchupTags.push(disp);
+        if (arrival.route === 'CATCHUP') {
+          catchupTags.push(shownDisp);
+          const noCatchupCard = !!arrival.catchupAllEmpty || !!arrival.handoverCuEmpty || !(arrival.cards || []).some(c => c && c.catch_up);
+          if (noCatchupCard) noCatchupTags.push(shownDisp);
+        }
       }
       if (!String((rec && rec.group) || '').trim()) {
-        noPathwayTags.push(disp);
+        noPathwayTags.push(shownDisp);
       }
 
       rows.push({
         normId: normId,
         rec: rec,
         disp: disp,
+        shownDisp: shownDisp,
         baseTier: baseTier,
         todayItem: todayItem,
         subjectItem: subjectItem,
@@ -4635,11 +5423,17 @@ section.print-only { display: none; }
       bar.setAttribute('role', 'region');
       bar.setAttribute('aria-label', 'Lesson packs from My tools');
       const countTitle = (handover.only && rows.length === 1)
-        ? ('Packs for this lesson: 1 pupil · ' + rows[0].disp)
+        ? ('Packs for this lesson: 1 pupil · ' + rows[0].shownDisp)
         : ('Packs for this lesson: ' + toPrint.length + (toPrint.length === 1 ? ' pupil' : ' pupils'));
       bar.appendChild(ad2El('p', 'ad3-ho-title', countTitle));
+      if (!cards.self) {
+        bar.appendChild(ad2El('p', 'ad3-ho-warn', noCardMsg));
+      }
       if (catchupTags.length) {
         bar.appendChild(ad2El('p', 'ad3-ho-line', 'Catch-up first: ' + catchupTags.join(', ')));
+      }
+      if (noCatchupTags.length) {
+        bar.appendChild(ad2El('p', 'ad3-ho-warn', 'No catch-up card for the last lesson yet: ' + noCatchupTags.join(', ') + '.'));
       }
       if (skippedTags.length) {
         bar.appendChild(ad2El('p', 'ad3-ho-line', 'Left out, out today: ' + skippedTags.join(', ')));
@@ -4658,15 +5452,35 @@ section.print-only { display: none; }
       } else {
         printBtn.addEventListener('click', () => window.buildAllAdaptedPupilPrint(toPrint));
       }
-      const dismissBtn = ad2El('button', 'act', 'Not now');
-      dismissBtn.type = 'button';
-      dismissBtn.addEventListener('click', () => {
-        ad3ActiveHandover = null;
-        ad3RemoveViewStyle();
-        renderMyPupilsTab();
-      });
+      const countBtn = ad2El('button', 'act', 'Count sheets');
+      countBtn.type = 'button';
+      if (!toPrint.length) {
+        countBtn.disabled = true;
+      } else {
+        countBtn.addEventListener('click', () => {
+          const built = ad3BuildJobUnits(toPrint);
+          let pCount = 0;
+          built.units.forEach(u => { pCount += u.querySelectorAll('article.paper').length; });
+          const bCount = ad3DuplexBlankCount(built.units);
+          const sCount = Math.ceil((pCount + bCount) / 2);
+          const msg = toPrint.length + (toPrint.length === 1 ? ' pack, ' : ' packs, ')
+            + pCount + (pCount === 1 ? ' page. ' : ' pages. ')
+            + 'On one side: ' + pCount + (pCount === 1 ? ' sheet. ' : ' sheets. ')
+            + 'On both sides: ' + sCount + (sCount === 1 ? ' sheet.' : ' sheets.');
+          let line = bar.querySelector('.ad3-count-line');
+          if (!line) {
+            line = ad2El('p', 'ad3-count-line', msg);
+            bRow.after(line);
+          } else {
+            line.textContent = msg;
+          }
+        });
+      }
       bRow.appendChild(printBtn);
-      bRow.appendChild(dismissBtn);
+      bRow.appendChild(countBtn);
+      bRow.appendChild(ad3MakeNamesToggleBtn(privateMode));
+      bRow.appendChild(ad3MakeDismissBtn(privateMode));
+      bRow.appendChild(ad3MakeDuplexTick());
       bar.appendChild(bRow);
       host.appendChild(bar);
 
@@ -4720,47 +5534,54 @@ section.print-only { display: none; }
       }
     }
 
-    host.appendChild(ad2El('p', '', 'Each help line saved in the class tools on this device becomes a real printed resource: a now and next card, short ticked steps, a word bank page, reader script, break and help cards, arrival plan, and a teacher slip. Nothing is stored in this lesson file or sent online.'));
+    if (privateMode) {
+      host.appendChild(ad2El('p', '', 'Names and help lines are hidden until you press Show names. Printing still uses every saved setting. Nothing is stored in this lesson file or sent online.'));
+    } else {
+      host.appendChild(ad2El('p', '', 'Each help line saved in the class tools on this device becomes a real printed resource: a now and next card, short ticked steps, a word bank page, reader script, break and help cards, arrival plan, and a teacher slip. Nothing is stored in this lesson file or sent online.'));
+    }
 
     rows.forEach(r => {
-      const { normId, rec, disp, baseTier, todayItem, subjectItem, effectiveTier, standingTags, mergedTags, note, plan, isSkipped, handoverCu, arrival, pupilTarget, printItem } = r;
+      const { normId, rec, disp, shownDisp, baseTier, todayItem, subjectItem, effectiveTier, standingTags, mergedTags, note, plan, isSkipped, handoverCu, arrival, pupilTarget, printItem } = r;
 
       const cardEl = ad2El('div', isSkipped ? 'pupil-adapt-card ad3-card ad3-card-skipped' : 'pupil-adapt-card ad3-card');
       const topRow = ad2El('div', 'ad3-row-top');
       const left = ad2El('div', 'ad3-row-left');
-      left.appendChild(ad2El('strong', '', disp + ' · ' + effectiveTier));
+      left.appendChild(ad2El('strong', '', privateMode ? shownDisp : (shownDisp + ' · ' + effectiveTier)));
 
-      const tagWrap = ad2El('div');
-      if (mergedTags.length) mergedTags.forEach(tg => tagWrap.appendChild(ad2El('span', 'tag-chip', tg)));
-      else tagWrap.textContent = 'Standard ' + effectiveTier + ' chunked set';
-      left.appendChild(tagWrap);
+      if (privateMode) {
+        if (isSkipped) {
+          left.appendChild(ad2El('p', 'ad3-skip-note', 'Out today — left out of this print.'));
+        }
+        left.appendChild(ad2El('p', 'ad3-meta', 'Help lines hidden'));
+      } else {
+        const tagWrap = ad2El('div');
+        if (mergedTags.length) mergedTags.forEach(tg => tagWrap.appendChild(ad2El('span', 'tag-chip', tg)));
+        else tagWrap.textContent = 'Standard ' + effectiveTier + ' chunked set';
+        left.appendChild(tagWrap);
 
-      if (isSkipped) {
-        left.appendChild(ad2El('p', 'ad3-skip-note', 'Out today — left out of this print.'));
-      }
-      left.appendChild(ad2El('p', 'ad3-meta', ad3ArrivalRowText(arrival)));
-      const subjSum = ad3SubjectSummaryText(brandSubject, subjectItem);
-      if (subjSum) left.appendChild(ad2El('p', 'ad3-subj-sum', subjSum));
-      const todaySum = ad3TodaySummaryText(todayItem);
-      if (todaySum) left.appendChild(ad2El('p', 'ad3-today-sum', todaySum));
+        if (isSkipped) {
+          left.appendChild(ad2El('p', 'ad3-skip-note', 'Out today — left out of this print.'));
+        }
+        left.appendChild(ad2El('p', 'ad3-meta', ad3ArrivalRowText(arrival)));
+        const subjSum = ad3SubjectSummaryText(brandSubject, subjectItem);
+        if (subjSum) left.appendChild(ad2El('p', 'ad3-subj-sum', subjSum));
+        const todaySum = ad3TodaySummaryText(todayItem);
+        if (todaySum) left.appendChild(ad2El('p', 'ad3-today-sum', todaySum));
 
-      if (plan.length) {
-        const pl = ad2El('p', 'ad2-plan');
-        pl.appendChild(ad2El('b', '', 'Prints: '));
-        const bits = [];
-        plan.forEach(p => { if (p.id !== 'staff' && p.id !== 'other' && bits.indexOf(p.label) < 0) bits.push(p.label); });
-        bits.push('teacher slip');
-        pl.appendChild(document.createTextNode(bits.join(' · ')));
-        const slipOnly = plan.filter(p => p.id === 'staff' || p.id === 'other').map(p => p.from);
-        if (slipOnly.length) pl.appendChild(document.createTextNode(' (on the slip only: ' + slipOnly.join(', ') + ')'));
-        left.appendChild(pl);
+        if (plan.length) {
+          const pl = ad2El('p', 'ad2-plan');
+          pl.appendChild(ad2El('b', '', 'Prints: '));
+          const bits = [];
+          plan.forEach(p => { if (p.id !== 'staff' && p.id !== 'other' && bits.indexOf(p.label) < 0) bits.push(p.label); });
+          bits.push('teacher slip');
+          pl.appendChild(document.createTextNode(bits.join(' · ')));
+          const slipOnly = plan.filter(p => p.id === 'staff' || p.id === 'other').map(p => p.from);
+          if (slipOnly.length) pl.appendChild(document.createTextNode(' (on the slip only: ' + slipOnly.join(', ') + ')'));
+          left.appendChild(pl);
+        }
       }
 
       const actions = ad2El('div', 'ad3-row-actions');
-      const todayBtn = ad2El('button', 'act', 'Today');
-      todayBtn.type = 'button';
-      todayBtn.setAttribute('aria-expanded', 'false');
-
       const pBtn = ad2El('button', 'act primary', 'Print adapted pack');
       pBtn.type = 'button';
       pBtn.addEventListener('click', () => {
@@ -4768,31 +5589,42 @@ section.print-only { display: none; }
         else window.buildAdaptedPupilPrint(normId, disp, baseTier, standingTags, note);
       });
 
-      actions.appendChild(todayBtn);
-      actions.appendChild(pBtn);
-      topRow.appendChild(left);
-      topRow.appendChild(actions);
-      cardEl.appendChild(topRow);
+      if (privateMode) {
+        actions.appendChild(pBtn);
+        topRow.appendChild(left);
+        topRow.appendChild(actions);
+        cardEl.appendChild(topRow);
+      } else {
+        const todayBtn = ad2El('button', 'act', 'Today');
+        todayBtn.type = 'button';
+        todayBtn.setAttribute('aria-expanded', 'false');
 
-      const boxNums = ad3GetLessonBoxNumbers(effectiveTier);
-      const panel = ad3BuildTodayPanel({
-        normId: normId,
-        rec: rec,
-        baseTier: baseTier,
-        todayItem: todayItem,
-        subjectItem: subjectItem,
-        brandSubject: brandSubject,
-        pupilTarget: pupilTarget,
-        lessonCode: lessonCode,
-        boxNums: boxNums,
-        allEntries: allProfileEntries
-      });
-      todayBtn.addEventListener('click', () => {
-        const opening = panel.hidden;
-        panel.hidden = !opening;
-        todayBtn.setAttribute('aria-expanded', opening ? 'true' : 'false');
-      });
-      cardEl.appendChild(panel);
+        actions.appendChild(todayBtn);
+        actions.appendChild(pBtn);
+        topRow.appendChild(left);
+        topRow.appendChild(actions);
+        cardEl.appendChild(topRow);
+
+        const boxNums = ad3GetLessonBoxNumbers(effectiveTier);
+        const panel = ad3BuildTodayPanel({
+          normId: normId,
+          rec: rec,
+          baseTier: baseTier,
+          todayItem: todayItem,
+          subjectItem: subjectItem,
+          brandSubject: brandSubject,
+          pupilTarget: pupilTarget,
+          lessonCode: lessonCode,
+          boxNums: boxNums,
+          allEntries: allProfileEntries
+        });
+        todayBtn.addEventListener('click', () => {
+          const opening = panel.hidden;
+          panel.hidden = !opening;
+          todayBtn.setAttribute('aria-expanded', opening ? 'true' : 'false');
+        });
+        cardEl.appendChild(panel);
+      }
       host.appendChild(cardEl);
     });
 
@@ -4802,6 +5634,7 @@ section.print-only { display: none; }
       allBtn.type = 'button';
       allBtn.addEventListener('click', () => window.buildAllAdaptedPupilPrint(all));
       allRow.appendChild(allBtn);
+      allRow.appendChild(ad3MakeDuplexTick());
       host.appendChild(allRow);
     } else if (!handover.only && toPrint.length) {
       const allRow = ad2El('div', 'btn-row');
@@ -4809,6 +5642,7 @@ section.print-only { display: none; }
       allBtn.type = 'button';
       allBtn.addEventListener('click', () => window.buildAllAdaptedPupilPrint(toPrint));
       allRow.appendChild(allBtn);
+      allRow.appendChild(ad3MakeDuplexTick());
       host.appendChild(allRow);
     }
   }
@@ -4821,6 +5655,7 @@ section.print-only { display: none; }
     dlg.addEventListener('close', () => {
       ad3ActiveHandover = null;
       ad3RemoveViewStyle();
+      document.querySelectorAll('#myPupilsBody .ad3-count-line').forEach(el => el.remove());
     });
   }
 
