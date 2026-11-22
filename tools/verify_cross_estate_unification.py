@@ -128,7 +128,10 @@ CATALOGUE_PINS = {
         "tools/catalogue/check_display_titles.cjs": "ef27c6fabcafd05015ba988ee99b0906cabe1a519c1049635ee92b7e7c361ce1",
         "tools/catalogue/check_display_titles_browser.cjs": "0c193780f901cf4d3b7013819a7488567bf7ce40a75d05dbe43c7a6971877344",
         "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
-        "tools/sw2/check_tokens_inert.cjs": "c45f009235c70d84a7e1ee8fc08fb0e6aa5e7efcc162714eff3c844cce68e9f1",
+        # Re-cut 2026-11-22 (ruling thread 22 November): PUBLISHED re-derived by tools/sw2/pin_published_digests.py --write from the
+        # Site cb5654dd admission registry (lessons "" fddec24e, subject.html 081595ee, apps "" 5009ba10), each equal to the live page
+        # measured the same hour; digest taken from the edited file, never typed.
+        "tools/sw2/check_tokens_inert.cjs": "63ce83d4472c99573162e02bcc4d67127527fbf7a6df726c4b32f68e0c7ad952",
         "assets/catalogue/lesson-order.json": "52ecf9155b5dcc92c12e4fdeac0251dffa3d2abbdba358d8ca4bf78d525842cd",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",

@@ -19,7 +19,7 @@ const BASE=arg('--base',process.env.MBM_BASE_URL);
 if(!BASE)throw Error('--base must name the project mount or deployed project URL');
 const OUT=arg('--output','audit-output/sw2-token-inertness.json');
 // Actual unchanged pinned-builder output measurements, not raw-source digests.
-const PUBLISHED={"lessons":{"":"c8f5466126b01d06de42b257a030d56726ff77b8a38301b2992f7e36d1e60a9b","subject.html":"fac42eaac3b967981ad482b9af2cce2c440641be0e6f9d3fdc99a1c5dd4d2259"},"apps":{"":"92383e23724914edb1acb319825e348fba82edbc61c960dd4de4f6f7c0a2a080"}};
+const PUBLISHED={"lessons":{"":"fddec24edcda60a147568623ea3e70374d5a46dd666c61828b417c6395b8ccd6","subject.html":"081595ee0b35e468bc5ed0be46ad38a05cf8bfb546042bddd9eb9a69a14441ee"},"apps":{"":"5009ba1092641c8224d5d5bd629df296f0bd6f8156d5d37de449207d303404f8"}};
 const published=process.argv.includes('--published');
 const routes=KIND==='lessons'?['','subject.html','subject.html?subject=science']:[''];
 async function waitForPublished(){
