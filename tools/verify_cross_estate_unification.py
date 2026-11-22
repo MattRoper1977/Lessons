@@ -144,7 +144,7 @@ CATALOGUE_PINS = {
         "tools/sw2/stamp_pack_page.py": "7d751c25a0a00a1602388537df236c0f79dee6facd31be15fc6e7bce38512149",
         "tools/sw2/check_pack_page.cjs": "89f6a087381c5a34342dc5738f67ad0a3d9f4bc8cfb684da451125617a606235",
         "subject.html": "38d423d526616f32212e124cbfcb5f8c2b71dcabfaace3ba61fb5425be4f1d15",
-        "assets/catalogue/hub.js": "f5c4185860f95c339e005e5f28eb031824e8d601befa8eb3fdf0135bfeef1d05",
+        "assets/catalogue/hub.js": "5b0d53bca57283c7df3d86cfd1487182348d346165070f5cea22b0926026c2ea",
         "assets/catalogue/hub.css": "1f9ac46a1d7876963e5d143e18d8375f798a1344d16c806e3b14fb1d8e145d64",
         "data/calendar-spine.json": "d199474b13c9d340add2c87165396d83712b0f1c9f8bd03b7b12e8fdf6af0d61",
         "Humanities/David_Cover_Autumn1_W3-W7/index.html": "4e25eb9ca8f9f93c720d88d945f3d6d79580f3362a88698fe7af75d146f01e96",
