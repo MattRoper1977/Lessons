@@ -127,7 +127,7 @@ CATALOGUE_PINS = {
         "tools/catalogue/build_display_titles.py": "02c273ff45b553708e6cd770d6ecb0647d925548be911c6b7fe1370061f458e8",
         "tools/catalogue/check_display_titles.cjs": "ef27c6fabcafd05015ba988ee99b0906cabe1a519c1049635ee92b7e7c361ce1",
         "tools/catalogue/check_display_titles_browser.cjs": "0c193780f901cf4d3b7013819a7488567bf7ce40a75d05dbe43c7a6971877344",
-        "tools/verify_lessons_chips.mjs": "e417afd94ae4f3a450caab2edf4b6c41d14e4588f070d0ad822263e30a86cf39",
+        "tools/verify_lessons_chips.mjs": "f1053d15a0b9bac0c851f237a4b7e96bf2518fc4908c8c39e14fee481365767b",
         "tools/sw2/check_tokens_inert.cjs": "c45f009235c70d84a7e1ee8fc08fb0e6aa5e7efcc162714eff3c844cce68e9f1",
         "assets/catalogue/lesson-order.json": "e69ba00292d6b2a0f5e33e711269d1290b00a364e081a08f6a9f84e3e090fbd9",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",

@@ -46,8 +46,8 @@ function cardOf(row) {
   const s = String(row.subject || ''), f = String(row.family || '');
   if (/science|biology|chemistry|physics/i.test(s)) return 'science';
   if (/humanities|religio|\bRE\b|history|geography/i.test(s)) return 'humanities-re';
-  if (/\bart\b|arts award/i.test(s)) return 'art-studio';
-  if (/ASDAN|PSHE|FoodWise|D&T|life ?skills|Vocational|PfA/i.test(s + ' ' + f)) return 'lifeskills';
+  if (/\bart\b|arts award|arts evidence/i.test(s)) return 'art-studio';
+  if (/ASDAN|PSHE|FoodWise|D&T|life ?skills|Vocational|PfA|Personal development/i.test(s + ' ' + f)) return 'lifeskills';
   return 'x-' + String(s).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 function tierOf(r) {
