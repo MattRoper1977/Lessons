@@ -117,7 +117,7 @@ function renderFlat(p){
   const b=document.createElement('button');b.type='button';b.className='btn';b.dataset.clearFilters='';b.textContent='Clear filters';st.appendChild(b);
   $('#count').textContent=`${rows.length} of ${H.state.rows.length} resources`;
   $$('.hub-bar .pill').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.view===view)));
-  if(p.get('q')!==null)$('#search').value=p.get('q');
+  if(p.get('q')!==null&&$('#search').value.trim()!==p.get('q'))$('#search').value=p.get('q');
 }
 function render(){
   const p=params();
