@@ -18,7 +18,7 @@
     }catch(_){} });
   if(isHub)return;
   function fallback(){const p=location.pathname.replace(/%20/gi,' '),query=new URLSearchParams();
-    if(/Science|Biology|Chemistry|Physics/i.test(p))query.set('subject','Science');else if(/Humanities|History|Geography|Rivers|(?:^|[/_])RE(?:[/_]|$)/i.test(p))query.set('subject','Humanities & RE');else if(/Art/i.test(p))query.set('subject','Art');else if(/ASDAN|Vocational|PfA/i.test(p))query.set('subject','ASDAN & life skills');
+    if(/Science|Biology|Chemistry|Physics/i.test(p))query.set('subject','Science');else if(/Humanities|History|Geography|Rivers|(?:^|[/_])RE(?:[/_]|$)/i.test(p))query.set('subject','Humanities & RE');else if(/Art/i.test(p))query.set('subject','Art');else if(/ASDAN|Vocational|PfA/i.test(p))query.set('subject','lifeskills');
     const match=p.match(/(?:^|[/_])(BUILD|GROW|LAUNCH)(?:[/_]|$)/i);if(match)query.set('pathway',match[1].toUpperCase());return ROOT+(query.size?'?'+query:'');}
   let back=fallback();try{const map=JSON.parse(sessionStorage.getItem(KEY)||'{}');back=safeHub(map[location.pathname])||back;}catch(_){}
   const style=document.createElement('style');style.id='mbm-lesson-navigation-style';style.textContent=`
