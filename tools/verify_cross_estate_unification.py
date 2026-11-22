@@ -103,7 +103,7 @@ MANIFEST_PINS = {
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
-    "resources.json": "3aab55dde9fda68e32d83f0ce8e70f0529d02526655172aa73feede846e098db"
+    "resources.json": "d16d168dcb7718c5899e0bca71fa2c02cc09b812631086bf0957eecbe57544c1"
 }
 PIN_COMMAND = "python3 tools/pin_manifests.py   (from either checkout — it writes both gate copies or neither)"
 
@@ -3707,7 +3707,7 @@ CATALOGUE_PINS = {
 # catalogue refresh interleaves (additive: with them taken out, the 734 are in their reviewed order, unedited).
 CATALOGUE_ORIGINAL_ROWS = 755
 # Re-cut 2026-11-08 (ruling thread, label rule): the same 755 rows with the place word removed from their subject, family, title and desc values; no row added, removed or reordered. Previous digest d4714b20.
-CATALOGUE_ORIGINAL_ROWS_SHA256 = "08fb7b0be928ca54765fa399e843bd0882d5522f18797d99b206eef94d6aaad0"
+CATALOGUE_ORIGINAL_ROWS_SHA256 = "57c9640c5ba48067f2f3689a9ca866835b1792b6e214d7c4dfbdd98f483a447f"
 # The appended rows are the 49 reviewed hub rows followed, since UX2 D3
 # (2026-09-08), by the companion-pack entries DERIVED from
 # data/companion-packs.json by tools/ux2/companion_catalogue.py. The count and
@@ -3738,7 +3738,7 @@ CATALOGUE_ORIGINAL_KEYS_BEFORE_TAGS = frozenset()
 # Re-cut 2026-11-17 (ruling thread, group D pilot, on the owner's standing word of 2026-11-16): 4 reviewed rows for the Life Skills money skills Autumn 2 lessons are added as new listed pages (a2new-lifeskills-money-build-a2-w04, a2new-lifeskills-money-build-a2-w05, a2new-lifeskills-money-build-a2-w06, a2new-lifeskills-money-build-a2-w07); no other row added, removed, reordered or edited (with the 4 dropped the 865 rows digest to bca6a5ac). Previous count 865, previous digest bca6a5ac.
 # Re-cut 2026-11-17 (ruling thread, group D pilot, on the owner's standing word of 2026-11-16): 5 reviewed rows for the Life Skills Autumn 1 lessons are added as new listed pages (a1list-lifeskills-home-build-a1-w01, a1list-lifeskills-home-build-a1-w02, a1list-lifeskills-home-build-a1-w03, a1list-lifeskills-home-build-a1-w04, a1list-lifeskills-home-build-a1-w05); no other row added, removed, reordered or edited (with the 5 dropped the 869 rows digest to 1febc1ed). Previous count 869, previous digest 1febc1ed.
 # Re-cut 2026-11-17 (ruling thread, "R-RAISE for Autumn 1", on the owner's standing word of 2026-11-16): 7 reviewed rows for the Humanities Autumn 1 pack lessons of weeks 1 to 7 rebuilt on the Week 8 model page are added straight before the Autumn 2 block (a1-humanities-build-w01-the-local-history-timeline, a1-humanities-build-w02-history-detectives, a1-humanities-build-w03-why-people-came, a1-humanities-build-w04-people-who-shaped-our-lives, a1-humanities-build-w05-big-deal-or-small-deal, a1-humanities-build-w06-plan-the-story, a1-humanities-build-w07-tell-the-story); no other row added, removed, reordered or edited (with the 7 dropped the 874 rows digest to 120eb426). Previous count 874, previous digest 120eb426.
-CATALOGUE_SHELF_ROWS_SHA256 = "8e33d41480691e16cba034ad6988ca6f36b2fcd80c41450210b7cf34773b2237"
+CATALOGUE_SHELF_ROWS_SHA256 = "801977f0d011c9c6e04417561e10614936326a5327a647ad252e6f7555c3bf66"
 
 # These named review records and review tools can change with their reviewed
 # transaction. Tools are not served assets; they are reviewed as executable

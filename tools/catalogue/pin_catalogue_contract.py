@@ -16,7 +16,7 @@ import re
 
 GATE = "tools/verify_cross_estate_unification.py"
 ORIGINAL_ROW_COUNT = 755   # ruling qp-2 (A-wide, os-4, 11 Oct 2026): 734 + the 21 reviewed catalogue rows the A19/A24 refresh interleaves
-ORIGINAL_ROWS_SHA256 = "08fb7b0be928ca54765fa399e843bd0882d5522f18797d99b206eef94d6aaad0"  # M1 (vr, vt, vt add.1, vu): re-cut below for the same 755 rows with the folder paths renamed and the archive downloads re-pinned; every difference is the rename map (790209ca before)  # Re-cut 2026-11-08 (ruling thread, label rule): the same 755 rows with the place word removed from subject, family, title and desc values; no row added, removed or reordered.  # Re-cut 2026-11-22 (N3a, ruling thread): the same 755 rows with plain public wording in id, title and subject (and family where it repeated one of them); every difference is tools/catalogue/PUBLIC_NAMES_MAP.json, proved by tools/catalogue/test_public_names_map.py (15150552 before).
+ORIGINAL_ROWS_SHA256 = "57c9640c5ba48067f2f3689a9ca866835b1792b6e214d7c4dfbdd98f483a447f"  # M1 (vr, vt, vt add.1, vu): re-cut below for the same 755 rows with the folder paths renamed and the archive downloads re-pinned; every difference is the rename map (790209ca before)  # Re-cut 2026-11-08 (ruling thread, label rule): the same 755 rows with the place word removed from subject, family, title and desc values; no row added, removed or reordered.  # Re-cut 2026-11-22 (N3a, ruling thread): the same 755 rows with plain public wording in id, title and subject (and family where it repeated one of them); every difference is tools/catalogue/PUBLIC_NAMES_MAP.json, proved by tools/catalogue/test_public_names_map.py (15150552 before).
 SHELF_ROWS = [{'subject': 'Science',
   'title': 'Science · browse by pathway, term and teaching version',
   'file': 'Science/index.html',
@@ -56,7 +56,7 @@ SHELF_ROWS = [{'subject': 'Science',
   'family': 'Humanities',
   'keywords': ['humanities',
                'religious education',
-               'cover',
+               'cover pack',
                'cover',
                'build',
                'grow',
