@@ -194,7 +194,7 @@ body.board-open>main{visibility:hidden}
 @page{size:A4;margin:12mm}
 @media print{
   body{background:#fff!important;color:#000!important;margin:0;padding:0}
-  body>main{display:none!important}
+  body>main,#pupilPage{display:none!important}
   .private-tag,.noprint,#boardDialog{display:none!important}
   body.print-observer-sheet #printObserverSheet{display:block!important}
   body.print-private-slip #printPrivateSlip{display:block!important}
@@ -212,6 +212,38 @@ body.board-open>main{visibility:hidden}
 <style>.tour-tip,.tour-help{font:600 15px/1.35 system-ui,sans-serif!important}.tour-help,.tour-actions button{background:#fff!important;color:#183c31!important;border:1px solid #365b49!important;min-height:44px!important;padding:.4rem .65rem!important;border-radius:7px!important;cursor:pointer}.tour-tip{position:relative;z-index:1;margin:.4rem 0;max-width:calc(100vw - 12px);width:300px;color:#172e2a!important;background:#fffbea!important;border:2px solid #355944;border-radius:9px;padding:10px 12px;box-sizing:border-box;box-shadow:0 3px 10px #172e2a26}.tour-tip[hidden]{display:none!important}.tour-tip small,.tour-tip p,.tour-tip a{color:#172e2a!important}.tour-tip p{margin:.35rem 0}.tour-actions{display:flex;flex-wrap:wrap;gap:.3rem}.tour-tip a{display:inline-block;margin-top:.4rem;text-decoration:underline}.tour-target{outline:3px dashed #345f43!important;outline-offset:2px}.tour-actions button:disabled{opacity:1;color:#384734!important;background:#eceee4!important}.tour-tip,.tour-tip *,.tour-target{animation:none!important;transition:none!important}@media print{.tour-tip,.tour-help{display:none!important}.tour-target{outline:0!important}}
 </style>
 <style>#dayLauncher{background:#f2f6f3;color:#142d26;border:2px solid #335d50;padding:1rem;border-radius:12px}#dayLauncher h2{margin:0}#dayLauncher button,#dayLauncher summary,#dayLauncher a{color:#123d32}#dayLauncher button{background:white;border-color:#335d50}#dayLauncher #launchStart,.launch-link{display:inline-flex;align-items:center;min-height:48px;padding:.55rem 1rem;background:#153e33!important;color:#fff!important;border-radius:8px;font-weight:700}.launch-card{background:white;border:1px solid #64736b;border-radius:8px;padding:.85rem;margin-top:.65rem}.launch-card.due{border-left:6px solid #234b3c}.launch-bits{display:flex;flex-wrap:wrap;gap:.4rem .9rem;border-block:1px solid #95a79b;padding:.55rem 0;margin:.5rem 0}.launch-code{font:600 .94em ui-monospace,monospace;overflow-wrap:anywhere}#launchClock{font-variant-numeric:tabular-nums}#dayLauncher summary{cursor:pointer}
+</style>
+<style id="livePacksStyle">
+.launch-card .launch-link{margin:.25rem .45rem 0 0}
+#pupilPages{margin-top:.75rem;border-top:1px solid #95a79b;padding-top:.55rem}
+#pupilPagesList{list-style:none;padding:0;margin:.5rem 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:.45rem}
+#pupilPagesList li{margin:0}
+#pupilPages a,#pupilPages button,#helpPreview button,#pupilPage a,#pupilPage button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:.45rem .85rem;border:2px solid #335d50;border-radius:8px;font-weight:700;text-decoration:none;cursor:pointer;max-width:100%;box-sizing:border-box}
+#pupilPagesList a{width:100%;justify-content:flex-start;background:#fff;color:#123d32;font-weight:650}
+#pupilPages button,#helpPreview button,#pupilPage button{background:#fff;color:#123d32}
+#helpFileStatus{font-weight:650;margin:.45rem 0}
+#helpPreview{overflow-x:auto;max-width:100%;margin-top:.5rem}
+#helpPreview table{width:100%;border-collapse:collapse;background:#fff;font-size:.92em;margin:.5rem 0}
+#helpPreview th,#helpPreview td{border:1px solid #64736b;padding:.4rem .5rem;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+#helpPreview th{background:#e4ece7;color:#142d26}
+#helpPreview .help-warn{color:#7a1c1c;font-weight:700}
+#helpPreview button:disabled{opacity:.55;cursor:not-allowed}
+#helpPreview .help-confirm{display:flex;align-items:center;gap:.5rem;margin:.5rem 0;min-height:44px;cursor:pointer;font-weight:650;max-width:100%}
+#helpPreview .help-confirm input{width:20px;height:20px;flex:none}
+#pupilPage{position:fixed;inset:0;overflow:auto;z-index:1000;background:#f2f6f3;color:#142d26;padding:1rem;overflow-wrap:anywhere;max-width:100%;box-sizing:border-box}
+#pupilPage :focus-visible{outline:3px solid #713600;outline-offset:3px}
+#pupilPage .pp-inner{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:.85rem}
+#pupilPage .pp-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.65rem;border-bottom:2px solid #335d50;padding-bottom:.65rem}
+#pupilPage .pp-head h2{margin:0}
+#pupilPage .pp-card{background:#fff;border:1px solid #64736b;border-radius:10px;padding:.85rem}
+#pupilPage .pp-card h3{margin:0 0 .45rem}
+#pupilPage .pp-lesson{background:#fff;border:1px solid #64736b;border-radius:8px;padding:.75rem;margin-top:.6rem}
+#pupilPage .pp-lesson.is-today{border-left:6px solid #234b3c}
+#pupilPage .pp-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
+#pupilPage .pp-actions a{background:#153e33;color:#fff;border-color:#153e33}
+#pupilPage .pp-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin:.35rem 0}
+#pupilPage .pp-chip{display:inline-block;padding:.15rem .55rem;border-radius:999px;border:1px solid #64736b;background:#f2f6f3;font-size:.92em;max-width:100%}
+#pupilPage .pp-chip-owed{background:#fff4dc;border-color:#8a5300;color:#663a00}
 </style></head>
 <body>
 <main>
@@ -248,6 +280,15 @@ body.board-open>main{visibility:hidden}
 <p><a href="guide/How_it_all_works.html">How it all works</a></p>
 <details id="launchSample"><summary>See a sample day</summary><p>Example only</p><ol><li>09:30 · Group A · Reading</li><li>10:30 · Group B · Making patterns</li><li>11:30 · Group C · Working together</li></ol></details>
 <div id="launchDetails" hidden><div id="launchList"></div></div>
+<details id="pupilPages">
+  <summary>Pupil pages</summary>
+  <p class="hint">Open a pupil’s own timetable, catch-ups and pack links, or load help settings by pupil number.</p>
+  <ul id="pupilPagesList"></ul>
+  <div class="row"><button type="button" id="helpFileBtn">Load help settings file</button></div>
+  <input type="file" id="helpFileInput" accept=".json,application/json" hidden>
+  <p id="helpFileStatus" role="status" aria-live="polite"></p>
+  <div id="helpPreview"></div>
+</details>
 </section>
 
 <div id="periodTimeline" class="period-strip noprint" role="group" aria-label="Today's six periods — tap to inspect"></div>
@@ -268,7 +309,8 @@ body.board-open>main{visibility:hidden}
     <option value="2">Second 40 min · Session 3 part 2 (W04)</option>
   </select>
 </div>
-<div class="now-actions"><a class="btn primary" id="nowCapture" href="Quick_capture.html?now=1">Quick capture</a><a class="btn" id="nowPromptStudio" href="Requests.html">Prompt studio</a><a class="btn" id="nowExtras" href="Lesson_extras.html">Lesson extras</a><a class="btn" id="nowTracker" href="Catch_up_Tracker.html">Catch-up tracker</a></div>
+<div class="now-actions"><a class="btn primary" id="nowCapture" href="Quick_capture.html?now=1">Quick capture</a><a class="btn" id="nowPromptStudio" href="Requests.html">Prompt studio</a><a class="btn" id="nowExtras" href="Lesson_extras.html">Lesson extras</a><a class="btn" id="nowTracker" href="Catch_up_Tracker.html">Catch-up tracker</a><a class="btn" id="nowPacks" href="#" target="_blank" rel="noopener" hidden>Print pupil packs</a></div>
+<p id="nowPacksPrinted" class="hint" hidden></p>
 <p id="nextLesson" class="hint"></p>
 
 <details id="roomBriefDetails">
@@ -540,6 +582,7 @@ body.board-open>main{visibility:hidden}
 <section class="panel" id="toolsPeriodTimesMount"></section>
 </section>
 </main>
+<section id="pupilPage" class="pupil-page" hidden aria-labelledby="pupilPageTitle"></section>
 <script id="mbmBoardPresetsData" type="application/json">{"SCI_LAUNCH_A2_W02_L3":{"chunks":["1 Choose (◆): Which process gives a cell features suited to one job: division , elongati","Choose your route: ◆ Supported · ▲ Independent · ★ Aspire","2 Finish: A root hair cell has a thin extension so that it can absorb more ________.","Check in the same colour, on the same page"],"code":"SCI_LAUNCH_A2_W02_L3","keyWords":"shows / cannot show / extra check · but · division · elongation / a meristem · root age (days) · root length / mm","pathway":"LAUNCH","stem":"Today I can explain growth and differentiation and use evidence to repair claims about stem cells.","title":"Master: Growth, differentiation and stem-cell evidence"}}</script>
 <section id="printDeskCardsSheet" aria-hidden="true"></section>
 <dialog id="boardDialog" class="board-dialog noprint" aria-labelledby="boardHeading">
@@ -665,6 +708,8 @@ const KEYS = {
   targetWords: 'mbm_pupil_target_words_v1',
   subjectSettings: 'mbm_pupil_subject_v1'
 };
+let nowPacksHook = null; // set by initDayLauncher (live packs)
+let showChangeHook = null; // set by initDayLauncher (live packs)
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -738,7 +783,7 @@ function el(tag, attrs = {}, text){
 const ONE_BEHIND = { 'LAUNCH|Careers': 1, 'GROW|Humanities': 1, 'BUILD|Vocational': 1 };
 function taughtWeek(w, path, subj){ return Math.max(1, +w - (ONE_BEHIND[path + '|' + subj] || 0)); }
 /* Weeks 4 to 7 slot codes, from the school by-day folders (19 Nov listing) with the 19 Nov scheme-of-work filing applied. Key: calendar week|group|subject|lesson number in the week. Only slots that differ from the calendar rule are listed. */
-const SLOT_CODES = {"4|BUILD|Careers|1":"CAREERS_BUILD_A2_W03","4|BUILD|Creative Arts|1":"ART_BUILD_A2_W03_P2","4|BUILD|Creative Arts|2":"ART_BUILD_A2_W04_P1","4|BUILD|Humanities|1":"HUM_BUILD_A2_W03","4|BUILD|RE|1":"BUILD_RE_A2_W03","4|BUILD|RSHE|1":"RSHE_BUILD_A2_W03","4|BUILD|Science|1":"SCI_BUILD_A2_W03_L2","4|BUILD|Science|2":"SCI_BUILD_A2_W04_L1","4|BUILD|Vocational|1":"VOC_BUILD_A2_W02","4|GROW|Creative Arts|1":"ART_GROW_A2_W03_P2","4|GROW|Creative Arts|2":"ART_GROW_A2_W04_P1","4|GROW|PSHE|1":"PSHE_GROW_A2_W03","4|GROW|RE|1":"GROW_RE_A2_W03","4|GROW|Science|1":"GROW_SCI_A2_W03_P2","4|GROW|Science|2":"GROW_SCI_A2_W04_P1","4|LAUNCH|Science|1":"SCI_LAUNCH_A2_W03_L2","4|LAUNCH|Science|2":"SCI_LAUNCH_A2_W03_L3","4|LAUNCH|Science|3":"SCI_LAUNCH_A2_W04_L1","4|LAUNCH|Vocational|1":"VOC_LAUNCH_A2_W03","5|BUILD|Careers|1":"CAREERS_BUILD_A2_W04","5|BUILD|Creative Arts|1":"ART_BUILD_A2_W04_P2","5|BUILD|Creative Arts|2":"ART_BUILD_A2_W05_P1","5|BUILD|Humanities|1":"HUM_BUILD_A2_W04","5|BUILD|RE|1":"BUILD_RE_A2_W04","5|BUILD|RSHE|1":"RSHE_BUILD_A2_W04","5|BUILD|Science|1":"SCI_BUILD_A2_W04_L2","5|BUILD|Science|2":"SCI_BUILD_A2_W05_L1","5|BUILD|Vocational|1":"VOC_BUILD_A2_W03","5|GROW|Creative Arts|1":"ART_GROW_A2_W04_P2","5|GROW|Creative Arts|2":"ART_GROW_A2_W05_P1","5|GROW|PSHE|1":"PSHE_GROW_A2_W04","5|GROW|RE|1":"GROW_RE_A2_W04","5|GROW|Science|1":"GROW_SCI_A2_W04_P2","5|GROW|Science|2":"GROW_SCI_A2_W05_P1","5|LAUNCH|Science|1":"SCI_LAUNCH_A2_W04_L2","5|LAUNCH|Science|2":"SCI_LAUNCH_A2_W04_L3","5|LAUNCH|Science|3":"SCI_LAUNCH_A2_W05_L1","6|BUILD|Careers|1":"CAREERS_BUILD_A2_W05","6|BUILD|Creative Arts|1":"ART_BUILD_A2_W05_P2","6|BUILD|Creative Arts|2":"ART_BUILD_A2_W06_P1","6|BUILD|Humanities|1":"HUM_BUILD_A2_W05","6|BUILD|RE|1":"BUILD_RE_A2_W05","6|BUILD|RSHE|1":"RSHE_BUILD_A2_W05","6|BUILD|Science|1":"SCI_BUILD_A2_W05_L2","6|BUILD|Science|2":"SCI_BUILD_A2_W06_L1","6|BUILD|Vocational|1":"VOC_BUILD_A2_W04","6|GROW|Creative Arts|1":"ART_GROW_A2_W05_P2","6|GROW|Creative Arts|2":"ART_GROW_A2_W06_P1","6|GROW|PSHE|1":"PSHE_GROW_A2_W05","6|GROW|RE|1":"GROW_RE_A2_W05","6|GROW|Science|1":"GROW_SCI_A2_W05_P2","6|GROW|Science|2":"GROW_SCI_A2_W06_P1","6|LAUNCH|Science|1":"SCI_LAUNCH_A2_W05_L2","6|LAUNCH|Science|2":"SCI_LAUNCH_A2_W05_L3","6|LAUNCH|Science|3":"SCI_LAUNCH_A2_W06_L1","7|BUILD|Creative Arts|1":"ART_BUILD_A2_W06_P2","7|BUILD|Creative Arts|2":"ART_BUILD_A2_W07_P1","7|BUILD|Science|1":"SCI_BUILD_A2_W06_L2","7|BUILD|Science|2":"SCI_BUILD_A2_W07_L1","7|BUILD|Vocational|1":"VOC_BUILD_A2_W07","7|GROW|Creative Arts|1":"ART_GROW_A2_W06_P2","7|GROW|Creative Arts|2":"ART_GROW_A2_W07_P1","7|GROW|Humanities|1":"HUM_GROW_A2_W07","7|GROW|Science|1":"GROW_SCI_A2_W06_P2","7|GROW|Science|2":"GROW_SCI_A2_W07_P1","7|LAUNCH|Careers|1":"CAREERS_LAUNCH_A2_W07","7|LAUNCH|Science|1":"SCI_LAUNCH_A2_W06_L2","7|LAUNCH|Science|2":"SCI_LAUNCH_A2_W06_L3","7|LAUNCH|Science|3":"SCI_LAUNCH_A2_W07_L1"};
+const SLOT_CODES = {"4|BUILD|Careers|1":"CAREERS_BUILD_A2_W03","4|BUILD|Creative Arts|1":"ART_BUILD_A2_W03_P2","4|BUILD|Creative Arts|2":"ART_BUILD_A2_W04_P1","4|BUILD|Humanities|1":"HUM_BUILD_A2_W03","4|BUILD|RE|1":"BUILD_RE_A2_W03","4|BUILD|RSHE|1":"RSHE_BUILD_A2_W03","4|BUILD|Science|1":"SCI_BUILD_A2_W03_L2","4|BUILD|Science|2":"SCI_BUILD_A2_W04_L1","4|BUILD|Vocational|1":"VOC_BUILD_A2_W02","4|GROW|Creative Arts|1":"ART_GROW_A2_W03_P2","4|GROW|Creative Arts|2":"ART_GROW_A2_W04_P1","4|GROW|PSHE|1":"PSHE_GROW_A2_W03","4|GROW|RE|1":"GROW_RE_A2_W03","4|GROW|Science|1":"GROW_SCI_A2_W03_P2","4|GROW|Science|2":"GROW_SCI_A2_W04_P1","4|LAUNCH|Science|1":"SCI_LAUNCH_A2_W03_L2","4|LAUNCH|Science|2":"SCI_LAUNCH_A2_W03_L3","4|LAUNCH|Science|3":"SCI_LAUNCH_A2_W04_L1","4|LAUNCH|Vocational|1":"VOC_LAUNCH_HOSP_A2_W04_L1","4|LAUNCH|Vocational|2":"VOC_LAUNCH_HOSP_A2_W04_L2","5|BUILD|Careers|1":"CAREERS_BUILD_A2_W04","5|BUILD|Creative Arts|1":"ART_BUILD_A2_W04_P2","5|BUILD|Creative Arts|2":"ART_BUILD_A2_W05_P1","5|BUILD|Humanities|1":"HUM_BUILD_A2_W04","5|BUILD|RE|1":"BUILD_RE_A2_W04","5|BUILD|RSHE|1":"RSHE_BUILD_A2_W04","5|BUILD|Science|1":"SCI_BUILD_A2_W04_L2","5|BUILD|Science|2":"SCI_BUILD_A2_W05_L1","5|BUILD|Vocational|1":"VOC_BUILD_A2_W03","5|GROW|Creative Arts|1":"ART_GROW_A2_W04_P2","5|GROW|Creative Arts|2":"ART_GROW_A2_W05_P1","5|GROW|PSHE|1":"PSHE_GROW_A2_W04","5|GROW|RE|1":"GROW_RE_A2_W04","5|GROW|Science|1":"GROW_SCI_A2_W04_P2","5|GROW|Science|2":"GROW_SCI_A2_W05_P1","5|LAUNCH|Science|1":"SCI_LAUNCH_A2_W04_L2","5|LAUNCH|Science|2":"SCI_LAUNCH_A2_W04_L3","5|LAUNCH|Science|3":"SCI_LAUNCH_A2_W05_L1","5|LAUNCH|Vocational|1":"VOC_LAUNCH_HOSP_A2_W05_L1","5|LAUNCH|Vocational|2":"VOC_LAUNCH_HOSP_A2_W05_L2","6|BUILD|Careers|1":"CAREERS_BUILD_A2_W05","6|BUILD|Creative Arts|1":"ART_BUILD_A2_W05_P2","6|BUILD|Creative Arts|2":"ART_BUILD_A2_W06_P1","6|BUILD|Humanities|1":"HUM_BUILD_A2_W05","6|BUILD|RE|1":"BUILD_RE_A2_W05","6|BUILD|RSHE|1":"RSHE_BUILD_A2_W05","6|BUILD|Science|1":"SCI_BUILD_A2_W05_L2","6|BUILD|Science|2":"SCI_BUILD_A2_W06_L1","6|BUILD|Vocational|1":"VOC_BUILD_A2_W04","6|GROW|Creative Arts|1":"ART_GROW_A2_W05_P2","6|GROW|Creative Arts|2":"ART_GROW_A2_W06_P1","6|GROW|PSHE|1":"PSHE_GROW_A2_W05","6|GROW|RE|1":"GROW_RE_A2_W05","6|GROW|Science|1":"GROW_SCI_A2_W05_P2","6|GROW|Science|2":"GROW_SCI_A2_W06_P1","6|LAUNCH|Science|1":"SCI_LAUNCH_A2_W05_L2","6|LAUNCH|Science|2":"SCI_LAUNCH_A2_W05_L3","6|LAUNCH|Science|3":"SCI_LAUNCH_A2_W06_L1","6|LAUNCH|Vocational|1":"VOC_LAUNCH_HOSP_A2_W06_L1","6|LAUNCH|Vocational|2":"VOC_LAUNCH_HOSP_A2_W06_L2","7|BUILD|Creative Arts|1":"ART_BUILD_A2_W06_P2","7|BUILD|Creative Arts|2":"ART_BUILD_A2_W07_P1","7|BUILD|Science|1":"SCI_BUILD_A2_W06_L2","7|BUILD|Science|2":"SCI_BUILD_A2_W07_L1","7|BUILD|Vocational|1":"VOC_BUILD_A2_W07","7|GROW|Creative Arts|1":"ART_GROW_A2_W06_P2","7|GROW|Creative Arts|2":"ART_GROW_A2_W07_P1","7|GROW|Humanities|1":"HUM_GROW_A2_W07","7|GROW|Science|1":"GROW_SCI_A2_W06_P2","7|GROW|Science|2":"GROW_SCI_A2_W07_P1","7|LAUNCH|Careers|1":"CAREERS_LAUNCH_A2_W07","7|LAUNCH|Science|1":"SCI_LAUNCH_A2_W06_L2","7|LAUNCH|Science|2":"SCI_LAUNCH_A2_W06_L3","7|LAUNCH|Science|3":"SCI_LAUNCH_A2_W07_L1","7|LAUNCH|Vocational|1":"VOC_LAUNCH_HOSP_A2_W07_L1","7|LAUNCH|Vocational|2":"VOC_LAUNCH_HOSP_A2_W07_L2"};
 function lessonCode(w, path, subj, n, part = 1){
   const fixed = SLOT_CODES[w + '|' + path + '|' + subj + '|' + n];
   if (fixed) return fixed;
@@ -776,6 +821,15 @@ function lifeSkillsCard(w){
   more.append(el('summary',{},'Autumn 1 catch-up sessions (pull one in when needed)'));
   LIFE_SKILLS_CATCHUP.forEach(t => list.append(el('li',{},t)));
   more.append(list); card.append(more);
+  return card;
+}
+/* Monday, Wednesday and Friday 09:00 tutor time is the assembly. Generic by weekday: no dates and no titles here. */
+function assemblyCard(){
+  const tutor = SCHOOL_DAY[0], card = el('article',{class:'launch-card'});
+  card.append(el('h3',{},'Tutor time · '+tutor.start+'–'+tutor.end),
+    el('p',{},'Tutor time assembly'),
+    el('p',{class:'launch-code'},'Open today’s file from your Drive day folder, 09 00 Tutor time.'),
+    el('a',{class:'launch-link',href:'Class_record.html#central'},'Record it in Class record'));
   return card;
 }
 function schoolTimes(){ return {v:2, starts:SCHOOL_DAY.filter(s=>s.p).map(s=>s.start), ends:SCHOOL_DAY.filter(s=>s.p).map(s=>s.end), confirmed:true}; }
@@ -822,11 +876,23 @@ function readClassNamesLines(){
   } catch (e) { return []; }
 }
 
-function buildRoster(){
+function buildRoster(override = null){
   let rawKey = {}, profile = {}, tracker = {}, extraNames = [];
-  try { rawKey = JSON.parse(localStorage.getItem(KEYS.pupilKey) || '{}') || {}; } catch(e){}
-  try { profile = JSON.parse(localStorage.getItem(KEYS.profile) || '{}') || {}; } catch(e){}
-  try { tracker = JSON.parse(localStorage.getItem(KEYS.tracker) || '{}') || {}; } catch(e){}
+  if (override && Object.prototype.hasOwnProperty.call(override, 'pupilKey')) {
+    rawKey = override.pupilKey || {};
+  } else {
+    try { rawKey = JSON.parse(localStorage.getItem(KEYS.pupilKey) || '{}') || {}; } catch(e){}
+  }
+  if (override && Object.prototype.hasOwnProperty.call(override, 'profile')) {
+    profile = override.profile || {};
+  } else {
+    try { profile = JSON.parse(localStorage.getItem(KEYS.profile) || '{}') || {}; } catch(e){}
+  }
+  if (override && Object.prototype.hasOwnProperty.call(override, 'tracker')) {
+    tracker = override.tracker || {};
+  } else {
+    try { tracker = JSON.parse(localStorage.getItem(KEYS.tracker) || '{}') || {}; } catch(e){}
+  }
   try { const n = JSON.parse(localStorage.getItem(KEYS.extraNames) || '[]'); if (Array.isArray(n)) extraNames = n.filter(x => typeof x === 'string' && x.trim()); } catch(e){}
 
   const keyByNum = {};
@@ -930,6 +996,7 @@ function setShowMode(mode){
   write(KEYS.profile, { ...p, version: 1, show: mode, pupils: p.pupils || {} });
   write(KEYS.showLegacy, mode);
   renderAll();
+  if (showChangeHook) showChangeHook();
 }
 
 function runDictionaryRedaction(text, mode, roster = buildRoster()){
@@ -1116,6 +1183,7 @@ function runUndo(){
   restoreRawKey(KEYS.brief, u.briefRaw);
   refreshUndoBars();
   renderAll();
+  window.mbmRefreshPacks?.();
 }
 $('briefUndoBtn').onclick = runUndo;
 $('morningUndoBtn').onclick = runUndo;
@@ -1183,6 +1251,7 @@ function markPupilOutToday(n, w, day, sourceKind = 'brief'){
   write(KEYS.tally, tallies);
   write(KEYS.qcQueue, sendQueue);
   renderAll();
+  window.mbmRefreshPacks?.();
 }
 
 function markPupilBackInNow(n, w, day, sourceKind = 'brief'){
@@ -1226,6 +1295,7 @@ function markPupilBackInNow(n, w, day, sourceKind = 'brief'){
   write(KEYS.tally, tallies);
   write(KEYS.qcQueue, sendQueue);
   renderAll();
+  window.mbmRefreshPacks?.();
 }
 
 function pupilTodayAttendance(n, w, day, now, tallies, tracker, roster){
@@ -1439,6 +1509,7 @@ function setBriefPupilTally(slot, effPath, n, nextState, nextNote, skipUndo = fa
     renderEndOfDayPack(now, curRoster);
     renderOfflineHub(now, curRoster);
   }
+  window.mbmRefreshPacks?.();
 }
 
 function buildPracticalLogHref(m, tallies){
@@ -1890,6 +1961,7 @@ function markCatchupDoneFromMorning(markKey, rowInfo){
     syncCoverageDone(rowInfo.n, rowInfo.w, rowInfo.d, rowInfo.p, rowInfo.path, rowInfo.subj, rowInfo.lesson, true);
   }
   renderAll();
+  window.mbmRefreshPacks?.();
 }
 
 function renderMorningCheckin(now = new Date(), roster = buildRoster()){
@@ -2057,6 +2129,7 @@ function markLessonSafeAllGotIt(c, undoTarget = 'eod'){
   write(KEYS.tally, tallies);
   write(KEYS.qcQueue, sendQueue);
   renderAll();
+  window.mbmRefreshPacks?.();
 }
 
 // Restoring a safe backup: the file says Pupil N, this device may hold real labels in its tracker.
@@ -2560,6 +2633,7 @@ function renderNow(now = new Date(), roster = buildRoster()){
 function renderAll(){
   const now = new Date(), roster = buildRoster();
   renderNow(now, roster);
+  if (nowPacksHook) nowPacksHook();
   renderMorningCheckin(now, roster);
   renderEndOfDayPack(now, roster);
   renderTomorrowDrawer(now, roster);
@@ -2931,6 +3005,7 @@ function applyTodaySyncCode(rawCode, allowOrderMismatch = false){
   write(KEYS.tally, tallies);
   write(KEYS.qcQueue, sendQueue);
   renderAll();
+  window.mbmRefreshPacks?.();
   return { ok: true, msg: '✓ Synced ' + appliedCount + ' pupil-period mark(s) for Week ' + w + ' ' + day + '.' };
 }
 
@@ -3138,6 +3213,7 @@ $('importSafeBackupFile').onchange = e => {
       populatePickPeriods($('pickPeriod').value);
       refreshRows();
       renderAll();
+      window.mbmRefreshPacks?.();
       $('backupStatus').textContent = '✓ Safe backup restored. The names and adaptation notes on this device were kept. Press Undo above to put back what was here before.';
     } catch (err) {
       $('backupStatus').textContent = 'Could not read that JSON file.';
@@ -3258,7 +3334,7 @@ function renderBoardUI(){
   $('boardTimerLabel').textContent = boardState.label;
   $('boardStartPauseBtn').textContent = boardRunning ? 'Pause' : (boardRemainSec === 0 ? 'Restart' : 'Start');
   $('boardChimeBtn').setAttribute('aria-pressed', String(boardState.chime));
-  $('boardChimeBtn').textContent = boardState.chime ? 'Chime: Soft bell' : 'Chime: Off';
+  $('boardChimeBtn').textContent = boardState.chime ? 'Chime: Soft' : 'Chime: Off';
   const pct = boardState.totalSec > 0 ? Math.max(0, Math.min(100, (boardRemainSec / boardState.totalSec) * 100)) : 0;
   const fill = $('boardBarFill');
   fill.style.width = pct + '%';
@@ -4361,7 +4437,15 @@ function initDayLauncher() {
   "VOC_LAUNCH_A2_W06": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W06/VOC_LAUNCH_A2_W06.html",
   "VOC_LAUNCH_A2_W07": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W07/VOC_LAUNCH_A2_W07.html",
   "VOC_LAUNCH_A2_W08_L1": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L1/VOC_LAUNCH_A2_W08_L1.html",
-  "VOC_LAUNCH_A2_W08_L2": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L2/VOC_LAUNCH_A2_W08_L2.html"
+  "VOC_LAUNCH_A2_W08_L2": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W08_L2/VOC_LAUNCH_A2_W08_L2.html",
+  "VOC_LAUNCH_HOSP_A2_W04_L1": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_HOSP_A2_W04_L1/VOC_LAUNCH_HOSP_A2_W04_L1.html",
+  "VOC_LAUNCH_HOSP_A2_W04_L2": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_HOSP_A2_W04_L2/VOC_LAUNCH_HOSP_A2_W04_L2.html",
+  "VOC_LAUNCH_HOSP_A2_W05_L1": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_HOSP_A2_W05_L1/VOC_LAUNCH_HOSP_A2_W05_L1.html",
+  "VOC_LAUNCH_HOSP_A2_W05_L2": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_HOSP_A2_W05_L2/VOC_LAUNCH_HOSP_A2_W05_L2.html",
+  "VOC_LAUNCH_HOSP_A2_W06_L1": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_HOSP_A2_W06_L1/VOC_LAUNCH_HOSP_A2_W06_L1.html",
+  "VOC_LAUNCH_HOSP_A2_W06_L2": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_HOSP_A2_W06_L2/VOC_LAUNCH_HOSP_A2_W06_L2.html",
+  "VOC_LAUNCH_HOSP_A2_W07_L1": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_HOSP_A2_W07_L1/VOC_LAUNCH_HOSP_A2_W07_L1.html",
+  "VOC_LAUNCH_HOSP_A2_W07_L2": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_HOSP_A2_W07_L2/VOC_LAUNCH_HOSP_A2_W07_L2.html"
 };
   const panel = $('dayLauncher'), list = $('launchList'), details = $('launchDetails');
   let openHref = '', signature = '';
@@ -4383,19 +4467,1319 @@ function initDayLauncher() {
     if (!initials || initials === raw.toUpperCase()) return number;
     return roster.initialsByNum[n] === initials ? initials : initials + ' (' + number + ')';
   }
+  function isPlainObj(v){
+    return !!v && typeof v === 'object' && !Array.isArray(v);
+  }
+  const KNOWN_TIERS = new Set(['Supported', 'Independent', 'Aspire']);
+  const KNOWN_PERIODS = new Set(SCHOOL_DAY.filter(s => s.p).map(s => s.p));
+  function parseCheckedRowSlot(wRaw, dRaw, pRaw){
+    const wStr = String(wRaw ?? '').trim();
+    const wm = wStr.match(/^(?:W)?0*([1-9]\d*)$/i);
+    if (!wm) return null;
+    const w = parseInt(wm[1], 10);
+    if (!Number.isInteger(w) || w < 1 || w > WEEKS.length) return null;
+    const dIdx = DAYS.indexOf(String(dRaw ?? '').trim());
+    if (dIdx < 0) return null;
+    const pStr = String(pRaw ?? '').trim();
+    const pm = pStr.match(/^(?:P)?0*([1-9]\d*)$/i);
+    if (!pm) return null;
+    const p = parseInt(pm[1], 10);
+    if (!Number.isInteger(p) || !KNOWN_PERIODS.has(p)) return null;
+    const day = DAYS[dIdx];
+    return { w, dIdx, day, p, wLabel: 'W' + w, dShort: day.slice(0, 3), pLabel: 'P' + p };
+  }
+  function convertTrackerEntry(entry) {
+    const st = typeof entry?.st === 'string' && entry.st.trim() ? entry.st.trim() : '';
+    const state = typeof entry?.state === 'string' && entry.state.trim() ? entry.state.trim() : '';
+    const rawState = st || state;
+    const low = rawState.toLowerCase();
+    return {
+      ...entry,
+      state: rawState,
+      done: entry?.done === true || entry?.cst === 'done' || low === 'done'
+    };
+  }
   function dayTracker(saved) {
     const marks = {};
-    for (const [key, entry] of Object.entries(saved?.marks || {})) {
-      if (!entry || typeof entry !== 'object') continue;
+    const rawMarks = isPlainObj(saved) && isPlainObj(saved.marks) ? saved.marks : {};
+    for (const [key, entry] of Object.entries(rawMarks)) {
+      if (!isPlainObj(entry)) continue;
       const parts = key.split('|');
       if (parts.length !== 4 && parts.length !== 6) continue;
-      const [week,day,period] = parts, who = parts.at(-1);
+      const slot = parseCheckedRowSlot(parts[0], parts[1], parts[2]);
+      if (!slot) continue;
+      const c = convertTrackerEntry(entry);
+      if (!c.state) continue;
+      const who = parts.at(-1);
       const path = parts.length === 6 ? parts[3] : entry.path;
       const subj = parts.length === 6 ? parts[4] : entry.subj;
-      marks[[week,day,period,who].join('|')] = {...entry,path,subj,
-        state:entry.st || entry.state || 'missed',done:entry.done || entry.cst==='done' || entry.st==='done' || entry.state==='done'};
+      marks[[slot.w, slot.day, slot.p, who].join('|')] = { ...c, path, subj };
     }
-    return {...saved,marks};
+    return { ...(isPlainObj(saved) ? saved : {}), marks };
+  }
+  const HASH_RE = /^#mbm-packs(=(BUILD|GROW|LAUNCH))?(&skip=\d{1,2}(,\d{1,2}){0,19})?(&cu=\d{1,2}(,\d{1,2}){0,19})?(&only=\d{1,2})?(&view)?$/;
+  const PUPIL_HASH_RE = /^#pupil=([1-9]|1\d|20)$/;
+  const ROUTE_LABELS = {
+    CATCHUP: 'Catch-up',
+    FIXIT: 'Fix-it',
+    EXIT_AGAIN: 'Exit question again',
+    RECALL_STRETCH: 'Recall and stretch',
+    DEFAULT: 'Usual'
+  };
+  const EXIT_LABELS = { got: 'Got it', nearly: 'Nearly', again: 'Not yet', absent: 'Absent' };
+  function isKnownExitState(v){
+    return typeof v === 'string' && Object.prototype.hasOwnProperty.call(EXIT_LABELS, v);
+  }
+  const ALLOWED_SUBJECTS = new Set(Object.keys(PREFIX).map(s => s.toLowerCase()));
+  const SUBJECT_DISPLAY = Object.fromEntries(Object.keys(PREFIX).map(s => [s.toLowerCase(), s]));
+  const KNOWN_HELP_LINES = new Set([
+    'Now and next card', 'Concise instructions', 'Reader', 'Movement break', 'Extra time',
+    'Word bank', 'Enlarged print', 'Sentence starters', 'Fewer questions', 'Coloured paper',
+    'Worked step first', 'Help card', 'Task checklist', 'Calm card', 'Timer strip',
+    'Extra writing space', 'Recall start', 'Room plan', 'Other help',
+    'Sit near front', 'Large print', 'One task at a time', 'Visual steps',
+    'Extra space', 'Coloured backgrounds',
+    'Own book', 'Starters for long answers', 'Gap-fill sentences',
+    'Blue background', 'Pink background', 'Cream background', 'Green background',
+    'Hands-on task', 'Labelling task', 'Finish with a stretch', 'Catch-up every lesson',
+    ...Object.values(LEGACY_ADAPT)
+  ].map(s => s.toLowerCase()));
+  // copied from engine v3.5 (engine_v3.js sha256 55F0DD5F66…)
+  const KNOWN_HELP_RES = [
+    /now(?:\s*(?:and|&|\+|\/|-)\s*|\s+)next(?:\s+card)?|first(?:\s*(?:and|&|\+|\/|-|,)\s*|\s+)then/,
+    /concise(?:\s+instructions?)?|short(?:er)?\s+instructions?|simple\s+instructions?|simplif(?:y|ied|ies|ying)|one\s+(?:step|task|instruction)\s+at\s+a\s+time|step[\s-]by[\s-]step|chunks?|chunk(?:ed|ing)|clear\s+instructions?|brief\s+instructions?/,
+    /readers?|read\s+(?:aloud|to|out)|read[\s-]aloud|reading\s+support|text\s+read/,
+    /movement(?:\s+break)?|move\s+break|brain\s+break|sensory\s+break|\bbreaks?\b|fidgets?|stand(?:ing)?\s+up/,
+    /extra\s+time|more\s+time|additional\s+time|25%|time[\s-]?out|processing\s+time|take[\s-]up\s+time|take\s+up\s+time/,
+    /word[\s-]?bank|key\s+words?|keywords?|vocab(?:ulary)?|word\s+mat|glossary|pre[\s-]?teach(?:ing)?/,
+    /enlarg(?:e|ed|es|ing)(?:\s+print)?|large(?:r)?(?:\s+print)?|big(?:ger)?\s+print|font|a3(?:\s+paper)?|bigger\s+text/,
+    /sentence\s+(?:starters?|stems?|frames?)|writing\s+frames?|starters?|scaffolds?/,
+    /fewer(?:\s+questions)?|reduced\s+(?:questions|tasks|work)|less\s+work|shorter\s+task|cut\s+down/,
+    /overlays?|tints?|colou?red\s+paper|cream|buff|(?:blue|green|pink|yellow)\s+(?:paper|background)|background\s+colou?r/,
+    /worked\s+examples?|visuals?|pictures?|symbols?|model(?:led)?\s+answers?|example\s+first/,
+    /help\s+card|ask\s+for\s+help|help\s+signal|traffic\s+light|stuck\s+card|red\s+card|help\s+sign/,
+    /check[\s-]?list|task\s+list|tick\s+list|to[\s-]?do\s+lists?|task\s+board|visual\s+timetable|schedules?/,
+    /calm(?:\s+card)?|regulat(?:e|ed|es|ing|ion)|exit\s+card|safe\s+space|time[\s-]?out\s+cards?|zones|anxiety|worry/,
+    /timers?|countdowns?|time\s+warning|time\s+limit|sand[\s-]?timer/,
+    /extra\s+space|more\s+lines|space\s+to\s+write|writing\s+space/,
+    /recall|remember|last\s+lesson/,
+    /(?:writes?|works?|answers?)(?:\s+(?:work|answers?|notes?))?\s+in\s+(?:(?:own|her|his|their|my)\s+|(?:an?\s+)?exercise\s+)books?|(?:own|exercise)\s+books?|not\s+on\s+(?:the\s+)?sheet/,
+    /(?:sentence\s+)?(?:starters?|stems?|frames?)\s+(?:for|on)\s+(?:long(?:er)?|extended)\s+(?:questions?|answers?|responses?)/,
+    /gap[\s-]?fill|fill\s+(?:the\s+)?gaps?|fill\s+in\s+(?:the\s+)?blanks?|missing\s+words?\s+provided|\bcloze\b|sentences?\s+to\s+fill/,
+    /\bhands[\s-]?on\b|\bpractical\b|\bkin(?:a?e)sthetic\b|\blearn\s+by\s+doing\b|\bdo\s+it\s+with\s+(?:my|their|his|her)\s+hands\b/,
+    /\blabell?ing\b|\blabel\b(?!\s+(?:paper|on\s+(?:the\s+)?books?|books?|sheets?|folders?|trays?|files?|boxes?|notebooks?|workbooks?)\b)/,
+    /finish\s+with\s+(?:a\s+)?stretch|extension\s+at\s+(?:the\s+)?end|harder\s+extension|\bns\+(?!\w)|stretch\s+(?:question|task|box|at\s+(?:the\s+)?end)|extension\s+(?:task|question|box)/,
+    /\bcatch[\s-]?up\s+(?:every|each|most)\s+lessons?\b|\bquick\s+catch[\s-]?up\b|\bforgets?\s+(?:previous|earlier)\s+(?:lessons?|work)\b/,
+    /sits?|sitting|seat(?:ed|ing|s)?|front|near\s+(?:the\s+)?(?:front|door|adult|teacher|board)|ear[\s-]?defenders?|scribe|\bta\b|adult\s+support|1:1|one[\s-]to[\s-]one|check[\s-]?ins?|prompts?|praise|reward|meet\s+and\s+greet|laptops?|computers?|tablets?|headphones?|hearing|glasses|medical|toilet|separate\s+room|small\s+group|pair|buddy/
+  ];
+
+  function cleanPackNums(arr){
+    const seen = new Set();
+    for (const x of (arr || [])) {
+      const n = Number(x);
+      if (Number.isInteger(n) && n >= 1 && n <= 99) seen.add(n);
+    }
+    return [...seen].sort((a, b) => a - b).slice(0, 20);
+  }
+  function packHash({ path, skip = [], cu = [], only, view } = {}){
+    let h = '#mbm-packs';
+    if (PATHWAYS.includes(path)) h += '=' + path;
+    const skipClean = cleanPackNums(skip);
+    if (skipClean.length) h += '&skip=' + skipClean.join(',');
+    const cuClean = cleanPackNums(cu);
+    if (cuClean.length) h += '&cu=' + cuClean.join(',');
+    const onlyN = Number(only);
+    if (Number.isInteger(onlyN) && onlyN >= 1 && onlyN <= 99) {
+      h += '&only=' + onlyN;
+      if (view) h += '&view';
+    }
+    return HASH_RE.test(h) ? h : '#mbm-packs';
+  }
+  function normPupilId(raw){
+    if (typeof raw === 'number' && Number.isInteger(raw) && raw >= 1 && raw <= 20) return raw;
+    const m = String(raw ?? '').trim().match(/^(?:pupil\s*|p)?0*(\d+)$/i);
+    if (!m) return null;
+    const n = Number(m[1]);
+    return n >= 1 && n <= 20 ? n : null;
+  }
+  function resolveProfileRecord(pupilsMap, n){
+    if (!isPlainObj(pupilsMap)) return { ok: false, found: false, key: null, legacy: false, record: null };
+    const plainKey = String(n);
+    if (Object.prototype.hasOwnProperty.call(pupilsMap, plainKey)) {
+      if (isPlainObj(pupilsMap[plainKey])) return { ok: true, found: true, key: plainKey, legacy: false, record: pupilsMap[plainKey] };
+      return { ok: false, found: false, key: plainKey, legacy: false, record: null };
+    }
+    const matches = Object.keys(pupilsMap).filter(k => normPupilId(k) === n).sort();
+    for (const k of matches) {
+      if (isPlainObj(pupilsMap[k])) return { ok: true, found: true, key: k, legacy: true, record: pupilsMap[k] };
+    }
+    if (matches.length) return { ok: false, found: false, key: matches[0], legacy: true, record: null };
+    return { ok: true, found: false, key: null, legacy: false, record: {} };
+  }
+  function resolveSubjectItem(subjItems, n, sKey){
+    if (!isPlainObj(subjItems)) return { ok: false, found: false, key: null, legacy: false, item: null };
+    const normSubj = String(sKey ?? '').trim().toLowerCase();
+    const plainKey = n + '|' + normSubj;
+    if (Object.prototype.hasOwnProperty.call(subjItems, plainKey)) {
+      if (isPlainObj(subjItems[plainKey])) return { ok: true, found: true, key: plainKey, legacy: false, item: subjItems[plainKey] };
+      return { ok: false, found: false, key: plainKey, legacy: false, item: null };
+    }
+    const matches = Object.keys(subjItems).filter(k => {
+      const sep = k.indexOf('|');
+      return sep > 0 && normPupilId(k.slice(0, sep)) === n && k.slice(sep + 1).trim().toLowerCase() === normSubj;
+    }).sort();
+    for (const k of matches) {
+      if (isPlainObj(subjItems[k])) return { ok: true, found: true, key: k, legacy: true, item: subjItems[k] };
+    }
+    if (matches.length) return { ok: false, found: false, key: matches[0], legacy: true, item: null };
+    return { ok: true, found: false, key: null, legacy: false, item: null };
+  }
+  function predictGroups(profileObj, trackerObj, roster){
+    const groupByNum = {};
+    const trackerGroupByNum = {};
+    const trPupils = isPlainObj(trackerObj) && isPlainObj(trackerObj.pupils) ? trackerObj.pupils : null;
+    const hasTracker = !!(trPupils && PATHWAYS.some(p => Array.isArray(trPupils[p]) && trPupils[p].some(lbl => String(lbl || '').trim())));
+    if (hasTracker) {
+      for (let n = 1; n <= 20; n++) {
+        if (roster.trackerRefByNum && roster.trackerRefByNum[n] && roster.groupByNum[n]) {
+          groupByNum[n] = roster.groupByNum[n];
+          trackerGroupByNum[n] = roster.groupByNum[n];
+        }
+      }
+    } else {
+      let anyProfGroup = false;
+      for (let n = 1; n <= 20; n++) {
+        if (PATHWAYS.includes(profileObj?.pupils?.[n]?.group)) { anyProfGroup = true; break; }
+      }
+      if (!anyProfGroup) {
+        PATHWAYS.forEach(p => DEFAULT_GROUPS[p].forEach(n => { groupByNum[n] = p; }));
+      }
+    }
+    for (let n = 1; n <= 20; n++) {
+      if (groupByNum[n]) continue;
+      const g = profileObj?.pupils?.[n]?.group;
+      if (PATHWAYS.includes(g)) groupByNum[n] = g;
+    }
+    return { hasTracker, groupByNum, trackerGroupByNum };
+  }
+  function owedMarksForPupil(n, rawTracker, roster){
+    const out = [];
+    const marks = isPlainObj(rawTracker) && isPlainObj(rawTracker.marks) ? rawTracker.marks : {};
+    for (const [k, m] of Object.entries(marks)) {
+      if (!isPlainObj(m)) continue;
+      const c = convertTrackerEntry(m);
+      const st = typeof c.state === 'string' ? c.state.trim().toLowerCase() : '';
+      if (c.done === true || st === 'done') continue;
+      if (st !== 'missed' && st !== 'partial') continue;
+      const parts = k.split('|');
+      if (parts.length !== 4 && parts.length !== 6) continue;
+      const slot = parseCheckedRowSlot(parts[0], parts[1], parts[2]);
+      if (!slot) continue;
+      const who = parts.length === 6 ? parts[5] : parts[3];
+      if (matchTrackerPupilNumber(who, rawTracker, roster) !== +n) continue;
+      const rawLes = (typeof c.lesson === 'string' || typeof c.lesson === 'number') ? String(c.lesson).trim() : '';
+      const lm = rawLes.match(/^L?0*([1-9]\d*)$/i);
+      const lesNum = lm ? parseInt(lm[1], 10) : (LN[slot.day + '|' + slot.p] || 0);
+      const lesLabel = lesNum ? ('L' + lesNum) : '';
+      const rawPath = String(parts.length === 6 ? parts[3] : (c.path || roster.groupByNum[n] || '')).trim();
+      const path = (PATHWAYS.includes(rawPath) || rawPath === 'ALL') ? rawPath : '';
+      const rawSubj = String(parts.length === 6 ? parts[4] : (c.subj || '')).trim();
+      const subjKey = rawSubj.toLowerCase();
+      const subj = ALLOWED_SUBJECTS.has(subjKey) ? SUBJECT_DISPLAY[subjKey] : '';
+      out.push({ key: k, w: slot.w, wLabel: slot.wLabel, d: slot.day, dShort: slot.dShort, dIdx: slot.dIdx, p: slot.p, pLabel: slot.pLabel, path, subj, lesson: lesNum, lesLabel, state: st });
+    }
+    out.sort((a, b) => a.w - b.w || a.dIdx - b.dIdx || a.p - b.p || a.subj.localeCompare(b.subj));
+    return out;
+  }
+  function owedBeforeSlot(item, slot){
+    if (!Number.isInteger(item.w) || item.w < 1 || item.w > WEEKS.length) return false;
+    if (item.w !== slot.w) return item.w < slot.w;
+    const itemD = Number.isInteger(item.dIdx) ? item.dIdx : DAYS.indexOf(item.d);
+    const slotD = DAYS.indexOf(slot.day);
+    if (itemD < 0 || slotD < 0) return false;
+    if (itemD !== slotD) return itemD < slotD;
+    if (!Number.isInteger(item.p) || !KNOWN_PERIODS.has(item.p)) return false;
+    return item.p < slot.p;
+  }
+  function formatSlotOwedMark(it){
+    return [it.wLabel, it.dShort, it.pLabel].filter(Boolean).join(' ') || 'Catch-up';
+  }
+  function codePrefixBeforeW(code){
+    const s = String(code || '').trim();
+    const idx = s.search(/_W\d+/i);
+    return idx >= 0 ? s.slice(0, idx) : s;
+  }
+  function lastExitForPupilSlot(n, slot, code, tallies, now){
+    const bDayIdx = DAYS.indexOf(slot.day);
+    const slotPrefix = codePrefixBeforeW(code).toUpperCase();
+    const fullCode = String(code || '').trim().toUpperCase();
+    const includeCurrent = slot.start <= now;
+    const candidates = [];
+    for (const [k, r] of Object.entries(isPlainObj(tallies) ? tallies : {})) {
+      if (!isPlainObj(r) || !isKnownExitState(r.state)) continue;
+      const parts = k.split('|');
+      if (parts.length !== 4) continue;
+      const rSlot = parseCheckedRowSlot(parts[0], parts[1], parts[2]);
+      if (!rSlot || normPupilId(parts[3]) !== +n) continue;
+      const hasSubj = typeof r.subj === 'string' && r.subj.trim() !== '';
+      const hasCode = typeof r.code === 'string' && r.code.trim() !== '';
+      if (!hasSubj && !hasCode) continue;
+      if (hasSubj && r.subj.trim() !== slot.subject) continue;
+      const isEarlier = rSlot.w < slot.w || (rSlot.w === slot.w && (rSlot.dIdx < bDayIdx || (rSlot.dIdx === bDayIdx && rSlot.p < slot.p)));
+      const isSame = rSlot.w === slot.w && rSlot.dIdx === bDayIdx && rSlot.p === slot.p;
+      if (!isEarlier && !(includeCurrent && isSame)) continue;
+      if (hasCode) {
+        const rCode = r.code.trim().toUpperCase();
+        if (isSame) {
+          if (rCode !== fullCode) continue;
+        } else {
+          if (codePrefixBeforeW(rCode) !== slotPrefix) continue;
+        }
+      }
+      candidates.push({ w: rSlot.w, dIdx: rSlot.dIdx, p: rSlot.p, state: r.state, code: r.code || '' });
+    }
+    candidates.sort((a, b) => b.w - a.w || b.dIdx - a.dIdx || b.p - a.p);
+    return candidates[0] || null;
+  }
+  function slotInfo(slot, roster, tallies, tracker, coverage){
+    const path = slot.path === 'ALL' ? sharedPath : slot.path;
+    const code = activeLessonCode(slot, path);
+    const file = lessonFiles[fileCode(code)];
+    const href = file ? '../../' + file.split('/').map(encodeURIComponent).join('/') : '';
+    const groups = slot.path === 'ALL' ? Object.keys(roster.groups) : [path];
+    const adapted = [];
+    const missedN = [], owedN = [], skip = [];
+    const missedMap = new Map(), owedMap = new Map();
+    for (const group of groups) {
+      const last = previousLesson(slot, group);
+      const inPackPath = group === path;
+      for (const n of roster.groups[group] || []) {
+        const tag = boardTag(n, roster);
+        if (pupilAdapt(n, roster).length || roster.profile?.pupils?.[n]?.tags?.length) adapted.push(tag);
+        if (!inPackPath) continue;
+        if (tallies[[slot.w, slot.day, slot.p, n].join('|')]?.state === 'absent') skip.push(n);
+        if (last) {
+          const absence = isPupilAbsentInSlot(n, last.w, last.day, last.p, tallies, tracker, roster);
+          const entry = coverage[n]?.[activeLessonCode(last, group)];
+          const wasMissed = entry ? (!entry.cleared || (entry.source === 'tracker_sync' && absence)) : absence;
+          if (wasMissed) {
+            missedN.push(n);
+            missedMap.set(n, tag);
+          }
+        }
+        const items = owedMarksForPupil(n, roster.tracker, roster).filter(item =>
+          item.subj === slot.subject && (!item.path || item.path === group || item.path === 'ALL') && owedBeforeSlot(item, slot));
+        if (items.length) {
+          owedN.push(n);
+          owedMap.set(n, tag + ' (' + items.length + ') · ' + items.map(formatSlotOwedMark).join(', '));
+        }
+      }
+    }
+    const lastForPath = previousLesson(slot, path);
+    for (let n = 1; n <= 20; n++) {
+      if (roster.groupByNum[n]) continue;
+      const tag = boardTag(n, roster);
+      if (tallies[[slot.w, slot.day, slot.p, n].join('|')]?.state === 'absent') skip.push(n);
+      if (lastForPath) {
+        const absence = isPupilAbsentInSlot(n, lastForPath.w, lastForPath.day, lastForPath.p, tallies, tracker, roster);
+        const entry = coverage[n]?.[activeLessonCode(lastForPath, path)];
+        const wasMissed = entry ? (!entry.cleared || (entry.source === 'tracker_sync' && absence)) : absence;
+        if (wasMissed) {
+          missedN.push(n);
+          missedMap.set(n, tag);
+        }
+      }
+      const items = owedMarksForPupil(n, roster.tracker, roster).filter(item =>
+        item.subj === slot.subject && (!item.path || item.path === path || item.path === 'ALL') && owedBeforeSlot(item, slot));
+      if (items.length) {
+        owedN.push(n);
+        owedMap.set(n, tag + ' (' + items.length + ') · ' + items.map(formatSlotOwedMark).join(', '));
+      }
+    }
+    const skipSet = new Set(skip);
+    const cu = [...new Set([...missedN, ...owedN])].filter(n => !skipSet.has(n)).sort((a, b) => a - b);
+    const missed = [...new Set(missedN)].filter(n => !skipSet.has(n)).sort((a, b) => a - b).map(n => missedMap.get(n));
+    const owed = [...new Set(owedN)].filter(n => !skipSet.has(n)).sort((a, b) => a - b).map(n => owedMap.get(n));
+    const packPath = slot.path === 'ALL' ? path : undefined;
+    const packHref = href ? href + packHash({ path: packPath, skip, cu }) : '';
+    return { path, code, file, href, groups, adapted, missed, owed, skip, cu, packHref };
+  }
+  function logPupilNum(raw){
+    if (typeof raw === 'number') return Number.isInteger(raw) && raw >= 1 && raw <= 99 ? raw : null;
+    if (typeof raw === 'string') {
+      if (!/^\d{1,2}$/.test(raw)) return null;
+      const n = Number(raw);
+      return n >= 1 && n <= 99 ? n : null;
+    }
+    return null;
+  }
+  function printedTodayRows(todayStr, code){
+    const log = read(KEYS.adaptLog, null);
+    const rows = (log && typeof log === 'object' && Array.isArray(log.rows)) ? log.rows : [];
+    const byN = new Map();
+    for (const r of rows) {
+      if (!r || typeof r !== 'object' || Array.isArray(r)) continue;
+      const n = logPupilNum(r.n);
+      if (n === null) continue;
+      if (r.d !== todayStr || r.code !== code) continue;
+      if (typeof r.route !== 'string' || !Object.prototype.hasOwnProperty.call(ROUTE_LABELS, r.route)) continue;
+      byN.set(n, { ...r, n });
+    }
+    return [...byN.entries()].sort((a, b) => a[0] - b[0]).map(([, r]) => r);
+  }
+  function printedTodayText(todayStr, code, roster){
+    const tags = printedTodayRows(todayStr, code).map(r => boardTag(r.n, roster) + (r.route === 'CATCHUP' ? ' (catch-up)' : ''));
+    return tags.join(', ') || 'None yet';
+  }
+  function renderNowPacks(){
+    const btn = $('nowPacks');
+    const printedEl = $('nowPacksPrinted');
+    const now = new Date(), s = currentActiveSlot(now).slot;
+    if (!s) {
+      if (btn) { btn.hidden = true; btn.href = '#'; }
+      if (printedEl) { printedEl.hidden = true; printedEl.replaceChildren(); }
+      return;
+    }
+    const roster = buildRoster(), tallies = read(KEYS.tally, {}) || {};
+    const tracker = dayTracker(roster.tracker), coverage = read(KEYS.covAbs, {}) || {};
+    const info = slotInfo(s, roster, tallies, tracker, coverage);
+    if (btn) {
+      if (!info.packHref) { btn.hidden = true; btn.href = '#'; }
+      else { btn.href = info.packHref; btn.hidden = false; }
+    }
+    if (printedEl) {
+      printedEl.replaceChildren(
+        el('b', {}, 'Packs printed today: '),
+        el('span', {}, printedTodayText(dateISO(now), info.code, roster))
+      );
+      printedEl.hidden = false;
+    }
+  }
+  nowPacksHook = renderNowPacks;
+  showChangeHook = () => redrawOpenHelpPreview(false);
+
+  function renderPupilList(roster = buildRoster()){
+    const ul = $('pupilPagesList');
+    if (!ul) return;
+    const focusedHref = ul.contains(document.activeElement) && document.activeElement.getAttribute('href');
+    const numSet = new Set(roster.allPupils);
+    const profPupils = isPlainObj(roster.profile?.pupils) ? roster.profile.pupils : {};
+    for (const k of Object.keys(profPupils)) {
+      const n = normPupilId(k);
+      if (n !== null && isPlainObj(profPupils[k])) numSet.add(n);
+    }
+    const subjStore = read(KEYS.subjectSettings, {}) || {};
+    const subjItems = (isPlainObj(subjStore) && isPlainObj(subjStore.items)) ? subjStore.items : {};
+    for (const k of Object.keys(subjItems)) {
+      const sep = k.indexOf('|');
+      if (sep > 0) {
+        const n = normPupilId(k.slice(0, sep));
+        if (n !== null && isPlainObj(subjItems[k])) numSet.add(n);
+      }
+    }
+    const nums = [...numSet].sort((a, b) => a - b);
+    const frag = document.createDocumentFragment();
+    for (const n of nums) {
+      const group = roster.groupByNum[n] || '';
+      const li = el('li', {});
+      li.append(el('a', { href: '#pupil=' + n }, boardTag(n, roster) + ' · ' + (group || 'No pathway set')));
+      frag.append(li);
+    }
+    ul.replaceChildren(frag);
+    if (focusedHref) {
+      Array.from(ul.querySelectorAll('a')).find(a => a.getAttribute('href') === focusedHref)?.focus({ preventScroll: true });
+    }
+  }
+  function parsePupilHash(){
+    const m = location.hash.match(PUPIL_HASH_RE);
+    return m ? Number(m[1]) : null;
+  }
+  function derivePupilTier(rec, group){
+    if (rec && KNOWN_TIERS.has(rec.tier)) return rec.tier;
+    return group === 'BUILD' ? 'Supported' : (group === 'LAUNCH' ? 'Aspire' : 'Independent');
+  }
+  function formatSubjParts(item, redactFn){
+    const parts = [];
+    if (typeof item.tier === 'string' && item.tier.trim()) parts.push(redactFn ? redactFn(item.tier.trim()) : item.tier.trim());
+    if (Array.isArray(item.add)) {
+      for (const a of item.add) {
+        const s = String(a || '').trim();
+        if (s) parts.push(redactFn ? redactFn(s) : s);
+      }
+    }
+    return parts;
+  }
+  function readPupilSubjects(n, subjStore, redactFn){
+    const items = (isPlainObj(subjStore) && isPlainObj(subjStore.items)) ? subjStore.items : {};
+    const out = [];
+    const allowedSeen = new Set();
+    for (const [k, item] of Object.entries(items)) {
+      const sep = k.indexOf('|');
+      if (sep <= 0 || normPupilId(k.slice(0, sep)) !== n || !isPlainObj(item)) continue;
+      const subjKey = k.slice(sep + 1).trim().toLowerCase();
+      if (ALLOWED_SUBJECTS.has(subjKey)) {
+        allowedSeen.add(subjKey);
+      } else {
+        const parts = formatSubjParts(item, redactFn);
+        if (parts.length) out.push({ subject: 'Other subject', text: 'Other subject: ' + parts.join(', ') });
+      }
+    }
+    for (const subjKey of allowedSeen) {
+      const res = resolveSubjectItem(items, n, subjKey);
+      if (!res.ok || !res.found) continue;
+      const subjName = SUBJECT_DISPLAY[subjKey];
+      const parts = formatSubjParts(res.item, redactFn);
+      if (parts.length) out.push({ subject: subjName, text: subjName + ': ' + parts.join(', ') });
+    }
+    out.sort((a, b) => a.subject.localeCompare(b.subject));
+    return out;
+  }
+
+  let inertedNodes = [];
+  let lastPupilOpener = null;
+  let openPupilNum = null;
+  function clearInert(){
+    for (const node of inertedNodes) node.inert = false;
+    inertedNodes = [];
+  }
+  function closePupilPage(skipHistory = false){
+    const page = $('pupilPage');
+    if (!page || page.hidden) return;
+    page.hidden = true;
+    page.replaceChildren();
+    clearInert();
+    const prevN = openPupilNum;
+    openPupilNum = null;
+    if (!skipHistory && parsePupilHash() !== null) {
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+    const detailsEl = $('pupilPages');
+    const summaryEl = detailsEl?.querySelector('summary');
+    const target = (lastPupilOpener && document.contains(lastPupilOpener))
+      ? lastPupilOpener
+      : (prevN ? document.querySelector('#pupilPagesList a[href="#pupil=' + prevN + '"]') : null);
+    lastPupilOpener = null;
+    if (target) {
+      if (detailsEl && detailsEl.contains(target)) detailsEl.open = true;
+      target.focus({ preventScroll: true });
+    } else if (summaryEl) {
+      summaryEl.focus({ preventScroll: true });
+    }
+  }
+  function openPupilPage(n, preserveState = false){
+    const page = $('pupilPage');
+    if (!page) return;
+    const prevScroll = preserveState ? page.scrollTop : 0;
+    const activeEl = preserveState && page.contains(document.activeElement) ? document.activeElement : null;
+    const focusId = activeEl && activeEl.id ? activeEl.id : '';
+    const focusHref = activeEl && activeEl.tagName === 'A' ? activeEl.getAttribute('href') : '';
+    const focusText = activeEl && activeEl.tagName === 'A' ? activeEl.textContent.trim() : '';
+    const focusArt = activeEl && activeEl.tagName === 'A' ? activeEl.closest('article') : null;
+    const focusSlot = focusArt?.dataset?.slot || '';
+    const focusLesson = focusArt?.querySelector('.launch-code')?.textContent?.trim() || '';
+
+    const now = new Date(), todayStr = dateISO(now);
+    const roster = buildRoster(), tallies = read(KEYS.tally, {}) || {};
+    const tracker = dayTracker(roster.tracker), coverage = read(KEYS.covAbs, {}) || {};
+    const subjStore = read(KEYS.subjectSettings, {}) || {};
+    const profPupils = isPlainObj(roster.profile?.pupils) ? roster.profile.pupils : {};
+    const recRes = resolveProfileRecord(profPupils, n);
+    const rec = (recRes.ok && recRes.found) ? recRes.record : {};
+    const pageRoster = recRes.legacy
+      ? { ...roster, profile: { ...roster.profile, pupils: { ...profPupils, [n]: rec } } }
+      : roster;
+    const group = roster.groupByNum[n] || (PATHWAYS.includes(rec.group) ? rec.group : '');
+    const tier = derivePupilTier(rec, group);
+    const shield = document.documentElement.dataset.privacyShield === 'on';
+    const redactOnShield = text => shield ? redactPublic(text, roster) : text;
+    const headTag = shield ? ('Pupil ' + n) : pupilTag(n, roster);
+    const adapts = pupilAdapt(n, pageRoster).map(redactOnShield);
+    const ticks = (Array.isArray(rec.tags) ? rec.tags.map(t => String(t || '').trim()).filter(Boolean) : []).map(redactOnShield);
+    const subjList = readPupilSubjects(n, subjStore, redactOnShield);
+    const allOwed = owedMarksForPupil(n, roster.tracker, roster);
+
+    const inner = el('div', { class: 'pp-inner' });
+    const headBar = el('div', { class: 'pp-head' });
+    const backBtn = el('button', { type: 'button', id: 'pupilPageBack' }, 'Back to My tools');
+    backBtn.addEventListener('click', () => closePupilPage(false));
+    headBar.append(el('h2', { id: 'pupilPageTitle', tabindex: '-1' }, headTag), backBtn);
+    inner.append(headBar);
+
+    // Head details (never read rec.note or rec.printNote)
+    const headCard = el('section', { class: 'pp-card' });
+    const metaChips = el('div', { class: 'pp-chips' });
+    if (group) {
+      metaChips.append(el('span', { class: 'pp-chip' }, 'Pathway: ' + group));
+    } else {
+      const noPath = el('span', { class: 'pp-chip' });
+      noPath.append(el('span', {}, 'Pathway: '), el('strong', {}, 'No pathway set'));
+      metaChips.append(noPath);
+    }
+    metaChips.append(el('span', { class: 'pp-chip' }, 'Tier: ' + tier));
+    headCard.append(metaChips);
+
+    const helpLine = el('p', {});
+    helpLine.append(el('strong', {}, 'Help lines: '), el('span', {}, adapts.length ? adapts.join(', ') : 'None'));
+    const tickLine = el('p', {});
+    tickLine.append(el('strong', {}, 'Ticks: '), el('span', {}, ticks.length ? ticks.join(', ') : 'None'));
+    const subjLine = el('p', {});
+    subjLine.append(el('strong', {}, 'Subject settings: '), el('span', {}, subjList.length ? subjList.map(s => s.text).join(' · ') : 'None'));
+    headCard.append(helpLine, tickLine, subjLine);
+    inner.append(headCard);
+
+    // Today and this week
+    const weekCard = el('section', { class: 'pp-card' });
+    weekCard.append(el('h3', {}, 'Today and this week'));
+    const dow = now.getDay();
+    const deltaToMon = dow === 0 ? 1 : (dow === 6 ? 2 : 1 - dow);
+    const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() + deltaToMon, 12);
+    const weekItems = [];
+    const [th, tm] = SCHOOL_DAY[0].start.split(':').map(Number);
+    for (let i = 0; i < 5; i++) {
+      const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i, 12);
+      const daySlots = schoolSlots(d, times);
+      if (d.getDay() === 4 && daySlots.length) {
+        const tutorStart = new Date(d.getFullYear(), d.getMonth(), d.getDate(), th, tm);
+        weekItems.push({ isTutor: true, start: tutorStart, w: daySlots[0].w, tutor: SCHOOL_DAY[0] });
+      }
+      for (const s of daySlots) {
+        if (s.path === 'ALL' || (group && s.path === group)) weekItems.push({ isTutor: false, start: s.start, slot: s });
+      }
+    }
+    weekItems.sort((a, b) => a.start - b.start);
+
+    if (!weekItems.length) {
+      weekCard.append(el('p', {}, 'No lessons in this week’s timetable.'));
+    } else {
+      for (const item of weekItems) {
+        const isToday = dateISO(item.start) === todayStr;
+        const dateLabel = item.start.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short' });
+        if (item.isTutor) {
+          const tutor = item.tutor;
+          const card = el('article', { class: 'pp-lesson pp-tutor' + (isToday ? ' is-today' : '') });
+          const sessionTxt = LIFE_SKILLS[item.w] ? 'Session: ' + LIFE_SKILLS[item.w] : 'No dated session this week. Pick a catch-up session if needed.';
+          card.append(
+            el('h4', {}, (isToday ? 'Today · ' : '') + dateLabel + ' · Tutor time · ' + tutor.start + '–' + tutor.end + ' · Independent Life Skills · All groups'),
+            el('p', { class: 'launch-code' }, sessionTxt)
+          );
+          weekCard.append(card);
+          continue;
+        }
+        const slot = item.slot;
+        const effPath = group || sharedPath;
+        const code = activeLessonCode(slot, effPath);
+        const file = lessonFiles[fileCode(code)];
+        const href = file ? '../../' + file.split('/').map(encodeURIComponent).join('/') : '';
+        const card = el('article', { class: 'pp-lesson' + (isToday ? ' is-today' : ''), 'data-slot': slot.day + '|' + slot.p });
+        const timeStr = times.starts[slot.p - 1] + '–' + times.ends[slot.p - 1];
+        card.append(
+          el('h4', {}, (isToday ? 'Today · ' : '') + dateLabel + ' · Period ' + slot.p + ' (' + timeStr + ') · ' + slot.subject),
+          el('p', { class: 'launch-code' }, code)
+        );
+        const last = previousLesson(slot, effPath);
+        let wasMissed = false;
+        if (last) {
+          const absence = isPupilAbsentInSlot(n, last.w, last.day, last.p, tallies, tracker, roster);
+          const entry = coverage[n]?.[activeLessonCode(last, effPath)];
+          wasMissed = entry ? (!entry.cleared || (entry.source === 'tracker_sync' && absence)) : absence;
+        }
+        const slotOwed = allOwed.filter(it =>
+          it.subj === slot.subject && (!it.path || it.path === effPath || it.path === 'ALL') && owedBeforeSlot(it, slot));
+        const owesOrMissed = wasMissed || slotOwed.length > 0;
+        if (wasMissed) card.append(el('p', {}, 'Missed last lesson'));
+        if (slotOwed.length) {
+          card.append(el('p', {}, 'Catch-up owed: ' + slotOwed.map(formatSlotOwedMark).join(', ')));
+        }
+        const printedRow = printedTodayRows(todayStr, code).find(r => r.n === n);
+        const routeText = printedRow ? (ROUTE_LABELS[printedRow.route] || 'Usual') : 'None yet';
+        card.append(el('p', {}, 'Pack printed today: ' + routeText));
+
+        const lastExit = lastExitForPupilSlot(n, slot, code, tallies, now);
+        const hasKnownExit = !!(lastExit && isKnownExitState(lastExit.state));
+        const exitLoc = hasKnownExit ? [lastExit.w ? ('W' + lastExit.w) : '', DAYS[lastExit.dIdx]?.slice(0, 3) || '', lastExit.p ? ('P' + lastExit.p) : ''].filter(Boolean).join(' ') : '';
+        const exitText = hasKnownExit
+          ? (EXIT_LABELS[lastExit.state] + (exitLoc ? ' (' + exitLoc + ')' : ''))
+          : 'Not recorded';
+        card.append(el('p', {}, 'Last exit: ' + exitText));
+
+        if (href) {
+          const cuList = owesOrMissed ? [n] : [];
+          const acts = el('div', { class: 'pp-actions' });
+          acts.append(
+            el('a', { href: href + packHash({ cu: cuList, only: n }), target: '_blank', rel: 'noopener' }, 'Print this pupil’s pack'),
+            el('a', { href: href + packHash({ cu: cuList, only: n, view: true }), target: '_blank', rel: 'noopener' }, 'View pack on screen')
+          );
+          card.append(acts);
+        } else {
+          card.append(el('p', {}, 'No linked lesson'));
+        }
+        weekCard.append(card);
+      }
+    }
+    inner.append(weekCard);
+
+    // Catch-up owed across all subjects (as Pupil overview shows it)
+    const owedCard = el('section', { class: 'pp-card' });
+    owedCard.append(el('h3', {}, 'Catch-up owed'));
+    if (!allOwed.length) {
+      owedCard.append(el('p', {}, 'None owed'));
+    } else {
+      const chips = el('div', { class: 'pp-chips' });
+      for (const it of allOwed) {
+        const subjLbl = it.subj
+          ? (ALLOWED_SUBJECTS.has(it.subj.toLowerCase()) ? it.subj : redactOnShield(it.subj))
+          : 'Lesson';
+        const lbl = [subjLbl, it.wLabel, it.lesLabel].filter(Boolean).join(' · ') + (it.state === 'partial' ? ' (partial)' : '');
+        chips.append(el('span', { class: 'pp-chip pp-chip-owed' }, lbl));
+      }
+      owedCard.append(chips);
+    }
+    inner.append(owedCard);
+
+    page.replaceChildren(inner);
+    clearInert();
+    for (const child of Array.from(document.body.children)) {
+      if (child === page || child.tagName === 'SCRIPT' || child.inert) continue;
+      child.inert = true;
+      inertedNodes.push(child);
+    }
+    openPupilNum = n;
+    page.hidden = false;
+    if (preserveState) {
+      page.scrollTop = prevScroll;
+      let restored = null;
+      if (focusId) restored = page.querySelector('#' + CSS.escape(focusId));
+      if (!restored && focusText && focusSlot && focusLesson) {
+        restored = Array.from(page.querySelectorAll('a')).find(a =>
+          a.textContent.trim() === focusText &&
+          (a.closest('article')?.dataset?.slot || '') === focusSlot &&
+          (a.closest('article')?.querySelector('.launch-code')?.textContent?.trim() || '') === focusLesson
+        );
+      }
+      if (!restored && focusText && focusSlot) {
+        restored = Array.from(page.querySelectorAll('a')).find(a =>
+          a.textContent.trim() === focusText &&
+          (a.closest('article')?.dataset?.slot || '') === focusSlot
+        );
+      }
+      if (!restored && focusText && focusLesson) {
+        restored = Array.from(page.querySelectorAll('a')).find(a =>
+          a.textContent.trim() === focusText &&
+          (a.closest('article')?.querySelector('.launch-code')?.textContent?.trim() || '') === focusLesson
+        );
+      }
+      if (!restored && focusHref) restored = Array.from(page.querySelectorAll('a')).find(a => a.getAttribute('href') === focusHref);
+      if (restored) restored.focus({ preventScroll: true });
+      else if (activeEl) $('pupilPageTitle')?.focus({ preventScroll: true });
+    } else {
+      $('pupilPageTitle')?.focus({ preventScroll: true });
+    }
+  }
+
+  function validHelpString(v){
+    return typeof v === 'string' && v.length <= 60 && !/[<>{}]/.test(v);
+  }
+  const KNOWN_HELP_PHRASES_RE = [...KNOWN_HELP_LINES]
+    .sort((a, b) => b.length - a.length)
+    .map(p => new RegExp('(?<![\\p{L}\\p{M}\\p{N}])' + escapeRE(p) + '(?![\\p{L}\\p{M}\\p{N}])', 'giu'));
+  const KNOWN_HELP_RES_G = KNOWN_HELP_RES.map(re =>
+    new RegExp('(?<![\\p{L}\\p{M}\\p{N}])(?:' + re.source + ')(?![\\p{L}\\p{M}\\p{N}])', 'giu'));
+  function looksLikeName(v){
+    const s = String(v ?? '').trim();
+    if (!s) return false;
+    const covered = new Uint8Array(s.length);
+    for (const re of [...KNOWN_HELP_PHRASES_RE, ...KNOWN_HELP_RES_G]) {
+      re.lastIndex = 0;
+      for (const m of s.matchAll(re)) {
+        for (let i = m.index; i < m.index + m[0].length; i++) covered[i] = 1;
+      }
+    }
+    let rest = '';
+    for (let i = 0; i < s.length; i++) rest += covered[i] ? ' ' : s[i];
+    return /(^|[^\p{L}\p{M}\p{N}])\p{Lu}/u.test(rest);
+  }
+  function validateHelpSettings(data){
+    if (!isPlainObj(data)) return 'top level must be an object';
+    const topKeys = Object.keys(data);
+    if (topKeys.some(k => k !== 'schema' && k !== 'pupils') || !('schema' in data) || !('pupils' in data)) {
+      return 'unexpected top-level key';
+    }
+    if (data.schema !== 'mbm_help_settings_v1') return 'wrong schema';
+    if (!isPlainObj(data.pupils)) return 'pupils must be an object';
+    for (const [pKey, pVal] of Object.entries(data.pupils)) {
+      if (!/^([1-9]|1\d|20)$/.test(pKey)) return 'pupil key "' + pKey + '" must be 1 to 20';
+      if (!isPlainObj(pVal)) return 'pupil ' + pKey + ' must be an object';
+      for (const k of Object.keys(pVal)) {
+        if (!['adapt', 'tags', 'tier', 'group', 'subjects'].includes(k)) return 'unexpected key "' + k + '"';
+      }
+      if ('adapt' in pVal) {
+        if (!Array.isArray(pVal.adapt) || !pVal.adapt.every(validHelpString)) return 'bad adapt value for pupil ' + pKey;
+      }
+      if ('tags' in pVal) {
+        if (!Array.isArray(pVal.tags) || pVal.tags.length > 8 || !pVal.tags.every(validHelpString) || pVal.tags.map(s => s.trim()).filter(Boolean).length > 8) {
+          return 'bad tags value for pupil ' + pKey;
+        }
+      }
+      if ('tier' in pVal) {
+        if (!validHelpString(pVal.tier) || !['', 'Supported', 'Independent', 'Aspire'].includes(pVal.tier)) return 'bad tier for pupil ' + pKey;
+      }
+      if ('group' in pVal) {
+        if (!validHelpString(pVal.group) || !PATHWAYS.includes(pVal.group)) return 'bad group for pupil ' + pKey;
+      }
+      if ('subjects' in pVal) {
+        if (!isPlainObj(pVal.subjects)) return 'bad subjects for pupil ' + pKey;
+        for (const [sKey, sVal] of Object.entries(pVal.subjects)) {
+          if (!validHelpString(sKey) || !ALLOWED_SUBJECTS.has(sKey)) return 'unknown subject "' + sKey + '"';
+          if (!isPlainObj(sVal)) return 'bad subject entry "' + sKey + '"';
+          const sKeys = Object.keys(sVal);
+          if (sKeys.some(k => k !== 'add') || !('add' in sVal)) return 'unexpected key in subject "' + sKey + '"';
+          if (!Array.isArray(sVal.add) || !sVal.add.every(validHelpString)) return 'bad add list in subject "' + sKey + '"';
+        }
+      }
+      const hasAny = ('adapt' in pVal) || ('tags' in pVal) || ('tier' in pVal) || ('group' in pVal) ||
+        ('subjects' in pVal && Object.keys(pVal.subjects).length > 0);
+      if (!hasAny) return 'pupil ' + pKey + ' has no settings';
+    }
+    return '';
+  }
+  function mergedSubjectCount(parsed, subjItems){
+    const keys = new Set(Object.keys(subjItems || {}));
+    for (const [pKey, pVal] of Object.entries(parsed?.pupils || {})) {
+      if (!pVal.subjects) continue;
+      for (const sKey of Object.keys(pVal.subjects)) keys.add(pKey + '|' + sKey);
+    }
+    return keys.size;
+  }
+  let helpFileSeq = 0;
+  let helpPreviewSeq = 0;
+  let helpPreviewState = null;
+  function parseHelpStoreObj(raw){
+    if (raw === null) return { ok: true, obj: {} };
+    try {
+      const val = JSON.parse(raw);
+      if (!isPlainObj(val)) return { ok: false, obj: null };
+      return { ok: true, obj: val };
+    } catch (e) {
+      return { ok: false, obj: null };
+    }
+  }
+  function readHelpSnapshot(parsed){
+    let profRaw, subjRaw, labelsRaw, trackerRaw;
+    try {
+      profRaw = localStorage.getItem(KEYS.profile);
+      subjRaw = localStorage.getItem(KEYS.subjectSettings);
+      labelsRaw = localStorage.getItem(KEYS.pupilKey);
+      trackerRaw = localStorage.getItem(KEYS.tracker);
+    } catch (e) {
+      return { ok: false };
+    }
+    const p = parseHelpStoreObj(profRaw);
+    const s = parseHelpStoreObj(subjRaw);
+    const l = parseHelpStoreObj(labelsRaw);
+    const t = parseHelpStoreObj(trackerRaw);
+    if (!p.ok || !s.ok || !l.ok || !t.ok) return { ok: false };
+    if (Object.prototype.hasOwnProperty.call(p.obj, 'pupils') && !isPlainObj(p.obj.pupils)) return { ok: false };
+    if (Object.prototype.hasOwnProperty.call(s.obj, 'items') && !isPlainObj(s.obj.items)) return { ok: false };
+    if (Object.prototype.hasOwnProperty.call(t.obj, 'pupils') && !isPlainObj(t.obj.pupils)) return { ok: false };
+    if (Object.prototype.hasOwnProperty.call(t.obj, 'marks') && !isPlainObj(t.obj.marks)) return { ok: false };
+    const pupilsMap = Object.prototype.hasOwnProperty.call(p.obj, 'pupils') ? p.obj.pupils : {};
+    const subjItems = Object.prototype.hasOwnProperty.call(s.obj, 'items') ? s.obj.items : {};
+    if (parsed && isPlainObj(parsed.pupils)) {
+      for (const [pKey, pVal] of Object.entries(parsed.pupils)) {
+        const n = Number(pKey);
+        if (!resolveProfileRecord(pupilsMap, n).ok) return { ok: false };
+        if (pVal.subjects) {
+          for (const sKey of Object.keys(pVal.subjects)) {
+            if (!resolveSubjectItem(subjItems, n, sKey).ok) return { ok: false };
+          }
+        }
+      }
+    }
+    return {
+      ok: true,
+      profRaw, subjRaw, labelsRaw, trackerRaw,
+      prof: p.obj, subj: s.obj, labels: l.obj, tracker: t.obj
+    };
+  }
+  function trySetRawStore(key, str){
+    try { localStorage.setItem(key, str); return true; } catch (e) { return false; }
+  }
+  function rollbackWrittenKeys(written){
+    let allOk = true;
+    for (const entry of written) {
+      try {
+        const cur = localStorage.getItem(entry.key);
+        if (cur !== entry.wrote) {
+          allOk = false;
+          continue;
+        }
+        if (entry.before === null) localStorage.removeItem(entry.key);
+        else localStorage.setItem(entry.key, entry.before);
+        if (localStorage.getItem(entry.key) !== entry.before) allOk = false;
+      } catch (e) {
+        allOk = false;
+      }
+    }
+    return allOk;
+  }
+  function buildHelpPlan(parsed, prof, subjStore, roster, snap){
+    const pupilsMap = Object.prototype.hasOwnProperty.call(prof, 'pupils') ? prof.pupils : {};
+    const subjItems = Object.prototype.hasOwnProperty.call(subjStore, 'items') ? subjStore.items : {};
+
+    const curPred = predictGroups(prof, roster.tracker, roster);
+    const sortedEntries = Object.entries(parsed.pupils).sort((a, b) => Number(a[0]) - Number(b[0]));
+    const simPupils = { ...pupilsMap };
+    let fileSetsGroup = false;
+    let hasSubjects = false;
+    let fileGroupCount = 0;
+    let diffGroupCount = 0;
+
+    for (const [pKey, pVal] of sortedEntries) {
+      const n = Number(pKey);
+      if (pVal.subjects && Object.keys(pVal.subjects).length) hasSubjects = true;
+      const recRes = resolveProfileRecord(pupilsMap, n);
+      const simRec = { ...(recRes.found ? recRes.record : {}) };
+      const trPath = curPred.trackerGroupByNum[n] || '';
+      if (typeof pVal.group === 'string' && PATHWAYS.includes(pVal.group)) {
+        fileGroupCount++;
+        const curGroup = curPred.groupByNum[n] || '';
+        if (curGroup && curGroup !== pVal.group) diffGroupCount++;
+        if (!trPath || trPath === pVal.group) {
+          simRec.group = pVal.group;
+          fileSetsGroup = true;
+        }
+      } else if (recRes.legacy && PATHWAYS.includes(simRec.group)) {
+        fileSetsGroup = true;
+      }
+      simPupils[pKey] = simRec;
+    }
+    const afterPred = predictGroups({ ...prof, pupils: simPupils }, roster.tracker, roster);
+
+    let anyProfGroupToday = false;
+    for (let n = 1; n <= 20; n++) {
+      if (PATHWAYS.includes(pupilsMap[n]?.group)) { anyProfGroupToday = true; break; }
+    }
+    const lostNums = [];
+    if (!curPred.hasTracker && !anyProfGroupToday && fileSetsGroup) {
+      for (let n = 1; n <= 20; n++) {
+        if (curPred.groupByNum[n] && !afterPred.groupByNum[n]) lostNums.push('P' + n);
+      }
+    }
+
+    const rows = [];
+    for (const [pKey, pVal] of sortedEntries) {
+      const n = Number(pKey);
+      const tag = boardTag(n, roster);
+      const devicePath = curPred.groupByNum[n] || 'Not set';
+      const recRes = resolveProfileRecord(pupilsMap, n);
+      const old = recRes.found ? recRes.record : {};
+      if ('adapt' in pVal) {
+        const nextAdapt = pVal.adapt.map(s => s.trim()).filter(Boolean).slice(0, 4);
+        const oldAdapt = Array.isArray(old.adapt) ? old.adapt : [];
+        const warn = nextAdapt.some(looksLikeName) ? 'Check this line: it may be a name' : '';
+        rows.push({ pKey, tag, devicePath, setting: 'Help lines', nowTxt: oldAdapt.join(', ') || 'None', newTxt: nextAdapt.join(', ') || 'None', warnTxt: warn });
+      }
+      if ('tags' in pVal) {
+        const nextTags = pVal.tags.map(s => s.trim()).filter(Boolean);
+        const oldTags = Array.isArray(old.tags) ? old.tags : [];
+        const warn = nextTags.some(looksLikeName) ? 'Check this line: it may be a name' : '';
+        rows.push({ pKey, tag, devicePath, setting: 'Ticks', nowTxt: oldTags.join(', ') || 'None', newTxt: nextTags.join(', ') || 'None', warnTxt: warn });
+      }
+      if ('tier' in pVal) {
+        rows.push({ pKey, tag, devicePath, setting: 'Tier', nowTxt: old.tier || 'Not set', newTxt: pVal.tier || 'Not set', warnTxt: '' });
+      }
+      if (typeof pVal.group === 'string' && PATHWAYS.includes(pVal.group)) {
+        const trPath = curPred.trackerGroupByNum[n] || '';
+        const nowGroup = devicePath;
+        const afterGroup = afterPred.groupByNum[n] || pVal.group;
+        if (trPath && trPath !== pVal.group) {
+          rows.push({
+            pKey, tag, devicePath,
+            setting: 'Pathway',
+            nowTxt: nowGroup,
+            newTxt: 'Pathway after Save: ' + afterGroup + '. This file\'s pathway (' + pVal.group + ') will not be saved.',
+            warnTxt: 'Pathway: the tracker list says ' + trPath + ', and the tracker list wins. Change it in the Catch-up tracker'
+          });
+        } else {
+          rows.push({ pKey, tag, devicePath, setting: 'Pathway', nowTxt: nowGroup, newTxt: 'Pathway after Save: ' + afterGroup, warnTxt: '' });
+        }
+      } else {
+        const curGroup = curPred.groupByNum[n] || '';
+        const afterGroup = afterPred.groupByNum[n] || '';
+        if (recRes.legacy && afterGroup && afterGroup !== curGroup) {
+          rows.push({
+            pKey, tag, devicePath,
+            setting: 'Pathway',
+            nowTxt: devicePath,
+            newTxt: 'Pathway after Save: ' + afterGroup + ' (from this pupil\'s older record)',
+            warnTxt: ''
+          });
+        }
+      }
+      if (pVal.subjects) {
+        for (const [sKey, sObj] of Object.entries(pVal.subjects)) {
+          const itemRes = resolveSubjectItem(subjItems, n, sKey);
+          const oldSubj = itemRes.found ? itemRes.item : null;
+          const oldParts = oldSubj
+            ? [oldSubj.tier, ...(Array.isArray(oldSubj.add) ? oldSubj.add : [])].map(x => String(x || '').trim()).filter(Boolean)
+            : [];
+          const keptTier = (oldSubj && typeof oldSubj.tier === 'string' && KNOWN_TIERS.has(oldSubj.tier)) ? oldSubj.tier : '';
+          const nextAdd = sObj.add.map(s => s.trim()).filter(Boolean);
+          const newParts = [keptTier, ...nextAdd].filter(Boolean);
+          const warn = nextAdd.some(looksLikeName) ? 'Check this line: it may be a name' : '';
+          rows.push({ pKey, tag, devicePath, setting: SUBJECT_DISPLAY[sKey] || sKey, nowTxt: oldParts.join(', ') || 'None', newTxt: newParts.join(', ') || 'None', warnTxt: warn });
+        }
+      }
+    }
+
+    const mismatch = (fileGroupCount >= 3 && diffGroupCount * 2 >= fileGroupCount)
+      ? { n: diffGroupCount, m: fileGroupCount }
+      : null;
+    const overLimit = hasSubjects && mergedSubjectCount(parsed, subjItems) > 400;
+    const hasNumberOnlyRow = rows.some(r => r.tag === ('P' + r.pKey));
+    const labelsMap = isPlainObj(snap?.labels) ? snap.labels : {};
+    const storedLabels = sortedEntries.map(([pKey]) => [
+      pKey,
+      Object.prototype.hasOwnProperty.call(labelsMap, pKey) ? labelsMap[pKey] : null,
+      roster.keyByNum[Number(pKey)] || ''
+    ]);
+    const sig = JSON.stringify({ rows, lostNums, mismatch, overLimit, storedLabels, show: roster.show, shield: false });
+    return { pupilCount: sortedEntries.length, hasSubjects, rows, lostNums, mismatch, overLimit, hasNumberOnlyRow, sig };
+  }
+  function renderHelpPreview(parsed, opts = {}){
+    const wrap = $('helpPreview'), statusEl = $('helpFileStatus');
+    const hadFocus = wrap.contains(document.activeElement);
+    const source = opts.source || 'redraw';
+    const snap = opts.snap || readHelpSnapshot(parsed);
+    if (!snap.ok) {
+      helpPreviewSeq++;
+      helpPreviewState = null;
+      wrap.replaceChildren();
+      statusEl.textContent = source === 'load'
+        ? 'This file was not loaded: this device could not read your settings. Nothing was saved.'
+        : 'Not saved: this device could not read your settings. Nothing was changed.';
+      if (hadFocus) $('helpFileBtn')?.focus({ preventScroll: true });
+      return false;
+    }
+
+    const myPreviewId = ++helpPreviewSeq;
+    const shield = document.documentElement.dataset.privacyShield === 'on';
+    if (shield) {
+      const shieldNote = el('p', { id: 'helpShieldNote' }, 'The privacy shield is on. Switch it off to check and save this file.');
+      const actions = el('div', { class: 'row' });
+      const cancelBtn = el('button', { type: 'button', id: 'helpCancelBtn' }, 'Cancel');
+      cancelBtn.addEventListener('click', () => {
+        if (!helpPreviewState || helpPreviewState.id !== myPreviewId || !wrap.contains(cancelBtn)) return;
+        helpFileSeq++;
+        helpPreviewSeq++;
+        helpPreviewState = null;
+        wrap.replaceChildren();
+        $('helpFileInput').value = '';
+        statusEl.textContent = 'Cancelled. Nothing was saved.';
+        if ($('pupilPages')) $('pupilPages').open = true;
+        $('helpFileBtn')?.focus({ preventScroll: true });
+      });
+      actions.append(cancelBtn);
+      wrap.replaceChildren(shieldNote, actions);
+      helpPreviewState = { id: myPreviewId, parsed, sig: '', shield: true };
+      statusEl.textContent = 'The privacy shield is on. Switch it off to check and save this file.';
+      if (hadFocus) cancelBtn.focus({ preventScroll: true });
+      return true;
+    }
+
+    const roster = buildRoster({ pupilKey: snap.labels, profile: snap.prof, tracker: snap.tracker });
+    const plan = buildHelpPlan(parsed, snap.prof, snap.subj, roster, snap);
+
+    const mismatchBox = plan.mismatch
+      ? el('div', { id: 'helpPathMismatch', class: 'note help-warn', role: 'alert' },
+          plan.mismatch.n + ' of ' + plan.mismatch.m + ' pupils have a different pathway on this device from the one in this file. The file may use different pupil numbers. Check each row before you save.')
+      : null;
+
+    const tbl = el('table', {});
+    const thead = el('thead', {}), htr = el('tr', {});
+    for (const h of ['Pupil', 'Shown as', 'Pathway now', 'Setting', 'Now', 'New', 'Check']) htr.append(el('th', {}, h));
+    thead.append(htr);
+    const tbody = el('tbody', {});
+    for (const r of plan.rows) {
+      const tr = el('tr', {});
+      tr.append(
+        el('td', {}, 'Pupil ' + r.pKey),
+        el('td', {}, r.tag),
+        el('td', {}, r.devicePath),
+        el('td', {}, r.setting),
+        el('td', {}, r.nowTxt),
+        el('td', {}, r.newTxt),
+        el('td', r.warnTxt ? { class: 'help-warn' } : {}, r.warnTxt || '')
+      );
+      tbody.append(tr);
+    }
+    tbl.append(thead, tbody);
+
+    const warnBox = plan.lostNums.length
+      ? el('div', { id: 'helpGroupWarn', class: 'note help-warn', role: 'alert' },
+          'Saving pathways from this file turns off the default class groups. These pupils will then have no pathway: ' + plan.lostNums.join(', '))
+      : null;
+
+    const numbersHint = plan.hasNumberOnlyRow
+      ? el('p', { id: 'helpNumbersHint', class: 'hint' },
+          'Some rows show a number only. Set Show to Initials to see who each row is. A number that stays means this device has no pupil saved at that number.')
+      : null;
+
+    const confirmWrap = el('label', { class: 'help-confirm' });
+    const confirmBox = el('input', { type: 'checkbox', id: 'helpConfirmRows' });
+    confirmWrap.append(confirmBox, el('span', {}, 'I have checked that each row is the right pupil'));
+
+    const actions = el('div', { class: 'row' });
+    const saveBtn = el('button', { type: 'button', id: 'helpSaveBtn', disabled: '' }, 'Save');
+    const cancelBtn = el('button', { type: 'button', id: 'helpCancelBtn' }, 'Cancel');
+    confirmBox.addEventListener('change', () => {
+      if (!helpPreviewState || helpPreviewState.id !== myPreviewId || !wrap.contains(confirmBox)) return;
+      saveBtn.disabled = !confirmBox.checked;
+    });
+    saveBtn.addEventListener('click', () => {
+      if (!helpPreviewState || helpPreviewState.id !== myPreviewId || !wrap.contains(saveBtn) || !wrap.contains(confirmBox)) return;
+      if (document.documentElement.dataset.privacyShield === 'on') return;
+      if (!confirmBox.checked) return;
+
+      const saveSnap = readHelpSnapshot(parsed);
+      if (!saveSnap.ok) {
+        statusEl.textContent = 'Not saved: this device could not read your settings. Nothing was changed.';
+        return;
+      }
+      const freshRoster = buildRoster({ pupilKey: saveSnap.labels, profile: saveSnap.prof, tracker: saveSnap.tracker });
+      const freshPlan = buildHelpPlan(parsed, saveSnap.prof, saveSnap.subj, freshRoster, saveSnap);
+      if (freshPlan.sig !== plan.sig) {
+        if (renderHelpPreview(parsed, { source: 'redraw', snap: saveSnap, focusConfirm: true })) {
+          statusEl.textContent = 'Your class list changed after this preview. Check it again, then save.';
+        }
+        return;
+      }
+      if (freshPlan.overLimit) {
+        statusEl.textContent = 'Not saved: it would take saved subject settings over the 400 limit. Nothing was changed.';
+        return;
+      }
+
+      const nextProf = { ...saveSnap.prof };
+      if (!nextProf.version) nextProf.version = 1;
+      const curPupils = Object.prototype.hasOwnProperty.call(nextProf, 'pupils') ? nextProf.pupils : {};
+      const nextPupils = { ...curPupils };
+      const freshPred = predictGroups(nextProf, freshRoster.tracker, freshRoster);
+      for (const [pKey, pVal] of Object.entries(parsed.pupils)) {
+        const n = Number(pKey);
+        const recRes = resolveProfileRecord(curPupils, n);
+        const oldRec = recRes.found ? { ...recRes.record } : {};
+        if ('adapt' in pVal) oldRec.adapt = pVal.adapt.map(s => s.trim()).filter(Boolean).slice(0, 4);
+        if ('tags' in pVal) oldRec.tags = pVal.tags.map(s => s.trim()).filter(Boolean);
+        if ('tier' in pVal) oldRec.tier = pVal.tier;
+        if (typeof pVal.group === 'string' && PATHWAYS.includes(pVal.group)) {
+          const trPath = freshPred.trackerGroupByNum[n] || '';
+          if (!trPath || trPath === pVal.group) oldRec.group = pVal.group;
+        }
+        nextPupils[pKey] = oldRec;
+      }
+      nextProf.pupils = nextPupils;
+      const nextProfStr = JSON.stringify(nextProf);
+
+      let nextSubjStr = null;
+      if (freshPlan.hasSubjects) {
+        const nextSubj = { ...saveSnap.subj };
+        if (!nextSubj.version) nextSubj.version = 1;
+        const curItems = Object.prototype.hasOwnProperty.call(nextSubj, 'items') ? nextSubj.items : {};
+        const nextItems = { ...curItems };
+        const savedIso = new Date().toISOString();
+        for (const [pKey, pVal] of Object.entries(parsed.pupils)) {
+          if (!pVal.subjects) continue;
+          const n = Number(pKey);
+          for (const [sKey, sObj] of Object.entries(pVal.subjects)) {
+            const itemRes = resolveSubjectItem(curItems, n, sKey);
+            const baseItem = itemRes.found ? { ...itemRes.item } : {};
+            const keptTier = (typeof baseItem.tier === 'string' && KNOWN_TIERS.has(baseItem.tier)) ? baseItem.tier : '';
+            nextItems[pKey + '|' + sKey] = {
+              ...baseItem,
+              tier: keptTier,
+              add: sObj.add.map(s => s.trim()).filter(Boolean),
+              saved: savedIso
+            };
+          }
+        }
+        nextSubj.items = nextItems;
+        nextSubjStr = JSON.stringify(nextSubj);
+      }
+
+      let curProfRaw;
+      try {
+        curProfRaw = localStorage.getItem(KEYS.profile);
+      } catch (e) {
+        statusEl.textContent = 'Not saved: this device could not read your settings. Nothing was changed.';
+        return;
+      }
+      if (curProfRaw !== saveSnap.profRaw) {
+        if (renderHelpPreview(parsed, { source: 'redraw', focusConfirm: true })) {
+          statusEl.textContent = 'Your settings changed in another tab. Check the preview again, then save.';
+        }
+        return;
+      }
+
+      const written = [];
+      if (!trySetRawStore(KEYS.profile, nextProfStr)) {
+        let profUnchanged = false;
+        try { profUnchanged = localStorage.getItem(KEYS.profile) === saveSnap.profRaw; } catch (e) {}
+        statusEl.textContent = profUnchanged
+          ? 'Not saved. Your settings are as they were.'
+          : 'Not saved, and this device could not put everything back. Load your last safe backup before you carry on.';
+        return;
+      }
+      written.push({ key: KEYS.profile, before: saveSnap.profRaw, wrote: nextProfStr });
+
+      if (freshPlan.hasSubjects) {
+        let preWrite2Prof, preWrite2Subj;
+        try {
+          preWrite2Subj = localStorage.getItem(KEYS.subjectSettings);
+          preWrite2Prof = localStorage.getItem(KEYS.profile);
+        } catch (e) {
+          rollbackWrittenKeys(written);
+          statusEl.textContent = 'Not saved, and this device could not put everything back. Load your last safe backup before you carry on.';
+          return;
+        }
+        if (preWrite2Prof !== nextProfStr) {
+          renderHelpPreview(parsed, { source: 'redraw', focusConfirm: true });
+          statusEl.textContent = 'Not saved, and this device could not put everything back. Load your last safe backup before you carry on.';
+          return;
+        }
+        if (preWrite2Subj !== saveSnap.subjRaw) {
+          const restoredOk = rollbackWrittenKeys(written);
+          const redrawn = renderHelpPreview(parsed, { source: 'redraw', focusConfirm: true });
+          statusEl.textContent = restoredOk
+            ? (redrawn ? 'Your settings changed in another tab. Check the preview again, then save.' : 'Not saved. Your settings are as they were.')
+            : 'Not saved, and this device could not put everything back. Load your last safe backup before you carry on.';
+          return;
+        }
+        if (!trySetRawStore(KEYS.subjectSettings, nextSubjStr)) {
+          const restoredOk = rollbackWrittenKeys(written);
+          let subjUnchanged = false;
+          try { subjUnchanged = localStorage.getItem(KEYS.subjectSettings) === saveSnap.subjRaw; } catch (e) {}
+          statusEl.textContent = (restoredOk && subjUnchanged)
+            ? 'Not saved. Your settings are as they were.'
+            : 'Not saved, and this device could not put everything back. Load your last safe backup before you carry on.';
+          return;
+        }
+      }
+
+      const nCount = Object.keys(parsed.pupils).length;
+      helpPreviewSeq++;
+      helpPreviewState = null;
+      wrap.replaceChildren();
+      $('helpFileInput').value = '';
+      statusEl.textContent = 'Saved help settings for ' + nCount + ' pupil' + (nCount === 1 ? '' : 's') + '.';
+      renderDay();
+      renderPupilList();
+      if ($('pupilPages')) $('pupilPages').open = true;
+      $('helpFileBtn')?.focus({ preventScroll: true });
+    });
+    cancelBtn.addEventListener('click', () => {
+      if (!helpPreviewState || helpPreviewState.id !== myPreviewId || !wrap.contains(cancelBtn)) return;
+      helpFileSeq++;
+      helpPreviewSeq++;
+      helpPreviewState = null;
+      wrap.replaceChildren();
+      $('helpFileInput').value = '';
+      statusEl.textContent = 'Cancelled. Nothing was saved.';
+      if ($('pupilPages')) $('pupilPages').open = true;
+      $('helpFileBtn')?.focus({ preventScroll: true });
+    });
+    actions.append(saveBtn, cancelBtn);
+    const nodes = [];
+    if (mismatchBox) nodes.push(mismatchBox);
+    nodes.push(tbl);
+    if (warnBox) nodes.push(warnBox);
+    if (numbersHint) nodes.push(numbersHint);
+    nodes.push(confirmWrap, actions);
+    wrap.replaceChildren(...nodes);
+    helpPreviewState = { id: myPreviewId, parsed, sig: plan.sig, shield: false };
+    statusEl.textContent = 'Preview ready for ' + plan.pupilCount + ' pupil' + (plan.pupilCount === 1 ? '' : 's') + '. Nothing has been saved yet.';
+    if (hadFocus || opts.focusConfirm) confirmBox.focus({ preventScroll: true });
+    return true;
+  }
+  function redrawOpenHelpPreview(announceIfChanged = true){
+    if (!helpPreviewState) return;
+    const { parsed, sig, shield: wasShield } = helpPreviewState;
+    const snap = readHelpSnapshot(parsed);
+    if (!snap.ok) {
+      renderHelpPreview(parsed, { source: 'redraw', snap });
+      return;
+    }
+    const shieldNow = document.documentElement.dataset.privacyShield === 'on';
+    if (shieldNow) {
+      if (!wasShield) renderHelpPreview(parsed, { source: 'redraw', snap });
+      return;
+    }
+    if (wasShield) {
+      renderHelpPreview(parsed, { source: 'redraw', snap });
+      return;
+    }
+    const freshRoster = buildRoster({ pupilKey: snap.labels, profile: snap.prof, tracker: snap.tracker });
+    const freshPlan = buildHelpPlan(parsed, snap.prof, snap.subj, freshRoster, snap);
+    if (freshPlan.sig !== sig) {
+      const ok = renderHelpPreview(parsed, { source: 'redraw', snap });
+      if (ok && announceIfChanged) {
+        $('helpFileStatus').textContent = 'Your class list changed after this preview. Check it again, then save.';
+      }
+    }
+  }
+  async function handleHelpFileChange(e){
+    const input = e.target, file = input.files && input.files[0];
+    const statusEl = $('helpFileStatus'), wrap = $('helpPreview');
+    if (!file) return;
+    const myFileSeq = ++helpFileSeq;
+    helpPreviewSeq++;
+    helpPreviewState = null;
+    wrap.replaceChildren();
+    statusEl.textContent = 'Loading the file\u2026';
+    if (file.size > 200 * 1024) {
+      input.value = '';
+      statusEl.textContent = 'This file was not loaded: file is over 200 KB. Nothing was saved.';
+      return;
+    }
+    let text;
+    try {
+      text = await file.text();
+    } catch (err) {
+      if (myFileSeq !== helpFileSeq) return;
+      input.value = '';
+      statusEl.textContent = 'This file was not loaded: not valid JSON. Nothing was saved.';
+      return;
+    }
+    if (myFileSeq !== helpFileSeq) return;
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (err) {
+      input.value = '';
+      statusEl.textContent = 'This file was not loaded: not valid JSON. Nothing was saved.';
+      return;
+    }
+    const errMsg = validateHelpSettings(parsed);
+    if (errMsg) {
+      input.value = '';
+      statusEl.textContent = 'This file was not loaded: ' + errMsg + '. Nothing was saved.';
+      return;
+    }
+    const snap = readHelpSnapshot(parsed);
+    if (!snap.ok) {
+      input.value = '';
+      statusEl.textContent = 'This file was not loaded: this device could not read your settings. Nothing was saved.';
+      return;
+    }
+    const hasSubj = Object.values(parsed.pupils).some(p => p.subjects && Object.keys(p.subjects).length > 0);
+    if (hasSubj) {
+      const curItems = Object.prototype.hasOwnProperty.call(snap.subj, 'items') ? snap.subj.items : {};
+      if (mergedSubjectCount(parsed, curItems) > 400) {
+        input.value = '';
+        statusEl.textContent = 'This file was not loaded: it would take saved subject settings over the 400 limit. Nothing was saved.';
+        return;
+      }
+    }
+    renderHelpPreview(parsed, { source: 'load', snap });
   }
   function renderDay() {
     const now = new Date();
@@ -4408,50 +5792,34 @@ function initDayLauncher() {
     const tracker = dayTracker(roster.tracker), coverage = read(KEYS.covAbs, {}) || {};
     const fragment = document.createDocumentFragment();
     openHref = '';
+    const todayISO = dateISO(now);
     (later ? [...slots,next] : slots).forEach(slot => {
-      const path = slot.path === 'ALL' ? sharedPath : slot.path;
-      const code = activeLessonCode(slot, path);
-      const file = lessonFiles[fileCode(code)];
-      const href = file ? '../../' + file.split('/').map(encodeURIComponent).join('/') : '';
+      const info = slotInfo(slot, roster, tallies, tracker, coverage);
+      const { path, code, href, adapted, missed, owed, packHref } = info;
       const isNext = next && +slot.start === +next.start;
       if (isNext) openHref = href;
       if (later && isNext) fragment.append(el('h3',{},'Next lesson · '+slot.start.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'})));
-      const card = el('article',{class:'launch-card'+(isNext ? ' due' : '')});
+      const card = el('article',{class:'launch-card'+(isNext ? ' due' : ''),'data-slot':slot.day+'|'+slot.p});
       const state = isNext ? (live.current ? 'Now' : 'Next') : '';
       const time = times.starts[slot.p-1]+'–'+times.ends[slot.p-1];
       card.append(el('h3',{},'Period '+slot.p+' · '+time+(state ? ' · '+state : '')),
         el('p',{},slot.subject+' · '+(slot.path === 'ALL' ? 'All groups' : path)),
         el('p',{class:'launch-code'},code));
       const strip = el('div',{class:'launch-bits'});
-      const groups = slot.path === 'ALL' ? Object.keys(roster.groups) : [path];
-      const adapted = [], missed = [], owed = [];
-      for (const group of groups) {
-        const last = previousLesson(slot,group);
-        for (const n of roster.groups[group] || []) {
-          const tag = boardTag(n,roster);
-          if (pupilAdapt(n,roster).length || roster.profile?.pupils?.[n]?.tags?.length) adapted.push(tag);
-          if (last) {
-            const absence = isPupilAbsentInSlot(n,last.w,last.day,last.p,tallies,tracker,roster);
-            const entry = coverage[n]?.[activeLessonCode(last,group)];
-            const wasMissed = entry ? (!entry.cleared || (entry.source==='tracker_sync' && absence)) : absence;
-            if (wasMissed) missed.push(tag);
-          }
-          const items = openCatchupsForPupil(n,tracker,roster).filter(item =>
-            item.subj === slot.subject && (item.path === group || item.path === 'ALL'));
-          if (items.length) owed.push(tag+' ('+items.length+') · '+items.map(item=>'W'+item.w+' '+item.d.slice(0,3)+' P'+item.p).join(', '));
-        }
-      }
       for (const [label, values] of [['Adaptations',adapted],['Missed last lesson',missed],['Open catch-up',owed]]) {
         const row = el('span',{}); row.append(el('b',{},label+' '),values.join(', ') || 'None'); strip.append(row);
       }
+      const printedRow = el('span', {}); printedRow.append(el('b', {}, 'Packs printed today: '), el('span', {}, printedTodayText(todayISO, code, roster))); strip.append(printedRow);
       const params = new URLSearchParams({week:slot.w,day:slot.day,period:slot.p,path,part:commPart});
       strip.append(el('a',{href:'Quick_capture.html?'+params},'Quick capture'));
       card.append(strip);
-      if (href) card.append(el('a',{class:'launch-link',href,target:'_blank',rel:'noopener'},'Open lesson'));
+      if (href) card.append(el('a',{class:'launch-link',href,target:'_blank',rel:'noopener'},'Open lesson'),
+        el('a',{class:'launch-link',href:packHref,target:'_blank',rel:'noopener'},'Print pupil packs'));
       else card.append(el('strong',{},'No linked lesson'),el('p',{},'Check the pathway code for this group in Class names.'));
       fragment.append(card);
     });
     if (now.getDay() === 4 && slots.length) fragment.prepend(lifeSkillsCard(slots[0].w));
+    if ([1,3,5].includes(now.getDay()) && slots.length) fragment.prepend(assemblyCard());
     const clock = now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
     $('launchClock').textContent = now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})+' · '+clock;
     if (!slots.length) fragment.prepend(el('p',{},'There are no periods today.'));
@@ -4459,12 +5827,52 @@ function initDayLauncher() {
     // Keep links, keyboard focus and an open tour intact across unchanged clock ticks.
     const newSignature = Array.from(fragment.children).map(node=>node.outerHTML).join('');
     if (signature !== newSignature) {
-      const focused = list.contains(document.activeElement) && document.activeElement.getAttribute('href');
+      const activeA = list.contains(document.activeElement) && document.activeElement.tagName === 'A' ? document.activeElement : null;
+      const focusedHref = activeA ? activeA.getAttribute('href') : '';
+      const focusedText = activeA ? activeA.textContent.trim() : '';
+      const focusedArt = activeA ? activeA.closest('article') : null;
+      const focusedSlot = focusedArt?.dataset?.slot || '';
+      const focusedLesson = focusedArt?.querySelector('.launch-code')?.textContent?.trim() || '';
       list.replaceChildren(fragment); signature = newSignature;
-      if (focused) Array.from(list.querySelectorAll('a')).find(a=>a.getAttribute('href')===focused)?.focus({preventScroll:true});
+      if (activeA) {
+        let nextFocus = null;
+        if (focusedText && focusedSlot && focusedLesson) {
+          nextFocus = Array.from(list.querySelectorAll('a')).find(a =>
+            a.textContent.trim() === focusedText &&
+            (a.closest('article')?.dataset?.slot || '') === focusedSlot &&
+            (a.closest('article')?.querySelector('.launch-code')?.textContent?.trim() || '') === focusedLesson
+          );
+        }
+        if (!nextFocus && focusedText && focusedSlot) {
+          nextFocus = Array.from(list.querySelectorAll('a')).find(a =>
+            a.textContent.trim() === focusedText &&
+            (a.closest('article')?.dataset?.slot || '') === focusedSlot
+          );
+        }
+        if (!nextFocus && focusedText && focusedLesson) {
+          nextFocus = Array.from(list.querySelectorAll('a')).find(a =>
+            a.textContent.trim() === focusedText &&
+            (a.closest('article')?.querySelector('.launch-code')?.textContent?.trim() || '') === focusedLesson
+          );
+        }
+        if (!nextFocus && focusedHref) nextFocus = Array.from(list.querySelectorAll('a')).find(a => a.getAttribute('href') === focusedHref);
+        nextFocus?.focus({ preventScroll: true });
+      }
     }
     $('launchSetup').hidden = false;
+    renderNowPacks();
+    renderPupilList(roster);
   }
+  function refreshOpenPupilIfShown(){
+    if (openPupilNum !== null && $('pupilPage') && !$('pupilPage').hidden) {
+      openPupilPage(openPupilNum, true);
+    }
+  }
+  window.mbmRefreshPacks = () => {
+    if (!details.hidden) renderDay();
+    else renderNowPacks();
+    refreshOpenPupilIfShown();
+  };
   $('launchStart').addEventListener('click', () => {
     details.hidden = false; renderDay();
     if (openHref) window.open(openHref,'_blank','noopener');
@@ -4475,11 +5883,44 @@ function initDayLauncher() {
   });
   renderDay();
   setInterval(renderDay,60000);
-  window.addEventListener('pageshow',renderDay);
-  window.addEventListener('storage',renderDay);
-  window.addEventListener('focus',renderDay);
+  window.addEventListener('pageshow', () => { renderDay(); refreshOpenPupilIfShown(); });
+  window.addEventListener('storage', () => { renderDay(); refreshOpenPupilIfShown(); redrawOpenHelpPreview(true); });
+  new MutationObserver(() => {
+    renderDay();
+    refreshOpenPupilIfShown();
+    redrawOpenHelpPreview(false);
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-privacy-shield'] });
+  window.addEventListener('focus', () => { renderDay(); refreshOpenPupilIfShown(); });
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) { renderDay(); refreshOpenPupilIfShown(); }
+  });
   document.addEventListener('change',() => { if (!details.hidden) renderDay(); });
   $('timesForm').addEventListener('submit',renderDay);
+  function syncPupilHash(){
+    const n = parsePupilHash();
+    if (n !== null) {
+      if (document.activeElement && document.activeElement.closest('#pupilPagesList')) {
+        lastPupilOpener = document.activeElement;
+      }
+      openPupilPage(n);
+    } else if (!$('pupilPage').hidden) {
+      closePupilPage(true);
+    }
+  }
+  $('pupilPagesList')?.addEventListener('click', e => {
+    const link = e.target.closest('a[href^="#pupil="]');
+    if (link) lastPupilOpener = link;
+  });
+  $('helpFileBtn')?.addEventListener('click', () => $('helpFileInput')?.click());
+  $('helpFileInput')?.addEventListener('change', handleHelpFileChange);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && $('pupilPage') && !$('pupilPage').hidden) {
+      e.preventDefault();
+      closePupilPage(false);
+    }
+  });
+  window.addEventListener('hashchange', syncPupilHash);
+  syncPupilHash();
 }
 initDayLauncher();
 
