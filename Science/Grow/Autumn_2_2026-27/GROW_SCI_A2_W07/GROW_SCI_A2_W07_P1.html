@@ -975,7 +975,7 @@ section.print-only { display: none; }
     return keyObj;
   }
 
-  /* mbm-adapt-v3 START · My pupils print engine v3.7.2 (Made by Matt). Reads device stores and #mbm-lesson-cards; writes only mbm_lesson_today_v1, mbm_adapt_log_v1, mbm_pupil_target_words_v1, mbm_pupil_subject_v1 and mbm_print_prefs_v1 (true/false only). Runs offline only. */
+  /* mbm-adapt-v3 START · My pupils print engine v3.7.3 (Made by Matt). Reads device stores and #mbm-lesson-cards; writes only mbm_lesson_today_v1, mbm_adapt_log_v1, mbm_pupil_target_words_v1, mbm_pupil_subject_v1 and mbm_print_prefs_v1 (true/false only). Runs offline only. */
   const ADAPT_V3_CSS = [
     '#dynamicPupilPrint .ad2-banner{border:2px solid #10243a;border-radius:2mm;padding:1.4mm 2.5mm;margin:0 0 2mm 0;font-size:13pt;font-weight:700;display:flex;gap:4mm;flex-wrap:wrap}',
     '#dynamicPupilPrint .ad2-banner .ad2-next{font-weight:400}',
@@ -1325,7 +1325,10 @@ section.print-only { display: none; }
     const wl = s.match(/_W0*(\d+)_L0*(\d+)\b/i);
     if (wl) return 'W' + parseInt(wl[1], 10) + ' L' + parseInt(wl[2], 10);
     const l = s.match(/_L0*(\d+)\b/i);
-    return l ? ('L' + parseInt(l[1], 10)) : (s || 'last lesson');
+    if (l) return 'L' + parseInt(l[1], 10);
+    const wp = s.match(/_W0*(\d+)(?:_P0*(\d+))?$/i);
+    if (wp) return 'W' + parseInt(wp[1], 10) + (wp[2] ? ' P' + parseInt(wp[2], 10) : '');
+    return s || 'last lesson';
   }
 
   function ad3CardTitle(card) {
