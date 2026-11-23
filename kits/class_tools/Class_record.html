@@ -122,13 +122,14 @@ body.slips main>*,body.slips header.top{display:none!important}body.slips #slips
   <div class="grid">
     <div><label for="f-objective">Lesson objective</label><textarea id="f-objective" maxlength="240" placeholder="I can ..."></textarea></div>
     <div><label for="f-skill">Skill or content taught</label><input id="f-skill" maxlength="240" list="skillList" autocomplete="off" placeholder="Pick from the list or type your own"><datalist id="skillList"></datalist>
+      <p class="hint" id="skillFeed" aria-live="polite" hidden></p>
       <div class="chips" id="skillChips" aria-label="Skills to pick from"></div>
       <label for="f-code">Lesson code (optional)</label><input id="f-code" maxlength="30" autocomplete="off"></div>
   </div>
   <div class="row noprint">
-    <button id="allGot" type="button">All got it</button>
+    <button id="allGot" type="button">All secure</button>
     <button id="clearResults" type="button">Clear results</button>
-    <span class="hint">Tap a pupil to change: Got it, Partly, Not yet, Absent.</span>
+    <span class="hint">Tap a pupil to change: Secure, Developing, Emerging, Absent. (These were Got it, Partly and Not yet.)</span>
   </div>
   <div class="pupils" id="pupilGrid"></div>
   <div class="row"><button class="primary" id="saveLesson" type="button">Save lesson to my sheet</button></div>
@@ -143,7 +144,7 @@ body.slips main>*,body.slips header.top{display:none!important}body.slips #slips
   <div class="grid noprint">
     <div><label for="q-pupil">Pupil</label><select id="q-pupil"></select></div>
     <div><label for="q-subject">Subject</label><select id="q-subject"></select></div>
-    <div><label for="q-result">Result</label><select id="q-result"><option value="">All results</option><option value="got">Got it</option><option value="partly">Partly</option><option value="notyet">Not yet</option><option value="absent">Absent</option></select></div>
+    <div><label for="q-result">Result</label><select id="q-result"><option value="">All results</option><option value="got">Secure</option><option value="partly">Developing</option><option value="notyet">Emerging</option><option value="absent">Absent</option></select></div>
     <div><label for="q-need">Show</label><select id="q-need"><option value="">Everything</option><option value="need">Needs catch-up only</option><option value="notes">Rows with a note only</option></select></div>
   </div>
   <p class="count" id="sheetCount"></p>
@@ -2570,10 +2571,18 @@ var qrcode = function() {
 (function(){
 'use strict';
 var KEY='mbm_class_record_v1', BLOCK_KEY='mbm_class_record_block_v1', ADMIN_KEY='mbm_class_record_admin_v1', INBOX_KEY='mbm_class_record_inbox_v1';
-var RESULTS={got:'Got it',partly:'Partly',notyet:'Not yet',absent:'Absent'}, CYCLE=['','got','partly','notyet','absent'];
+var RESULTS={got:'Secure',partly:'Developing',notyet:'Emerging',absent:'Absent'}, OLD_RESULTS={got:'Got it',partly:'Partly',notyet:'Not yet',absent:'Absent'}, CYCLE=['','got','partly','notyet','absent'];
 var CATCH={'':'Not needed',need:'Needs catch-up',partdone:'Partly done',done:'Done'};
 var DAYS=['Mon','Tue','Wed','Thu','Fri'], DAYNAME={Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thu:'Thursday',Fri:'Friday'}, NP=6;
 var $=function(id){return document.getElementById(id);};
+var TRACKER={English:['R1 Main ideas & retrieval','R2 Compare texts','R3 Fact & opinion','R4 Reading purpose & audience','R5 Vocabulary in context','R6 Text structure & navigation','R7 Inference & evidence','W1 Clear ideas & detail','W2 Writing purpose & audience','W3 Sentences & paragraphs','W4 Grammar & tense','W5 Punctuation','W6 Spelling','W7 Review & edit own writing','S1 Listen & understand','S2 Ask & answer','S3 Explain & justify','S4 Discussion & register'],
+Maths:['M1 Number, place value & negatives','M2 Four operations & order','M3 Rounding, estimate & check','M4 Fractions','M5 Decimals & percentages','M6 Ratio, patterns & simple formulae','M7 Money, discounts & interest','M8 Time, measure & conversions','M9 Scales, maps & directions','M10 2D shapes, angles & symmetry','M11 Perimeter, area & volume','M12 3D shapes, nets & elevations','M13 Tables, charts & graphs','M14 Mean & range','M15 Probability','M16 Problem-solving & reasoning'],
+Science:['SC1 Scientific vocabulary','SC2 Recall key facts','SC3 Identify & classify','SC4 Describe processes','SC5 Explain cause & effect','SC6 Make predictions','SC7 Plan a fair test','SC8 Observe & measure','SC9 Record results','SC10 Explain findings & conclusions','B1 Cells & structures','B2 Genetics & inheritance','B3 Health & disease','B4 Medicines & treatment','C1 Particles & changes of state','C2 Atoms, elements & compounds','C3 Mixtures & separation','C4 Acids, alkalis & metals','P1 Forces & movement','P2 Energy & transfers','P3 Waves, light & sound','P4 Radiation & safety','G1 Key concepts in Biology','G2 Cells and control','G3 Genetics','G4 Natural selection & GM','G5 Health, disease & medicines','G6 Plant structures & functions','G7 Animal coordination & control','G8 Exchange & transport in animals','G9 Ecosystems & material cycles']};
+function trackerFor(subj){subj=String(subj||'').toLowerCase();if(/english/.test(subj))return TRACKER.English;if(/math|numeracy/.test(subj))return TRACKER.Maths;if(/science|biology/.test(subj))return TRACKER.Science;return [];}
+function trackerCode(skill){var m=/^(SC10|SC[1-9]|M1[0-6]|M[1-9]|[RW][1-7]|S[1-4]|[BCP][1-4]|G[1-9])(?![0-9A-Za-z])/.exec(String(skill||'').trim());return m?m[1]:'';}
+function feedHint(){var el=$('skillFeed');if(!el)return;var subj=$('f-subject').value,sk=clean($('f-skill').value,240),code=trackerCode(sk);
+  if(!trackerFor(subj).length){el.textContent='';el.hidden=true;return;}el.hidden=false;
+  el.textContent=code?'Feeds the school tracker as skill '+code+'.':sk?'Not one of the tracker skills. It still saves, but only skills with a code (such as R5 or M4) fill the Skills tabs in the shared sheet.':'Pick a skill with a code (such as R5 or M4) and this lesson feeds the school tracker.';}
 function blank(){return {version:2,teacher:'Teacher 1',name:'',size:13,classCode:'Class A',classes:[],tt:null,skills:{},notice:'',packMade:'',sheet:'',folder:'',assistant:'',admin:false,lessons:{},rows:{}};}
 function readJSON(k,fb){try{var r=localStorage.getItem(k);return r?JSON.parse(r):fb;}catch(e){return fb;}}
 function loadS(s){if(!s||typeof s!=='object'||!s.lessons||!s.rows)s=blank();var b=blank();for(var k in b)if(s[k]===undefined)s[k]=b[k];s.classes=normClasses(s.classes);s.tt=s.tt?normTT(s.tt):null;s.skills=normSkills(s.skills);return s;}
@@ -2662,12 +2671,13 @@ $('todayStrip').addEventListener('click',function(e){var b=e.target.closest('but
 function fillSkillList(){
   var subj=clean($('f-subject').value,40).toLowerCase(),seen={},list=[];
   function add(v){if(v&&!seen[v.toLowerCase()]){seen[v.toLowerCase()]=1;list.push(v);}}
-  Object.keys(S.skills).forEach(function(k){if(!subj||k.toLowerCase()===subj)S.skills[k].forEach(add);});
+  var tk=subj?trackerFor(subj):[],old={};if(tk.length)Object.keys(SKILLS0).forEach(function(k){SKILLS0[k].forEach(function(v){old[v.toLowerCase()]=1;});});tk.forEach(add);Object.keys(S.skills).forEach(function(k){if(!subj||k.toLowerCase()===subj)S.skills[k].forEach(function(v){if(!old[v.toLowerCase()])add(v);});});
   Object.keys(S.lessons).forEach(function(id){var L=S.lessons[id];if(L.skill&&(!subj||L.subject.toLowerCase()===subj))add(L.skill);});
   $('skillList').innerHTML=list.map(function(s){return '<option value="'+esc(s)+'">';}).join('');
-  $('skillChips').innerHTML=list.slice(0,14).map(function(s){return '<button type="button" data-s="'+esc(s)+'">'+esc(s)+'</button>';}).join('');
-  $('sameLast').hidden=!lastLike();
+  $('skillChips').innerHTML=list.slice(0,40).map(function(s){return '<button type="button" data-s="'+esc(s)+'">'+esc(s)+'</button>';}).join('');
+  $('sameLast').hidden=!lastLike();feedHint();
 }
+$('f-skill').addEventListener('input',feedHint);
 function lastLike(){var subj=clean($('f-subject').value,40).toLowerCase(),cls=clean($('f-class').value,12).toLowerCase(),best=null,bestC=null;if(!subj)return null;
   Object.keys(S.lessons).forEach(function(id){var L=S.lessons[id];if(L.subject.toLowerCase()!==subj||(!L.objective&&!L.skill))return;if(!best||L.date>best.date)best=L;if(L.cls.toLowerCase()===cls&&(!bestC||L.date>bestC.date))bestC=L;});return bestC||best;}
 $('skillChips').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;$('f-skill').value=b.getAttribute('data-s');});
@@ -2870,7 +2880,7 @@ function renderCentral(){
   $('c-teacher').innerHTML='<option value="">All teachers</option>'+Object.keys(ts).sort().map(function(k){return '<option value="'+esc(k)+'"'+(k===ct?' selected':'')+'>'+esc(staffName(k))+'</option>';}).join('');
   var rows=centralFiltered(),view=$('c-view').value,head,body=[];
   if(view==='pupil'){
-    head=['Class','Pupil','Lessons','Got it','Partly','Not yet','Absent','Catch-up still to do','Skills to catch up','Notes'];
+    head=['Class','Pupil','Lessons','Secure','Developing','Emerging','Absent','Catch-up still to do','Skills to catch up','Notes'];
     var g={},ord=[];rows.forEach(function(r){var k=pk(r);if(!g[k]){g[k]={r:r,n:0,got:0,partly:0,notyet:0,absent:0,need:0,sk:[],notes:[]};ord.push(k);}var o=g[k];o.n++;o[r.result]++;if(needs(r)){o.need++;o.sk.push((r.missed||r.skill||r.objective||'')+(r.subject?' ('+r.subject+')':''));}if(r.note)o.notes.push(r.note);});
     ord.forEach(function(k){var o=g[k];body.push([o.r.cls,'Pupil '+o.r.pupil,o.n,o.got,o.partly,o.notyet,o.absent,o.need,uniq(o.sk).join('; '),uniq(o.notes).join('; ')]);});
   }else if(view==='skill'){
@@ -2995,7 +3005,7 @@ function isoDate(v){v=String(v||'').trim();var m=/^(\d{4})-(\d{1,2})-(\d{1,2})/.
 function keyByLabel(map,label){label=String(label||'').trim().toLowerCase();for(var k in map)if(map[k].toLowerCase()===label)return k;return null;}
 $('pasteAdd').addEventListener('click',function(){
   var by={},blockedCount=0,n=0;String($('c-paste').value).split(/\r?\n/).forEach(function(line){var c=line.split('\t').map(function(x){return x.replace(/^'/,'');});if(c.length<9||c[0].trim()==='Teacher')return;
-    var pm=/(\d+)/.exec(c[7]||''),res=keyByLabel(RESULTS,c[8]),cu=keyByLabel(CATCH,c[10]),rid=clean(c[12],40),di=rid.lastIndexOf('-');
+    var pm=/(\d+)/.exec(c[7]||''),res=keyByLabel(RESULTS,c[8])||keyByLabel(OLD_RESULTS,c[8]),cu=keyByLabel(CATCH,c[10]),rid=clean(c[12],40),di=rid.lastIndexOf('-');
     var o={lid:di>0?rid.slice(0,di):'',teacher:/^Teacher ([1-9]|1[0-2])$/.test(c[0].trim())?c[0].trim():'Teacher ?',date:isoDate(c[1]),period:/^[1-6]$/.test(String(c[2]).trim())?String(c[2]).trim():'',cls:clean(c[3],12),subject:clean(c[4],40),code:'',objective:clean(c[5]),skill:clean(c[6]),pupil:pm?+pm[1]:0,result:res,missed:clean(c[9]),catchup:cu==null||cu==='null'?'':cu,note:clean(c[11])};
     if(!validRow(o))return;if(nameHit([o.cls,o.subject,o.objective,o.skill,o.missed,o.note].join(' | '))){blockedCount++;return;}by[sig(o)]=o;n++;});
   pasted=Object.keys(by).map(function(k){return by[k];});renderCentral();
