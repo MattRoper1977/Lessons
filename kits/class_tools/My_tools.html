@@ -244,6 +244,54 @@ body.board-open>main{visibility:hidden}
 #pupilPage .pp-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin:.35rem 0}
 #pupilPage .pp-chip{display:inline-block;padding:.15rem .55rem;border-radius:999px;border:1px solid #64736b;background:#f2f6f3;font-size:.92em;max-width:100%}
 #pupilPage .pp-chip-owed{background:#fff4dc;border-color:#8a5300;color:#663a00}
+</style>
+<style id="paperworkStyle">
+#paperwork{margin-top:.75rem;border-top:1px solid #95a79b;padding-top:.55rem;max-width:100%}
+#paperwork :focus-visible{outline:3px solid #713600;outline-offset:3px}
+#paperwork h3{margin:0 0 .45rem;color:#142d26;font-size:20px}
+#paperwork h4{margin:0 0 .25rem;color:#142d26;font-size:18px}
+#paperwork label{color:#142d26;font-size:16px;margin:0 0 .2rem}
+#paperwork input:not([type=checkbox]),#paperwork select,#paperwork textarea{background:#fff;color:#142d26;border:1.5px solid #52677c;border-radius:8px;min-height:44px;padding:.4rem .55rem;width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+#paperwork input[type=checkbox]{width:22px;height:22px;min-width:22px;min-height:22px;flex:none;margin:0}
+#paperwork button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;padding:.45rem .8rem;border:2px solid #335d50;border-radius:8px;background:#fff;color:#123d32;font-size:16px;font-weight:700;cursor:pointer;max-width:100%;box-sizing:border-box}
+#paperwork button.primary{background:#153e33;color:#fff;border-color:#153e33}
+#paperwork button:disabled{opacity:.55;cursor:not-allowed}
+#paperworkStatus{min-height:1.4em;font-weight:700;color:#123d32;margin:.4rem 0}
+.pw-part{margin-top:.85rem;padding-top:.7rem;border-top:1px solid #95a79b;max-width:100%}
+.pw-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:.6rem;margin:.5rem 0}
+.pw-controls>div{min-width:0}
+.pw-subdetails{background:#fff;border:1px solid #64736b;border-radius:8px;padding:.5rem .7rem;margin:.55rem 0;max-width:100%}
+.pw-subdetails>summary{color:#123d32;min-height:44px}
+.pw-card{background:#fff;color:#142d26;border:1px solid #64736b;border-radius:10px;padding:.85rem;margin-top:.65rem;max-width:100%}
+.pw-cells{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem;margin:.55rem 0}
+.pw-cells>div{min-width:0;display:flex;flex-direction:column;gap:.25rem}
+textarea.pw-box{min-height:112px;font:15.5px/1.4 system-ui,sans-serif;background:#f8fbf9!important;resize:vertical}
+textarea.pw-iedp-box{min-height:66px;font:15.5px/1.4 system-ui,sans-serif;background:#f8fbf9!important;resize:vertical}
+.pw-actions{display:flex;flex-wrap:wrap;gap:.45rem;margin:.5rem 0;align-items:center}
+.pw-actions>*{max-width:100%;min-width:0}
+.pw-note-wrap{margin-top:.5rem}
+.pw-short-note{background:#fff4dc;color:#663a00;border:1px solid #8a5300;border-radius:8px;padding:.4rem .6rem;font-size:15px;font-weight:650;margin:.4rem 0}
+.pw-own-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,185px),1fr));gap:.35rem .65rem;margin:.45rem 0}
+.pw-own-item{display:flex;align-items:center;gap:.5rem;min-height:44px;font-weight:600;cursor:pointer}
+.pw-bank-closing{border-bottom:1px solid #95a79b;padding-bottom:.6rem;margin-bottom:.6rem}
+.pw-bank-closing .pw-actions input{flex:1 1 220px}
+.pw-bank-row{border:1px solid #95a79b;border-radius:8px;padding:.6rem;margin:.45rem 0;background:#f8fbf9;max-width:100%}
+.pw-bank-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.45rem;margin-bottom:.35rem}
+.pw-bank-grid{display:grid;grid-template-columns:1fr 1.4fr auto;gap:.5rem;align-items:end}
+.pw-bank-grid>div{min-width:0}
+.pw-iedp-field{margin:.5rem 0;padding-bottom:.5rem;border-bottom:1px solid #e1eae5}
+.pw-iedp-field:last-of-type{border-bottom:0;padding-bottom:0}
+.pw-iedp-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.45rem;margin-bottom:.25rem}
+.pw-link-row,.pw-boxorder-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem;padding:.4rem 0;border-bottom:1px solid #e1eae5}
+.pw-link-row:last-child,.pw-boxorder-row:last-child{border-bottom:0}
+.pw-link-row select{width:auto;min-width:150px;flex:0 1 auto}
+.pw-boxorder-row input{flex:1 1 160px}
+.pw-unlinked{background:#fff;border:1px solid #64736b;border-radius:8px;padding:.55rem .75rem;margin-top:.65rem;font-weight:600}
+.pw-empty{background:#fff;border:1px solid #64736b;border-radius:8px;padding:.65rem .8rem;margin:.55rem 0}
+@media(max-width:680px){
+  .pw-cells,.pw-bank-grid{grid-template-columns:1fr}
+  .pw-link-row select{width:100%}
+}
 </style></head>
 <body>
 <main>
@@ -277,7 +325,7 @@ body.board-open>main{visibility:hidden}
 <h2 id="launchTitle">Start my day</h2><p id="launchClock"></p>
 <button type="button" id="launchStart">Start my day</button> <button type="button" id="launchShow">See today’s periods</button>
 <p id="launchSetup">The built-in timetable uses your saved period times and term dates.</p>
-<p><a href="guide/How_it_all_works.html">How it all works</a></p>
+<p><a href="guide/How_it_all_works.html">How it all works</a> · <a href="#paperwork">Paperwork</a></p>
 <details id="launchSample"><summary>See a sample day</summary><p>Example only</p><ol><li>09:30 · Group A · Reading</li><li>10:30 · Group B · Making patterns</li><li>11:30 · Group C · Working together</li></ol></details>
 <div id="launchDetails" hidden><div id="launchList"></div></div>
 <details id="pupilPages">
@@ -288,6 +336,90 @@ body.board-open>main{visibility:hidden}
   <input type="file" id="helpFileInput" accept=".json,application/json" hidden>
   <p id="helpFileStatus" role="status" aria-live="polite"></p>
   <div id="helpPreview"></div>
+</details>
+<details id="paperwork">
+  <summary>Paperwork: weekly plan and IEDP words</summary>
+  <p class="hint">Copy ready-to-paste words for your weekly plan workbook and each pupil’s IEDP. Nothing is uploaded or sent.</p>
+  <p id="paperworkStatus" class="status" role="status" aria-live="polite"></p>
+  <div id="pwCopyFallbackWrap" hidden>
+    <label for="pwCopyFallback">Selected text to copy</label>
+    <textarea id="pwCopyFallback" class="pw-box" readonly rows="3"></textarea>
+  </div>
+
+  <details id="pwBankDetails" class="pw-subdetails">
+    <summary>Wording bank</summary>
+    <p class="hint">Edit the weekly plan phrase (2 to 8 words), IEDP sentence (6 to 25 words) and column choice for any help line.</p>
+    <div class="pw-bank-closing">
+      <label for="pwClosingInput">Closing line for Classroom support (may be blank)</label>
+      <div class="pw-actions">
+        <input type="text" id="pwClosingInput" maxlength="200" autocomplete="off">
+        <button type="button" id="pwResetClosingBtn">Reset closing line</button>
+      </div>
+    </div>
+    <div>
+      <label for="pwBankFilter">Find a help line</label>
+      <input type="search" id="pwBankFilter" placeholder="Filter help lines" autocomplete="off">
+    </div>
+    <div id="pwBankList"></div>
+  </details>
+
+  <section id="pwWeeklySection" class="pw-part" aria-labelledby="pwWeeklyHeading">
+    <h3 id="pwWeeklyHeading">Weekly plan</h3>
+    <div class="pw-controls">
+      <div>
+        <label for="pwPathway">Pathway</label>
+        <select id="pwPathway">
+          <option value="BUILD">BUILD</option>
+          <option value="GROW">GROW</option>
+          <option value="LAUNCH">LAUNCH</option>
+        </select>
+      </div>
+      <div>
+        <label for="pwWeek">Calendar week</label>
+        <select id="pwWeek"></select>
+      </div>
+    </div>
+    <details id="pwOwnDetails" class="pw-subdetails">
+      <summary>My subject rows in this workbook</summary>
+      <div id="pwOwnList" class="pw-own-grid"></div>
+      <div class="pw-actions">
+        <button type="button" id="pwResetOwnBtn">Reset subjects for this pathway</button>
+      </div>
+    </details>
+    <div id="pwWeeklyCards"></div>
+  </section>
+
+  <section id="pwIedpSection" class="pw-part" aria-labelledby="pwIedpHeading">
+    <h3 id="pwIedpHeading">IEDP</h3>
+    <div class="pw-controls">
+      <div>
+        <label for="pwPupil">Pupil</label>
+        <select id="pwPupil"></select>
+      </div>
+      <div>
+        <label for="pwFrom">From date</label>
+        <input type="date" id="pwFrom">
+      </div>
+      <div>
+        <label for="pwTo">To date</label>
+        <input type="date" id="pwTo">
+      </div>
+    </div>
+    <details id="pwBoxesDetails" class="pw-subdetails">
+      <summary>IEDP boxes: labels and order</summary>
+      <p class="hint">Rename or reorder the boxes once to match the school form.</p>
+      <div id="pwBoxesList"></div>
+      <div class="pw-actions">
+        <button type="button" id="pwResetBoxesBtn">Reset boxes</button>
+      </div>
+    </details>
+    <details id="pwLinksDetails" class="pw-subdetails">
+      <summary>Link help lines to targets</summary>
+      <div id="pwLinksList"></div>
+    </details>
+    <div id="pwIedpCards"></div>
+    <p id="pwUnlinkedLine" class="pw-unlinked" hidden></p>
+  </section>
 </details>
 </section>
 
@@ -3140,7 +3272,8 @@ function buildFullSafeBackup(roster = buildRoster()){
       lessonToday: cleanLessonToday,
       adaptLog: cleanAdaptLog,
       targetWords: cleanTargetWords,
-      subjectSettings: cleanSubjectSettings
+      subjectSettings: cleanSubjectSettings,
+      paperwork: deepRedactObjectPublic(read('mbm_paperwork_v1', null), roster)
     }
   };
 }
@@ -3197,6 +3330,7 @@ $('importSafeBackupFile').onchange = e => {
       if (d.adaptLog && typeof d.adaptLog === 'object' && !Array.isArray(d.adaptLog) && Array.isArray(d.adaptLog.rows)) write(KEYS.adaptLog, d.adaptLog);
       if (d.targetWords && typeof d.targetWords === 'object' && !Array.isArray(d.targetWords)) write(KEYS.targetWords, d.targetWords);
       if (d.subjectSettings && typeof d.subjectSettings === 'object' && !Array.isArray(d.subjectSettings) && d.subjectSettings.items && typeof d.subjectSettings.items === 'object' && !Array.isArray(d.subjectSettings.items)) write(KEYS.subjectSettings, d.subjectSettings);
+      if (d.paperwork && typeof d.paperwork === 'object' && !Array.isArray(d.paperwork)) write('mbm_paperwork_v1', d.paperwork);
       // Merge public group & adapt into local profile while preserving any local private .note!
       if (d.profilePublic?.pupils) {
         const curProf = read(KEYS.profile, {}) || {};
@@ -6079,6 +6213,2000 @@ initToolTour({
   "key": "mbm_tour_seen_v1"
 });
 
+</script>
+<script id="paperworkScript">
+function initPaperworkSection() {
+  'use strict';
+  const PW_KEY = 'mbm_paperwork_v1';
+  const PW_CLOSING_META = '__closing__';
+  const PW_DEFAULT_CLOSING = 'Record E against targets at check-out.';
+  const PW_DEFAULT_BOXES = ['Target', 'Strategy', 'Provided', 'Review', 'Evidence'];
+  const PW_BOX_IDS = ['target', 'strategy', 'provided', 'review', 'evidence'];
+  const PW_VALID_WHERE = new Set(['adapt', 'support', 'both']);
+  const PW_VALID_TIERS = new Set(['Supported', 'Independent', 'Aspire']);
+  const PW_KNOWN_PERIODS = new Set(SCHOOL_DAY.filter(s => s.p).map(s => s.p));
+
+  const PW_SUBJECT_KEYS = {
+    'Science': ['science'],
+    'Vocational': ['vocational'],
+    'Creative Arts': ['creative arts'],
+    'Humanities': ['humanities'],
+    'Careers': ['careers'],
+    'RE': ['re'],
+    'ICT': ['ict'],
+    'DT': ['dt'],
+    'PSHE': ['pshe'],
+    'RSHE': ['rshe'],
+    'RSE': ['rshe'],
+    'Community Projects': ['all community projects', 'community projects']
+  };
+
+  const PW_BASE_BANK = {
+    '1:1 adult support': { plan: '1:1 support with', iedp: 'Provide 1:1 adult support to guide the start of tasks and build independence.', where: 'support' },
+    'Reader': { plan: 'reads with', iedp: 'Provide an adult reader so written questions and instructions are read aloud clearly.', where: 'support' },
+    'Read aloud': { plan: 'reads aloud with', iedp: 'Read written questions and key text aloud so reading load does not block understanding.', where: 'support' },
+    'Adult helper card': { plan: 'adult helper card with', iedp: 'Give the supporting adult a helper card with key words and prompts for the lesson.', where: 'support' },
+    'Movement break': { plan: 'movement break offered', iedp: 'Offer a short planned movement break so the pupil can reset and return calmly.', where: 'both' },
+    'Now and next card': { plan: 'now and next card', iedp: 'Place a now and next card on the desk to show the current and next step.', where: 'both' },
+    'Help card': { plan: 'help card on desk', iedp: 'Provide a desk help card so the pupil can ask for help calmly without calling out.', where: 'both' },
+    'Timer strip': { plan: 'visual timer strip', iedp: 'Provide a visual timer strip to show how long each part of the lesson lasts.', where: 'both' },
+    'Catch-up every lesson': { plan: 'short catch-up starter', iedp: 'Include a short catch-up starter from earlier work at the start of lessons.', where: 'both' },
+    'Sentence starters': { plan: 'sentence starters', iedp: 'Provide printed sentence starters on the sheet to help start written answers.', where: 'adapt' },
+    'Word bank': { plan: 'word bank', iedp: 'Provide a key word bank with clear meanings alongside the lesson tasks.', where: 'adapt' },
+    'Enlarged print': { plan: 'enlarged print', iedp: 'Print lesson sheets in enlarged print so text and diagrams are clear to read.', where: 'adapt' },
+    'Large print': { plan: 'large print', iedp: 'Print worksheets in large print so every instruction and question is easy to read.', where: 'adapt' },
+    'Concise instructions': { plan: 'short clear instructions', iedp: 'Give short, clear instructions one step at a time to reduce working-memory load.', where: 'adapt' },
+    'One task at a time': { plan: 'one task at a time', iedp: 'Present one task at a time so the pupil can focus on each step cleanly.', where: 'adapt' },
+    'Extra time': { plan: 'extra processing time', iedp: 'Allow extra processing and finishing time before moving on to the next task.', where: 'adapt' },
+    'Extra time and space': { plan: 'extra time and space', iedp: 'Provide extra time and writing space so answers are not rushed or cramped.', where: 'adapt' },
+    'Extra space': { plan: 'extra writing space', iedp: 'Add extra space on the worksheet so the pupil has room to write clearly.', where: 'adapt' },
+    'Extra writing space': { plan: 'extra writing lines', iedp: 'Print extra writing lines beneath questions so handwritten answers fit comfortably on the page.', where: 'adapt' },
+    'Fewer questions': { plan: 'fewer questions', iedp: 'Reduce the number of questions on the sheet while keeping the core learning goal.', where: 'adapt' },
+    'Coloured paper': { plan: 'coloured paper', iedp: 'Provide tinted or coloured paper to reduce visual glare when reading and writing.', where: 'adapt' },
+    'Coloured backgrounds': { plan: 'tinted page background', iedp: 'Use a calm tinted page background to make text easier to read comfortably.', where: 'adapt' },
+    'Blue background': { plan: 'blue page tint', iedp: 'Print packs with a soft blue background tint to support comfortable reading.', where: 'adapt' },
+    'Pink background': { plan: 'pink page tint', iedp: 'Print packs with a soft pink background tint to reduce visual stress when reading.', where: 'adapt' },
+    'Cream background': { plan: 'cream page tint', iedp: 'Print packs on a warm cream background tint to reduce glare from white paper.', where: 'adapt' },
+    'Green background': { plan: 'green page tint', iedp: 'Print packs with a soft green background tint to support steady reading focus.', where: 'adapt' },
+    'Worked step first': { plan: 'worked step first', iedp: 'Show a clear worked step at the start of the task before independent questions.', where: 'adapt' },
+    'Visual steps': { plan: 'visual step guide', iedp: 'Provide numbered visual steps so the sequence of the task is clear to follow.', where: 'adapt' },
+    'Task checklist': { plan: 'tickable task checklist', iedp: 'Provide a tickable task checklist on the sheet to break work into small steps.', where: 'adapt' },
+    'Calm card': { plan: 'calm card available', iedp: 'Keep a calm card available so the pupil has a clear agreed regulation routine.', where: 'adapt' },
+    'Recall start': { plan: 'last-lesson recall box', iedp: 'Start the pack with a short recall box revisiting the key fact from last lesson.', where: 'adapt' },
+    'Sit near front': { plan: 'seat near front', iedp: 'Offer a seat near the front so board models and instructions are clear.', where: 'adapt' },
+    'Room plan': { plan: 'agreed seating plan', iedp: 'Follow the agreed classroom seating and workspace plan to support calm focus.', where: 'adapt' },
+    'Own book': { plan: 'writes in own book', iedp: 'Format packs so questions are clear while written answers go in the exercise book.', where: 'adapt' },
+    'Starters for long answers': { plan: 'starters for long answers', iedp: 'Provide sentence starters on extended questions to scaffold longer written explanations.', where: 'adapt' },
+    'Gap-fill sentences': { plan: 'gap-fill sentences', iedp: 'Provide gap-fill sentences with missing key words to scaffold written recording.', where: 'adapt' },
+    'Hands-on task': { plan: 'practical hands-on task', iedp: 'Include a practical hands-on sorting or building task alongside the written sheet.', where: 'adapt' },
+    'Labelling task': { plan: 'diagram labelling task', iedp: 'Provide a structured diagram labelling task to show understanding with minimal writing.', where: 'adapt' },
+    'Finish with a stretch': { plan: 'extension stretch task', iedp: 'Add a short extension stretch question at the end of the lesson pack.', where: 'adapt' },
+    'Works on my own': { plan: 'self-guided plan sheet', iedp: 'Include a front plan page and self-check strip for working independently.', where: 'adapt' },
+    'Other help': { plan: 'agreed lesson adjustment', iedp: 'Provide the agreed individual classroom adjustment recorded on the pupil profile.', where: 'adapt' }
+  };
+
+  // Ensure every item in the page's LEGACY_ADAPT list is present in PW_DEFAULT_BANK
+  const PW_DEFAULT_BANK = { ...PW_BASE_BANK };
+  if (typeof LEGACY_ADAPT === 'object' && LEGACY_ADAPT) {
+    Object.values(LEGACY_ADAPT).forEach(lbl => {
+      const s = String(lbl || '').trim();
+      if (s && !PW_DEFAULT_BANK[s]) {
+        PW_DEFAULT_BANK[s] = {
+          plan: s.toLowerCase().split(/\s+/).length >= 2 ? s.toLowerCase() : (s.toLowerCase() + ' support'),
+          iedp: 'Provide ' + s.toLowerCase() + ' as part of the lesson pack.',
+          where: 'adapt'
+        };
+      }
+    });
+  }
+  const PW_DEFAULT_KEYS_LOWER = new Map(Object.keys(PW_DEFAULT_BANK).map(k => [k.toLowerCase(), k]));
+
+  // Engine plan id <-> help line rules (from ENGINE_V3_SPEC, ENGINE_V3_1_SPEC, ENGINE_V3_7_SPEC and KNOWN_HELP_RES)
+  // Ordered most-specific first where regexes could overlap (e.g. longstarters before starters, adulthelp before helpcard, ownwork before ownbook)
+  const PW_PLAN_RULES = [
+    {
+      rule: 'adulthelp',
+      ids: ['adulthelp', 'adult_help', 'adult-help', 'adult_helper', 'adult_helper_card', 'helper_card', 'helpercard', 'adult helper card'],
+      re: /adult\s+helper(?:\s+card)?|\bhelper\s+card\b/i,
+      canonical: 'Adult helper card'
+    },
+    {
+      rule: 'ownwork',
+      ids: ['ownwork', 'own_work', 'own-work', 'works_on_my_own', 'worksonmyown', 'works_alone', 'worksalone', 'standalone', 'stand_alone', 'works on my own'],
+      re: /\bworks?\s+on\s+(?:my|his|her|their)\s+own\b|\bworks?\s+alone\b|\bworks?\s+(?:outside\s+the\s+(?:lesson|room)|out\s+of\s+class)\b|\bstand[\s-]alone\s+(?:pack|sheets?)\b/i,
+      canonical: 'Works on my own'
+    },
+    {
+      rule: 'longstarters',
+      ids: ['starterlong', 'longstarters', 'long_starters', 'long-starters', 'starters_long', 'startersforlong', 'starters_for_long_answers', 'extended_starters', 'long_answers', 'longanswers', 'starters for long answers'],
+      re: /(?:sentence\s+)?(?:starters?|stems?|frames?)\s+(?:for|on)\s+(?:long(?:er)?|extended)\s+(?:questions?|answers?|responses?)|\bstarter(?:s)?\s+for\s+long\s+answers?\b/i,
+      canonical: 'Starters for long answers'
+    },
+    {
+      rule: 'nownext',
+      ids: ['nownext', 'now_next', 'now-next', 'nowandnext', 'now_and_next', 'now_and_next_card', 'firstthen', 'first_then', 'now and next card'],
+      re: /now(?:\s*(?:and|&|\+|\/|-)\s*|\s+)next(?:\s+card)?|first(?:\s*(?:and|&|\+|\/|-|,)\s*|\s+)then/i,
+      canonical: 'Now and next card'
+    },
+    {
+      rule: 'concise',
+      ids: ['concise', 'chunked', 'chunks', 'one_task', 'onetask', 'one_task_at_a_time', 'concise_instructions', 'short_instructions', 'step_by_step', 'concise instructions', 'one task at a time'],
+      re: /concise(?:\s+instructions?)?|short(?:er)?\s+instructions?|simple\s+instructions?|simplif(?:y|ied|ies|ying)|one\s+(?:step|task|instruction)\s+at\s+a\s+time|step[\s-]by[\s-]step|chunks?|chunk(?:ed|ing)|clear\s+instructions?|brief\s+instructions?/i,
+      canonical: 'Concise instructions'
+    },
+    {
+      rule: 'reader',
+      ids: ['reader', 'read_aloud', 'readaloud', 'read-aloud', 'read', 'reading', 'reading_script', 'readscript', 'read aloud'],
+      re: /readers?|read\s+(?:aloud|to|out)|read[\s-]aloud|reading\s+support|text\s+read/i,
+      canonical: 'Reader'
+    },
+    {
+      rule: 'movement',
+      ids: ['movement', 'move', 'movement_break', 'movement-break', 'movementbreak', 'break', 'breaks', 'brain_break', 'brainbreak', 'movement break'],
+      re: /movement(?:\s+break)?|move\s+break|brain\s+break|sensory\s+break|\bbreaks?\b|fidgets?|stand(?:ing)?\s+up/i,
+      canonical: 'Movement break'
+    },
+    {
+      rule: 'extratime',
+      ids: ['extratime', 'extra_time', 'extra-time', 'moretime', 'more_time', 'time', 'extra time'],
+      re: /extra\s+time|more\s+time|additional\s+time|25%|time[\s-]?out|processing\s+time|take[\s-]up\s+time|take\s+up\s+time/i,
+      canonical: 'Extra time'
+    },
+    {
+      rule: 'wordbank',
+      ids: ['words', 'wordbank', 'word_bank', 'word-bank', 'vocab', 'vocabulary', 'keywords', 'key_words', 'glossary', 'word bank'],
+      re: /word[\s-]?bank|key\s+words?|keywords?|vocab(?:ulary)?|word\s+mat|glossary|pre[\s-]?teach(?:ing)?/i,
+      canonical: 'Word bank'
+    },
+    {
+      rule: 'enlarged',
+      ids: ['enlarged', 'large_print', 'large-print', 'largeprint', 'enlarged_print', 'enlarged-print', 'enlargedprint', 'enlarge', 'bigprint', 'big_print', 'large', 'font', 'enlarged print', 'large print'],
+      re: /enlarg(?:e|ed|es|ing)(?:\s+print)?|large(?:r)?(?:\s+print)?|big(?:ger)?\s+print|font|a3(?:\s+paper)?|bigger\s+text/i,
+      canonical: 'Enlarged print'
+    },
+    {
+      rule: 'starters',
+      ids: ['starter', 'starters', 'sentence_starters', 'sentence-starters', 'sentencestarters', 'stems', 'sentence_stems', 'frames', 'writing_frame', 'writingframe', 'scaffold', 'scaffolds', 'sentence starters'],
+      re: /sentence\s+(?:starters?|stems?|frames?)|writing\s+frames?|starters?|scaffolds?/i,
+      canonical: 'Sentence starters'
+    },
+    {
+      rule: 'fewer',
+      ids: ['fewer', 'fewer_questions', 'fewer-questions', 'fewerquestions', 'reduced', 'reduced_questions', 'lesswork', 'less_work', 'fewer questions'],
+      re: /fewer(?:\s+questions)?|reduced\s+(?:questions|tasks|work)|less\s+work|shorter\s+task|cut\s+down/i,
+      canonical: 'Fewer questions'
+    },
+    {
+      rule: 'tint',
+      ids: ['tint', 'paper', 'coloured', 'colored', 'coloured_paper', 'colored_paper', 'colouredpaper', 'coloured_backgrounds', 'colouredbackgrounds', 'overlay', 'overlays', 'cream', 'buff', 'blue', 'pink', 'green', 'yellow', 'tint_blue', 'tint_pink', 'tint_cream', 'tint_green', 'blue_bg', 'pink_bg', 'cream_bg', 'green_bg', 'bluebg', 'pinkbg', 'creambg', 'greenbg', 'bg_blue', 'bg_pink', 'bg_cream', 'bg_green', 'coloured paper', 'coloured backgrounds', 'blue background', 'pink background', 'cream background', 'green background'],
+      re: /overlays?|tints?|colou?red\s+(?:paper|backgrounds?)|cream|buff|(?:blue|green|pink|yellow)\s+(?:paper|background)|background\s+colou?r/i,
+      canonical: 'Coloured paper'
+    },
+    {
+      rule: 'worked',
+      ids: ['worked', 'worked_step', 'worked-step', 'workedstep', 'worked_step_first', 'worked_example', 'workedexample', 'visual_steps', 'visual-steps', 'visualsteps', 'visuals', 'modelled', 'worked step first', 'visual steps'],
+      re: /worked\s+(?:step(?:\s+first)?|examples?)|visual\s+steps?|visuals?|pictures?|symbols?|model(?:led)?\s+answers?|example\s+first/i,
+      canonical: 'Worked step first'
+    },
+    {
+      rule: 'helpcard',
+      ids: ['helpcard', 'help_card', 'help-card', 'help', 'stuckcard', 'stuck_card', 'traffic_light', 'help card'],
+      re: /help\s+card|ask\s+for\s+help|help\s+signal|traffic\s+light|stuck\s+card|red\s+card|help\s+sign/i,
+      canonical: 'Help card'
+    },
+    {
+      rule: 'checklist',
+      ids: ['checklist', 'check_list', 'check-list', 'task_checklist', 'taskchecklist', 'task_list', 'tasklist', 'ticklist', 'tick_list', 'todo', 'task checklist'],
+      re: /check[\s-]?list|task\s+list|tick\s+list|to[\s-]?do\s+lists?|task\s+board|visual\s+timetable|schedules?/i,
+      canonical: 'Task checklist'
+    },
+    {
+      rule: 'calm',
+      ids: ['calm', 'calm_card', 'calm-card', 'calmcard', 'regulate', 'regulation', 'exit_card', 'exitcard', 'timeout_card', 'calm card'],
+      re: /calm(?:\s+card)?|regulat(?:e|ed|es|ing|ion)|exit\s+card|safe\s+space|time[\s-]?out\s+cards?|zones|anxiety|worry/i,
+      canonical: 'Calm card'
+    },
+    {
+      rule: 'timer',
+      ids: ['timer', 'timer_strip', 'timer-strip', 'timerstrip', 'timers', 'countdown', 'sand_timer', 'sandtimer', 'timer strip'],
+      re: /timer(?:\s+strip)?|timers?|countdowns?|time\s+warning|time\s+limit|sand[\s-]?timer/i,
+      canonical: 'Timer strip'
+    },
+    {
+      rule: 'space',
+      ids: ['space', 'extra_space', 'extra-space', 'extraspace', 'extra_writing_space', 'extrawritingspace', 'writing_space', 'writingspace', 'more_lines', 'morelines', 'extra_time_and_space', 'extra writing space', 'extra space', 'extra time and space'],
+      re: /extra\s+(?:writing\s+)?space|more\s+lines|space\s+to\s+write|writing\s+space/i,
+      canonical: 'Extra writing space'
+    },
+    {
+      rule: 'recall',
+      ids: ['recall', 'recall_start', 'recall-start', 'recallstart', 'last_lesson', 'lastlesson', 'recall start'],
+      re: /recall|remember|last\s+lesson/i,
+      canonical: 'Recall start'
+    },
+    {
+      rule: 'ownbook',
+      ids: ['ownbook', 'own_book', 'own-book', 'exercise_book', 'exercisebook', 'book', 'own book'],
+      re: /(?:writes?|works?|answers?)(?:\s+(?:work|answers?|notes?))?\s+in\s+(?:(?:own|her|his|their|my)\s+|(?:an?\s+)?exercise\s+)books?|(?:own|exercise)\s+books?|not\s+on\s+(?:the\s+)?sheet/i,
+      canonical: 'Own book'
+    },
+    {
+      rule: 'gapfill',
+      ids: ['gapfill', 'gap_fill', 'gap-fill', 'gap_fill_sentences', 'gapfillsentences', 'cloze', 'fill_gaps', 'blanks', 'gap-fill sentences'],
+      re: /gap[\s-]?fill|fill\s+(?:the\s+)?gaps?|fill\s+in\s+(?:the\s+)?blanks?|missing\s+words?\s+provided|\bcloze\b|sentences?\s+to\s+fill/i,
+      canonical: 'Gap-fill sentences'
+    },
+    {
+      rule: 'handson',
+      ids: ['handson', 'hands_on', 'hands-on', 'hands_on_task', 'handsontask', 'practical', 'kinaesthetic', 'kinesthetic', 'hands-on task'],
+      re: /\bhands[\s-]?on\b|\bpractical\b|\bkin(?:a?e)sthetic\b|\blearn\s+by\s+doing\b|\bdo\s+it\s+with\s+(?:my|their|his|her)\s+hands\b/i,
+      canonical: 'Hands-on task'
+    },
+    {
+      rule: 'labelling',
+      ids: ['labelling', 'labeling', 'label', 'labels', 'labelling_task', 'labellingtask', 'diagram_label', 'labelling task'],
+      re: /\blabell?ing\b|\blabel\b(?!\s+(?:paper|on\s+(?:the\s+)?books?|books?|sheets?|folders?|trays?|files?|boxes?|notebooks?|workbooks?)\b)/i,
+      canonical: 'Labelling task'
+    },
+    {
+      rule: 'stretchend',
+      ids: ['stretchend', 'stretch_end', 'stretch-end', 'stretch', 'finish_stretch', 'finishstretch', 'finish_with_a_stretch', 'extension', 'ns+', 'finish with a stretch'],
+      re: /finish\s+with\s+(?:a\s+)?stretch|extension\s+at\s+(?:the\s+)?end|harder\s+extension|\bns\+(?!\w)|stretch\s+(?:question|task|box|at\s+(?:the\s+)?end)|extension\s+(?:task|question|box)/i,
+      canonical: 'Finish with a stretch'
+    },
+    {
+      rule: 'everycatchup',
+      ids: ['catchupall', 'everycatchup', 'every_catchup', 'catchup_every', 'catch_up_every', 'catchupevery', 'catchup_every_lesson', 'catch_up_every_lesson', 'quick_catchup', 'quickcatchup', 'always_catchup', 'alwayscatchup', 'catch-up every lesson'],
+      re: /\bcatch[\s-]?up\s+(?:every|each|most)\s+lessons?\b|\bquick\s+catch[\s-]?up\b|\bforgets?\s+(?:previous|earlier)\s+(?:lessons?|work)\b/i,
+      canonical: 'Catch-up every lesson'
+    },
+    {
+      rule: 'room',
+      ids: ['room', 'room_plan', 'room-plan', 'roomplan', 'seating', 'sit_near_front', 'sitnearfront', 'front', '1:1', '1to1', 'one_to_one', 'adult_support', 'adultsupport', 'scribe', 'ta', 'staff', 'room plan', 'sit near front', '1:1 adult support'],
+      re: /\broom\s+plan\b|sits?|sitting|seat(?:ed|ing|s)?|front|near\s+(?:the\s+)?(?:front|door|adult|teacher|board)|ear[\s-]?defenders?|scribe|\bta\b|adult\s+support|1:1|one[\s-]to[\s-]one|check[\s-]?ins?|prompts?|praise|reward|meet\s+and\s+greet|laptops?|computers?|tablets?|headphones?|hearing|glasses|medical|toilet|separate\s+room|small\s+group|pair|buddy/i,
+      canonical: 'Room plan'
+    },
+    {
+      rule: 'other',
+      ids: ['other', 'other_help', 'other-help', 'otherhelp', 'custom', 'other help'],
+      re: /^other\s+help$/i,
+      canonical: 'Other help'
+    }
+  ];
+
+  const PW_ID_TO_RULE = new Map();
+  PW_PLAN_RULES.forEach(entry => {
+    entry.ids.forEach(id => PW_ID_TO_RULE.set(id.toLowerCase(), entry.rule));
+  });
+
+  const pwRoot = $('paperwork');
+  const pwStatusEl = $('paperworkStatus');
+  const pwFallbackWrap = $('pwCopyFallbackWrap');
+  const pwFallbackArea = $('pwCopyFallback');
+  const pwClosingInput = $('pwClosingInput');
+  const pwResetClosingBtn = $('pwResetClosingBtn');
+  const pwBankFilter = $('pwBankFilter');
+  const pwBankList = $('pwBankList');
+  const pwPathwaySel = $('pwPathway');
+  const pwWeekSel = $('pwWeek');
+  const pwOwnList = $('pwOwnList');
+  const pwResetOwnBtn = $('pwResetOwnBtn');
+  const pwWeeklyCards = $('pwWeeklyCards');
+  const pwPupilSel = $('pwPupil');
+  const pwFromInput = $('pwFrom');
+  const pwToInput = $('pwTo');
+  const pwBoxesList = $('pwBoxesList');
+  const pwResetBoxesBtn = $('pwResetBoxesBtn');
+  const pwLinksDetails = $('pwLinksDetails');
+  const pwLinksList = $('pwLinksList');
+  const pwIedpCards = $('pwIedpCards');
+  const pwUnlinkedLine = $('pwUnlinkedLine');
+
+  if (!pwRoot) return;
+
+  // In-memory fallback state if storage cannot save on this device
+  let memoryStore = null;
+
+  function pwSetStatus(msg, alsoNotice) {
+    if (pwStatusEl) pwStatusEl.textContent = msg;
+    if (alsoNotice && typeof notice === 'function') notice(msg);
+  }
+
+  function pwIsPlainObj(v) {
+    return !!v && typeof v === 'object' && !Array.isArray(v);
+  }
+
+  function pwReadJson(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw === null) return fallback;
+      return JSON.parse(raw);
+    } catch (err) {
+      pwSetStatus('This device could not read saved data. Showing defaults.', true);
+      return fallback;
+    }
+  }
+
+  function pwWriteStore(storeObj) {
+    const clean = {
+      version: 1,
+      bank: pwIsPlainObj(storeObj.bank) ? storeObj.bank : {},
+      notes: pwIsPlainObj(storeObj.notes) ? storeObj.notes : {},
+      own: pwIsPlainObj(storeObj.own) ? storeObj.own : {},
+      links: pwIsPlainObj(storeObj.links) ? storeObj.links : {},
+      boxes: Array.isArray(storeObj.boxes) ? storeObj.boxes : []
+    };
+    memoryStore = clean;
+    try {
+      localStorage.setItem(PW_KEY, JSON.stringify(clean));
+      return true;
+    } catch (err) {
+      pwSetStatus('Your change shows for this visit. This device could not save it.', true);
+      return false;
+    }
+  }
+
+  function pwLoadStore() {
+    let raw = null;
+    try {
+      const str = localStorage.getItem(PW_KEY);
+      if (str !== null) raw = JSON.parse(str);
+    } catch (err) {
+      pwSetStatus('This device could not read saved paperwork settings. Showing defaults.', true);
+      raw = memoryStore;
+    }
+    if (!pwIsPlainObj(raw)) raw = memoryStore || {};
+    return {
+      version: 1,
+      bank: pwIsPlainObj(raw.bank) ? { ...raw.bank } : {},
+      notes: pwIsPlainObj(raw.notes) ? { ...raw.notes } : {},
+      own: pwIsPlainObj(raw.own) ? { ...raw.own } : {},
+      links: pwIsPlainObj(raw.links) ? { ...raw.links } : {},
+      boxes: Array.isArray(raw.boxes) ? raw.boxes.slice() : [],
+      _rawClosing: typeof raw.closing === 'string' ? raw.closing : undefined
+    };
+  }
+
+  function pwNormPupilId(raw) {
+    if (typeof raw === 'number' && Number.isInteger(raw) && raw >= 1 && raw <= 20) return raw;
+    const m = String(raw ?? '').trim().match(/^(?:pupil\s*|p)?0*(\d+)$/i);
+    if (!m) return null;
+    const n = Number(m[1]);
+    return n >= 1 && n <= 20 ? n : null;
+  }
+
+  function pwLogPupilNum(raw) {
+    if (typeof raw === 'number' && Number.isInteger(raw) && raw >= 1 && raw <= 99) return raw;
+    const m = String(raw ?? '').trim().match(/^(?:pupil\s*|p)?0*(\d{1,2})$/i);
+    if (!m) return null;
+    const n = Number(m[1]);
+    return n >= 1 && n <= 99 ? n : null;
+  }
+
+  function pwIsShieldOn() {
+    return document.documentElement.dataset.privacyShield === 'on';
+  }
+
+  function pwBuildSafeRoster() {
+    const rawKey = pwReadJson(KEYS.pupilKey, {}) || {};
+    const rawProf = pwReadJson(KEYS.profile, {}) || {};
+    const rawTracker = pwReadJson(KEYS.tracker, {}) || {};
+    let normProf = pwIsPlainObj(rawProf) ? { ...rawProf } : {};
+    if (pwIsPlainObj(normProf.pupils)) {
+      const nextPupils = {};
+      Object.entries(normProf.pupils).forEach(([k, v]) => {
+        if (!pwIsPlainObj(v)) return;
+        const n = pwNormPupilId(k);
+        if (n !== null) {
+          const pk = String(n);
+          if (!nextPupils[pk] || k === pk) nextPupils[pk] = v;
+        }
+      });
+      normProf.pupils = nextPupils;
+    }
+    return buildRoster({
+      pupilKey: pwIsPlainObj(rawKey) ? rawKey : {},
+      profile: normProf,
+      tracker: pwIsPlainObj(rawTracker) ? rawTracker : {}
+    });
+  }
+
+  function pwPupilLabel(n, roster) {
+    if (pwIsShieldOn()) return 'Pupil ' + n;
+    return pupilTag(n, roster);
+  }
+
+  function pwJoinList(items) {
+    const clean = items.filter(Boolean);
+    if (!clean.length) return '';
+    if (clean.length === 1) return clean[0];
+    if (clean.length === 2) return clean[0] + ' and ' + clean[1];
+    return clean.slice(0, -1).join(', ') + ' and ' + clean[clean.length - 1];
+  }
+
+  function pwEnsurePeriod(s) {
+    const t = String(s || '').trim();
+    if (!t) return '';
+    return /[.!?]$/.test(t) ? t : (t + '.');
+  }
+
+  function pwReadClosingLine(store) {
+    if (typeof store._rawClosing === 'string') return store._rawClosing;
+    for (const key of [PW_CLOSING_META, 'Closing line']) {
+      if (Object.prototype.hasOwnProperty.call(store.bank, key)) {
+        const v = store.bank[key];
+        if (typeof v === 'string') return v;
+        if (pwIsPlainObj(v) && typeof v.plan === 'string') return v.plan;
+      }
+    }
+    return PW_DEFAULT_CLOSING;
+  }
+
+  function pwIsMetaBankKey(k) {
+    const low = String(k || '').trim().toLowerCase();
+    return low === PW_CLOSING_META || low === 'closing line';
+  }
+
+  function pwFallbackBankEntry(rawLine, roster) {
+    const clean = pwIsShieldOn() ? redactPublic(String(rawLine || '').trim(), roster) : String(rawLine || '').trim();
+    const base = clean.replace(/[.!?]+$/, '').trim();
+    const words = base.split(/\s+/).filter(Boolean);
+    let plan = base.toLowerCase();
+    if (words.length < 2) plan = (plan || 'agreed') + ' support';
+    else if (words.length > 8) plan = words.slice(0, 8).join(' ').toLowerCase();
+    const iedpPhrase = words.slice(0, 14).join(' ').toLowerCase() || 'the agreed support';
+    return {
+      key: clean || 'Other help',
+      plan,
+      iedp: 'Provide ' + iedpPhrase + ' as part of the lesson pack.',
+      where: 'adapt'
+    };
+  }
+
+  function pwResolveBankEntry(rawLine, store, roster) {
+    const trimmed = String(rawLine || '').trim();
+    if (!trimmed) return null;
+    const low = trimmed.toLowerCase();
+
+    // 1. Exact or case-insensitive match in user-edited store.bank
+    let userEntry = null;
+    let userKey = null;
+    if (Object.prototype.hasOwnProperty.call(store.bank, trimmed) && !pwIsMetaBankKey(trimmed)) {
+      userKey = trimmed;
+      userEntry = store.bank[trimmed];
+    } else {
+      for (const [k, v] of Object.entries(store.bank)) {
+        if (!pwIsMetaBankKey(k) && k.trim().toLowerCase() === low) {
+          userKey = k;
+          userEntry = v;
+          break;
+        }
+      }
+    }
+
+    // 2. Canonical default bank key (exact case-insensitive, else rule match)
+    let defKey = PW_DEFAULT_KEYS_LOWER.get(low) || null;
+    if (!defKey) {
+      if (/\b(?:1:1|one[\s-]to[\s-]one|adult\s+support|scribe|\bta\b)\b/i.test(trimmed)) {
+        defKey = '1:1 adult support';
+      } else {
+        for (const r of PW_PLAN_RULES) {
+          if (r.rule !== 'room' && r.re.test(trimmed) && PW_DEFAULT_BANK[r.canonical]) {
+            defKey = r.canonical;
+            break;
+          }
+        }
+      }
+    }
+    if (!userEntry && defKey) {
+      for (const [k, v] of Object.entries(store.bank)) {
+        if (!pwIsMetaBankKey(k) && k.trim().toLowerCase() === defKey.toLowerCase()) {
+          userKey = k;
+          userEntry = v;
+          break;
+        }
+      }
+    }
+
+    const base = defKey ? PW_DEFAULT_BANK[defKey] : pwFallbackBankEntry(trimmed, roster);
+    if (pwIsPlainObj(userEntry)) {
+      const plan = typeof userEntry.plan === 'string' && userEntry.plan.trim() ? userEntry.plan.trim() : base.plan;
+      const iedp = typeof userEntry.iedp === 'string' && userEntry.iedp.trim() ? userEntry.iedp.trim() : base.iedp;
+      const where = PW_VALID_WHERE.has(userEntry.where) ? userEntry.where : base.where;
+      return {
+        key: defKey || userKey || trimmed,
+        plan: pwIsShieldOn() ? redactPublic(plan, roster) : plan,
+        iedp: pwIsShieldOn() ? redactPublic(iedp, roster) : iedp,
+        where
+      };
+    }
+    return {
+      key: defKey || trimmed,
+      plan: base.plan,
+      iedp: base.iedp,
+      where: base.where
+    };
+  }
+
+  function pwPathwayDefaultSubjects(pathway) {
+    const seen = new Set();
+    const out = [];
+    DAYS.forEach(day => {
+      (TT[day] || []).forEach(row => {
+        if (row[1] === pathway || row[1] === 'ALL') {
+          if (!seen.has(row[2])) {
+            seen.add(row[2]);
+            out.push(row[2]);
+          }
+        }
+      });
+    });
+    return out;
+  }
+
+  function pwGetOwnedSubjects(pathway, store) {
+    const defaults = pwPathwayDefaultSubjects(pathway);
+    const allowed = new Set(defaults);
+    if (Array.isArray(store.own[pathway])) {
+      const seen = new Set();
+      const filtered = [];
+      store.own[pathway].forEach(s => {
+        const name = String(s || '').trim();
+        const match = defaults.find(d => d.toLowerCase() === name.toLowerCase());
+        if (match && !seen.has(match) && allowed.has(match)) {
+          seen.add(match);
+          filtered.push(match);
+        }
+      });
+      return filtered;
+    }
+    return defaults;
+  }
+
+  function pwReadTermCfgSafe() {
+    const raw = pwReadJson(KEYS.term, null);
+    if (pwIsPlainObj(raw) && typeof raw.w1Monday === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.w1Monday)) {
+      const [y, m, d] = raw.w1Monday.split('-').map(Number);
+      const dt = new Date(y, m - 1, d, 12);
+      if (!Number.isNaN(dt.getTime())) {
+        return { w1Monday: raw.w1Monday, y, m, d, skipW1Mon: raw.skipW1Mon !== false };
+      }
+    }
+    return { w1Monday: '2026-11-02', y: 2026, m: 11, d: 2, skipW1Mon: true };
+  }
+
+  function pwDefaultNextWeek(now, cfg) {
+    const curWeek = 1 + Math.round(
+      (Date.UTC(now.getFullYear(), now.getMonth(), now.getDate() - (now.getDay() + 6) % 7) -
+        Date.UTC(cfg.y, cfg.m - 1, cfg.d)) / 604800000
+    );
+    return Math.min(7, Math.max(1, curWeek + 1));
+  }
+
+  function pwWeekMondayLabel(w, cfg) {
+    const dt = new Date(cfg.y, cfg.m - 1, cfg.d + (w - 1) * 7, 12);
+    return dt.getDate() + ' ' + MONTHS_SHORT[dt.getMonth()];
+  }
+
+  function pwLessonDateISO(w, day, cfg) {
+    const dt = new Date(cfg.y, cfg.m - 1, cfg.d + (+w - 1) * 7 + DAYS.indexOf(day), 12);
+    return dateISO(dt);
+  }
+
+  function pwSubjectSlotsInWeek(w, pathway, subjectName, cfg) {
+    const all = [];
+    DAYS.forEach(day => {
+      (TT[day] || []).forEach(row => {
+        if ((row[1] === pathway || row[1] === 'ALL') && row[2] === subjectName) {
+          all.push({
+            w: +w,
+            day,
+            p: row[0],
+            path: row[1],
+            subject: row[2],
+            lesson: LN[day + '|' + row[0]] || 1,
+            skipped: !!(cfg.skipW1Mon && +w === 1 && day === 'Monday')
+          });
+        }
+      });
+    });
+    const teaching = all.filter(s => !s.skipped);
+    return teaching.length ? teaching : all;
+  }
+
+  function pwLessonCodesForSlot(w, pathway, subjectName, slots) {
+    const codes = [];
+    const seen = new Set();
+    const pushCode = c => { if (c && !seen.has(c)) { seen.add(c); codes.push(c); } };
+    slots.forEach(s => {
+      if (subjectName === 'Community Projects' && +w === 4) {
+        pushCode(lessonCode(w, pathway, subjectName, s.lesson, 1));
+        pushCode(lessonCode(w, pathway, subjectName, s.lesson, 2));
+      } else {
+        pushCode(lessonCode(w, pathway, subjectName, s.lesson, 1));
+      }
+    });
+    return codes;
+  }
+
+  function pwReadSubjItemsMap() {
+    const raw = pwReadJson(KEYS.subjectSettings, null);
+    if (!pwIsPlainObj(raw)) return {};
+    if (pwIsPlainObj(raw.items)) return raw.items;
+    return raw;
+  }
+
+  function pwGetPupilSubjectHelp(n, subjectName, subjItems) {
+    const targetKeys = PW_SUBJECT_KEYS[subjectName] || [String(subjectName || '').trim().toLowerCase()];
+    const matched = [];
+    targetKeys.forEach(sKey => {
+      const direct = subjItems[n + '|' + sKey];
+      if (pwIsPlainObj(direct)) {
+        matched.push(direct);
+        return;
+      }
+      Object.entries(subjItems).forEach(([k, v]) => {
+        if (!pwIsPlainObj(v)) return;
+        const sep = k.indexOf('|');
+        if (sep <= 0) return;
+        if (pwNormPupilId(k.slice(0, sep)) === n && k.slice(sep + 1).trim().toLowerCase() === sKey) {
+          matched.push(v);
+        }
+      });
+    });
+    const add = [];
+    let tier = '';
+    let bestSaved = '';
+    matched.forEach(item => {
+      if (Array.isArray(item.add)) {
+        item.add.forEach(x => {
+          const s = String(x || '').trim();
+          if (s) add.push(s);
+        });
+      }
+      if (typeof item.tier === 'string' && PW_VALID_TIERS.has(item.tier.trim())) {
+        const t = item.tier.trim();
+        const sv = typeof item.saved === 'string' ? item.saved : '';
+        if (!tier || (sv && sv >= bestSaved)) {
+          tier = t;
+          bestSaved = sv;
+        }
+      }
+    });
+    return { tier, add };
+  }
+
+  function pwGetPupilProfileHelp(n, roster) {
+    const rec = roster.profile?.pupils?.[n] || {};
+    const adapts = pupilAdapt(n, roster);
+    const ticks = Array.isArray(rec.tags)
+      ? rec.tags.map(t => String(t || '').trim()).filter(Boolean).slice(0, 8)
+      : [];
+    const tier = (typeof rec.tier === 'string' && PW_VALID_TIERS.has(rec.tier.trim())) ? rec.tier.trim() : '';
+    return { adapts, ticks, tier };
+  }
+
+  function pwDedupeLines(lines) {
+    const seen = new Set();
+    const out = [];
+    lines.forEach(raw => {
+      const s = String(raw || '').trim();
+      if (!s) return;
+      const k = s.toLowerCase();
+      if (!seen.has(k)) {
+        seen.add(k);
+        out.push(s);
+      }
+    });
+    return out;
+  }
+
+  function pwParseSlotTriple(wRaw, dRaw, pRaw) {
+    const wm = String(wRaw ?? '').trim().match(/^(?:W)?0*([1-7])$/i);
+    if (!wm) return null;
+    const w = parseInt(wm[1], 10);
+    const dIdx = DAYS.indexOf(String(dRaw ?? '').trim());
+    if (dIdx < 0) return null;
+    const pm = String(pRaw ?? '').trim().match(/^(?:P)?0*([1-6])$/i);
+    if (!pm) return null;
+    const p = parseInt(pm[1], 10);
+    if (!PW_KNOWN_PERIODS.has(p)) return null;
+    return { w, dIdx, day: DAYS[dIdx], p };
+  }
+
+  const PW_SUBJ_BY_LOWER = Object.fromEntries(Object.keys(PREFIX).map(s => [s.toLowerCase(), s]));
+
+  function pwOwedBeforeSlot(markSlot, targetSlot) {
+    if (markSlot.w !== targetSlot.w) return markSlot.w < targetSlot.w;
+    const targetD = DAYS.indexOf(targetSlot.day);
+    if (markSlot.dIdx !== targetD) return markSlot.dIdx < targetD;
+    return markSlot.p < targetSlot.p;
+  }
+
+  function pwPupilOwesForFirstSlot(n, pathway, firstSlot, roster) {
+    if (!firstSlot) return false;
+    const rawTracker = roster.tracker;
+    const marks = pwIsPlainObj(rawTracker) && pwIsPlainObj(rawTracker.marks) ? rawTracker.marks : {};
+    for (const [k, m] of Object.entries(marks)) {
+      if (!pwIsPlainObj(m)) continue;
+      const rawSt = String((typeof m.st === 'string' && m.st.trim()) ? m.st : (m.state || '')).trim().toLowerCase();
+      const isDone = m.done === true || m.cst === 'done' || rawSt === 'done';
+      if (isDone || (rawSt !== 'missed' && rawSt !== 'partial')) continue;
+      const parts = k.split('|');
+      if (parts.length !== 4 && parts.length !== 6) continue;
+      const mSlot = pwParseSlotTriple(parts[0], parts[1], parts[2]);
+      if (!mSlot) continue;
+      const who = parts.length === 6 ? parts[5] : parts[3];
+      if (matchTrackerPupilNumber(who, rawTracker, roster) !== +n) continue;
+      const rawPath = String(parts.length === 6 ? parts[3] : (m.path || roster.groupByNum[n] || '')).trim();
+      const path = (PATHWAYS.includes(rawPath) || rawPath === 'ALL') ? rawPath : '';
+      if (path && path !== pathway && path !== 'ALL') continue;
+      const rawSubj = String(parts.length === 6 ? parts[4] : (m.subj || '')).trim().toLowerCase();
+      const normSubj = PW_SUBJ_BY_LOWER[rawSubj] || '';
+      if (normSubj !== firstSlot.subject) continue;
+      if (pwOwedBeforeSlot(mSlot, firstSlot)) return true;
+    }
+    return false;
+  }
+
+  function pwFormatSupportLine(planPhrase, pupilsJoined) {
+    const p = String(planPhrase || '').trim().replace(/[.!?]+$/, '').trim();
+    if (!p) return 'TA: supports ' + pupilsJoined + '.';
+    if (p.includes('{pupils}')) {
+      return pwEnsurePeriod('TA: ' + p.replace(/\{pupils\}/g, pupilsJoined));
+    }
+    if (/\b(with|to|for|near|beside|alongside)$/i.test(p)) {
+      return 'TA: ' + p + ' ' + pupilsJoined + '.';
+    }
+    return 'TA: ' + p + ' for ' + pupilsJoined + '.';
+  }
+
+  function pwShortenAdaptCell(noteLine, groups, routeLine, catchupLine, roster) {
+    // Stage 1: merge adaptation groups onto one semicolon-separated line, and merge route + catchup onto one line
+    const groupBit = groups.map(g => pwJoinList(g.pupils.map(n => pwPupilLabel(n, roster))) + ': ' + pwJoinList(g.phrases)).join('; ');
+    const tailParts = [routeLine, catchupLine].filter(Boolean);
+    const lines1 = [];
+    if (noteLine) lines1.push(noteLine);
+    if (groupBit) lines1.push(pwEnsurePeriod(groupBit));
+    if (tailParts.length) lines1.push(tailParts.join(' '));
+    const cand1 = lines1.join('\n');
+    if (cand1.length <= 700) return cand1;
+
+    // Stage 2: whole phrases only. Each line keeps as many phrases as fit its share of the cell, then says how many more there are. Every pupil is kept.
+    const fixedLen2 = (noteLine ? noteLine.length + 1 : 0) + (tailParts.length ? tailParts.join(' ').length + 1 : 0) + 1;
+    const share2 = Math.floor((700 - fixedLen2) / Math.max(1, groups.length)) - 2;
+    let fits2 = true;
+    const groupBit2 = groups.map(g => {
+      const who = pwJoinList(g.pupils.map(n => pwPupilLabel(n, roster))) + ': ';
+      let kept = 0;
+      while (kept < g.phrases.length) {
+        const after = g.phrases.length - kept - 1;
+        if ((who + g.phrases.slice(0, kept + 1).join(', ') + (after ? ' + ' + after + ' more' : '')).length > share2) break;
+        kept++;
+      }
+      if (!kept) fits2 = false;
+      const left = g.phrases.length - kept;
+      return who + g.phrases.slice(0, kept).join(', ') + (left ? ' + ' + left + ' more' : '');
+    }).join('; ');
+    const lines2 = [];
+    if (noteLine) lines2.push(noteLine);
+    if (groupBit2) lines2.push(pwEnsurePeriod(groupBit2));
+    if (tailParts.length) lines2.push(tailParts.join(' '));
+    const cand2 = lines2.join('\n');
+    if (fits2 && cand2.length <= 700) return cand2;
+
+    // Stage 3: merge all adapted pupils onto one compact line so zero pupils are ever dropped
+    const allAdaptNums = [...new Set(groups.flatMap(g => g.pupils))].sort((a, b) => a - b);
+    const parts3 = [];
+    if (noteLine) parts3.push(noteLine);
+    if (allAdaptNums.length) parts3.push('Adapted packs: ' + allAdaptNums.map(n => pwPupilLabel(n, roster)).join(', ') + '.');
+    if (tailParts.length) parts3.push(tailParts.join(' '));
+    let cand3 = parts3.join(' ');
+    if (cand3.length > 700 && noteLine) {
+      const rest = parts3.slice(1).join(' ');
+      const budget = Math.max(20, 696 - rest.length);
+      cand3 = noteLine.slice(0, budget).trimEnd() + '… ' + rest;
+    }
+    return cand3.slice(0, 700);
+  }
+
+  function pwShortenSupportCell(supportEntries, owedPupils, closingLine, roster) {
+    // Stage 1: merge all TA support lines onto a single semicolon-separated line
+    const lines1 = [];
+    if (supportEntries.length) {
+      const bit = supportEntries.map(e => {
+        const p = e.plan.replace(/[.!?]+$/, '').trim();
+        const who = pwJoinList(e.pupils.map(n => pwPupilLabel(n, roster)));
+        return /\b(with|to|for|near|beside|alongside)$/i.test(p) ? (p + ' ' + who) : (p + ' for ' + who);
+      }).join('; ');
+      lines1.push(pwEnsurePeriod('TA: ' + bit));
+    }
+    if (owedPupils.length) {
+      lines1.push('TA runs catch-up in retrieval with: ' + pwJoinList(owedPupils.map(n => pwPupilLabel(n, roster))) + '.');
+    }
+    if (closingLine) lines1.push(closingLine);
+    const cand1 = lines1.join('\n');
+    if (cand1.length <= 700) return cand1;
+
+    // Stage 2: single-line join with every pupil preserved
+    const allSupNums = [...new Set(supportEntries.flatMap(e => e.pupils))].sort((a, b) => a - b);
+    const parts2 = [];
+    if (allSupNums.length) parts2.push('TA support: ' + allSupNums.map(n => pwPupilLabel(n, roster)).join(', ') + '.');
+    if (owedPupils.length) parts2.push('TA runs catch-up in retrieval with: ' + owedPupils.map(n => pwPupilLabel(n, roster)).join(', ') + '.');
+    if (closingLine) parts2.push(closingLine);
+    return parts2.join(' ').slice(0, 700);
+  }
+
+  function pwBuildSubjectCells(pathway, subjectName, weekNum, store, roster, subjItems, cfg) {
+    const pupils = (roster.groups[pathway] || []).slice().sort((a, b) => a - b);
+    const slots = pwSubjectSlotsInWeek(weekNum, pathway, subjectName, cfg);
+    const firstSlot = slots[0] || null;
+    const codes = pwLessonCodesForSlot(weekNum, pathway, subjectName, slots);
+
+    const rawNote = String(store.notes[pathway + '|' + subjectName] || '').trim().slice(0, 300);
+    const noteLine = rawNote ? (pwIsShieldOn() ? redactPublic(rawNote, roster) : rawNote) : '';
+
+    const adaptGroupMap = new Map();
+    const adaptGroups = [];
+    const supportMap = new Map();
+    const supportEntries = [];
+    const supportedPupils = [];
+    const aspirePupils = [];
+    const owedPupils = [];
+
+    pupils.forEach(n => {
+      const profHelp = pwGetPupilProfileHelp(n, roster);
+      const subjHelp = pwGetPupilSubjectHelp(n, subjectName, subjItems);
+      const effLines = pwDedupeLines([...profHelp.adapts, ...profHelp.ticks, ...subjHelp.add]);
+      const effTier = subjHelp.tier || profHelp.tier || '';
+
+      const pupilAdaptEntries = [];
+      const seenAdaptKeys = new Set();
+      effLines.forEach(line => {
+        const entry = pwResolveBankEntry(line, store, roster);
+        if (!entry) return;
+        const cleanPlan = entry.plan.replace(/[.!?]+$/, '').trim();
+        if ((entry.where === 'adapt' || entry.where === 'both') && cleanPlan) {
+          const pk = cleanPlan.toLowerCase();
+          if (!seenAdaptKeys.has(pk)) {
+            seenAdaptKeys.add(pk);
+            pupilAdaptEntries.push(cleanPlan);
+          }
+        }
+        if ((entry.where === 'support' || entry.where === 'both') && cleanPlan) {
+          const sk = entry.key.toLowerCase();
+          let sup = supportMap.get(sk);
+          if (!sup) {
+            sup = { key: entry.key, plan: cleanPlan, pupils: [] };
+            supportMap.set(sk, sup);
+            supportEntries.push(sup);
+          }
+          if (!sup.pupils.includes(n)) sup.pupils.push(n);
+        }
+      });
+
+      if (pupilAdaptEntries.length) {
+        const setKey = pupilAdaptEntries.map(p => p.toLowerCase()).slice().sort().join('||');
+        let grp = adaptGroupMap.get(setKey);
+        if (!grp) {
+          grp = { phrases: pupilAdaptEntries, pupils: [] };
+          adaptGroupMap.set(setKey, grp);
+          adaptGroups.push(grp);
+        }
+        grp.pupils.push(n);
+      }
+
+      if (effTier === 'Supported') supportedPupils.push(n);
+      else if (effTier === 'Aspire') aspirePupils.push(n);
+
+      if (pwPupilOwesForFirstSlot(n, pathway, firstSlot, roster)) {
+        owedPupils.push(n);
+      }
+    });
+
+    adaptGroups.sort((a, b) => a.pupils[0] - b.pupils[0]);
+    supportEntries.sort((a, b) => a.pupils[0] - b.pupils[0]);
+
+    const adaptBodyLines = [];
+    adaptGroups.forEach(grp => {
+      const who = pwJoinList(grp.pupils.map(n => pwPupilLabel(n, roster)));
+      const what = pwJoinList(grp.phrases);
+      adaptBodyLines.push(pwEnsurePeriod(who + ': ' + what));
+    });
+
+    const routeParts = [];
+    if (supportedPupils.length) {
+      routeParts.push('Supported route: ' + pwJoinList(supportedPupils.map(n => pwPupilLabel(n, roster))) + '.');
+    }
+    if (aspirePupils.length) {
+      routeParts.push('Aspire: ' + pwJoinList(aspirePupils.map(n => pwPupilLabel(n, roster))) + '.');
+    }
+    const routeLine = routeParts.join(' ');
+    if (routeLine) adaptBodyLines.push(routeLine);
+
+    const catchupLine = owedPupils.length
+      ? ('Catch-up first: ' + pwJoinList(owedPupils.map(n => pwPupilLabel(n, roster))) + '.')
+      : '';
+    if (catchupLine) adaptBodyLines.push(catchupLine);
+
+    const fullAdaptLines = [];
+    if (noteLine) fullAdaptLines.push(noteLine);
+    if (adaptBodyLines.length) {
+      fullAdaptLines.push(...adaptBodyLines);
+    } else {
+      fullAdaptLines.push('No extra adaptations recorded for this group.');
+    }
+
+    let adaptText = fullAdaptLines.join('\n');
+    let shortened = false;
+    if (adaptText.length > 700) {
+      adaptText = pwShortenAdaptCell(noteLine, adaptGroups, routeLine, catchupLine, roster);
+      shortened = true;
+    }
+
+    const closingRaw = pwReadClosingLine(store).trim();
+    const closingLine = closingRaw ? (pwIsShieldOn() ? redactPublic(closingRaw, roster) : closingRaw) : '';
+    const supportLines = [];
+    supportEntries.forEach(sup => {
+      const who = pwJoinList(sup.pupils.map(n => pwPupilLabel(n, roster)));
+      supportLines.push(pwFormatSupportLine(sup.plan, who));
+    });
+    if (owedPupils.length) {
+      supportLines.push('TA runs catch-up in retrieval with: ' + pwJoinList(owedPupils.map(n => pwPupilLabel(n, roster))) + '.');
+    }
+    if (closingLine) {
+      supportLines.push(closingLine);
+    }
+
+    let supportText = supportLines.join('\n');
+    if (supportText.length > 700) {
+      supportText = pwShortenSupportCell(supportEntries, owedPupils, closingLine, roster);
+      shortened = true;
+    }
+
+    return {
+      heading: pathway + ' · ' + subjectName + ' · Week ' + weekNum + ' (w/c ' + pwWeekMondayLabel(weekNum, cfg) + ')',
+      codesText: codes.join(' · ') || 'No lesson code',
+      adaptText,
+      supportText,
+      rawNote,
+      shortened
+    };
+  }
+
+  function pwQuoteTsvCell(s) {
+    const norm = String(s ?? '').replace(/\r\n?/g, '\n');
+    return '"' + norm.replace(/"/g, '""') + '"';
+  }
+
+  async function pwCopy(text, okMsg, triggerBtn) {
+    const str = String(text ?? '');
+    if (pwFallbackWrap) pwFallbackWrap.hidden = true;
+    try {
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        await navigator.clipboard.writeText(str);
+        pwSetStatus(okMsg, false);
+        return true;
+      }
+    } catch (err) {}
+
+    if (pwFallbackWrap && pwFallbackArea) {
+      pwFallbackWrap.hidden = false;
+      pwFallbackArea.value = str;
+      pwFallbackArea.focus({ preventScroll: true });
+      pwFallbackArea.select();
+      try { pwFallbackArea.setSelectionRange(0, str.length); } catch (e) {}
+      let copied = false;
+      try { copied = document.execCommand('copy'); } catch (err) { copied = false; }
+      if (copied) {
+        pwFallbackWrap.hidden = true;
+        if (triggerBtn && typeof triggerBtn.focus === 'function') {
+          triggerBtn.focus({ preventScroll: true });
+        }
+        pwSetStatus(okMsg, false);
+        return true;
+      }
+      pwFallbackArea.focus({ preventScroll: true });
+      pwFallbackArea.select();
+      try { pwFallbackArea.setSelectionRange(0, str.length); } catch (e) {}
+      pwSetStatus('Press Ctrl+C to copy', false);
+      return false;
+    }
+    pwSetStatus('Press Ctrl+C to copy', false);
+    return false;
+  }
+
+  // --- Part B helpers: boxes, links, log plan-id matching, tallies & catch-up review ---
+  const PW_BOX_HINT_RES = [
+    ['target', /\b(target|goal|aim|outcome|assess)\b/i],
+    ['strategy', /\b(strateg|plan|support|approach|provision)\b/i],
+    ['provided', /\b(provid|print|pack|deliver|do)\b/i],
+    ['review', /\b(review|progress|exit|check|evaluat)\b/i],
+    ['evidence', /\b(evidenc|proof|record|sample)\b/i]
+  ];
+
+  function pwResolveBoxes(store) {
+    const raw = Array.isArray(store.boxes) && store.boxes.length ? store.boxes : PW_DEFAULT_BOXES;
+    const entries = raw.slice(0, 5).map(item => {
+      if (typeof item === 'string') {
+        return { id: null, label: item.trim() || '' };
+      }
+      if (pwIsPlainObj(item)) {
+        const idCand = String(item.id || item.key || '').trim().toLowerCase();
+        const label = String(item.label || item.name || '').trim();
+        return { id: PW_BOX_IDS.includes(idCand) ? idCand : null, label };
+      }
+      return { id: null, label: '' };
+    });
+
+    const used = new Set();
+    // Pass 1: explicit id or exact canonical name match
+    entries.forEach(e => {
+      if (e.id && !used.has(e.id)) {
+        used.add(e.id);
+        if (!e.label) e.label = PW_DEFAULT_BOXES[PW_BOX_IDS.indexOf(e.id)];
+        return;
+      }
+      const exactIdx = PW_BOX_IDS.indexOf(e.label.toLowerCase());
+      if (exactIdx >= 0 && !used.has(PW_BOX_IDS[exactIdx])) {
+        e.id = PW_BOX_IDS[exactIdx];
+        used.add(e.id);
+      }
+    });
+    // Pass 2: keyword hint match
+    entries.forEach(e => {
+      if (e.id) return;
+      for (const [id, re] of PW_BOX_HINT_RES) {
+        if (!used.has(id) && re.test(e.label)) {
+          e.id = id;
+          used.add(id);
+          break;
+        }
+      }
+    });
+    // Pass 3: assign remaining unused canonical IDs in order
+    entries.forEach(e => {
+      if (e.id) return;
+      const nextId = PW_BOX_IDS.find(id => !used.has(id));
+      if (nextId) {
+        e.id = nextId;
+        used.add(nextId);
+        if (!e.label) e.label = PW_DEFAULT_BOXES[PW_BOX_IDS.indexOf(nextId)];
+      }
+    });
+    // Ensure all 5 canonical boxes exist
+    PW_BOX_IDS.forEach((id, idx) => {
+      if (!used.has(id)) {
+        entries.push({ id, label: PW_DEFAULT_BOXES[idx] });
+        used.add(id);
+      }
+    });
+    return entries.filter(e => e.id).slice(0, 5);
+  }
+
+  function pwSerializeBoxes(resolvedBoxes) {
+    // Store plain strings whenever unambiguous on reload; otherwise store {id, label}
+    const asStrings = resolvedBoxes.map(b => b.label);
+    const roundTrip = pwResolveBoxes({ boxes: asStrings });
+    const lossless = roundTrip.length === resolvedBoxes.length &&
+      roundTrip.every((r, i) => r.id === resolvedBoxes[i].id && r.label === resolvedBoxes[i].label);
+    if (lossless) return asStrings;
+    return resolvedBoxes.map(b => (b.label.toLowerCase() === b.id ? b.label : { id: b.id, label: b.label }));
+  }
+
+  function pwClassifyHelpLineRules(helpLine) {
+    const s = String(helpLine || '').trim();
+    if (!s) return { rules: new Set(), color: '' };
+    const low = s.toLowerCase();
+    const rules = new Set();
+
+    // Specific compound legacy line
+    if (low === 'extra time and space') {
+      rules.add('extratime');
+      rules.add('space');
+      return { rules, color: '' };
+    }
+
+    let color = '';
+    const cm = low.match(/\b(blue|pink|cream|green|yellow)\s+(?:background|paper|tint)\b/);
+    if (cm) color = cm[1];
+
+    for (const entry of PW_PLAN_RULES) {
+      if (entry.re.test(s)) {
+        rules.add(entry.rule);
+        // Most help lines map to one primary rule
+        break;
+      }
+    }
+    if (!rules.size) rules.add('other');
+    return { rules, color };
+  }
+
+  function pwRowMatchesHelpLine(rowLines, helpLine, rowHands) {
+    if (!Array.isArray(rowLines) || !rowLines.length) return false;
+    const target = pwClassifyHelpLineRules(helpLine);
+    const helpLow = String(helpLine || '').trim().toLowerCase();
+
+    for (const rawId of rowLines) {
+      const id = String(rawId || '').trim().toLowerCase();
+      if (!id) continue;
+      if (id === helpLow) return true;
+
+      // Check colour-specific tint plan IDs if present
+      const idColorMatch = id.match(/\b(blue|pink|cream|green|yellow)\b/);
+      const mappedRule = PW_ID_TO_RULE.get(id) || null;
+      if (mappedRule && target.rules.has(mappedRule)) {
+        if (mappedRule === 'handson' && !rowHands) continue;
+        if (mappedRule === 'tint' && target.color && idColorMatch && idColorMatch[1] !== target.color) {
+          continue;
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function pwFormatDateSpan(minISO, maxISO) {
+    const [y1, m1, d1] = minISO.split('-').map(Number);
+    const [y2, m2, d2] = maxISO.split('-').map(Number);
+    const mon1 = MONTHS_SHORT[m1 - 1];
+    const mon2 = MONTHS_SHORT[m2 - 1];
+    if (minISO === maxISO) {
+      return d1 + ' ' + mon1;
+    }
+    if (y1 === y2 && m1 === m2) {
+      return d1 + ' to ' + d2 + ' ' + mon2;
+    }
+    if (y1 === y2) {
+      return d1 + ' ' + mon1 + ' to ' + d2 + ' ' + mon2;
+    }
+    return d1 + ' ' + mon1 + ' ' + y1 + ' to ' + d2 + ' ' + mon2 + ' ' + y2;
+  }
+
+  function pwReadPupilTargets(n) {
+    const rawTargets = pwReadJson(KEYS.targets, {}) || {};
+    if (!pwIsPlainObj(rawTargets)) return [];
+    let val = rawTargets[String(n)];
+    if (val === undefined) {
+      for (const [k, v] of Object.entries(rawTargets)) {
+        if (pwNormPupilId(k) === n) { val = v; break; }
+      }
+    }
+    if (typeof val === 'string') {
+      return val.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+    }
+    if (Array.isArray(val)) {
+      return val.map(s => String(s ?? '').trim()).filter(Boolean);
+    }
+    return [];
+  }
+
+  function pwAllHelpLinesForPupil(n, roster, subjItems) {
+    const prof = pwGetPupilProfileHelp(n, roster);
+    const subjAdds = [];
+    Object.entries(subjItems).forEach(([k, v]) => {
+      if (!pwIsPlainObj(v) || !Array.isArray(v.add)) return;
+      const sep = k.indexOf('|');
+      if (sep > 0 && pwNormPupilId(k.slice(0, sep)) === n) {
+        v.add.forEach(a => {
+          const s = String(a || '').trim();
+          if (s) subjAdds.push(s);
+        });
+      }
+    });
+    return pwDedupeLines([...prof.adapts, ...prof.ticks, ...subjAdds]);
+  }
+
+  function pwReadPupilLinksMap(n, store) {
+    let map = store.links[String(n)];
+    if (!pwIsPlainObj(map)) {
+      map = {};
+      Object.entries(store.links).forEach(([k, v]) => {
+        if (pwNormPupilId(k) === n && pwIsPlainObj(v)) {
+          map = { ...map, ...v };
+        }
+      });
+    }
+    const byLow = new Map();
+    Object.entries(map).forEach(([hl, tNum]) => {
+      const num = Number(tNum);
+      if (Number.isInteger(num) && num >= 1) {
+        byLow.set(String(hl || '').trim().toLowerCase(), num);
+      }
+    });
+    return byLow;
+  }
+
+  function pwReadPupilLogRowsInRange(n, startISO, endISO) {
+    const rawLog = pwReadJson(KEYS.adaptLog, null);
+    const rows = (pwIsPlainObj(rawLog) && Array.isArray(rawLog.rows)) ? rawLog.rows : [];
+    const dedup = new Map();
+    let anonIdx = 0;
+    rows.forEach(r => {
+      if (!pwIsPlainObj(r)) return;
+      if (pwLogPupilNum(r.n) !== n) return;
+      if (typeof r.d !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(r.d)) return;
+      if (r.d < startISO || r.d > endISO) return;
+      const codeKey = (typeof r.code === 'string' && r.code.trim()) ? r.code.trim() : ('__row_' + (anonIdx++));
+      dedup.set(r.d + '|' + codeKey, {
+        d: r.d,
+        code: codeKey,
+        lines: Array.isArray(r.lines) ? r.lines : [],
+        hands: r.hands === true
+      });
+    });
+    return [...dedup.values()].sort((a, b) => a.d.localeCompare(b.d));
+  }
+
+  function pwComputeReviewStats(n, startISO, endISO, roster, cfg) {
+    const rawTallies = pwReadJson(KEYS.tally, {}) || {};
+    const tallyBySlot = new Map();
+    let fallbackIdx = 0;
+    if (pwIsPlainObj(rawTallies)) {
+      Object.entries(rawTallies).forEach(([k, r]) => {
+        if (!pwIsPlainObj(r) || typeof r.state !== 'string') return;
+        const st = r.state.trim();
+        if (!['got', 'nearly', 'again', 'absent'].includes(st)) return;
+        const parts = k.split('|');
+        let dISO = '';
+        let slotId = '';
+        if (parts.length === 4) {
+          if (pwNormPupilId(parts[3]) !== n) return;
+          const sl = pwParseSlotTriple(parts[0], parts[1], parts[2]);
+          if (sl) {
+            dISO = (typeof r.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(r.date)) ? r.date : pwLessonDateISO(sl.w, sl.day, cfg);
+            slotId = sl.w + '|' + sl.day + '|' + sl.p;
+          }
+        }
+        if (!dISO) {
+          const recN = pwNormPupilId(r.n ?? r.pupil);
+          if (recN !== n) return;
+          if (typeof r.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(r.date)) dISO = r.date;
+          else if (typeof r.ts === 'string' && /^\d{4}-\d{2}-\d{2}/.test(r.ts)) dISO = r.ts.slice(0, 10);
+          slotId = 'fb_' + (fallbackIdx++);
+        }
+        if (!dISO || dISO < startISO || dISO > endISO) return;
+        const prev = tallyBySlot.get(slotId);
+        const ts = typeof r.ts === 'string' ? r.ts : '';
+        if (!prev || ts >= prev.ts) {
+          tallyBySlot.set(slotId, { state: st, ts });
+        }
+      });
+    }
+
+    const counts = { got: 0, nearly: 0, again: 0, absent: 0 };
+    tallyBySlot.forEach(v => { counts[v.state]++; });
+
+    let cuDone = 0;
+    let cuOwed = 0;
+    const rawTracker = roster.tracker;
+    const marks = (pwIsPlainObj(rawTracker) && pwIsPlainObj(rawTracker.marks)) ? rawTracker.marks : {};
+    const markBySlot = new Map();
+    Object.entries(marks).forEach(([k, m]) => {
+      if (!pwIsPlainObj(m)) return;
+      const parts = k.split('|');
+      if (parts.length !== 4 && parts.length !== 6) return;
+      const sl = pwParseSlotTriple(parts[0], parts[1], parts[2]);
+      if (!sl) return;
+      const who = parts.length === 6 ? parts[5] : parts[3];
+      if (matchTrackerPupilNumber(who, rawTracker, roster) !== +n) return;
+      const dISO = (typeof m.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(m.date)) ? m.date : pwLessonDateISO(sl.w, sl.day, cfg);
+      if (dISO < startISO || dISO > endISO) return;
+      const rawSt = String((typeof m.st === 'string' && m.st.trim()) ? m.st : (m.state || '')).trim().toLowerCase();
+      const isDone = m.done === true || m.cst === 'done' || rawSt === 'done';
+      const isOwed = !isDone && (rawSt === 'missed' || rawSt === 'partial');
+      if (!isDone && !isOwed) return;
+      const slotKey = sl.w + '|' + sl.day + '|' + sl.p;
+      markBySlot.set(slotKey, { isDone, isOwed });
+    });
+    markBySlot.forEach(v => {
+      if (v.isDone) cuDone++;
+      else if (v.isOwed) cuOwed++;
+    });
+
+    return 'Exit results in these dates: Got it ' + counts.got +
+      ', Nearly ' + counts.nearly +
+      ', Not yet ' + counts.again +
+      ', Absent ' + counts.absent +
+      '. Catch-up: ' + cuDone + ' done, ' + cuOwed + ' owed. My judgement: ';
+  }
+
+  function pwActivePupilNumbers(roster, subjItems) {
+    const set = new Set(roster.allPupils);
+    for (let n = 1; n <= 12; n++) set.add(n);
+    const rawTargets = pwReadJson(KEYS.targets, {}) || {};
+    if (pwIsPlainObj(rawTargets)) {
+      Object.keys(rawTargets).forEach(k => {
+        const n = pwNormPupilId(k);
+        if (n !== null) set.add(n);
+      });
+    }
+    Object.keys(subjItems).forEach(k => {
+      const sep = k.indexOf('|');
+      if (sep > 0) {
+        const n = pwNormPupilId(k.slice(0, sep));
+        if (n !== null) set.add(n);
+      }
+    });
+    return [...set].filter(n => n >= 1 && n <= 20).sort((a, b) => a - b);
+  }
+
+  // --- Rendering functions ---
+  function pwInitPickers() {
+    const now = new Date();
+    const cfg = pwReadTermCfgSafe();
+    const defWeek = pwDefaultNextWeek(now, cfg);
+    pwPopulateWeeks(cfg, defWeek);
+
+    const toDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12);
+    const fromDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 28, 12);
+    pwToInput.value = dateISO(toDate);
+    pwFromInput.value = dateISO(fromDate);
+  }
+
+  function pwPopulateWeeks(cfg, preferredWeek) {
+    const cur = preferredWeek || +pwWeekSel.value || pwDefaultNextWeek(new Date(), cfg);
+    pwWeekSel.replaceChildren();
+    for (let w = 1; w <= 7; w++) {
+      pwWeekSel.append(el('option', { value: String(w) }, 'Week ' + w + ' (w/c ' + pwWeekMondayLabel(w, cfg) + ')'));
+    }
+    pwWeekSel.value = String(Math.min(7, Math.max(1, cur)));
+  }
+
+  function pwPopulatePupils(roster, subjItems) {
+    const nums = pwActivePupilNumbers(roster, subjItems);
+    const prevVal = +pwPupilSel.value || nums[0] || 1;
+    pwPupilSel.replaceChildren();
+    nums.forEach(n => {
+      pwPupilSel.append(el('option', { value: String(n) }, pwPupilLabel(n, roster)));
+    });
+    pwPupilSel.value = String(nums.includes(prevVal) ? prevVal : (nums[0] || 1));
+  }
+
+  function pwAllBankKeys(store, roster, subjItems) {
+    const keys = Object.keys(PW_DEFAULT_BANK);
+    const seen = new Set(keys.map(k => k.toLowerCase()));
+    Object.keys(store.bank).forEach(k => {
+      if (pwIsMetaBankKey(k)) return;
+      const low = k.trim().toLowerCase();
+      if (low && !seen.has(low)) {
+        seen.add(low);
+        keys.push(k.trim());
+      }
+    });
+    for (let n = 1; n <= 20; n++) {
+      pwAllHelpLinesForPupil(n, roster, subjItems).forEach(hl => {
+        const low = hl.toLowerCase();
+        if (!seen.has(low)) {
+          seen.add(low);
+          keys.push(hl);
+        }
+      });
+    }
+    return keys;
+  }
+
+  function pwRenderBankEditor(store, roster, subjItems) {
+    pwClosingInput.readOnly = pwIsShieldOn();
+    if (pwIsShieldOn()) {
+      pwClosingInput.value = redactPublic(pwReadClosingLine(store), roster);
+    } else if (document.activeElement !== pwClosingInput) {
+      pwClosingInput.value = pwReadClosingLine(store);
+    }
+    const q = (pwBankFilter.value || '').trim().toLowerCase();
+    const keys = pwAllBankKeys(store, roster, subjItems);
+    const frag = document.createDocumentFragment();
+
+    keys.forEach((helpKey, idx) => {
+      const resolved = pwResolveBankEntry(helpKey, store, roster);
+      if (!resolved) return;
+      const dispName = pwIsShieldOn() ? redactPublic(helpKey, roster) : helpKey;
+      if (q && !dispName.toLowerCase().includes(q) && !resolved.plan.toLowerCase().includes(q) && !resolved.iedp.toLowerCase().includes(q)) {
+        return;
+      }
+
+      const row = el('div', { class: 'pw-bank-row', 'data-bank-key': helpKey });
+      const head = el('div', { class: 'pw-bank-head' });
+      head.append(el('strong', {}, dispName));
+      const resetBtn = el('button', { type: 'button', 'aria-label': 'Reset this line: ' + dispName }, 'Reset this line');
+      resetBtn.addEventListener('click', () => {
+        const fresh = pwLoadStore();
+        Object.keys(fresh.bank).forEach(k => {
+          if (!pwIsMetaBankKey(k) && k.trim().toLowerCase() === helpKey.trim().toLowerCase()) {
+            delete fresh.bank[k];
+          }
+        });
+        const ok = pwWriteStore(fresh);
+        const afterStore = pwLoadStore();
+        const defEntry = pwResolveBankEntry(helpKey, afterStore, roster);
+        planInp.value = defEntry.plan;
+        iedpInp.value = defEntry.iedp;
+        whereSel.value = defEntry.where;
+        if (ok) pwSetStatus('Reset wording for ' + dispName + '.', false);
+        pwRefreshOutputsOnly();
+      });
+      head.append(resetBtn);
+      row.append(head);
+
+      const grid = el('div', { class: 'pw-bank-grid' });
+      const planId = 'pwBankPlan_' + idx;
+      const iedpId = 'pwBankIedp_' + idx;
+      const whereId = 'pwBankWhere_' + idx;
+
+      const pWrap = el('div', {});
+      pWrap.append(el('label', { for: planId }, 'Weekly plan phrase (2 to 8 words)'));
+      const planInp = el('input', { type: 'text', id: planId, maxlength: '90', value: resolved.plan });
+      pWrap.append(planInp);
+
+      const iWrap = el('div', {});
+      iWrap.append(el('label', { for: iedpId }, 'IEDP sentence (6 to 25 words)'));
+      const iedpInp = el('input', { type: 'text', id: iedpId, maxlength: '220', value: resolved.iedp });
+      iWrap.append(iedpInp);
+
+      const wWrap = el('div', {});
+      wWrap.append(el('label', { for: whereId }, 'Where'));
+      const whereSel = el('select', { id: whereId });
+      [['adapt', 'Adaptations'], ['support', 'Support'], ['both', 'Both']].forEach(([val, lbl]) => {
+        whereSel.append(el('option', { value: val }, lbl));
+      });
+      whereSel.value = resolved.where;
+      wWrap.append(whereSel);
+
+      const saveLineEdit = () => {
+        const fresh = pwLoadStore();
+        const canonicalKey = PW_DEFAULT_KEYS_LOWER.get(helpKey.trim().toLowerCase()) || helpKey.trim();
+        Object.keys(fresh.bank).forEach(k => {
+          if (!pwIsMetaBankKey(k) && k !== canonicalKey && k.trim().toLowerCase() === canonicalKey.toLowerCase()) {
+            delete fresh.bank[k];
+          }
+        });
+        fresh.bank[canonicalKey] = {
+          plan: planInp.value.trim() || resolved.plan,
+          iedp: iedpInp.value.trim() || resolved.iedp,
+          where: PW_VALID_WHERE.has(whereSel.value) ? whereSel.value : 'adapt'
+        };
+        const ok = pwWriteStore(fresh);
+        if (ok) pwSetStatus('Saved wording for ' + dispName + '.', false);
+        pwRefreshOutputsOnly();
+      };
+
+      planInp.addEventListener('change', saveLineEdit);
+      iedpInp.addEventListener('change', saveLineEdit);
+      whereSel.addEventListener('change', saveLineEdit);
+      planInp.addEventListener('input', saveLineEdit);
+      iedpInp.addEventListener('input', saveLineEdit);
+
+      grid.append(pWrap, iWrap, wWrap);
+      row.append(grid);
+      frag.append(row);
+    });
+
+    pwBankList.replaceChildren(frag);
+  }
+
+  function pwRenderOwnSubjects(pathway, store) {
+    const defaults = pwPathwayDefaultSubjects(pathway);
+    const owned = new Set(pwGetOwnedSubjects(pathway, store));
+    const frag = document.createDocumentFragment();
+
+    defaults.forEach((subj, idx) => {
+      const id = 'pwOwn_' + idx;
+      const lbl = el('label', { class: 'pw-own-item', for: id });
+      const cb = el('input', { type: 'checkbox', id, 'data-own-subj': subj });
+      cb.checked = owned.has(subj);
+      cb.addEventListener('change', () => {
+        const fresh = pwLoadStore();
+        const nextOwned = defaults.filter(s => {
+          if (s === subj) return cb.checked;
+          const curSet = new Set(pwGetOwnedSubjects(pathway, fresh));
+          return curSet.has(s);
+        });
+        fresh.own[pathway] = nextOwned;
+        const ok = pwWriteStore(fresh);
+        if (ok) pwSetStatus('Updated subjects for ' + pathway + '.', false);
+        pwRenderWeeklyCards(pwLoadStore(), pwBuildSafeRoster(), pwReadSubjItemsMap(), pwReadTermCfgSafe());
+      });
+      lbl.append(cb, el('span', {}, subj));
+      frag.append(lbl);
+    });
+    pwOwnList.replaceChildren(frag);
+  }
+
+  function pwRenderWeeklyCards(store, roster, subjItems, cfg) {
+    const pathway = PATHWAYS.includes(pwPathwaySel.value) ? pwPathwaySel.value : 'BUILD';
+    const weekNum = Math.min(7, Math.max(1, +pwWeekSel.value || pwDefaultNextWeek(new Date(), cfg)));
+    const owned = pwGetOwnedSubjects(pathway, store);
+    const frag = document.createDocumentFragment();
+
+    if (!owned.length) {
+      frag.append(el('p', { class: 'pw-empty' }, 'No subject rows ticked for ' + pathway + '. Open My subject rows above to tick your subjects.'));
+      pwWeeklyCards.replaceChildren(frag);
+      return;
+    }
+
+    owned.forEach((subjectName, idx) => {
+      const model = pwBuildSubjectCells(pathway, subjectName, weekNum, store, roster, subjItems, cfg);
+      const card = el('article', { class: 'pw-card', 'data-pw-subject': subjectName, 'data-pw-pathway': pathway });
+      const headEl = el('h4', {}, model.heading);
+      const codeEl = el('p', { class: 'launch-code' }, model.codesText);
+      const shortEl = el('p', { class: 'pw-short-note' }, 'Shortened to stay within 700 characters. Every pupil is still listed. “+ 2 more” means more help lines than fit here.');
+      shortEl.hidden = !model.shortened;
+
+      const cellsGrid = el('div', { class: 'pw-cells' });
+      const adaptId = 'pwAdaptBox_' + idx;
+      const supId = 'pwSupportBox_' + idx;
+
+      const adaptCol = el('div', {});
+      adaptCol.append(el('label', { for: adaptId }, 'Student adaptations'));
+      const adaptBox = el('textarea', { id: adaptId, class: 'pw-box', readonly: 'readonly', rows: '4' });
+      adaptBox.value = model.adaptText;
+      adaptCol.append(adaptBox);
+
+      const supCol = el('div', {});
+      supCol.append(el('label', { for: supId }, 'Classroom support'));
+      const supBox = el('textarea', { id: supId, class: 'pw-box', readonly: 'readonly', rows: '4' });
+      supBox.value = model.supportText;
+      supCol.append(supBox);
+
+      cellsGrid.append(adaptCol, supCol);
+
+      const btnRow = el('div', { class: 'pw-actions' });
+      const btnBoth = el('button', { type: 'button', class: 'primary' }, 'Copy both cells');
+      const btnAdapt = el('button', { type: 'button' }, 'Copy adaptations');
+      const btnSup = el('button', { type: 'button' }, 'Copy support');
+
+      btnBoth.addEventListener('click', () => {
+        const tsv = pwQuoteTsvCell(adaptBox.value) + '\t' + pwQuoteTsvCell(supBox.value);
+        pwCopy(tsv, 'Copied: ' + pathway + ' · ' + subjectName + ' · both cells', btnBoth);
+      });
+      btnAdapt.addEventListener('click', () => {
+        pwCopy(adaptBox.value, 'Copied: ' + pathway + ' · ' + subjectName + ' · adaptations', btnAdapt);
+      });
+      btnSup.addEventListener('click', () => {
+        pwCopy(supBox.value, 'Copied: ' + pathway + ' · ' + subjectName + ' · support', btnSup);
+      });
+      btnRow.append(btnBoth, btnAdapt, btnSup);
+
+      const noteWrap = el('div', { class: 'pw-note-wrap' });
+      const noteId = 'pwNoteInput_' + idx;
+      noteWrap.append(el('label', { for: noteId }, 'Edit my note'));
+      const noteInput = el('input', {
+        type: 'text',
+        id: noteId,
+        maxlength: '300',
+        autocomplete: 'off',
+        placeholder: 'Optional note printed first in Student adaptations (max 300 characters)',
+        value: pwIsShieldOn() ? redactPublic(model.rawNote, roster) : model.rawNote
+      });
+      if (pwIsShieldOn()) { noteInput.readOnly = true; noteInput.title = 'Turn the privacy shield off to edit this note.'; }
+
+      const handleNoteEdit = () => {
+        if (pwIsShieldOn()) return;
+        const val = noteInput.value.slice(0, 300);
+        const fresh = pwLoadStore();
+        const nk = pathway + '|' + subjectName;
+        if (val.trim()) fresh.notes[nk] = val.trim();
+        else delete fresh.notes[nk];
+        const ok = pwWriteStore(fresh);
+        const latestStore = pwLoadStore();
+        const latestRoster = pwBuildSafeRoster();
+        const latestSubj = pwReadSubjItemsMap();
+        const latestCfg = pwReadTermCfgSafe();
+        const updated = pwBuildSubjectCells(pathway, subjectName, weekNum, latestStore, latestRoster, latestSubj, latestCfg);
+        adaptBox.value = updated.adaptText;
+        supBox.value = updated.supportText;
+        shortEl.hidden = !updated.shortened;
+        if (ok) pwSetStatus('Saved note for ' + pathway + ' · ' + subjectName + '.', false);
+      };
+      noteInput.addEventListener('input', handleNoteEdit);
+      noteInput.addEventListener('change', handleNoteEdit);
+      noteWrap.append(noteInput);
+
+      card.append(headEl, codeEl, shortEl, cellsGrid, btnRow, noteWrap);
+      frag.append(card);
+    });
+
+    pwWeeklyCards.replaceChildren(frag);
+  }
+
+  function pwRenderBoxesEditor(store) {
+    const resolved = pwResolveBoxes(store);
+    const frag = document.createDocumentFragment();
+
+    resolved.forEach((box, idx) => {
+      const row = el('div', { class: 'pw-boxorder-row', 'data-box-id': box.id });
+      const inpId = 'pwBoxLabel_' + box.id;
+      const lbl = el('label', { for: inpId, class: 'sr-only' }, 'Box ' + (idx + 1) + ' label');
+      const inp = el('input', { type: 'text', id: inpId, maxlength: '60', value: box.label });
+
+      inp.addEventListener('change', () => {
+        const fresh = pwLoadStore();
+        const curBoxes = pwResolveBoxes(fresh);
+        const target = curBoxes.find(b => b.id === box.id);
+        if (target) {
+          const defIdx = PW_BOX_IDS.indexOf(box.id);
+          target.label = inp.value.trim() || PW_DEFAULT_BOXES[defIdx];
+          inp.value = target.label;
+          fresh.boxes = pwSerializeBoxes(curBoxes);
+          const ok = pwWriteStore(fresh);
+          if (ok) pwSetStatus('Saved IEDP box label.', false);
+          pwRenderIedpCardsOnly();
+        }
+      });
+
+      const moveBtns = el('div', { class: 'pw-actions', style: 'margin:0' });
+      const upBtn = el('button', { type: 'button', 'aria-label': 'Move ' + box.label + ' up' }, 'Move up');
+      const downBtn = el('button', { type: 'button', 'aria-label': 'Move ' + box.label + ' down' }, 'Move down');
+      if (idx === 0) upBtn.disabled = true;
+      if (idx === resolved.length - 1) downBtn.disabled = true;
+
+      upBtn.addEventListener('click', () => {
+        if (idx === 0) return;
+        const fresh = pwLoadStore();
+        const curBoxes = pwResolveBoxes(fresh);
+        const curIdx = curBoxes.findIndex(b => b.id === box.id);
+        if (curIdx > 0) {
+          const tmp = curBoxes[curIdx - 1];
+          curBoxes[curIdx - 1] = curBoxes[curIdx];
+          curBoxes[curIdx] = tmp;
+          fresh.boxes = pwSerializeBoxes(curBoxes);
+          const ok = pwWriteStore(fresh);
+          if (ok) pwSetStatus('Moved ' + box.label + ' up.', false);
+          pwRenderBoxesEditor(pwLoadStore());
+          pwRenderIedpCardsOnly();
+          pwBoxesList.querySelector('[data-box-id="' + box.id + '"] button:not([disabled])')?.focus({ preventScroll: true });
+        }
+      });
+
+      downBtn.addEventListener('click', () => {
+        if (idx >= resolved.length - 1) return;
+        const fresh = pwLoadStore();
+        const curBoxes = pwResolveBoxes(fresh);
+        const curIdx = curBoxes.findIndex(b => b.id === box.id);
+        if (curIdx >= 0 && curIdx < curBoxes.length - 1) {
+          const tmp = curBoxes[curIdx + 1];
+          curBoxes[curIdx + 1] = curBoxes[curIdx];
+          curBoxes[curIdx] = tmp;
+          fresh.boxes = pwSerializeBoxes(curBoxes);
+          const ok = pwWriteStore(fresh);
+          if (ok) pwSetStatus('Moved ' + box.label + ' down.', false);
+          pwRenderBoxesEditor(pwLoadStore());
+          pwRenderIedpCardsOnly();
+          const btns = pwBoxesList.querySelectorAll('[data-box-id="' + box.id + '"] button');
+          (btns[1] && !btns[1].disabled ? btns[1] : btns[0])?.focus({ preventScroll: true });
+        }
+      });
+
+      moveBtns.append(upBtn, downBtn);
+      row.append(lbl, inp, moveBtns);
+      frag.append(row);
+    });
+
+    pwBoxesList.replaceChildren(frag);
+  }
+
+  function pwRenderLinksEditor(n, targets, helpLines, store, roster) {
+    if (!targets.length) {
+      pwLinksDetails.hidden = true;
+      pwLinksList.replaceChildren();
+      return;
+    }
+    pwLinksDetails.hidden = false;
+    const linksMap = pwReadPupilLinksMap(n, store);
+    const frag = document.createDocumentFragment();
+
+    if (!helpLines.length) {
+      frag.append(el('p', { class: 'hint' }, 'No help lines saved for this pupil yet.'));
+      pwLinksList.replaceChildren(frag);
+      return;
+    }
+
+    helpLines.forEach((hl, idx) => {
+      const dispHl = pwIsShieldOn() ? redactPublic(hl, roster) : hl;
+      const selId = 'pwLinkSel_' + idx;
+      const row = el('div', { class: 'pw-link-row' });
+      row.append(el('label', { for: selId }, dispHl));
+      const sel = el('select', { id: selId, 'data-link-help': hl });
+      sel.append(el('option', { value: '0' }, 'Not linked'));
+      targets.forEach((tLine, tIdx) => {
+        const tNum = tIdx + 1;
+        const cleanT = pwIsShieldOn() ? redactPublic(tLine, roster) : tLine;
+        const shortT = cleanT.length > 42 ? (cleanT.slice(0, 39) + '…') : cleanT;
+        sel.append(el('option', { value: String(tNum) }, 'Target ' + tNum + ': ' + shortT));
+      });
+      const curLink = linksMap.get(hl.toLowerCase()) || 0;
+      sel.value = (curLink >= 1 && curLink <= targets.length) ? String(curLink) : '0';
+
+      sel.addEventListener('change', () => {
+        const chosen = Number(sel.value) || 0;
+        const fresh = pwLoadStore();
+        const pk = String(n);
+        const nextMap = pwIsPlainObj(fresh.links[pk]) ? { ...fresh.links[pk] } : {};
+        Object.keys(nextMap).forEach(k => {
+          if (k.trim().toLowerCase() === hl.toLowerCase()) delete nextMap[k];
+        });
+        if (chosen >= 1) nextMap[hl] = chosen;
+        if (Object.keys(nextMap).length) fresh.links[pk] = nextMap;
+        else delete fresh.links[pk];
+        const ok = pwWriteStore(fresh);
+        if (ok) pwSetStatus('Updated target link for ' + dispHl + '.', false);
+        pwRenderIedpCardsOnly();
+      });
+
+      row.append(sel);
+      frag.append(row);
+    });
+
+    pwLinksList.replaceChildren(frag);
+  }
+
+  function pwRenderIedpCards(store, roster, subjItems, cfg) {
+    const n = +pwPupilSel.value || 1;
+    const pupilLbl = pwPupilLabel(n, roster);
+    const pwToday = new Date();
+    const rawFrom = pwFromInput.value || dateISO(new Date(pwToday.getFullYear(), pwToday.getMonth(), pwToday.getDate() - 28, 12));
+    const rawTo = pwToInput.value || dateISO(pwToday);
+    const [startISO, endISO] = rawFrom <= rawTo ? [rawFrom, rawTo] : [rawTo, rawFrom];
+
+    const targets = pwReadPupilTargets(n);
+    const helpLines = pwAllHelpLinesForPupil(n, roster, subjItems);
+
+    if (!targets.length) {
+      pwIedpCards.replaceChildren(el('p', { class: 'pw-empty' }, 'No IEDP targets saved for this pupil yet.'));
+      pwUnlinkedLine.hidden = true;
+      pwUnlinkedLine.textContent = '';
+      return;
+    }
+
+    const boxes = pwResolveBoxes(store);
+    const linksMap = pwReadPupilLinksMap(n, store);
+    const logRows = pwReadPupilLogRowsInRange(n, startISO, endISO);
+    const reviewText = pwComputeReviewStats(n, startISO, endISO, roster, cfg);
+    const dateSpan = logRows.length ? pwFormatDateSpan(logRows[0].d, logRows[logRows.length - 1].d) : '';
+
+    const unlinked = [];
+    const linkedByTarget = new Map();
+    for (let t = 1; t <= targets.length; t++) linkedByTarget.set(t, []);
+
+    helpLines.forEach(hl => {
+      const tNum = linksMap.get(hl.toLowerCase()) || 0;
+      if (tNum >= 1 && tNum <= targets.length) {
+        linkedByTarget.get(tNum).push(hl);
+      } else {
+        unlinked.push(pwIsShieldOn() ? redactPublic(hl, roster) : hl);
+      }
+    });
+
+    const frag = document.createDocumentFragment();
+    targets.forEach((rawTargetLine, idx) => {
+      const tNum = idx + 1;
+      const targetText = pwIsShieldOn() ? redactPublic(rawTargetLine, roster) : rawTargetLine;
+      const linkedLines = linkedByTarget.get(tNum) || [];
+
+      const strategySentences = linkedLines.map(hl => {
+        const b = pwResolveBankEntry(hl, store, roster);
+        return b ? pwEnsurePeriod(b.iedp) : '';
+      }).filter(Boolean);
+      const strategyText = strategySentences.length
+        ? strategySentences.join(' ')
+        : 'No help lines linked to this target yet.';
+
+      let providedText = '';
+      if (!logRows.length) {
+        providedText = 'No printed packs recorded in these dates.';
+      } else if (!linkedLines.length) {
+        providedText = 'No help lines linked to this target yet.';
+      } else if (linkedLines.length === 1) {
+        const cnt = logRows.filter(r => pwRowMatchesHelpLine(r.lines, linkedLines[0], r.hands)).length;
+        providedText = 'Printed in ' + cnt + ' of ' + logRows.length + ' ' + (logRows.length === 1 ? 'pack' : 'packs') + ', ' + dateSpan + '.';
+      } else {
+        providedText = linkedLines.map(hl => {
+          const cnt = logRows.filter(r => pwRowMatchesHelpLine(r.lines, hl, r.hands)).length;
+          const disp = pwIsShieldOn() ? redactPublic(hl, roster) : hl;
+          return disp + ': Printed in ' + cnt + ' of ' + logRows.length + ' ' + (logRows.length === 1 ? 'pack' : 'packs') + ', ' + dateSpan + '.';
+        }).join(' ');
+      }
+
+      const valueById = {
+        target: targetText,
+        strategy: strategyText,
+        provided: providedText,
+        review: reviewText,
+        evidence: 'Not recorded on this page yet.'
+      };
+
+      const card = el('article', { class: 'pw-card pw-iedp-card', 'data-target-num': String(tNum) });
+      card.append(el('h4', {}, pupilLbl + ' · Target ' + tNum));
+
+      boxes.forEach(b => {
+        const fieldWrap = el('div', { class: 'pw-iedp-field', 'data-iedp-box': b.id });
+        const fieldHead = el('div', { class: 'pw-iedp-head' });
+        const areaId = 'pwIedp_' + tNum + '_' + b.id;
+        fieldHead.append(el('label', { for: areaId }, b.label));
+        const copyBoxBtn = el('button', { type: 'button', 'aria-label': 'Copy ' + b.label + ' for Target ' + tNum }, 'Copy');
+        const boxText = valueById[b.id] ?? '';
+        copyBoxBtn.addEventListener('click', () => {
+          pwCopy(boxText, 'Copied: ' + pupilLbl + ' · Target ' + tNum + ' · ' + b.label, copyBoxBtn);
+        });
+        fieldHead.append(copyBoxBtn);
+
+        const area = el('textarea', { id: areaId, class: 'pw-iedp-box', readonly: 'readonly', rows: '2' });
+        area.value = boxText;
+        fieldWrap.append(fieldHead, area);
+        card.append(fieldWrap);
+      });
+
+      const allRow = el('div', { class: 'pw-actions' });
+      const copyAllBtn = el('button', { type: 'button', class: 'primary' }, 'Copy all for this target');
+      copyAllBtn.addEventListener('click', () => {
+        const joined = boxes.map(b => b.label + ': ' + (valueById[b.id] ?? '')).join('\n');
+        pwCopy(joined, 'Copied: ' + pupilLbl + ' · Target ' + tNum + ' · all boxes', copyAllBtn);
+      });
+      allRow.append(copyAllBtn);
+      card.append(allRow);
+      frag.append(card);
+    });
+
+    pwIedpCards.replaceChildren(frag);
+
+    if (unlinked.length) {
+      pwUnlinkedLine.textContent = 'Not linked to a target: ' + unlinked.join(', ');
+      pwUnlinkedLine.hidden = false;
+    } else {
+      pwUnlinkedLine.textContent = '';
+      pwUnlinkedLine.hidden = true;
+    }
+  }
+
+  function pwRenderIedpCardsOnly() {
+    const store = pwLoadStore();
+    const roster = pwBuildSafeRoster();
+    const subjItems = pwReadSubjItemsMap();
+    const cfg = pwReadTermCfgSafe();
+    pwRenderIedpCards(store, roster, subjItems, cfg);
+  }
+
+  function pwRefreshOutputsOnly() {
+    const store = pwLoadStore();
+    const roster = pwBuildSafeRoster();
+    const subjItems = pwReadSubjItemsMap();
+    const cfg = pwReadTermCfgSafe();
+    pwRenderWeeklyCards(store, roster, subjItems, cfg);
+    pwRenderIedpCards(store, roster, subjItems, cfg);
+  }
+
+  function pwRenderAll() {
+    const store = pwLoadStore();
+    const roster = pwBuildSafeRoster();
+    const subjItems = pwReadSubjItemsMap();
+    const cfg = pwReadTermCfgSafe();
+
+    pwPopulateWeeks(cfg, +pwWeekSel.value);
+    pwPopulatePupils(roster, subjItems);
+    pwRenderBankEditor(store, roster, subjItems);
+    pwRenderOwnSubjects(pwPathwaySel.value || 'BUILD', store);
+    pwRenderWeeklyCards(store, roster, subjItems, cfg);
+    pwRenderBoxesEditor(store);
+    const n = +pwPupilSel.value || 1;
+    pwRenderLinksEditor(n, pwReadPupilTargets(n), pwAllHelpLinesForPupil(n, roster, subjItems), store, roster);
+    pwRenderIedpCards(store, roster, subjItems, cfg);
+  }
+
+  // Wire UI events
+  pwClosingInput.addEventListener('input', () => {
+    if (pwIsShieldOn()) return;
+    const fresh = pwLoadStore();
+    fresh.bank[PW_CLOSING_META] = {
+      plan: pwClosingInput.value,
+      iedp: PW_DEFAULT_CLOSING,
+      where: 'support'
+    };
+    const ok = pwWriteStore(fresh);
+    if (ok) pwSetStatus('Updated Classroom support closing line.', false);
+    pwRefreshOutputsOnly();
+  });
+
+  pwResetClosingBtn.addEventListener('click', () => {
+    const fresh = pwLoadStore();
+    delete fresh.bank[PW_CLOSING_META];
+    delete fresh.bank['Closing line'];
+    const ok = pwWriteStore(fresh);
+    pwClosingInput.value = PW_DEFAULT_CLOSING;
+    if (ok) pwSetStatus('Reset Classroom support closing line.', false);
+    pwRefreshOutputsOnly();
+  });
+
+  pwBankFilter.addEventListener('input', () => {
+    pwRenderBankEditor(pwLoadStore(), pwBuildSafeRoster(), pwReadSubjItemsMap());
+  });
+
+  pwPathwaySel.addEventListener('change', () => {
+    const store = pwLoadStore();
+    const roster = pwBuildSafeRoster();
+    const subjItems = pwReadSubjItemsMap();
+    const cfg = pwReadTermCfgSafe();
+    pwRenderOwnSubjects(pwPathwaySel.value, store);
+    pwRenderWeeklyCards(store, roster, subjItems, cfg);
+  });
+
+  pwWeekSel.addEventListener('change', () => {
+    pwRenderWeeklyCards(pwLoadStore(), pwBuildSafeRoster(), pwReadSubjItemsMap(), pwReadTermCfgSafe());
+  });
+
+  pwResetOwnBtn.addEventListener('click', () => {
+    const pathway = pwPathwaySel.value || 'BUILD';
+    const fresh = pwLoadStore();
+    delete fresh.own[pathway];
+    const ok = pwWriteStore(fresh);
+    if (ok) pwSetStatus('Reset subject rows for ' + pathway + '.', false);
+    const afterStore = pwLoadStore();
+    pwRenderOwnSubjects(pathway, afterStore);
+    pwRenderWeeklyCards(afterStore, pwBuildSafeRoster(), pwReadSubjItemsMap(), pwReadTermCfgSafe());
+  });
+
+  pwPupilSel.addEventListener('change', () => {
+    const store = pwLoadStore();
+    const roster = pwBuildSafeRoster();
+    const subjItems = pwReadSubjItemsMap();
+    const cfg = pwReadTermCfgSafe();
+    const n = +pwPupilSel.value || 1;
+    pwRenderLinksEditor(n, pwReadPupilTargets(n), pwAllHelpLinesForPupil(n, roster, subjItems), store, roster);
+    pwRenderIedpCards(store, roster, subjItems, cfg);
+  });
+
+  pwFromInput.addEventListener('change', pwRenderIedpCardsOnly);
+  pwToInput.addEventListener('change', pwRenderIedpCardsOnly);
+
+  pwResetBoxesBtn.addEventListener('click', () => {
+    const fresh = pwLoadStore();
+    fresh.boxes = PW_DEFAULT_BOXES.slice();
+    const ok = pwWriteStore(fresh);
+    if (ok) pwSetStatus('Reset IEDP box labels and order.', false);
+    pwRenderBoxesEditor(pwLoadStore());
+    pwRenderIedpCardsOnly();
+  });
+
+  // Redraw when Show mode, privacy shield, storage, hash, or other My tools panels update
+  $('showTags')?.addEventListener('change', pwRenderAll);
+  $('timesForm')?.addEventListener('submit', () => setTimeout(pwRenderAll, 0));
+  $('resetSchoolTimes')?.addEventListener('click', () => setTimeout(pwRenderAll, 0));
+  $('helpPreview')?.addEventListener('click', e => {
+    if (e.target && e.target.id === 'helpSaveBtn') setTimeout(pwRenderAll, 0);
+  });
+
+  const prevRefreshPacks = window.mbmRefreshPacks;
+  window.mbmRefreshPacks = function() {
+    if (typeof prevRefreshPacks === 'function') prevRefreshPacks();
+    pwRenderAll();
+  };
+
+  new MutationObserver(() => {
+    pwRenderAll();
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-privacy-shield'] });
+
+  window.addEventListener('storage', pwRenderAll);
+  window.addEventListener('pageshow', pwRenderAll);
+
+  function pwOpenOnHash() {
+    if (location.hash === '#paperwork') {
+      pwRoot.open = true;
+      pwRoot.querySelector('summary')?.focus({ preventScroll: false });
+      pwRoot.scrollIntoView({ block: 'start' });
+    }
+  }
+  document.addEventListener('click', e => {
+    const link = e.target.closest && e.target.closest('a[href="#paperwork"]');
+    if (link) {
+      pwRoot.open = true;
+    }
+  });
+  window.addEventListener('hashchange', pwOpenOnHash);
+
+  pwInitPickers();
+  pwRenderAll();
+  pwOpenOnHash();
+}
+initPaperworkSection();
 </script>
 </body>
 </html>
