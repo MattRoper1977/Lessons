@@ -3281,7 +3281,7 @@ CATALOGUE_PINS = {
         "kits/help/testclue.html": "40840aef0b895bbc51eff41a1496d2406069967e6ed0cdd70cff75abd40c41f4",
         "kits/class_tools/Catch_up_Tracker.html": "c4ed136ef403c8084bef6de8fdcdb2caebdd9ad025beddf766094368dd562270",
         "kits/class_tools/Class_names.html": "7465659a2aabfb2ba9afce1fe4ec48f6781e0c4dcbc1b7d177b7687b2a8eecb5",
-        "kits/class_tools/Class_record.html": "047396e5aca97cfcc195be3972ab44c9389327578d83a1e94d1f508a93c3f845",
+        "kits/class_tools/Class_record.html": "b8d1f644e4e51f9c43a1102f18c33161367a7e316b0b07d65840be3eb2c9a009",
         "kits/class_tools/How_to_use.html": "0eb6033c3cc108950d6ec2cf731bd041ba1006cfc6f648b1fc763017b6637c10",
         "kits/class_tools/My_tools.html": "e1975de33fd24d984f90cf128461d1529a69902436740ddb6a19cb40e73e07fd",
         "kits/class_tools/Practical_log.html": "6fded535b36c2768955ae9a9486fb6cb5fe24ed6109d3502208026ae01193f26",
@@ -3317,12 +3317,12 @@ CATALOGUE_PINS = {
         "kits/class_tools/trial/Award_tracker.html": "f6e8bfd235416720fdb1303829c1729e1d631687a742ce82314c13881438a8e7",
         "kits/class_tools/trial/Catch_up_Tracker.html": "eb700121715cd8da66c4671832671d74c0a6a7a98eb84f669c2d60753adb7f3c",
         "kits/class_tools/trial/Class_names.html": "44767f5c43c8d255371dc47cceefe62cdbd31b3f8175d9ffe6ceecd701b5f3e8",
-        "kits/class_tools/trial/Class_record.html": "c79a42927b1915e88aff9b2a87d0183ef02241c3e03221accb4abd638f61837b",
+        "kits/class_tools/trial/Class_record.html": "84eb77328efe1cec6ec26b1165aa5e8bc0577db645e387c7eff48c85ee4d5825",
         "kits/class_tools/trial/Coverage_map.html": "08b12ddaa084075c2da6a951627d5bc251aef548c449cfd300a30f365a7d061d",
-        "kits/class_tools/trial/How_to_use.html": "0eb6033c3cc108950d6ec2cf731bd041ba1006cfc6f648b1fc763017b6637c10",
+        "kits/class_tools/trial/How_to_use.html": "9d67a3ace891a4c0a3d17dc58c63820b3ba97e45dcaa46f908b992f13126987f",
         "kits/class_tools/trial/Lesson_extras.html": "c778fe2430353bf6e51a8a903daca4afec5b0a826c46efc56dbc2ee1e84e0f6d",
         "kits/class_tools/trial/Missed_last_week.html": "99d7410e4847c7b7dead5432a74a9ee42ff20be8188c40ebd681cd25eb571e46",
-        "kits/class_tools/trial/My_tools.html": "058c10a3fd21a884dd9a0665bf719d92eac07b5f1fc8738a8e45779c7c513743",
+        "kits/class_tools/trial/My_tools.html": "cb0718ca0fa4cf87098608fb5bcdc3db26e2146d13588dce479ecf936cdcae21",
         "kits/class_tools/trial/My_tools_pocket.html": "3013f8fc7a2ee4ff9235b6ca9dd740e334f47b763a9bdea0883dc692c1afe4cd",
         "kits/class_tools/trial/Practical_log.html": "eac980c08b85ab6dbcb7672b84b521cbb65d0aa1eb2804ba193a116f2cf1fa46",
         "kits/class_tools/trial/Quick_capture.html": "1f70203127a702f22479fe4f46bcad64e641bbc056b489dca90ac20ab4ca2df8",
@@ -4046,7 +4046,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "9899429c9f992d70eab008982a0188190c9909cad888bf8bd8e95b79c65d38b5",
+    "lessons": "c42e6ca5b2645953797c622982dee106862fecddf1840f04af3fe6f683f3a9c2",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
