@@ -250,7 +250,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "313e7371d9bedce80fbb1e2dd6880084cf7f921ef6774c06d880b20a0d7107fc",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "a787ca1760480342b355296c6fc9e1462ecca1da1124403dea22bb187899f3c9",
         "tools/catalogue/TERM_REVIEW.json": "202e6fb09a1b163114d806f085e4712f9bfde4d1a55a89fcef4392d24a366847",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
