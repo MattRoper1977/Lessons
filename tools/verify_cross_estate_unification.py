@@ -3282,7 +3282,7 @@ CATALOGUE_PINS = {
         "kits/class_tools/Catch_up_Tracker.html": "c4ed136ef403c8084bef6de8fdcdb2caebdd9ad025beddf766094368dd562270",
         "kits/class_tools/Class_names.html": "7465659a2aabfb2ba9afce1fe4ec48f6781e0c4dcbc1b7d177b7687b2a8eecb5",
         "kits/class_tools/Class_record.html": "b8d1f644e4e51f9c43a1102f18c33161367a7e316b0b07d65840be3eb2c9a009",
-        "kits/class_tools/How_to_use.html": "9d67a3ace891a4c0a3d17dc58c63820b3ba97e45dcaa46f908b992f13126987f",
+        "kits/class_tools/How_to_use.html": "0eb6033c3cc108950d6ec2cf731bd041ba1006cfc6f648b1fc763017b6637c10",
         "kits/class_tools/My_tools.html": "320669d3bd3d80d5a3be671f5b82ad256457bca55d3cf798c7b19c9680797d37",
         "kits/class_tools/Practical_log.html": "6fded535b36c2768955ae9a9486fb6cb5fe24ed6109d3502208026ae01193f26",
         "kits/class_tools/Requests.html": "affb763c12ae2d873ecbc7cffd08bcb404ab8bf30bc4854e10d91e5e07f160e7",
