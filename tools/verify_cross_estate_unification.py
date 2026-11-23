@@ -176,7 +176,7 @@ CATALOGUE_PINS = {
         "Science/Build/START_HERE.html": "acac26140f5aeef22292e6ce3831fa61aaf5e62432cc3998b340918c8bfaee7f",
         "Science/Grow/START_HERE.html": "d2bec305dec3212215c6f599cad3925c571f9a34ca6e85268893c8ed142170dd",
         "Science/Launch/START_HERE.html": "10b46e7cf26e3aa4b7f1fb4758a039bcbec7000bc2ec8d30dfe3ce0e0b966353",
-        "tools/catalogue/SHELF_SELECTION.json": "c29ea59eded6f1af5ecf0e6a65c0c290416dbf8fa47f8e2954bdc769860e1e88",
+        "tools/catalogue/SHELF_SELECTION.json": "3e93eba98592d24a6d568d33cf7b4b683007603f7340370c4a390d49ee118d88",
         "tools/catalogue/HUMANITIES_SELECTION.json": "453b7f410e6703c89c69e05a2e87191b9472aeacad311763e79b8b7946ec59b9",
         "tools/easter/science_original_browser.cjs": "aae28a4166d41546cbe5b0acd0866eeaf5e6f47cd5b1949fc48ecb2d4c79a1ec",
         "tools/science_pack/browser_checks.cjs": "058c9bc1f06c876f2994a23d467d83fced683c6355eb92d0ef43986d3e28d72d",
