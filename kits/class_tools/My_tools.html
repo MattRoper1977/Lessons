@@ -292,6 +292,41 @@ textarea.pw-iedp-box{min-height:66px;font:15.5px/1.4 system-ui,sans-serif;backgr
   .pw-cells,.pw-bank-grid{grid-template-columns:1fr}
   .pw-link-row select{width:100%}
 }
+.pw-check-row{display:flex;align-items:center;gap:.5rem;min-height:44px;font-weight:600;cursor:pointer;margin:.35rem 0;max-width:100%}
+.pw-soft-note{background:#fff4dc;color:#663a00;border:2px solid #8a5300;border-radius:8px;padding:.5rem .7rem;font-size:15.5px;font-weight:650;margin:.5rem 0;max-width:100%}
+.pw-warn-box{background:#fdeaea;color:#7a1c1c;border:2px solid #7a1c1c;border-radius:8px;padding:.55rem .75rem;font-size:15.5px;font-weight:700;margin:.5rem 0;max-width:100%}
+.pw-ok-box{background:#e3f4e8;color:#123d32;border:2px solid #155724;border-radius:8px;padding:.55rem .75rem;font-size:15.5px;font-weight:650;margin:.5rem 0;max-width:100%}
+.pw-undo-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem;background:#fff;color:#142d26;border:2px solid #153e33;border-radius:8px;padding:.55rem .75rem;margin:.5rem 0;font-weight:650;max-width:100%}
+.pw-badge{display:inline-block;padding:.15rem .5rem;border-radius:999px;border:1.5px solid #335d50;background:#f2f6f3;color:#142d26;font-size:14px;font-weight:700;max-width:100%}
+.pw-badge-active{background:#e3f4e8;border-color:#155724;color:#123d32}
+.pw-badge-changed{background:#fff4dc;border-color:#8a5300;color:#663a00}
+.pw-badge-retired{background:#eef1ef;border-color:#52677c;color:#18283b}
+.pw-badge-warn{background:#fdeaea;border-color:#7a1c1c;color:#7a1c1c}
+.pw-target-card,.pw-strat-card,.pw-import-card{background:#f8fbf9;border:1.5px solid #64736b;border-radius:10px;padding:.7rem;margin:.55rem 0;max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
+.pw-import-card.is-dup{border:2px solid #7a1c1c;background:#fdeaea}
+.pw-target-head,.pw-strat-head,.pw-import-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.45rem;margin-bottom:.4rem}
+.pw-target-meta{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;margin:.25rem 0 .4rem;font-size:14.5px}
+.pw-inline-panel{background:#fff;border:2px solid #335d50;border-radius:10px;padding:.7rem;margin:.55rem 0;max-width:100%;box-sizing:border-box}
+.pw-field-grid,.pw-strat-top{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:.55rem;margin:.4rem 0}
+.pw-field-grid>div,.pw-strat-top>div{min-width:0}
+.pw-steps-list{display:flex;flex-direction:column;gap:.4rem;margin:.45rem 0}
+.pw-step-row{background:#fff;border:1px solid #95a79b;border-radius:8px;padding:.45rem .55rem;display:flex;flex-direction:column;gap:.35rem;max-width:100%}
+.pw-step-main{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.45rem}
+.pw-step-text{flex:1 1 180px;min-width:0;overflow-wrap:anywhere}
+.pw-step-ctrls{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;max-width:100%}
+.pw-step-ctrls select{width:auto;min-width:130px;flex:0 1 auto}
+.pw-step-add{display:flex;flex-wrap:wrap;gap:.45rem;align-items:end;margin-top:.45rem}
+.pw-step-add>div{flex:1 1 190px;min-width:0}
+.pw-links-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,195px),1fr));gap:.25rem .55rem;margin:.35rem 0}
+.pw-import-pick{min-width:0;flex:1 1 200px}
+.pw-suggest-list{display:flex;flex-wrap:wrap;gap:.25rem .8rem;margin:.35rem 0}
+.pw-count-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:.45rem;margin:.45rem 0}
+.pw-count-box{background:#f8fbf9;border:1px solid #95a79b;border-radius:8px;padding:.45rem .6rem;min-width:0}
+.pw-char-hint{font-size:14.5px;color:#142d26;margin:.2rem 0 0}
+.pw-history-list{margin:.35rem 0 0;padding-left:1.25rem;font-size:14.5px}
+@media(max-width:680px){
+  .pw-step-ctrls select{width:100%}
+}
 </style></head>
 <body>
 <main>
@@ -345,6 +380,10 @@ textarea.pw-iedp-box{min-height:66px;font:15.5px/1.4 system-ui,sans-serif;backgr
     <label for="pwCopyFallback">Selected text to copy</label>
     <textarea id="pwCopyFallback" class="pw-box" readonly rows="3"></textarea>
   </div>
+  <div id="pwImportUndoBar" class="pw-undo-bar" hidden role="status">
+    <span id="pwImportUndoText"></span>
+    <button type="button" id="pwImportUndoBtn">Undo</button>
+  </div>
 
   <details id="pwBankDetails" class="pw-subdetails">
     <summary>Wording bank</summary>
@@ -379,6 +418,10 @@ textarea.pw-iedp-box{min-height:66px;font:15.5px/1.4 system-ui,sans-serif;backgr
         <select id="pwWeek"></select>
       </div>
     </div>
+    <label class="pw-check-row" for="pwIncludeSomeStrategies">
+      <input type="checkbox" id="pwIncludeSomeStrategies">
+      <span>Include “some” strategy rows in weekly plan cards</span>
+    </label>
     <details id="pwOwnDetails" class="pw-subdetails">
       <summary>My subject rows in this workbook</summary>
       <div id="pwOwnList" class="pw-own-grid"></div>
@@ -405,6 +448,37 @@ textarea.pw-iedp-box{min-height:66px;font:15.5px/1.4 system-ui,sans-serif;backgr
         <input type="date" id="pwTo">
       </div>
     </div>
+    <details id="pwTargetsDetails" class="pw-subdetails">
+      <summary>Edit targets</summary>
+      <p id="pwTargetsNote" class="hint"></p>
+      <div id="pwTargetsEditor"></div>
+    </details>
+    <details id="pwStrategiesDetails" class="pw-subdetails">
+      <summary>Strategy rows (5 rows)</summary>
+      <p class="hint">The five fixed strategy rows for this pupil. Rows at “Use” (and “Some” if ticked above) feed the weekly plan cards and the IEDP Strategy box.</p>
+      <div id="pwStrategiesEditor"></div>
+    </details>
+    <details id="pwImportDetails" class="pw-subdetails">
+      <summary>Load IEDP targets from private file</summary>
+      <p class="hint">Choose a private targets file on this device. Matching runs on this device only. Nothing is saved until you press Save.</p>
+      <div class="pw-actions">
+        <button type="button" id="pwImportFileBtn">Choose private targets file</button>
+      </div>
+      <input type="file" id="pwImportFileInput" accept=".json,application/json" hidden>
+      <p id="pwImportStatus" class="status" role="status" aria-live="polite"></p>
+      <div id="pwImportPreview"></div>
+    </details>
+    <details id="pwPlanBackupDetails" class="pw-subdetails">
+      <summary>Private export and import of IEDP plans</summary>
+      <p class="hint">Export or import saved IEDP plans by pupil number only (no names). Imports show a preview of counts and save a safety copy first.</p>
+      <div class="pw-actions">
+        <button type="button" id="pwPlanExportBtn">Export IEDP plans (numbers only)</button>
+        <button type="button" id="pwPlanImportBtn">Import IEDP plans file</button>
+      </div>
+      <input type="file" id="pwPlanImportInput" accept=".json,application/json" hidden>
+      <p id="pwPlanBackupStatus" class="status" role="status" aria-live="polite"></p>
+      <div id="pwPlanImportPreview"></div>
+    </details>
     <details id="pwBoxesDetails" class="pw-subdetails">
       <summary>IEDP boxes: labels and order</summary>
       <p class="hint">Rename or reorder the boxes once to match the school form.</p>
@@ -3265,6 +3339,49 @@ function buildFullSafeBackup(roster = buildRoster()){
   const rawSubjectSettings = read(KEYS.subjectSettings, null);
   const cleanSubjectSettings = (rawSubjectSettings && typeof rawSubjectSettings === 'object' && !Array.isArray(rawSubjectSettings) && rawSubjectSettings.items && typeof rawSubjectSettings.items === 'object' && !Array.isArray(rawSubjectSettings.items)) ? rawSubjectSettings : null;
 
+  const rawIedpPlan = read('mbm_iedp_plan_v1', null);
+  let cleanIedpPlan = null;
+  if (rawIedpPlan && typeof rawIedpPlan === 'object' && !Array.isArray(rawIedpPlan) && rawIedpPlan.pupils && typeof rawIedpPlan.pupils === 'object' && !Array.isArray(rawIedpPlan.pupils)) {
+    const cleanPlanPupils = {};
+    Object.entries(rawIedpPlan.pupils).forEach(([pn, rec]) => {
+      if (!(+pn >= 1 && +pn <= 20) || !rec || typeof rec !== 'object' || Array.isArray(rec)) return;
+      cleanPlanPupils[String(+pn)] = {
+        plan: typeof rec.plan === 'string' ? redactPublic(rec.plan, roster) : '',
+        targets: Array.isArray(rec.targets) ? rec.targets.filter(t => t && typeof t === 'object').map(t => ({
+          id: typeof t.id === 'string' ? t.id : '',
+          status: ['active', 'retired', 'changed'].includes(t.status) ? t.status : 'active',
+          need: typeof t.need === 'string' ? redactPublic(t.need, roster) : '',
+          title: typeof t.title === 'string' ? redactPublic(t.title, roster).slice(0, 90) : '',
+          overall: typeof t.overall === 'string' ? redactPublic(t.overall, roster) : '',
+          measure: typeof t.measure === 'string' ? redactPublic(t.measure, roster) : '',
+          subjects: Array.isArray(t.subjects) ? t.subjects.map(s => redactPublic(String(s || ''), roster)).filter(Boolean) : [],
+          steps: Array.isArray(t.steps) ? t.steps.filter(st => st && typeof st === 'object').map(st => ({
+            text: typeof st.text === 'string' ? redactPublic(st.text, roster) : '',
+            state: ['notyet', 'partly', 'met'].includes(st.state) ? st.state : 'notyet',
+            date: typeof st.date === 'string' ? st.date : '',
+            note: typeof st.note === 'string' ? redactPublic(st.note, roster) : ''
+          })) : [],
+          rating: typeof t.rating === 'string' ? redactPublic(t.rating, roster) : '',
+          links: Array.isArray(t.links) ? t.links.filter(x => typeof x === 'string') : [],
+          lastChanged: typeof t.lastChanged === 'string' ? t.lastChanged : '',
+          lastCopied: typeof t.lastCopied === 'string' ? t.lastCopied : '',
+          history: Array.isArray(t.history) ? t.history.filter(h => h && typeof h === 'object').map(h => ({
+            date: typeof h.date === 'string' ? h.date : '',
+            was: typeof h.was === 'string' ? redactPublic(h.was, roster) : ''
+          })) : []
+        })) : [],
+        strategies: Array.isArray(rec.strategies) ? rec.strategies.filter(s => s && typeof s === 'object').map(s => ({
+          row: typeof s.row === 'string' ? s.row : '',
+          level: ['use', 'some', 'notyet'].includes(s.level) ? s.level : 'notyet',
+          apply: typeof s.apply === 'string' ? redactPublic(s.apply, roster) : '',
+          short: typeof s.short === 'string' ? redactPublic(s.short, roster) : '',
+          cell: s.cell === 'support' ? 'support' : 'adapt'
+        })) : []
+      };
+    });
+    cleanIedpPlan = { version: 1, pupils: cleanPlanPupils };
+  }
+
   return {
     schema: 'mbm_my_tools_safe_backup_v1',
     exportedAt: new Date().toISOString(),
@@ -3290,7 +3407,8 @@ function buildFullSafeBackup(roster = buildRoster()){
       adaptLog: cleanAdaptLog,
       targetWords: cleanTargetWords,
       subjectSettings: cleanSubjectSettings,
-      paperwork: deepRedactObjectPublic(read('mbm_paperwork_v1', null), roster)
+      paperwork: deepRedactObjectPublic(read('mbm_paperwork_v1', null), roster),
+      iedpPlan: cleanIedpPlan
     }
   };
 }
@@ -3348,6 +3466,18 @@ $('importSafeBackupFile').onchange = e => {
       if (d.targetWords && typeof d.targetWords === 'object' && !Array.isArray(d.targetWords)) write(KEYS.targetWords, d.targetWords);
       if (d.subjectSettings && typeof d.subjectSettings === 'object' && !Array.isArray(d.subjectSettings) && d.subjectSettings.items && typeof d.subjectSettings.items === 'object' && !Array.isArray(d.subjectSettings.items)) write(KEYS.subjectSettings, d.subjectSettings);
       if (d.paperwork && typeof d.paperwork === 'object' && !Array.isArray(d.paperwork)) write('mbm_paperwork_v1', d.paperwork);
+      if (d.iedpPlan && typeof d.iedpPlan === 'object' && !Array.isArray(d.iedpPlan) && d.iedpPlan.pupils && typeof d.iedpPlan.pupils === 'object' && !Array.isArray(d.iedpPlan.pupils)) {
+        write('mbm_iedp_plan_v1', { version: 1, pupils: d.iedpPlan.pupils });
+        const syncedT = read(KEYS.targets, {}) || {};
+        Object.entries(d.iedpPlan.pupils).forEach(([pn, rec]) => {
+          if (+pn >= 1 && +pn <= 20 && rec && Array.isArray(rec.targets)) {
+            const act = rec.targets.filter(t => t && t.status === 'active').map(t => String(t.title || '').replace(/[\r\n]+/g, ' ').trim().slice(0, 90)).filter(Boolean);
+            if (act.length) syncedT[String(+pn)] = act.join('\n');
+            else delete syncedT[String(+pn)];
+          }
+        });
+        write(KEYS.targets, syncedT);
+      }
       // Merge public group & adapt into local profile while preserving any local private .note!
       if (d.profilePublic?.pupils) {
         const curProf = read(KEYS.profile, {}) || {};
@@ -6256,6 +6386,54 @@ initToolTour({
 function initPaperworkSection() {
   'use strict';
   const PW_KEY = 'mbm_paperwork_v1';
+  const PW_PLAN_KEY = 'mbm_iedp_plan_v1';
+  const PW_TARGETS_BEFORE_KEY = 'mbm_iedp_targets_v1_before_plan';
+  const PW_IMPORT_SCHEMA = 'mbm_iedp_targets_import_v1';
+  const PW_PLAN_EXPORT_SCHEMA = 'mbm_iedp_plan_export_v1';
+  const PW_STRATEGY_ROWS = [
+    'Explicit instruction',
+    'Cognitive and metacognitive strategies',
+    'Scaffolding',
+    'Flexible grouping',
+    'Targeted use of technology'
+  ];
+  const PW_NEED_AREAS = [
+    'Cognition and learning',
+    'Communication and interaction',
+    'Social, emotional and mental health',
+    'Sensory and/or physical'
+  ];
+  const PW_ENGINE_PLAN_IDS = [
+    ['nownext', 'Now and next card'],
+    ['concise', 'Concise instructions'],
+    ['reader', 'Reader'],
+    ['move', 'Movement break'],
+    ['time', 'Extra time'],
+    ['words', 'Word bank'],
+    ['large', 'Enlarged print'],
+    ['starter', 'Sentence starters'],
+    ['fewer', 'Fewer questions'],
+    ['tint', 'Coloured paper'],
+    ['worked', 'Worked step first'],
+    ['help', 'Help card'],
+    ['checklist', 'Task checklist'],
+    ['calm', 'Calm card'],
+    ['timer', 'Timer strip'],
+    ['space', 'Extra writing space'],
+    ['recall', 'Recall start'],
+    ['book', 'Own book'],
+    ['starterlong', 'Starters for long answers'],
+    ['gapfill', 'Gap-fill sentences'],
+    ['handson', 'Hands-on task'],
+    ['label', 'Labelling task'],
+    ['stretchend', 'Finish with a stretch'],
+    ['catchupall', 'Catch-up every lesson'],
+    ['adulthelp', 'Adult helper card'],
+    ['ownwork', 'Works on my own'],
+    ['staff', '1:1 adult support / Room plan'],
+    ['other', 'Other help']
+  ];
+  const PW_ENGINE_PLAN_ID_MAP = new Map(PW_ENGINE_PLAN_IDS);
   const PW_CLOSING_META = '__closing__';
   const PW_DEFAULT_CLOSING = 'Record E against targets at check-out.';
   const PW_DEFAULT_BOXES = ['Target', 'Strategy', 'Provided', 'Review', 'Evidence'];
@@ -6539,8 +6717,474 @@ function initPaperworkSection() {
   const pwLinksList = $('pwLinksList');
   const pwIedpCards = $('pwIedpCards');
   const pwUnlinkedLine = $('pwUnlinkedLine');
+  const pwImportUndoBar = $('pwImportUndoBar');
+  const pwImportUndoText = $('pwImportUndoText');
+  const pwImportUndoBtn = $('pwImportUndoBtn');
+  const pwIncludeSomeCb = $('pwIncludeSomeStrategies');
+  const pwTargetsDetails = $('pwTargetsDetails');
+  const pwTargetsNote = $('pwTargetsNote');
+  const pwTargetsEditor = $('pwTargetsEditor');
+  const pwStrategiesDetails = $('pwStrategiesDetails');
+  const pwStrategiesEditor = $('pwStrategiesEditor');
+  const pwImportDetails = $('pwImportDetails');
+  const pwImportFileBtn = $('pwImportFileBtn');
+  const pwImportFileInput = $('pwImportFileInput');
+  const pwImportStatus = $('pwImportStatus');
+  const pwImportPreview = $('pwImportPreview');
+  const pwPlanBackupDetails = $('pwPlanBackupDetails');
+  const pwPlanExportBtn = $('pwPlanExportBtn');
+  const pwPlanImportBtn = $('pwPlanImportBtn');
+  const pwPlanImportInput = $('pwPlanImportInput');
+  const pwPlanBackupStatus = $('pwPlanBackupStatus');
+  const pwPlanImportPreview = $('pwPlanImportPreview');
 
   if (!pwRoot) return;
+
+  // --- Step 1: IEDP live plan store, SHA-256 fingerprint, sync & lossless upgrade helpers ---
+  let pwTargetIdSeq = 0;
+  let pwImportUndoSnap = null;
+  let pwImportPreviewState = null;
+  let pwPlanImportState = null;
+  let pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
+
+  const PW_SHA256_K = [
+    0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+    0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+    0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+    0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+    0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+    0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+    0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+    0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+  ];
+
+  function pwUtf8Bytes(str) {
+    if (typeof TextEncoder === 'function') return new TextEncoder().encode(str);
+    const out = [];
+    for (let i = 0; i < str.length; i++) {
+      let c = str.charCodeAt(i);
+      if (c < 0x80) {
+        out.push(c);
+      } else if (c < 0x800) {
+        out.push(0xc0 | (c >> 6), 0x80 | (c & 0x3f));
+      } else if (c >= 0xd800 && c <= 0xdbff && i + 1 < str.length) {
+        const c2 = str.charCodeAt(++i);
+        const cp = 0x10000 + (((c & 0x3ff) << 10) | (c2 & 0x3ff));
+        out.push(0xf0 | (cp >> 18), 0x80 | ((cp >> 12) & 0x3f), 0x80 | ((cp >> 6) & 0x3f), 0x80 | (cp & 0x3f));
+      } else {
+        out.push(0xe0 | (c >> 12), 0x80 | ((c >> 6) & 0x3f), 0x80 | (c & 0x3f));
+      }
+    }
+    return new Uint8Array(out);
+  }
+
+  function pwSha256Hex(str) {
+    const bytes = pwUtf8Bytes(String(str ?? ''));
+    const bitLen = bytes.length * 8;
+    const paddedLen = Math.ceil((bytes.length + 9) / 64) * 64;
+    const buf = new Uint8Array(paddedLen);
+    buf.set(bytes);
+    buf[bytes.length] = 0x80;
+    const dv = new DataView(buf.buffer);
+    dv.setUint32(paddedLen - 8, Math.floor(bitLen / 0x100000000), false);
+    dv.setUint32(paddedLen - 4, bitLen >>> 0, false);
+
+    let h0 = 0x6a09e667, h1 = 0xbb67ae85, h2 = 0x3c6ef372, h3 = 0xa54ff53a;
+    let h4 = 0x510e527f, h5 = 0x9b05688c, h6 = 0x1f83d9ab, h7 = 0x5be0cd19;
+    const w = new Uint32Array(64);
+
+    for (let off = 0; off < paddedLen; off += 64) {
+      for (let i = 0; i < 16; i++) w[i] = dv.getUint32(off + i * 4, false);
+      for (let i = 16; i < 64; i++) {
+        const s0 = ((w[i - 15] >>> 7) | (w[i - 15] << 25)) ^ ((w[i - 15] >>> 18) | (w[i - 15] << 14)) ^ (w[i - 15] >>> 3);
+        const s1 = ((w[i - 2] >>> 17) | (w[i - 2] << 15)) ^ ((w[i - 2] >>> 19) | (w[i - 2] << 13)) ^ (w[i - 2] >>> 10);
+        w[i] = (w[i - 16] + s0 + w[i - 7] + s1) >>> 0;
+      }
+      let a = h0, b = h1, c = h2, d = h3, e = h4, f = h5, g = h6, h = h7;
+      for (let i = 0; i < 64; i++) {
+        const S1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
+        const ch = (e & f) ^ ((~e) & g);
+        const t1 = (h + S1 + ch + PW_SHA256_K[i] + w[i]) >>> 0;
+        const S0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
+        const maj = (a & b) ^ (a & c) ^ (b & c);
+        const t2 = (S0 + maj) >>> 0;
+        h = g; g = f; f = e; e = (d + t1) >>> 0;
+        d = c; c = b; b = a; a = (t1 + t2) >>> 0;
+      }
+      h0 = (h0 + a) >>> 0; h1 = (h1 + b) >>> 0; h2 = (h2 + c) >>> 0; h3 = (h3 + d) >>> 0;
+      h4 = (h4 + e) >>> 0; h5 = (h5 + f) >>> 0; h6 = (h6 + g) >>> 0; h7 = (h7 + h) >>> 0;
+    }
+    return [h0, h1, h2, h3, h4, h5, h6, h7].map(x => x.toString(16).padStart(8, '0')).join('');
+  }
+
+  function pwFingerprint(firstName) {
+    const first = String(firstName || '').trim().split(/\s+/)[0].toLowerCase();
+    if (!first) return '';
+    return pwSha256Hex('mbm-iedp|' + first).slice(0, 12);
+  }
+
+  function pwRawInitials(label) {
+    const words = String(label || '').trim().split(/\s+/)
+      .map(w => Array.from(w.replace(/[^\p{L}\p{M}]/gu, '').toLocaleUpperCase('en-GB')))
+      .filter(w => w.length);
+    return words.slice(0, 3).map(x => x[0]).join('');
+  }
+
+  function pwMakeTargetId() {
+    return 't_' + Date.now().toString(36) + '_' + (++pwTargetIdSeq) + '_' + Math.random().toString(36).slice(2, 6);
+  }
+
+  function pwNormTitle(s) {
+    return String(s ?? '').replace(/[\r\n]+/g, ' ').trim().slice(0, 90);
+  }
+
+  function pwWordCount(s) {
+    const t = String(s || '').trim();
+    return t ? t.split(/\s+/).filter(Boolean).length : 0;
+  }
+
+  function pwDefaultStrategies() {
+    return PW_STRATEGY_ROWS.map(row => ({
+      row,
+      level: 'notyet',
+      apply: '',
+      short: '',
+      cell: 'adapt'
+    }));
+  }
+
+  function pwNormStrategies(rawList) {
+    const byLow = new Map();
+    if (Array.isArray(rawList)) {
+      rawList.forEach(item => {
+        if (!pwIsPlainObj(item)) return;
+        const rName = String(item.row || '').trim();
+        if (rName) byLow.set(rName.toLowerCase(), item);
+      });
+    }
+    return PW_STRATEGY_ROWS.map(row => {
+      const found = byLow.get(row.toLowerCase());
+      const level = (found && ['use', 'some', 'notyet'].includes(found.level)) ? found.level : 'notyet';
+      const apply = found && typeof found.apply === 'string' ? found.apply.trim() : '';
+      const short = found && typeof found.short === 'string' ? found.short.replace(/[\r\n]+/g, ' ').trim() : '';
+      const cell = (found && found.cell === 'support') ? 'support' : 'adapt';
+      return { row, level, apply, short, cell };
+    });
+  }
+
+  function pwNormStep(raw) {
+    if (typeof raw === 'string') {
+      const txt = raw.trim();
+      return txt ? { text: txt, state: 'notyet', date: '', note: '' } : null;
+    }
+    if (!pwIsPlainObj(raw)) return null;
+    const text = String(raw.text || '').trim();
+    if (!text) return null;
+    const state = ['notyet', 'partly', 'met'].includes(raw.state) ? raw.state : 'notyet';
+    const date = typeof raw.date === 'string' ? raw.date.trim() : '';
+    const note = typeof raw.note === 'string' ? raw.note.trim() : '';
+    return { text, state, date, note };
+  }
+
+  function pwNormTarget(raw, assignIdIfMissing) {
+    if (!pwIsPlainObj(raw)) return null;
+    const rawOverall = typeof raw.overall === 'string' ? raw.overall.trim() : '';
+    const rawTitle = pwNormTitle(typeof raw.title === 'string' ? raw.title : rawOverall);
+    const overall = rawOverall || rawTitle;
+    const title = rawTitle || pwNormTitle(overall);
+    if (!title && !overall) return null;
+    const id = (typeof raw.id === 'string' && raw.id.trim()) ? raw.id.trim() : (assignIdIfMissing ? pwMakeTargetId() : '');
+    const status = ['active', 'retired', 'changed'].includes(raw.status) ? raw.status : 'active';
+    const need = typeof raw.need === 'string' ? raw.need.trim() : '';
+    const measure = typeof raw.measure === 'string' ? raw.measure.trim() : '';
+    const subjects = Array.isArray(raw.subjects)
+      ? [...new Set(raw.subjects.map(s => String(s || '').trim()).filter(Boolean))]
+      : [];
+    const steps = Array.isArray(raw.steps) ? raw.steps.map(pwNormStep).filter(Boolean) : [];
+    const rating = typeof raw.rating === 'string' ? raw.rating.trim() : '';
+    const links = Array.isArray(raw.links)
+      ? [...new Set(raw.links.map(x => String(x || '').trim().toLowerCase()).filter(x => PW_ENGINE_PLAN_ID_MAP.has(x)))]
+      : [];
+    const lastChanged = typeof raw.lastChanged === 'string' ? raw.lastChanged.trim() : '';
+    const lastCopied = typeof raw.lastCopied === 'string' ? raw.lastCopied.trim() : '';
+    const history = Array.isArray(raw.history)
+      ? raw.history.filter(h => pwIsPlainObj(h) && typeof h.was === 'string' && h.was.trim()).map(h => ({
+          date: typeof h.date === 'string' ? h.date.trim() : '',
+          was: h.was.trim()
+        }))
+      : [];
+    return { id, status, need, title, overall, measure, subjects, steps, rating, links, lastChanged, lastCopied, history };
+  }
+
+  function pwNormPupilRecord(raw, assignIds) {
+    const rec = pwIsPlainObj(raw) ? raw : {};
+    return {
+      plan: typeof rec.plan === 'string' ? rec.plan.trim() : '',
+      targets: Array.isArray(rec.targets) ? rec.targets.map(t => pwNormTarget(t, assignIds)).filter(Boolean) : [],
+      strategies: pwNormStrategies(rec.strategies)
+    };
+  }
+
+  // Strictly READ-ONLY: returns null when mbm_iedp_plan_v1 does not exist.
+  function pwReadPlanStoreRaw() {
+    let rawStr = null;
+    try { rawStr = localStorage.getItem(PW_PLAN_KEY); } catch (e) { return null; }
+    if (rawStr === null) return null;
+    try {
+      const parsed = JSON.parse(rawStr);
+      if (!pwIsPlainObj(parsed)) return null;
+      const pupilsIn = pwIsPlainObj(parsed.pupils) ? parsed.pupils : {};
+      const pupils = {};
+      Object.entries(pupilsIn).forEach(([k, v]) => {
+        const n = pwNormPupilId(k);
+        if (n !== null && pwIsPlainObj(v)) {
+          const pk = String(n);
+          if (!pupils[pk] || k === pk) pupils[pk] = v;
+        }
+      });
+      return { version: 1, pupils };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Strictly READ-ONLY: returns normalized plan record if pupil n has a plan, else null.
+  function pwReadPupilPlan(n, planStore) {
+    const store = planStore !== undefined ? planStore : pwReadPlanStoreRaw();
+    if (!store || !pwIsPlainObj(store.pupils)) return null;
+    const rec = store.pupils[String(n)];
+    if (!pwIsPlainObj(rec)) return null;
+    return pwNormPupilRecord(rec, false);
+  }
+
+  // Strictly READ-ONLY: reads old mbm_iedp_targets_v1 lines for pupil n without writing.
+  function pwReadLegacyTargetLines(n) {
+    const rawTargets = pwReadJson(KEYS.targets, {}) || {};
+    if (!pwIsPlainObj(rawTargets)) return [];
+    let val = rawTargets[String(n)];
+    if (val === undefined) {
+      for (const [k, v] of Object.entries(rawTargets)) {
+        if (pwNormPupilId(k) === n) { val = v; break; }
+      }
+    }
+    if (typeof val === 'string') {
+      return val.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+    }
+    if (Array.isArray(val)) {
+      return val.map(s => String(s ?? '').trim()).filter(Boolean);
+    }
+    return [];
+  }
+
+  // Strictly READ-ONLY display model for Target & Strategy editors (never upgrades on look!).
+  function pwGetDisplayPlanForPupil(n) {
+    const existing = pwReadPupilPlan(n);
+    if (existing) {
+      return { hasPlan: true, isLegacyPreview: false, record: existing };
+    }
+    const legacyLines = pwReadLegacyTargetLines(n);
+    if (legacyLines.length) {
+      return {
+        hasPlan: false,
+        isLegacyPreview: true,
+        record: {
+          plan: '',
+          targets: legacyLines.map((line, i) => ({
+            id: 'legacy_' + n + '_' + i,
+            status: 'active',
+            need: '',
+            title: pwNormTitle(line),
+            overall: line,
+            measure: '',
+            subjects: [],
+            steps: [],
+            rating: '',
+            links: [],
+            lastChanged: '',
+            lastCopied: '',
+            history: []
+          })),
+          strategies: pwDefaultStrategies()
+        }
+      };
+    }
+    return {
+      hasPlan: false,
+      isLegacyPreview: false,
+      record: { plan: '', targets: [], strategies: pwDefaultStrategies() }
+    };
+  }
+
+  function pwWriteRawJson(key, obj) {
+    try {
+      localStorage.setItem(key, JSON.stringify(obj));
+      return true;
+    } catch (err) {
+      pwSetStatus('Your change shows for this visit. This device could not save it.', true);
+      return false;
+    }
+  }
+
+  function pwReadLegacyRawEntry(rawTargets, n) {
+    if (!pwIsPlainObj(rawTargets)) return { found: false, val: undefined };
+    if (Object.prototype.hasOwnProperty.call(rawTargets, String(n))) {
+      return { found: true, val: rawTargets[String(n)] };
+    }
+    for (const [k, v] of Object.entries(rawTargets)) {
+      if (pwNormPupilId(k) === n) return { found: true, val: v };
+    }
+    return { found: false, val: undefined };
+  }
+
+  function pwBackupLegacyTargetOnce(n, rawTargets) {
+    const entry = pwReadLegacyRawEntry(rawTargets, n);
+    if (!entry.found) return;
+    const hasContent = typeof entry.val === 'string'
+      ? entry.val.trim().length > 0
+      : (Array.isArray(entry.val) && entry.val.some(s => String(s || '').trim()));
+    if (!hasContent) return;
+    let beforeMap = {};
+    try {
+      const raw = localStorage.getItem(PW_TARGETS_BEFORE_KEY);
+      if (raw !== null) {
+        const parsed = JSON.parse(raw);
+        if (pwIsPlainObj(parsed)) beforeMap = parsed;
+      }
+    } catch (e) {}
+    if (!Object.prototype.hasOwnProperty.call(beforeMap, String(n))) {
+      beforeMap[String(n)] = entry.val;
+      pwWriteRawJson(PW_TARGETS_BEFORE_KEY, beforeMap);
+    }
+  }
+
+  function pwSyncTargetsStoreForPupil(n, rec, rawTargetsObj) {
+    const nextTargets = pwIsPlainObj(rawTargetsObj) ? { ...rawTargetsObj } : {};
+    Object.keys(nextTargets).forEach(k => {
+      if (pwNormPupilId(k) === n && k !== String(n)) delete nextTargets[k];
+    });
+    const activeLines = (rec.targets || [])
+      .filter(t => t && t.status === 'active')
+      .map(t => pwNormTitle(t.title))
+      .filter(Boolean);
+    if (activeLines.length) nextTargets[String(n)] = activeLines.join('\n');
+    else delete nextTargets[String(n)];
+    return nextTargets;
+  }
+
+  // Upgrade pupil n on first edit only (copying legacy once to mbm_iedp_targets_v1_before_plan),
+  // apply mutatorFn(record), write mbm_iedp_plan_v1, and keep mbm_iedp_targets_v1 in step.
+  function pwMutatePupilPlan(n, mutatorFn, opts = {}) {
+    const existingStore = pwReadPlanStoreRaw();
+    const planStore = existingStore
+      ? { version: 1, pupils: { ...existingStore.pupils } }
+      : { version: 1, pupils: {} };
+    const rawTargets = pwReadJson(KEYS.targets, {}) || {};
+    const hadPlan = pwIsPlainObj(planStore.pupils[String(n)]);
+    let rec;
+    if (hadPlan) {
+      rec = pwNormPupilRecord(planStore.pupils[String(n)], true);
+    } else {
+      const legacyLines = pwReadLegacyTargetLines(n);
+      if (legacyLines.length) {
+        pwBackupLegacyTargetOnce(n, rawTargets);
+      }
+      rec = {
+        plan: '',
+        targets: legacyLines.map(line => ({
+          id: pwMakeTargetId(),
+          status: 'active',
+          need: '',
+          title: pwNormTitle(line),
+          overall: line,
+          measure: '',
+          subjects: [],
+          steps: [],
+          rating: '',
+          links: [],
+          lastChanged: '',
+          lastCopied: '',
+          history: []
+        })),
+        strategies: pwDefaultStrategies()
+      };
+    }
+
+    const res = mutatorFn(rec, { upgradedFromLegacy: !hadPlan });
+    if (res === false) return false;
+
+    const cleanRec = pwNormPupilRecord(rec, true);
+    planStore.pupils[String(n)] = cleanRec;
+    const okPlan = pwWriteRawJson(PW_PLAN_KEY, planStore);
+    const nextTargets = pwSyncTargetsStoreForPupil(n, cleanRec, rawTargets);
+    const okTargets = pwWriteRawJson(KEYS.targets, nextTargets);
+    if (!opts.skipGlobalRender && typeof renderAll === 'function') renderAll();
+    return okPlan && okTargets;
+  }
+
+  function pwResolveTargetInRecord(rec, targetId, targetIdx) {
+    if (targetId && !String(targetId).startsWith('legacy_')) {
+      const byId = rec.targets.findIndex(t => t.id === targetId);
+      if (byId >= 0) return byId;
+    }
+    if (Number.isInteger(targetIdx) && targetIdx >= 0 && targetIdx < rec.targets.length) {
+      return targetIdx;
+    }
+    return -1;
+  }
+
+  function pwStepStateLabel(state) {
+    if (state === 'met') return 'Met';
+    if (state === 'partly') return 'Partly';
+    return 'Not yet';
+  }
+
+  function pwStepStateSymbol(state) {
+    if (state === 'met') return '✓ Met';
+    if (state === 'partly') return '◐ Partly';
+    return '○ Not yet';
+  }
+
+  function pwStrategyLevelBadge(level) {
+    if (level === 'use') return '● Use';
+    if (level === 'some') return '◐ Some';
+    return '○ Not yet';
+  }
+
+  function pwShowUndoBar(snap) {
+    pwImportUndoSnap = snap;
+    if (!pwImportUndoBar || !pwImportUndoText) return;
+    pwImportUndoText.textContent = snap.label + '. Press Undo to put every store back exactly as before.';
+    pwImportUndoBar.hidden = false;
+  }
+
+  function pwHideUndoBar() {
+    pwImportUndoSnap = null;
+    if (pwImportUndoBar) pwImportUndoBar.hidden = true;
+    if (pwImportUndoText) pwImportUndoText.textContent = '';
+  }
+
+  function pwRunImportUndo() {
+    if (!pwImportUndoSnap) return;
+    const keys = pwImportUndoSnap.keys || {};
+    let ok = true;
+    Object.entries(keys).forEach(([k, raw]) => {
+      try {
+        if (raw === null) localStorage.removeItem(k);
+        else localStorage.setItem(k, raw);
+      } catch (e) {
+        ok = false;
+      }
+    });
+    pwHideUndoBar();
+    pwRenderAll();
+    if (typeof renderAll === 'function') renderAll();
+    const msg = ok
+      ? 'Undone. Every store was restored exactly as it was before Save.'
+      : 'Undo tried to restore stores, but this device blocked storage access.';
+    pwSetStatus(msg, false);
+    if (pwImportStatus) pwImportStatus.textContent = msg;
+    if (pwPlanBackupStatus) pwPlanBackupStatus.textContent = msg;
+  }
 
   // In-memory fallback state if storage cannot save on this device
   let memoryStore = null;
@@ -7010,28 +7654,35 @@ function initPaperworkSection() {
     const cand1 = lines1.join('\n');
     if (cand1.length <= 700) return cand1;
 
-    // Stage 2: whole phrases only. Each line keeps as many phrases as fit its share of the cell, then says how many more there are. Every pupil is kept.
-    const fixedLen2 = (noteLine ? noteLine.length + 1 : 0) + (tailParts.length ? tailParts.join(' ').length + 1 : 0) + 1;
-    const share2 = Math.floor((700 - fixedLen2) / Math.max(1, groups.length)) - 2;
-    let fits2 = true;
-    const groupBit2 = groups.map(g => {
-      const who = pwJoinList(g.pupils.map(n => pwPupilLabel(n, roster))) + ': ';
-      let kept = 0;
-      while (kept < g.phrases.length) {
-        const after = g.phrases.length - kept - 1;
-        if ((who + g.phrases.slice(0, kept + 1).join(', ') + (after ? ' + ' + after + ' more' : '')).length > share2) break;
-        kept++;
+    // Stage 2: whole phrases only. Trim one whole phrase at a time from the group with the most phrases so maximum whole phrases fit, then "+ N more". Every pupil is kept.
+    const keptCounts = groups.map(g => g.phrases.length);
+    const buildStage2 = () => {
+      const bit = groups.map((g, i) => {
+        const who = pwJoinList(g.pupils.map(n => pwPupilLabel(n, roster))) + ': ';
+        const k = keptCounts[i];
+        const left = g.phrases.length - k;
+        return who + g.phrases.slice(0, k).join(', ') + (left ? ' + ' + left + ' more' : '');
+      }).join('; ');
+      const lines2 = [];
+      if (noteLine) lines2.push(noteLine);
+      if (bit) lines2.push(pwEnsurePeriod(bit));
+      if (tailParts.length) lines2.push(tailParts.join(' '));
+      return lines2.join('\n');
+    };
+    let cand2 = buildStage2();
+    while (cand2.length > 700) {
+      let pick = -1;
+      let bestScore = -1;
+      for (let i = 0; i < groups.length; i++) {
+        if (keptCounts[i] <= 1) continue;
+        const score = keptCounts[i] * 1000 + groups[i].phrases[keptCounts[i] - 1].length;
+        if (score > bestScore) { bestScore = score; pick = i; }
       }
-      if (!kept) fits2 = false;
-      const left = g.phrases.length - kept;
-      return who + g.phrases.slice(0, kept).join(', ') + (left ? ' + ' + left + ' more' : '');
-    }).join('; ');
-    const lines2 = [];
-    if (noteLine) lines2.push(noteLine);
-    if (groupBit2) lines2.push(pwEnsurePeriod(groupBit2));
-    if (tailParts.length) lines2.push(tailParts.join(' '));
-    const cand2 = lines2.join('\n');
-    if (fits2 && cand2.length <= 700) return cand2;
+      if (pick < 0) break;
+      keptCounts[pick]--;
+      cand2 = buildStage2();
+    }
+    if (cand2.length <= 700 && keptCounts.every(k => k >= 1)) return cand2;
 
     // Stage 3: merge all adapted pupils onto one compact line so zero pupils are ever dropped
     const allAdaptNums = [...new Set(groups.flatMap(g => g.pupils))].sort((a, b) => a - b);
@@ -7066,6 +7717,33 @@ function initPaperworkSection() {
     const cand1 = lines1.join('\n');
     if (cand1.length <= 700) return cand1;
 
+    // Stage 1b: whole phrases only with "+ N more", while preserving every pupil
+    if (supportEntries.length > 1) {
+      const allPupilsNeeded = new Set(supportEntries.flatMap(e => e.pupils));
+      let kept = supportEntries.length - 1;
+      while (kept >= 1) {
+        const slice = supportEntries.slice(0, kept);
+        const covered = new Set(slice.flatMap(e => e.pupils));
+        const missing = [...allPupilsNeeded].filter(n => !covered.has(n)).sort((a, b) => a - b);
+        const parts = slice.map(e => {
+          const p = e.plan.replace(/[.!?]+$/, '').trim();
+          const who = pwJoinList(e.pupils.map(n => pwPupilLabel(n, roster)));
+          return /\b(with|to|for|near|beside|alongside)$/i.test(p) ? (p + ' ' + who) : (p + ' for ' + who);
+        });
+        const left = supportEntries.length - kept;
+        let line = 'TA: ' + parts.join('; ') + ' + ' + left + ' more';
+        if (missing.length) line += ' (also ' + pwJoinList(missing.map(n => pwPupilLabel(n, roster))) + ')';
+        const lines1b = [pwEnsurePeriod(line)];
+        if (owedPupils.length) {
+          lines1b.push('TA runs catch-up in retrieval with: ' + pwJoinList(owedPupils.map(n => pwPupilLabel(n, roster))) + '.');
+        }
+        if (closingLine) lines1b.push(closingLine);
+        const cand1b = lines1b.join('\n');
+        if (cand1b.length <= 700) return cand1b;
+        kept--;
+      }
+    }
+
     // Stage 2: single-line join with every pupil preserved
     const allSupNums = [...new Set(supportEntries.flatMap(e => e.pupils))].sort((a, b) => a - b);
     const parts2 = [];
@@ -7091,6 +7769,10 @@ function initPaperworkSection() {
     const supportedPupils = [];
     const aspirePupils = [];
     const owedPupils = [];
+    const pupilAdaptLowerMap = new Map();
+    const includeSome = !!(pwIncludeSomeCb && pwIncludeSomeCb.checked);
+    const planStore = pwReadPlanStoreRaw();
+    const stratAdaptByPhrase = new Map();
 
     pupils.forEach(n => {
       const profHelp = pwGetPupilProfileHelp(n, roster);
@@ -7123,6 +7805,8 @@ function initPaperworkSection() {
         }
       });
 
+      pupilAdaptLowerMap.set(n, seenAdaptKeys);
+
       if (pupilAdaptEntries.length) {
         const setKey = pupilAdaptEntries.map(p => p.toLowerCase()).slice().sort().join('||');
         let grp = adaptGroupMap.get(setKey);
@@ -7134,6 +7818,40 @@ function initPaperworkSection() {
         grp.pupils.push(n);
       }
 
+      // Add active strategy rows from mbm_iedp_plan_v1 (read-only; grouped by wording across the pathway)
+      const pPlan = pwReadPupilPlan(n, planStore);
+      if (pPlan && Array.isArray(pPlan.strategies)) {
+        pPlan.strategies.forEach(s => {
+          if (s.level !== 'use' && !(includeSome && s.level === 'some')) return;
+          const rawShort = String(s.short || '').trim().replace(/[.!?]+$/, '').trim();
+          if (!rawShort) return;
+          const phrase = pwIsShieldOn() ? redactPublic(rawShort, roster) : rawShort;
+          const pk = phrase.toLowerCase();
+          if (s.cell === 'support') {
+            let sup = supportMap.get('strat|' + pk);
+            if (!sup) {
+              for (const existingSup of supportEntries) {
+                if (existingSup.plan.toLowerCase() === pk) { sup = existingSup; break; }
+              }
+            }
+            if (!sup) {
+              sup = { key: 'strat|' + pk, plan: phrase, pupils: [] };
+              supportMap.set('strat|' + pk, sup);
+              supportEntries.push(sup);
+            }
+            if (!sup.pupils.includes(n)) sup.pupils.push(n);
+          } else {
+            if (seenAdaptKeys.has(pk)) return;
+            let stratEntry = stratAdaptByPhrase.get(pk);
+            if (!stratEntry) {
+              stratEntry = { phrase, pupils: [] };
+              stratAdaptByPhrase.set(pk, stratEntry);
+            }
+            if (!stratEntry.pupils.includes(n)) stratEntry.pupils.push(n);
+          }
+        });
+      }
+
       if (effTier === 'Supported') supportedPupils.push(n);
       else if (effTier === 'Aspire') aspirePupils.push(n);
 
@@ -7141,6 +7859,36 @@ function initPaperworkSection() {
         owedPupils.push(n);
       }
     });
+
+    // Combine pathway-grouped strategy phrases that share the exact same pupil set
+    if (stratAdaptByPhrase.size) {
+      const stratByPupilKey = new Map();
+      stratAdaptByPhrase.forEach(entry => {
+        entry.pupils.sort((a, b) => a - b);
+        const pk = entry.pupils.join(',');
+        let bucket = stratByPupilKey.get(pk);
+        if (!bucket) {
+          bucket = { pupils: entry.pupils.slice(), phrases: [] };
+          stratByPupilKey.set(pk, bucket);
+        }
+        if (!bucket.phrases.some(x => x.toLowerCase() === entry.phrase.toLowerCase())) {
+          bucket.phrases.push(entry.phrase);
+        }
+      });
+      stratByPupilKey.forEach(bucket => {
+        const bKey = bucket.pupils.join(',');
+        const existingGrp = adaptGroups.find(g => g.pupils.slice().sort((a, b) => a - b).join(',') === bKey);
+        if (existingGrp) {
+          bucket.phrases.forEach(ph => {
+            if (!existingGrp.phrases.some(x => x.toLowerCase() === ph.toLowerCase())) {
+              existingGrp.phrases.push(ph);
+            }
+          });
+        } else {
+          adaptGroups.push(bucket);
+        }
+      });
+    }
 
     adaptGroups.sort((a, b) => a.pupils[0] - b.pupils[0]);
     supportEntries.sort((a, b) => a.pupils[0] - b.pupils[0]);
@@ -7402,21 +8150,31 @@ function initPaperworkSection() {
   }
 
   function pwReadPupilTargets(n) {
-    const rawTargets = pwReadJson(KEYS.targets, {}) || {};
-    if (!pwIsPlainObj(rawTargets)) return [];
-    let val = rawTargets[String(n)];
-    if (val === undefined) {
-      for (const [k, v] of Object.entries(rawTargets)) {
-        if (pwNormPupilId(k) === n) { val = v; break; }
+    const plan = pwReadPupilPlan(n);
+    if (plan) {
+      return plan.targets
+        .filter(t => t.status === 'active')
+        .map(t => pwNormTitle(t.title))
+        .filter(Boolean);
+    }
+    return pwReadLegacyTargetLines(n);
+  }
+
+  function pwRowMatchesPlanId(rowLines, planId, rowHands) {
+    if (!Array.isArray(rowLines) || !rowLines.length) return false;
+    const pid = String(planId || '').trim().toLowerCase();
+    if (!pid) return false;
+    const targetRule = PW_ID_TO_RULE.get(pid) || null;
+    for (const rawId of rowLines) {
+      const id = String(rawId || '').trim().toLowerCase();
+      if (!id) continue;
+      const mapped = PW_ID_TO_RULE.get(id) || null;
+      if (id === pid || (targetRule && mapped === targetRule)) {
+        if (targetRule === 'handson' && !rowHands) continue;
+        return true;
       }
     }
-    if (typeof val === 'string') {
-      return val.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-    }
-    if (Array.isArray(val)) {
-      return val.map(s => String(s ?? '').trim()).filter(Boolean);
-    }
-    return [];
+    return false;
   }
 
   function pwAllHelpLinesForPupil(n, roster, subjItems) {
@@ -7555,6 +8313,13 @@ function initPaperworkSection() {
     const rawTargets = pwReadJson(KEYS.targets, {}) || {};
     if (pwIsPlainObj(rawTargets)) {
       Object.keys(rawTargets).forEach(k => {
+        const n = pwNormPupilId(k);
+        if (n !== null) set.add(n);
+      });
+    }
+    const planStore = pwReadPlanStoreRaw();
+    if (planStore && pwIsPlainObj(planStore.pupils)) {
+      Object.keys(planStore.pupils).forEach(k => {
         const n = pwNormPupilId(k);
         if (n !== null) set.add(n);
       });
@@ -7978,19 +8743,69 @@ function initPaperworkSection() {
     pwLinksList.replaceChildren(frag);
   }
 
+  function pwRecordTargetLastCopied(n, targetId) {
+    if (!targetId || pwIsShieldOn()) return;
+    const planStore = pwReadPlanStoreRaw();
+    if (!planStore || !pwIsPlainObj(planStore.pupils) || !pwIsPlainObj(planStore.pupils[String(n)])) return;
+    const rec = pwNormPupilRecord(planStore.pupils[String(n)], true);
+    const t = rec.targets.find(item => item.id === targetId);
+    if (!t) return;
+    t.lastCopied = dateISO();
+    planStore.pupils[String(n)] = rec;
+    pwWriteRawJson(PW_PLAN_KEY, planStore);
+  }
+
+  function pwFormatPlanStrategyLines(plan, roster) {
+    const shield = pwIsShieldOn();
+    const out = [];
+    if (!plan || !Array.isArray(plan.strategies)) return out;
+    plan.strategies.forEach(s => {
+      if (s.level !== 'use' && s.level !== 'some') return;
+      const bodyRaw = (s.apply || s.short || '').trim();
+      if (!bodyRaw) return;
+      const body = shield ? redactPublic(bodyRaw, roster) : bodyRaw;
+      const prefix = s.level === 'some' ? (s.row + ' (some lessons): ') : (s.row + ': ');
+      out.push(prefix + pwEnsurePeriod(body));
+    });
+    return out;
+  }
+
   function pwRenderIedpCards(store, roster, subjItems, cfg) {
     const n = +pwPupilSel.value || 1;
     const pupilLbl = pwPupilLabel(n, roster);
+    const shield = pwIsShieldOn();
     const pwToday = new Date();
     const rawFrom = pwFromInput.value || dateISO(new Date(pwToday.getFullYear(), pwToday.getMonth(), pwToday.getDate() - 28, 12));
     const rawTo = pwToInput.value || dateISO(pwToday);
     const [startISO, endISO] = rawFrom <= rawTo ? [rawFrom, rawTo] : [rawTo, rawFrom];
 
-    const targets = pwReadPupilTargets(n);
+    const plan = pwReadPupilPlan(n);
     const helpLines = pwAllHelpLinesForPupil(n, roster, subjItems);
+    const activePlanTargets = plan ? plan.targets.filter(t => t.status === 'active') : null;
+    const targets = activePlanTargets ? activePlanTargets.map(t => t.title) : pwReadLegacyTargetLines(n);
+    const activeStratLines = plan ? pwFormatPlanStrategyLines(plan, roster) : [];
 
     if (!targets.length) {
-      pwIedpCards.replaceChildren(el('p', { class: 'pw-empty' }, 'No IEDP targets saved for this pupil yet.'));
+      const emptyFrag = document.createDocumentFragment();
+      emptyFrag.append(el('p', { class: 'pw-empty' }, 'No IEDP targets saved for this pupil yet.'));
+      if (activeStratLines.length) {
+        const sCard = el('article', { class: 'pw-card pw-iedp-card', 'data-strategy-only': '1' });
+        sCard.append(el('h4', {}, pupilLbl + ' · Active strategies'));
+        const areaId = 'pwIedpStratOnly_' + n;
+        const head = el('div', { class: 'pw-iedp-head' });
+        head.append(el('label', { for: areaId }, 'Strategy'));
+        const stratTxt = activeStratLines.join('\n');
+        const cBtn = el('button', { type: 'button' }, 'Copy');
+        cBtn.addEventListener('click', () => {
+          pwCopy(stratTxt, 'Copied: ' + pupilLbl + ' · Strategy', cBtn);
+        });
+        head.append(cBtn);
+        const area = el('textarea', { id: areaId, class: 'pw-iedp-box', readonly: 'readonly', rows: '3' });
+        area.value = stratTxt;
+        sCard.append(head, area);
+        emptyFrag.append(sCard);
+      }
+      pwIedpCards.replaceChildren(emptyFrag);
       pwUnlinkedLine.hidden = true;
       pwUnlinkedLine.textContent = '';
       return;
@@ -8011,37 +8826,103 @@ function initPaperworkSection() {
       if (tNum >= 1 && tNum <= targets.length) {
         linkedByTarget.get(tNum).push(hl);
       } else {
-        unlinked.push(pwIsShieldOn() ? redactPublic(hl, roster) : hl);
+        unlinked.push(shield ? redactPublic(hl, roster) : hl);
       }
     });
 
     const frag = document.createDocumentFragment();
     targets.forEach((rawTargetLine, idx) => {
       const tNum = idx + 1;
-      const targetText = pwIsShieldOn() ? redactPublic(rawTargetLine, roster) : rawTargetLine;
+      const planTarget = activePlanTargets ? activePlanTargets[idx] : null;
       const linkedLines = linkedByTarget.get(tNum) || [];
+      const planLinkIds = planTarget && Array.isArray(planTarget.links) ? planTarget.links : [];
 
-      const strategySentences = linkedLines.map(hl => {
+      let targetText = '';
+      if (planTarget) {
+        const tParts = [];
+        const overallRaw = (planTarget.overall || planTarget.title || '').trim();
+        if (overallRaw) tParts.push(shield ? redactPublic(overallRaw, roster) : overallRaw);
+        if (planTarget.need) tParts.push('Area of need: ' + (shield ? redactPublic(planTarget.need, roster) : planTarget.need));
+        if (planTarget.subjects && planTarget.subjects.length) {
+          tParts.push('Subjects: ' + planTarget.subjects.map(s => shield ? redactPublic(s, roster) : s).join(', '));
+        }
+        if (planTarget.steps && planTarget.steps.length) {
+          tParts.push('Steps:');
+          planTarget.steps.forEach((st, sIdx) => {
+            const stTxt = shield ? redactPublic(st.text, roster) : st.text;
+            const stNote = st.note ? (' — ' + (shield ? redactPublic(st.note, roster) : st.note)) : '';
+            const stDate = st.date ? (', ' + st.date) : '';
+            tParts.push((sIdx + 1) + '. ' + stTxt + ' [' + pwStepStateLabel(st.state) + stDate + stNote + ']');
+          });
+        }
+        if (planTarget.measure) tParts.push('Measure: ' + (shield ? redactPublic(planTarget.measure, roster) : planTarget.measure));
+        targetText = tParts.join('\n');
+      } else {
+        targetText = shield ? redactPublic(rawTargetLine, roster) : rawTargetLine;
+      }
+
+      // Build Strategy: linked help lines (from store.links + target.links) + pupil active strategy rows
+      const strategySentences = [];
+      const seenStratKeys = new Set();
+      linkedLines.forEach(hl => {
         const b = pwResolveBankEntry(hl, store, roster);
-        return b ? pwEnsurePeriod(b.iedp) : '';
-      }).filter(Boolean);
-      const strategyText = strategySentences.length
-        ? strategySentences.join(' ')
+        if (b && b.iedp) {
+          const sent = pwEnsurePeriod(b.iedp);
+          const k = sent.toLowerCase();
+          if (!seenStratKeys.has(k)) { seenStratKeys.add(k); strategySentences.push(sent); }
+        }
+      });
+      planLinkIds.forEach(pid => {
+        const lbl = PW_ENGINE_PLAN_ID_MAP.get(pid) || pid;
+        const lookup = pid === 'staff' ? '1:1 adult support' : lbl;
+        const b = pwResolveBankEntry(lookup, store, roster);
+        if (b && b.iedp) {
+          const sent = pwEnsurePeriod(b.iedp);
+          const k = sent.toLowerCase();
+          if (!seenStratKeys.has(k)) { seenStratKeys.add(k); strategySentences.push(sent); }
+        }
+      });
+
+      const strategyBlocks = [];
+      if (strategySentences.length) strategyBlocks.push(strategySentences.join(' '));
+      if (activeStratLines.length) strategyBlocks.push(activeStratLines.join('\n'));
+      const strategyText = strategyBlocks.length
+        ? strategyBlocks.join('\n')
         : 'No help lines linked to this target yet.';
+
+      // Build Provided: combine store.links help lines + target.links engine plan IDs
+      const provItems = [];
+      const seenProvRules = new Set();
+      linkedLines.forEach(hl => {
+        const cls = pwClassifyHelpLineRules(hl);
+        cls.rules.forEach(r => seenProvRules.add(r));
+        provItems.push({ kind: 'help', hl, label: shield ? redactPublic(hl, roster) : hl });
+      });
+      planLinkIds.forEach(pid => {
+        const rule = PW_ID_TO_RULE.get(pid) || pid;
+        if (seenProvRules.has(rule)) return;
+        seenProvRules.add(rule);
+        const lbl = PW_ENGINE_PLAN_ID_MAP.get(pid) || pid;
+        provItems.push({ kind: 'planId', pid, label: lbl });
+      });
 
       let providedText = '';
       if (!logRows.length) {
         providedText = 'No printed packs recorded in these dates.';
-      } else if (!linkedLines.length) {
+      } else if (!provItems.length) {
         providedText = 'No help lines linked to this target yet.';
-      } else if (linkedLines.length === 1) {
-        const cnt = logRows.filter(r => pwRowMatchesHelpLine(r.lines, linkedLines[0], r.hands)).length;
+      } else if (provItems.length === 1) {
+        const it = provItems[0];
+        const cnt = logRows.filter(r => it.kind === 'help'
+          ? pwRowMatchesHelpLine(r.lines, it.hl, r.hands)
+          : pwRowMatchesPlanId(r.lines, it.pid, r.hands)).length;
         providedText = 'Printed in ' + cnt + ' of ' + logRows.length + ' ' + (logRows.length === 1 ? 'pack' : 'packs') + ', ' + dateSpan + '.';
       } else {
-        providedText = linkedLines.map(hl => {
-          const cnt = logRows.filter(r => pwRowMatchesHelpLine(r.lines, hl, r.hands)).length;
-          const disp = pwIsShieldOn() ? redactPublic(hl, roster) : hl;
-          return disp + ': Printed in ' + cnt + ' of ' + logRows.length + ' ' + (logRows.length === 1 ? 'pack' : 'packs') + ', ' + dateSpan + '.';
+        providedText = provItems.map(it => {
+          const cnt = logRows.filter(r => it.kind === 'help'
+            ? pwRowMatchesHelpLine(r.lines, it.hl, r.hands)
+            : pwRowMatchesPlanId(r.lines, it.pid, r.hands)).length;
+          return it.label + ': Printed in ' + cnt + ' of ' + logRows.length + ' ' + (logRows.length === 1 ? 'pack' : 'packs') + ', ' + dateSpan + '.';
         }).join(' ');
       }
 
@@ -8054,7 +8935,9 @@ function initPaperworkSection() {
       };
 
       const card = el('article', { class: 'pw-card pw-iedp-card', 'data-target-num': String(tNum) });
-      card.append(el('h4', {}, pupilLbl + ' · Target ' + tNum));
+      const headBits = [pupilLbl + ' · Target ' + tNum];
+      if (plan && plan.plan) headBits.push(shield ? redactPublic(plan.plan, roster) : plan.plan);
+      card.append(el('h4', {}, headBits.join(' · ')));
 
       boxes.forEach(b => {
         const fieldWrap = el('div', { class: 'pw-iedp-field', 'data-iedp-box': b.id });
@@ -8065,10 +8948,11 @@ function initPaperworkSection() {
         const boxText = valueById[b.id] ?? '';
         copyBoxBtn.addEventListener('click', () => {
           pwCopy(boxText, 'Copied: ' + pupilLbl + ' · Target ' + tNum + ' · ' + b.label, copyBoxBtn);
+          if (planTarget) pwRecordTargetLastCopied(n, planTarget.id);
         });
         fieldHead.append(copyBoxBtn);
 
-        const area = el('textarea', { id: areaId, class: 'pw-iedp-box', readonly: 'readonly', rows: '2' });
+        const area = el('textarea', { id: areaId, class: 'pw-iedp-box', readonly: 'readonly', rows: b.id === 'target' && planTarget ? '4' : '2' });
         area.value = boxText;
         fieldWrap.append(fieldHead, area);
         card.append(fieldWrap);
@@ -8079,6 +8963,7 @@ function initPaperworkSection() {
       copyAllBtn.addEventListener('click', () => {
         const joined = boxes.map(b => b.label + ': ' + (valueById[b.id] ?? '')).join('\n');
         pwCopy(joined, 'Copied: ' + pupilLbl + ' · Target ' + tNum + ' · all boxes', copyAllBtn);
+        if (planTarget) pwRecordTargetLastCopied(n, planTarget.id);
       });
       allRow.append(copyAllBtn);
       card.append(allRow);
@@ -8094,6 +8979,1357 @@ function initPaperworkSection() {
       pwUnlinkedLine.textContent = '';
       pwUnlinkedLine.hidden = true;
     }
+  }
+
+  // --- Step 1 UI: Target Editor (per pupil) ---
+  function pwCloseEditorPanel(restoreFocus) {
+    const openerSel = pwEditorPanelState.openerSelector;
+    pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
+    pwRenderTargetsEditor(pwBuildSafeRoster());
+    if (restoreFocus && openerSel && pwTargetsEditor) {
+      pwTargetsEditor.querySelector(openerSel)?.focus({ preventScroll: true });
+    }
+  }
+
+  function pwBuildTargetFormFields(prefix, initial, shield) {
+    const wrap = el('div', {});
+    const titleId = prefix + '_title';
+    const needId = prefix + '_need';
+    const overallId = prefix + '_overall';
+    const measureId = prefix + '_measure';
+    const subjId = prefix + '_subjects';
+    const ratingId = prefix + '_rating';
+
+    const titleWrap = el('div', {});
+    titleWrap.append(el('label', { for: titleId }, 'Short target line (max 90 characters)'));
+    const titleInp = el('input', { type: 'text', id: titleId, maxlength: '90', autocomplete: 'off', value: initial.title || '' });
+    const titleHint = el('p', { class: 'pw-char-hint' }, (initial.title || '').length + ' / 90 characters');
+    titleInp.addEventListener('input', () => {
+      titleHint.textContent = titleInp.value.length + ' / 90 characters';
+    });
+    titleWrap.append(titleInp, titleHint);
+
+    const grid1 = el('div', { class: 'pw-field-grid' });
+    const needDiv = el('div', {});
+    needDiv.append(el('label', { for: needId }, 'Area of need'));
+    const needInp = el('input', { type: 'text', id: needId, list: 'pwNeedAreaList', maxlength: '120', autocomplete: 'off', value: initial.need || '' });
+    needDiv.append(needInp);
+
+    const subjDiv = el('div', {});
+    subjDiv.append(el('label', { for: subjId }, 'Subjects (comma-separated)'));
+    const subjInp = el('input', { type: 'text', id: subjId, maxlength: '180', autocomplete: 'off', placeholder: 'e.g. Writing, Science', value: (initial.subjects || []).join(', ') });
+    subjDiv.append(subjInp);
+    grid1.append(needDiv, subjDiv);
+
+    const overallDiv = el('div', {});
+    overallDiv.append(el('label', { for: overallId }, 'Full target wording (overall)'));
+    const overallInp = el('textarea', { id: overallId, class: 'pw-iedp-box', rows: '3' });
+    overallInp.value = initial.overall || '';
+    overallDiv.append(overallInp);
+
+    const grid2 = el('div', { class: 'pw-field-grid' });
+    const measDiv = el('div', {});
+    measDiv.append(el('label', { for: measureId }, 'How it is measured'));
+    const measureInp = el('input', { type: 'text', id: measureId, maxlength: '240', autocomplete: 'off', value: initial.measure || '' });
+    measDiv.append(measureInp);
+
+    const ratDiv = el('div', {});
+    ratDiv.append(el('label', { for: ratingId }, 'Teacher rating note (optional)'));
+    const ratingInp = el('input', { type: 'text', id: ratingId, maxlength: '80', autocomplete: 'off', value: initial.rating || '' });
+    ratDiv.append(ratingInp);
+    grid2.append(measDiv, ratDiv);
+
+    const linksDetails = el('details', { class: 'pw-subdetails' });
+    const curLinks = new Set(initial.links || []);
+    linksDetails.append(el('summary', {}, 'Link help lines to this target (' + curLinks.size + ' selected)'));
+    const linksGrid = el('div', { class: 'pw-links-grid' });
+    const linkBoxes = [];
+    PW_ENGINE_PLAN_IDS.forEach(([pid, plbl]) => {
+      const cid = prefix + '_link_' + pid;
+      const lbl = el('label', { class: 'pw-check-row', for: cid });
+      const cb = el('input', { type: 'checkbox', id: cid, value: pid });
+      cb.checked = curLinks.has(pid);
+      if (shield) cb.disabled = true;
+      linkBoxes.push(cb);
+      lbl.append(cb, el('span', {}, plbl));
+      linksGrid.append(lbl);
+    });
+    linksDetails.append(linksGrid);
+
+    if (shield) {
+      titleInp.readOnly = true;
+      needInp.readOnly = true;
+      subjInp.readOnly = true;
+      overallInp.readOnly = true;
+      measureInp.readOnly = true;
+      ratingInp.readOnly = true;
+    }
+
+    wrap.append(titleWrap, grid1, overallDiv, grid2, linksDetails);
+    return {
+      node: wrap,
+      titleInp,
+      readValues: () => ({
+        title: pwNormTitle(titleInp.value),
+        need: needInp.value.trim(),
+        overall: overallInp.value.trim() || pwNormTitle(titleInp.value),
+        measure: measureInp.value.trim(),
+        subjects: subjInp.value.split(',').map(s => s.trim()).filter(Boolean),
+        rating: ratingInp.value.trim(),
+        links: linkBoxes.filter(cb => cb.checked).map(cb => cb.value)
+      })
+    };
+  }
+
+  function pwEnsureNeedDatalist() {
+    if ($('pwNeedAreaList')) return;
+    const dl = el('datalist', { id: 'pwNeedAreaList' });
+    PW_NEED_AREAS.forEach(a => dl.append(el('option', { value: a })));
+    pwRoot.append(dl);
+  }
+
+  function pwRefreshAfterPlanEdit(n, statusMsg) {
+    const store = pwLoadStore();
+    const roster = pwBuildSafeRoster();
+    const subjItems = pwReadSubjItemsMap();
+    const cfg = pwReadTermCfgSafe();
+    pwRenderTargetsEditor(roster);
+    pwRenderStrategiesEditor(roster);
+    pwRenderLinksEditor(n, pwReadPupilTargets(n), pwAllHelpLinesForPupil(n, roster, subjItems), store, roster);
+    pwRenderWeeklyCards(store, roster, subjItems, cfg);
+    pwRenderIedpCards(store, roster, subjItems, cfg);
+    if (statusMsg) pwSetStatus(statusMsg, false);
+  }
+
+  function pwRenderTargetsEditor(roster) {
+    if (!pwTargetsEditor) return;
+    pwEnsureNeedDatalist();
+    const n = +pwPupilSel.value || 1;
+    const shield = pwIsShieldOn();
+    const pupilLbl = pwPupilLabel(n, roster);
+    const display = pwGetDisplayPlanForPupil(n);
+    const rec = display.record;
+    const activeEntries = [];
+    const inactiveEntries = [];
+    rec.targets.forEach((t, idx) => {
+      if (t.status === 'active') activeEntries.push({ t, idx });
+      else inactiveEntries.push({ t, idx });
+    });
+
+    if (pwTargetsNote) {
+      if (shield) {
+        pwTargetsNote.textContent = 'The privacy shield is on. Showing ' + pupilLbl + ' in read-only mode. Switch the shield off to edit targets.';
+      } else if (display.isLegacyPreview) {
+        pwTargetsNote.textContent = 'Showing older saved target lines for ' + pupilLbl + '. Nothing is upgraded until you save an edit (your old lines are copied once first).';
+      } else if (display.hasPlan) {
+        pwTargetsNote.textContent = 'Editing saved IEDP targets for ' + pupilLbl + '. Every save keeps the one-line target list in step.';
+      } else {
+        pwTargetsNote.textContent = 'No IEDP targets saved for ' + pupilLbl + ' yet. Add a target below or load a private targets file.';
+      }
+    }
+
+    const frag = document.createDocumentFragment();
+
+    // Plan date input
+    const planWrap = el('div', { class: 'pw-controls' });
+    const planDiv = el('div', {});
+    const planInpId = 'pwPlanDateInput';
+    planDiv.append(el('label', { for: planInpId }, 'Plan date / term for ' + pupilLbl));
+    const planVal = shield ? redactPublic(rec.plan, roster) : rec.plan;
+    const planInp = el('input', {
+      type: 'text',
+      id: planInpId,
+      maxlength: '80',
+      autocomplete: 'off',
+      placeholder: 'e.g. Autumn 2 2026',
+      value: planVal
+    });
+    if (shield) planInp.readOnly = true;
+    planInp.addEventListener('change', () => {
+      if (pwIsShieldOn()) return;
+      const nextPlan = planInp.value.trim();
+      const ok = pwMutatePupilPlan(n, r => { r.plan = nextPlan; });
+      if (ok) pwRefreshAfterPlanEdit(n, 'Saved plan date for ' + pupilLbl + '.');
+    });
+    planDiv.append(planInp);
+    planWrap.append(planDiv);
+    frag.append(planWrap);
+
+    // Soft note at five or more active targets
+    if (activeEntries.length >= 5) {
+      frag.append(el('p', { class: 'pw-soft-note', id: 'pwFiveTargetsNote', role: 'status' },
+        'Note: ' + activeEntries.length + ' active targets saved for ' + pupilLbl + '. Most plans keep 3 to 4 active targets, though you can keep ' + activeEntries.length + ' if needed.'));
+    }
+
+    // Add target button & inline panel
+    const topActions = el('div', { class: 'pw-actions' });
+    const addBtn = el('button', { type: 'button', id: 'pwAddTargetBtn', class: 'primary' }, 'Add target');
+    if (shield) addBtn.disabled = true;
+    addBtn.addEventListener('click', () => {
+      if (pwIsShieldOn()) return;
+      pwEditorPanelState = { mode: 'addTarget', pupil: n, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '#pwAddTargetBtn' };
+      pwRenderTargetsEditor(pwBuildSafeRoster());
+      pwTargetsEditor.querySelector('#pwAdd_title')?.focus({ preventScroll: true });
+    });
+    topActions.append(addBtn);
+    frag.append(topActions);
+
+    if (!shield && pwEditorPanelState.mode === 'addTarget' && pwEditorPanelState.pupil === n) {
+      const panel = el('div', { class: 'pw-inline-panel', id: 'pwAddTargetPanel', role: 'region', 'aria-label': 'Add target' });
+      panel.append(el('h4', {}, 'Add a target for ' + pupilLbl));
+      const form = pwBuildTargetFormFields('pwAdd', { title: '', need: '', overall: '', measure: '', subjects: [], rating: '', links: [] }, false);
+      const errP = el('p', { class: 'pw-warn-box', hidden: 'hidden', role: 'alert' });
+      const act = el('div', { class: 'pw-actions' });
+      const saveAddBtn = el('button', { type: 'button', id: 'pwSaveNewTargetBtn', class: 'primary' }, 'Save target');
+      const cancelAddBtn = el('button', { type: 'button', id: 'pwCancelNewTargetBtn' }, 'Cancel');
+      saveAddBtn.addEventListener('click', () => {
+        const vals = form.readValues();
+        if (!vals.title) {
+          errP.textContent = 'Enter a short target line first.';
+          errP.hidden = false;
+          form.titleInp.focus({ preventScroll: true });
+          return;
+        }
+        const ok = pwMutatePupilPlan(n, r => {
+          r.targets.push({
+            id: pwMakeTargetId(),
+            status: 'active',
+            need: vals.need,
+            title: vals.title,
+            overall: vals.overall,
+            measure: vals.measure,
+            subjects: vals.subjects,
+            steps: [],
+            rating: vals.rating,
+            links: vals.links,
+            lastChanged: dateISO(),
+            lastCopied: '',
+            history: []
+          });
+        });
+        pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
+        if (ok) pwRefreshAfterPlanEdit(n, 'Added target for ' + pupilLbl + '.');
+        pwTargetsEditor.querySelector('#pwAddTargetBtn')?.focus({ preventScroll: true });
+      });
+      cancelAddBtn.addEventListener('click', () => pwCloseEditorPanel(true));
+      act.append(saveAddBtn, cancelAddBtn);
+      panel.append(form.node, errP, act);
+      frag.append(panel);
+    }
+
+    if (!activeEntries.length) {
+      frag.append(el('p', { class: 'pw-empty' }, 'No active targets for ' + pupilLbl + '.'));
+    }
+
+    // Active target cards
+    activeEntries.forEach((entry, activePos) => {
+      const t = entry.t;
+      const tNum = activePos + 1;
+      const dispTitle = shield ? redactPublic(t.title, roster) : t.title;
+      const dispOverall = shield ? redactPublic(t.overall, roster) : t.overall;
+      const dispNeed = shield ? redactPublic(t.need, roster) : t.need;
+      const dispMeasure = shield ? redactPublic(t.measure, roster) : t.measure;
+      const dispSubjects = (t.subjects || []).map(s => shield ? redactPublic(s, roster) : s);
+
+      const card = el('article', {
+        class: 'pw-target-card',
+        'data-target-id': t.id,
+        'data-active-pos': String(activePos)
+      });
+
+      const head = el('div', { class: 'pw-target-head' });
+      const titleBox = el('div', {});
+      titleBox.append(
+        el('span', { class: 'pw-badge pw-badge-active' }, 'Target ' + tNum + ' · Active'),
+        ' ',
+        el('strong', {}, dispTitle)
+      );
+      head.append(titleBox);
+
+      const moveRow = el('div', { class: 'pw-actions', style: 'margin:0' });
+      const upBtn = el('button', {
+        type: 'button',
+        'data-move-dir': 'up',
+        'aria-label': 'Move Target ' + tNum + ' up'
+      }, 'Move up');
+      const downBtn = el('button', {
+        type: 'button',
+        'data-move-dir': 'down',
+        'aria-label': 'Move Target ' + tNum + ' down'
+      }, 'Move down');
+      if (shield || activePos === 0) upBtn.disabled = true;
+      if (shield || activePos === activeEntries.length - 1) downBtn.disabled = true;
+
+      const doMove = dir => {
+        if (pwIsShieldOn()) return;
+        let movedId = t.id;
+        const ok = pwMutatePupilPlan(n, r => {
+          const actIndices = [];
+          r.targets.forEach((item, i) => { if (item.status === 'active') actIndices.push(i); });
+          const targetPos = activePos + dir;
+          if (targetPos < 0 || targetPos >= actIndices.length) return false;
+          const iA = actIndices[activePos];
+          const iB = actIndices[targetPos];
+          const tmp = r.targets[iA];
+          r.targets[iA] = r.targets[iB];
+          r.targets[iB] = tmp;
+          movedId = r.targets[iB].id;
+          return true;
+        });
+        if (ok) {
+          pwRefreshAfterPlanEdit(n, 'Moved target ' + (dir < 0 ? 'up' : 'down') + ' for ' + pupilLbl + '.');
+          const movedCard = pwTargetsEditor.querySelector('[data-target-id="' + movedId + '"]');
+          const btn = movedCard?.querySelector('[data-move-dir="' + (dir < 0 ? 'up' : 'down') + '"]:not([disabled])') ||
+            movedCard?.querySelector('[data-move-dir]:not([disabled])');
+          btn?.focus({ preventScroll: true });
+        }
+      };
+      upBtn.addEventListener('click', () => doMove(-1));
+      downBtn.addEventListener('click', () => doMove(1));
+      moveRow.append(upBtn, downBtn);
+      head.append(moveRow);
+      card.append(head);
+
+      const meta = el('div', { class: 'pw-target-meta' });
+      if (dispNeed) meta.append(el('span', { class: 'pw-badge' }, dispNeed));
+      if (dispSubjects.length) meta.append(el('span', { class: 'pw-badge' }, dispSubjects.join(', ')));
+      if (t.links && t.links.length) meta.append(el('span', { class: 'pw-badge' }, t.links.length + ' linked help line' + (t.links.length === 1 ? '' : 's')));
+      if (t.lastChanged) meta.append(el('span', { class: 'hint' }, 'Changed: ' + t.lastChanged));
+      if (meta.childNodes.length) card.append(meta);
+
+      if (dispOverall && dispOverall !== dispTitle) {
+        card.append(el('p', { style: 'margin:.3rem 0' }, dispOverall));
+      }
+      if (dispMeasure) {
+        card.append(el('p', { class: 'hint', style: 'margin:.2rem 0' }, 'Measure: ' + dispMeasure));
+      }
+
+      // Target action buttons: Reword, Mark changed, Retire
+      const actRow = el('div', { class: 'pw-actions' });
+      const rewordBtn = el('button', { type: 'button', 'data-act': 'reword' }, 'Reword');
+      const changeBtn = el('button', { type: 'button', 'data-act': 'markChanged' }, 'Mark changed');
+      const retireBtn = el('button', { type: 'button', 'data-act': 'retire' }, 'Retire');
+      if (shield) {
+        rewordBtn.disabled = true;
+        changeBtn.disabled = true;
+        retireBtn.disabled = true;
+      }
+      rewordBtn.addEventListener('click', () => {
+        if (pwIsShieldOn()) return;
+        pwEditorPanelState = {
+          mode: 'reword',
+          pupil: n,
+          targetIdx: entry.idx,
+          targetId: t.id,
+          stepIdx: -1,
+          openerSelector: '[data-active-pos="' + activePos + '"] [data-act="reword"]'
+        };
+        pwRenderTargetsEditor(pwBuildSafeRoster());
+        pwTargetsEditor.querySelector('#pwReword_title')?.focus({ preventScroll: true });
+      });
+      changeBtn.addEventListener('click', () => {
+        if (pwIsShieldOn()) return;
+        pwEditorPanelState = {
+          mode: 'markChanged',
+          pupil: n,
+          targetIdx: entry.idx,
+          targetId: t.id,
+          stepIdx: -1,
+          openerSelector: '[data-active-pos="' + activePos + '"] [data-act="markChanged"]'
+        };
+        pwRenderTargetsEditor(pwBuildSafeRoster());
+        pwTargetsEditor.querySelector('#pwChangeReasonInput')?.focus({ preventScroll: true });
+      });
+      retireBtn.addEventListener('click', () => {
+        if (pwIsShieldOn()) return;
+        const ok = pwMutatePupilPlan(n, r => {
+          const i = pwResolveTargetInRecord(r, t.id, entry.idx);
+          if (i < 0) return false;
+          const item = r.targets[i];
+          item.status = 'retired';
+          item.lastChanged = dateISO();
+          item.history.push({ date: dateISO(), was: 'Retired: ' + item.title });
+          return true;
+        });
+        pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
+        if (ok) pwRefreshAfterPlanEdit(n, 'Retired target for ' + pupilLbl + '.');
+      });
+      actRow.append(rewordBtn, changeBtn, retireBtn);
+      card.append(actRow);
+
+      // Inline Reword panel
+      const isThisTarget = pwEditorPanelState.pupil === n &&
+        (pwEditorPanelState.targetId === t.id || pwEditorPanelState.targetIdx === entry.idx);
+      if (!shield && pwEditorPanelState.mode === 'reword' && isThisTarget) {
+        const panel = el('div', { class: 'pw-inline-panel', id: 'pwRewordPanel', role: 'region', 'aria-label': 'Reword target' });
+        panel.append(el('h4', {}, 'Reword Target ' + tNum + ' (keeps ID and step ticks, logs old wording)'));
+        const form = pwBuildTargetFormFields('pwReword', t, false);
+        const errP = el('p', { class: 'pw-warn-box', hidden: 'hidden', role: 'alert' });
+        const pAct = el('div', { class: 'pw-actions' });
+        const saveBtn = el('button', { type: 'button', id: 'pwSaveRewordBtn', class: 'primary' }, 'Save rewording');
+        const cancelBtn = el('button', { type: 'button', id: 'pwCancelRewordBtn' }, 'Cancel');
+        saveBtn.addEventListener('click', () => {
+          const vals = form.readValues();
+          if (!vals.title) {
+            errP.textContent = 'Short target line cannot be blank.';
+            errP.hidden = false;
+            form.titleInp.focus({ preventScroll: true });
+            return;
+          }
+          const ok = pwMutatePupilPlan(n, r => {
+            const i = pwResolveTargetInRecord(r, t.id, entry.idx);
+            if (i < 0) return false;
+            const item = r.targets[i];
+            const wordingChanged = item.title !== vals.title || item.overall !== vals.overall;
+            if (wordingChanged) {
+              const oldText = item.overall && item.overall !== item.title
+                ? (item.title + ' — ' + item.overall)
+                : item.title;
+              item.history.push({ date: dateISO(), was: oldText });
+            }
+            item.title = vals.title;
+            item.overall = vals.overall;
+            item.need = vals.need;
+            item.measure = vals.measure;
+            item.subjects = vals.subjects;
+            item.rating = vals.rating;
+            item.links = vals.links;
+            item.lastChanged = dateISO();
+            return true;
+          });
+          pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
+          if (ok) pwRefreshAfterPlanEdit(n, 'Reworded Target ' + tNum + ' for ' + pupilLbl + '. Old wording saved in history.');
+        });
+        cancelBtn.addEventListener('click', () => pwCloseEditorPanel(true));
+        pAct.append(saveBtn, cancelBtn);
+        panel.append(form.node, errP, pAct);
+        card.append(panel);
+      }
+
+      // Inline Mark Changed panel
+      if (!shield && pwEditorPanelState.mode === 'markChanged' && isThisTarget) {
+        const panel = el('div', { class: 'pw-inline-panel', id: 'pwMarkChangedPanel', role: 'region', 'aria-label': 'Mark target changed' });
+        panel.append(el('h4', {}, 'Mark Target ' + tNum + ' as changed'));
+        const reasonLbl = el('label', { for: 'pwChangeReasonInput' }, 'Reason for change (required)');
+        const reasonInp = el('input', { type: 'text', id: 'pwChangeReasonInput', maxlength: '180', autocomplete: 'off', placeholder: 'e.g. Met early and moved to next step' });
+        const repLbl = el('label', { for: 'pwChangeReplacementInput', style: 'margin-top:.45rem' }, 'Replacement target short line (optional, max 90 characters)');
+        const repInp = el('input', { type: 'text', id: 'pwChangeReplacementInput', maxlength: '90', autocomplete: 'off', placeholder: 'Leave blank if only marking this target changed' });
+        const errP = el('p', { class: 'pw-warn-box', hidden: 'hidden', role: 'alert' });
+        const pAct = el('div', { class: 'pw-actions' });
+        const saveBtn = el('button', { type: 'button', id: 'pwConfirmMarkChangedBtn', class: 'primary' }, 'Confirm mark changed');
+        const cancelBtn = el('button', { type: 'button', id: 'pwCancelMarkChangedBtn' }, 'Cancel');
+        saveBtn.addEventListener('click', () => {
+          const reason = reasonInp.value.trim();
+          if (!reason) {
+            errP.textContent = 'Please enter a reason before marking this target as changed.';
+            errP.hidden = false;
+            reasonInp.focus({ preventScroll: true });
+            return;
+          }
+          const replacement = pwNormTitle(repInp.value);
+          const ok = pwMutatePupilPlan(n, r => {
+            const i = pwResolveTargetInRecord(r, t.id, entry.idx);
+            if (i < 0) return false;
+            const item = r.targets[i];
+            item.status = 'changed';
+            item.lastChanged = dateISO();
+            item.history.push({ date: dateISO(), was: 'Changed (' + reason + '): ' + item.title });
+            if (replacement) {
+              r.targets.splice(i + 1, 0, {
+                id: pwMakeTargetId(),
+                status: 'active',
+                need: item.need,
+                title: replacement,
+                overall: replacement,
+                measure: '',
+                subjects: item.subjects.slice(),
+                steps: [],
+                rating: '',
+                links: item.links.slice(),
+                lastChanged: dateISO(),
+                lastCopied: '',
+                history: []
+              });
+            }
+            return true;
+          });
+          pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
+          if (ok) pwRefreshAfterPlanEdit(n, 'Marked Target ' + tNum + ' as changed for ' + pupilLbl + '.');
+        });
+        cancelBtn.addEventListener('click', () => pwCloseEditorPanel(true));
+        pAct.append(saveBtn, cancelBtn);
+        panel.append(reasonLbl, reasonInp, repLbl, repInp, errP, pAct);
+        card.append(panel);
+      }
+
+      // Steps list + Add step
+      const stepsWrap = el('div', { class: 'pw-steps-list' });
+      const stepsTitle = el('strong', { style: 'font-size:15.5px' }, 'Steps (' + (t.steps || []).length + ')');
+      stepsWrap.append(stepsTitle);
+
+      (t.steps || []).forEach((st, sIdx) => {
+        const dispSt = shield ? redactPublic(st.text, roster) : st.text;
+        const dispNote = st.note ? (shield ? redactPublic(st.note, roster) : st.note) : '';
+        const stepRow = el('div', { class: 'pw-step-row', 'data-step-idx': String(sIdx) });
+        const mainLine = el('div', { class: 'pw-step-main' });
+        const txtSpan = el('div', { class: 'pw-step-text' });
+        txtSpan.append(
+          el('span', { class: 'pw-badge' }, pwStepStateSymbol(st.state)),
+          ' ',
+          el('span', {}, (sIdx + 1) + '. ' + dispSt)
+        );
+        if (st.date || dispNote) {
+          txtSpan.append(el('div', { class: 'hint', style: 'font-size:14px;margin-top:.15rem' },
+            [st.date, dispNote].filter(Boolean).join(' · ')));
+        }
+
+        const ctrls = el('div', { class: 'pw-step-ctrls' });
+        const stateSelId = 'pwStepState_' + activePos + '_' + sIdx;
+        ctrls.append(el('label', { for: stateSelId, class: 'sr-only' }, 'Step ' + (sIdx + 1) + ' state'));
+        const stateSel = el('select', { id: stateSelId, 'data-step-state': '1' });
+        [['notyet', '○ Not yet'], ['partly', '◐ Partly'], ['met', '✓ Met']].forEach(([val, lbl]) => {
+          stateSel.append(el('option', { value: val }, lbl));
+        });
+        stateSel.value = st.state;
+        if (shield) stateSel.disabled = true;
+        stateSel.addEventListener('change', () => {
+          if (pwIsShieldOn()) return;
+          const nextState = stateSel.value;
+          const ok = pwMutatePupilPlan(n, r => {
+            const i = pwResolveTargetInRecord(r, t.id, entry.idx);
+            if (i < 0 || !r.targets[i].steps[sIdx]) return false;
+            r.targets[i].steps[sIdx].state = nextState;
+            if (nextState !== 'notyet' && !r.targets[i].steps[sIdx].date) {
+              r.targets[i].steps[sIdx].date = dateISO();
+            }
+            r.targets[i].lastChanged = dateISO();
+            return true;
+          });
+          if (ok) pwRefreshAfterPlanEdit(n, 'Updated step ' + (sIdx + 1) + ' state.');
+        });
+
+        const editStepBtn = el('button', { type: 'button', 'data-step-act': 'edit', 'aria-label': 'Edit step ' + (sIdx + 1) }, 'Edit');
+        const remStepBtn = el('button', { type: 'button', 'data-step-act': 'remove', 'aria-label': 'Remove step ' + (sIdx + 1) }, 'Remove');
+        if (shield) {
+          editStepBtn.disabled = true;
+          remStepBtn.disabled = true;
+        }
+        editStepBtn.addEventListener('click', () => {
+          if (pwIsShieldOn()) return;
+          pwEditorPanelState = {
+            mode: 'editStep',
+            pupil: n,
+            targetIdx: entry.idx,
+            targetId: t.id,
+            stepIdx: sIdx,
+            openerSelector: '[data-active-pos="' + activePos + '"] [data-step-idx="' + sIdx + '"] [data-step-act="edit"]'
+          };
+          pwRenderTargetsEditor(pwBuildSafeRoster());
+          pwTargetsEditor.querySelector('#pwEditStepText')?.focus({ preventScroll: true });
+        });
+        remStepBtn.addEventListener('click', () => {
+          if (pwIsShieldOn()) return;
+          const ok = pwMutatePupilPlan(n, r => {
+            const i = pwResolveTargetInRecord(r, t.id, entry.idx);
+            if (i < 0 || !r.targets[i].steps[sIdx]) return false;
+            r.targets[i].steps.splice(sIdx, 1);
+            r.targets[i].lastChanged = dateISO();
+            return true;
+          });
+          pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
+          if (ok) pwRefreshAfterPlanEdit(n, 'Removed step from Target ' + tNum + '.');
+        });
+
+        ctrls.append(stateSel, editStepBtn, remStepBtn);
+        mainLine.append(txtSpan, ctrls);
+        stepRow.append(mainLine);
+
+        if (!shield && pwEditorPanelState.mode === 'editStep' && isThisTarget && pwEditorPanelState.stepIdx === sIdx) {
+          const sPanel = el('div', { class: 'pw-inline-panel', id: 'pwEditStepPanel', role: 'region', 'aria-label': 'Edit step' });
+          const stTxtLbl = el('label', { for: 'pwEditStepText' }, 'Step wording');
+          const stTxtInp = el('input', { type: 'text', id: 'pwEditStepText', maxlength: '220', autocomplete: 'off', value: st.text });
+          const sGrid = el('div', { class: 'pw-field-grid' });
+          const dDiv = el('div', {});
+          dDiv.append(el('label', { for: 'pwEditStepDate' }, 'Date (optional)'));
+          const dInp = el('input', { type: 'date', id: 'pwEditStepDate', value: st.date || '' });
+          dDiv.append(dInp);
+          const nDiv = el('div', {});
+          nDiv.append(el('label', { for: 'pwEditStepNote' }, 'Note (optional)'));
+          const nInp = el('input', { type: 'text', id: 'pwEditStepNote', maxlength: '180', autocomplete: 'off', value: st.note || '' });
+          nDiv.append(nInp);
+          sGrid.append(dDiv, nDiv);
+          const sAct = el('div', { class: 'pw-actions' });
+          const sSave = el('button', { type: 'button', id: 'pwSaveStepBtn', class: 'primary' }, 'Save step');
+          const sCancel = el('button', { type: 'button', id: 'pwCancelStepBtn' }, 'Cancel');
+          sSave.addEventListener('click', () => {
+            const newTxt = stTxtInp.value.trim();
+            if (!newTxt) { stTxtInp.focus({ preventScroll: true }); return; }
+            const ok = pwMutatePupilPlan(n, r => {
+              const i = pwResolveTargetInRecord(r, t.id, entry.idx);
+              if (i < 0 || !r.targets[i].steps[sIdx]) return false;
+              r.targets[i].steps[sIdx].text = newTxt;
+              r.targets[i].steps[sIdx].date = dInp.value.trim();
+              r.targets[i].steps[sIdx].note = nInp.value.trim();
+              r.targets[i].lastChanged = dateISO();
+              return true;
+            });
+            pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
+            if (ok) pwRefreshAfterPlanEdit(n, 'Saved step edit.');
+          });
+          sCancel.addEventListener('click', () => pwCloseEditorPanel(true));
+          sAct.append(sSave, sCancel);
+          sPanel.append(stTxtLbl, stTxtInp, sGrid, sAct);
+          stepRow.append(sPanel);
+        }
+
+        stepsWrap.append(stepRow);
+      });
+
+      if (!shield) {
+        const addStepRow = el('div', { class: 'pw-step-add' });
+        const newStepId = 'pwNewStep_' + activePos;
+        const inpWrap = el('div', {});
+        inpWrap.append(el('label', { for: newStepId }, 'Add a step to Target ' + tNum));
+        const newStepInp = el('input', { type: 'text', id: newStepId, maxlength: '220', autocomplete: 'off', placeholder: 'e.g. Write one sentence with a starter.' });
+        inpWrap.append(newStepInp);
+        const addStepBtn = el('button', { type: 'button', 'data-add-step': String(activePos) }, 'Add step');
+        const submitNewStep = () => {
+          const txt = newStepInp.value.trim();
+          if (!txt) { newStepInp.focus({ preventScroll: true }); return; }
+          const ok = pwMutatePupilPlan(n, r => {
+            const i = pwResolveTargetInRecord(r, t.id, entry.idx);
+            if (i < 0) return false;
+            r.targets[i].steps.push({ text: txt, state: 'notyet', date: '', note: '' });
+            r.targets[i].lastChanged = dateISO();
+            return true;
+          });
+          if (ok) pwRefreshAfterPlanEdit(n, 'Added step to Target ' + tNum + '.');
+        };
+        addStepBtn.addEventListener('click', submitNewStep);
+        newStepInp.addEventListener('keydown', ev => {
+          if (ev.key === 'Enter') { ev.preventDefault(); submitNewStep(); }
+        });
+        addStepRow.append(inpWrap, addStepBtn);
+        stepsWrap.append(addStepRow);
+      }
+      card.append(stepsWrap);
+
+      if (t.history && t.history.length) {
+        const hDet = el('details', { class: 'pw-subdetails' });
+        hDet.append(el('summary', {}, 'Wording history (' + t.history.length + ')'));
+        const hUl = el('ul', { class: 'pw-history-list' });
+        t.history.forEach(h => {
+          const hWas = shield ? redactPublic(h.was, roster) : h.was;
+          hUl.append(el('li', {}, (h.date ? h.date + ' — ' : '') + hWas));
+        });
+        hDet.append(hUl);
+        card.append(hDet);
+      }
+
+      frag.append(card);
+    });
+
+    // Retired and changed targets
+    if (inactiveEntries.length) {
+      const inDet = el('details', { class: 'pw-subdetails', id: 'pwInactiveTargetsDetails' });
+      inDet.append(el('summary', {}, 'Retired and changed targets (' + inactiveEntries.length + ')'));
+      inactiveEntries.forEach(entry => {
+        const t = entry.t;
+        const dispTitle = shield ? redactPublic(t.title, roster) : t.title;
+        const card = el('article', { class: 'pw-target-card', 'data-inactive-status': t.status });
+        const head = el('div', { class: 'pw-target-head' });
+        const badgeCls = t.status === 'changed' ? 'pw-badge pw-badge-changed' : 'pw-badge pw-badge-retired';
+        const badgeTxt = t.status === 'changed' ? 'Changed' : 'Retired';
+        const left = el('div', {});
+        left.append(el('span', { class: badgeCls }, badgeTxt), ' ', el('strong', {}, dispTitle));
+        head.append(left);
+        const restoreBtn = el('button', { type: 'button', 'data-act': 'reactivate' }, 'Make active again');
+        if (shield) restoreBtn.disabled = true;
+        restoreBtn.addEventListener('click', () => {
+          if (pwIsShieldOn()) return;
+          const ok = pwMutatePupilPlan(n, r => {
+            const i = pwResolveTargetInRecord(r, t.id, entry.idx);
+            if (i < 0) return false;
+            r.targets[i].status = 'active';
+            r.targets[i].lastChanged = dateISO();
+            r.targets[i].history.push({ date: dateISO(), was: 'Restored to active' });
+            return true;
+          });
+          if (ok) pwRefreshAfterPlanEdit(n, 'Restored target to active for ' + pupilLbl + '.');
+        });
+        head.append(restoreBtn);
+        card.append(head);
+        if (t.history && t.history.length) {
+          const ul = el('ul', { class: 'pw-history-list' });
+          t.history.forEach(h => {
+            const hWas = shield ? redactPublic(h.was, roster) : h.was;
+            ul.append(el('li', {}, (h.date ? h.date + ' — ' : '') + hWas));
+          });
+          card.append(ul);
+        }
+        inDet.append(card);
+      });
+      frag.append(inDet);
+    }
+
+    pwTargetsEditor.replaceChildren(frag);
+  }
+
+  // --- Step 1 UI: Strategy Rows Editor (5 fixed rows) ---
+  function pwFormatShortWordHint(shortText) {
+    const wc = pwWordCount(shortText);
+    if (!wc) return 'Blank — add 3 to 6 words to show this row in the weekly plan.';
+    if (wc >= 3 && wc <= 6) return wc + ' words (fits the 3 to 6 word guide).';
+    return 'Note: ' + wc + ' word' + (wc === 1 ? '' : 's') + ' — aim for 3 to 6 words for the weekly plan.';
+  }
+
+  function pwRenderStrategiesEditor(roster) {
+    if (!pwStrategiesEditor) return;
+    const n = +pwPupilSel.value || 1;
+    const shield = pwIsShieldOn();
+    const pupilLbl = pwPupilLabel(n, roster);
+    const display = pwGetDisplayPlanForPupil(n);
+    const strategies = pwNormStrategies(display.record.strategies);
+    const frag = document.createDocumentFragment();
+
+    if (shield) {
+      frag.append(el('p', { class: 'pw-soft-note' }, 'The privacy shield is on. Showing strategy rows for ' + pupilLbl + ' in read-only mode. Switch the shield off to edit.'));
+    }
+
+    strategies.forEach((s, idx) => {
+      const card = el('div', { class: 'pw-strat-card', 'data-strat-row': s.row });
+      const head = el('div', { class: 'pw-strat-head' });
+      head.append(el('strong', {}, s.row));
+      const badge = el('span', { class: 'pw-badge' }, pwStrategyLevelBadge(s.level));
+      head.append(badge);
+      card.append(head);
+
+      const topGrid = el('div', { class: 'pw-strat-top' });
+      const lvlId = 'pwStratLvl_' + idx;
+      const cellId = 'pwStratCell_' + idx;
+      const shortId = 'pwStratShort_' + idx;
+      const applyId = 'pwStratApply_' + idx;
+
+      const lvlDiv = el('div', {});
+      lvlDiv.append(el('label', { for: lvlId }, 'Level'));
+      const lvlSel = el('select', { id: lvlId });
+      [['use', '● Use (weekly plan & IEDP)'], ['some', '◐ Some (optional on weekly plan & IEDP)'], ['notyet', '○ Not yet']].forEach(([val, lbl]) => {
+        lvlSel.append(el('option', { value: val }, lbl));
+      });
+      lvlSel.value = s.level;
+      if (shield) lvlSel.disabled = true;
+      lvlDiv.append(lvlSel);
+
+      const cellDiv = el('div', {});
+      cellDiv.append(el('label', { for: cellId }, 'Weekly plan cell'));
+      const cellSel = el('select', { id: cellId });
+      [['adapt', 'Student adaptations'], ['support', 'Classroom support']].forEach(([val, lbl]) => {
+        cellSel.append(el('option', { value: val }, lbl));
+      });
+      cellSel.value = s.cell;
+      if (shield) cellSel.disabled = true;
+      cellDiv.append(cellSel);
+
+      topGrid.append(lvlDiv, cellDiv);
+      card.append(topGrid);
+
+      const shortDiv = el('div', {});
+      shortDiv.append(el('label', { for: shortId }, 'Short help line (3 to 6 words)'));
+      const dispShort = shield ? redactPublic(s.short, roster) : s.short;
+      const shortInp = el('input', { type: 'text', id: shortId, maxlength: '90', autocomplete: 'off', placeholder: 'e.g. Chunked two-step instructions', value: dispShort });
+      if (shield) shortInp.readOnly = true;
+      const wcHint = el('p', { class: 'pw-char-hint' }, pwFormatShortWordHint(dispShort));
+      shortDiv.append(shortInp, wcHint);
+
+      const applyDiv = el('div', { style: 'margin-top:.4rem' });
+      applyDiv.append(el('label', { for: applyId }, 'Specific application (full wording for IEDP)'));
+      const dispApply = shield ? redactPublic(s.apply, roster) : s.apply;
+      const applyInp = el('textarea', { id: applyId, class: 'pw-iedp-box', rows: '2', placeholder: 'Specific classroom application for this pupil' });
+      applyInp.value = dispApply;
+      if (shield) applyInp.readOnly = true;
+      applyDiv.append(applyInp);
+
+      const saveStratRow = () => {
+        if (pwIsShieldOn()) return;
+        const nextLevel = ['use', 'some', 'notyet'].includes(lvlSel.value) ? lvlSel.value : 'notyet';
+        const nextCell = cellSel.value === 'support' ? 'support' : 'adapt';
+        const nextShort = shortInp.value.replace(/[\r\n]+/g, ' ').trim();
+        const nextApply = applyInp.value.trim();
+        badge.textContent = pwStrategyLevelBadge(nextLevel);
+        wcHint.textContent = pwFormatShortWordHint(nextShort);
+        const ok = pwMutatePupilPlan(n, r => {
+          r.strategies = pwNormStrategies(r.strategies);
+          r.strategies[idx] = { row: s.row, level: nextLevel, apply: nextApply, short: nextShort, cell: nextCell };
+        }, { skipGlobalRender: true });
+        if (ok) {
+          pwSetStatus('Saved strategy row (' + s.row + ') for ' + pupilLbl + '.', false);
+          pwRefreshOutputsOnly();
+        }
+      };
+
+      lvlSel.addEventListener('change', saveStratRow);
+      cellSel.addEventListener('change', saveStratRow);
+      shortInp.addEventListener('input', saveStratRow);
+      shortInp.addEventListener('change', saveStratRow);
+      applyInp.addEventListener('input', saveStratRow);
+      applyInp.addEventListener('change', saveStratRow);
+
+      card.append(shortDiv, applyDiv);
+      frag.append(card);
+    });
+
+    pwStrategiesEditor.replaceChildren(frag);
+  }
+
+  // --- Step 1 UI: Load from private file (mbm_iedp_targets_import_v1) ---
+  function pwCleanImport(parsed) {
+    if (!pwIsPlainObj(parsed) || parsed.schema !== PW_IMPORT_SCHEMA || !Array.isArray(parsed.plans)) {
+      return { ok: false, error: 'That file is not a private IEDP targets file (expected schema ' + PW_IMPORT_SCHEMA + ').' };
+    }
+    if (!parsed.plans.length) {
+      return { ok: false, error: 'That file has no pupil plans in it.' };
+    }
+    const plans = [];
+    for (let i = 0; i < parsed.plans.length; i++) {
+      const p = parsed.plans[i];
+      if (!pwIsPlainObj(p)) continue;
+      const key = typeof p.key === 'string' ? p.key.trim().toUpperCase().slice(0, 12) : '';
+      const planDate = typeof p.plan === 'string' ? p.plan.trim().slice(0, 80) : '';
+      const fp = Array.isArray(p.fp)
+        ? [...new Set(p.fp.map(x => String(x || '').trim().toLowerCase()).filter(x => /^[0-9a-f]{12}$/.test(x)))].slice(0, 4)
+        : [];
+      const targets = Array.isArray(p.targets)
+        ? p.targets.map(t => pwNormTarget(t, false)).filter(Boolean)
+        : [];
+      const strategies = pwNormStrategies(p.strategies);
+      const suggest = Array.isArray(p.suggest)
+        ? pwDedupeLines(p.suggest.map(s => String(s || '').trim().slice(0, 90)).filter(Boolean))
+        : [];
+      plans.push({
+        index: plans.length,
+        key,
+        plan: planDate,
+        fp,
+        targets,
+        strategies,
+        suggest,
+        assignedPupil: 0,
+        matchNote: '',
+        selectedSuggest: new Set()
+      });
+    }
+    if (!plans.length) {
+      return { ok: false, error: 'No usable plans were found in that file.' };
+    }
+    return { ok: true, plans };
+  }
+
+  function pwMatchImportPlans(plans, roster, subjItems) {
+    const nums = pwActivePupilNumbers(roster, subjItems);
+    const rosterInfo = nums.map(n => {
+      const label = String(roster.keyByNum[n] || '').trim();
+      return {
+        n,
+        label,
+        fp: pwFingerprint(label),
+        rawIni: pwRawInitials(label),
+        resolvedIni: String(roster.initialsByNum[n] || '').toUpperCase()
+      };
+    });
+
+    plans.forEach(p => {
+      // 1. Fingerprint match first (roster first name)
+      const fpMatches = p.fp.length
+        ? rosterInfo.filter(r => r.fp && p.fp.includes(r.fp)).map(r => r.n)
+        : [];
+      if (fpMatches.length === 1) {
+        p.assignedPupil = fpMatches[0];
+        p.matchNote = 'Matched by fingerprint';
+        return;
+      }
+      if (fpMatches.length > 1) {
+        p.assignedPupil = 0;
+        p.matchNote = 'More than one pupil matched fingerprint — set to Not this class';
+        return;
+      }
+
+      // 2. Initials match second
+      if (p.key) {
+        const keyUp = p.key.toUpperCase();
+        let iniMatches = rosterInfo.filter(r => r.rawIni && r.rawIni === keyUp).map(r => r.n);
+        if (!iniMatches.length) {
+          iniMatches = rosterInfo.filter(r => r.resolvedIni && r.resolvedIni === keyUp && !/^P\d+$/.test(r.resolvedIni)).map(r => r.n);
+        }
+        if (iniMatches.length === 1) {
+          p.assignedPupil = iniMatches[0];
+          p.matchNote = 'Matched by initials';
+          return;
+        }
+        if (iniMatches.length > 1) {
+          p.assignedPupil = 0;
+          p.matchNote = 'More than one pupil shares initials ' + keyUp + ' — set to Not this class';
+          return;
+        }
+      }
+
+      p.assignedPupil = 0;
+      p.matchNote = 'No pupil matched — Not this class';
+    });
+  }
+
+  function pwCancelImportPreview(restoreFocus) {
+    pwImportPreviewState = null;
+    if (pwImportPreview) pwImportPreview.replaceChildren();
+    if (pwImportFileInput) pwImportFileInput.value = '';
+    if (pwImportStatus) pwImportStatus.textContent = 'Cancelled. Nothing was saved.';
+    if (restoreFocus && pwImportFileBtn) pwImportFileBtn.focus({ preventScroll: true });
+  }
+
+  function pwRenderImportPreview() {
+    if (!pwImportPreview) return;
+    if (!pwImportPreviewState) {
+      pwImportPreview.replaceChildren();
+      return;
+    }
+    const roster = pwBuildSafeRoster();
+    const subjItems = pwReadSubjItemsMap();
+    const shield = pwIsShieldOn();
+    const plans = pwImportPreviewState.plans;
+    const frag = document.createDocumentFragment();
+
+    // Privacy shield: NEVER show file contents beyond "Pupil N"
+    if (shield) {
+      if (pwImportStatus) {
+        pwImportStatus.textContent = 'The privacy shield is on. File contents are hidden beyond Pupil N. Switch the shield off to review and save.';
+      }
+      frag.append(el('div', { class: 'pw-warn-box', id: 'pwImportShieldBox', role: 'alert' },
+        'The privacy shield is on. File contents are hidden beyond Pupil N. Switch the shield off to review and save this file.'));
+      const list = el('ul', { class: 'pw-history-list' });
+      plans.forEach((p, idx) => {
+        const who = p.assignedPupil ? ('Pupil ' + p.assignedPupil) : 'Not this class';
+        list.append(el('li', {}, 'Plan ' + (idx + 1) + ' — ' + who));
+      });
+      frag.append(list);
+      const act = el('div', { class: 'pw-actions' });
+      const cancelBtn = el('button', { type: 'button', id: 'pwImportCancelBtn' }, 'Cancel');
+      cancelBtn.addEventListener('click', () => pwCancelImportPreview(true));
+      act.append(cancelBtn);
+      frag.append(act);
+      pwImportPreview.replaceChildren(frag);
+      return;
+    }
+
+    const nums = pwActivePupilNumbers(roster, subjItems);
+    const assignCounts = new Map();
+    plans.forEach(p => {
+      if (p.assignedPupil >= 1) {
+        assignCounts.set(p.assignedPupil, (assignCounts.get(p.assignedPupil) || 0) + 1);
+      }
+    });
+    const dupPupils = [...assignCounts.entries()].filter(([, cnt]) => cnt > 1).map(([pn]) => pn);
+
+    if (dupPupils.length) {
+      const dupLabels = dupPupils.map(pn => pwPupilLabel(pn, roster)).join(', ');
+      frag.append(el('div', { class: 'pw-warn-box', id: 'pwImportDupWarn', role: 'alert' },
+        '⚠ Warning: More than one plan is picked for ' + dupLabels + '. Choose a different pupil or “Not this class” before saving.'));
+    }
+
+    plans.forEach((p, idx) => {
+      const isDup = p.assignedPupil >= 1 && (assignCounts.get(p.assignedPupil) || 0) > 1;
+      const card = el('article', { class: 'pw-import-card' + (isDup ? ' is-dup' : ''), 'data-import-idx': String(idx) });
+      const head = el('div', { class: 'pw-import-head' });
+
+      const meta = el('div', {});
+      meta.append(el('strong', {}, 'Plan ' + (idx + 1) + (p.key ? ' · Key ' + p.key : '') + (p.plan ? ' · ' + p.plan : '')));
+      const mLine = el('div', { class: 'pw-target-meta' });
+      mLine.append(el('span', { class: 'pw-badge' }, p.matchNote || 'Review pupil match'));
+      if (isDup) mLine.append(el('span', { class: 'pw-badge pw-badge-warn' }, '⚠ Warning: duplicate pupil'));
+      meta.append(mLine);
+
+      const pickWrap = el('div', { class: 'pw-import-pick' });
+      const selId = 'pwImportPick_' + idx;
+      pickWrap.append(el('label', { for: selId }, 'Assign to pupil'));
+      const sel = el('select', { id: selId, 'data-import-pick': String(idx) });
+      sel.append(el('option', { value: '0' }, 'Not this class'));
+      nums.forEach(pn => {
+        sel.append(el('option', { value: String(pn) }, pwPupilLabel(pn, roster)));
+      });
+      sel.value = String(p.assignedPupil || 0);
+      sel.addEventListener('change', () => {
+        p.assignedPupil = +sel.value || 0;
+        pwRenderImportPreview();
+        pwImportPreview.querySelector('#' + selId)?.focus({ preventScroll: true });
+      });
+      pickWrap.append(sel);
+      head.append(meta, pickWrap);
+      card.append(head);
+
+      const useCnt = p.strategies.filter(s => s.level === 'use').length;
+      const someCnt = p.strategies.filter(s => s.level === 'some').length;
+      card.append(el('p', { class: 'hint', style: 'margin:.25rem 0' },
+        p.targets.length + ' target' + (p.targets.length === 1 ? '' : 's') +
+        ' · Strategies: ' + useCnt + ' Use, ' + someCnt + ' Some.'));
+
+      if (p.targets.length >= 5) {
+        card.append(el('p', { class: 'pw-soft-note', style: 'margin:.3rem 0' },
+          'Note: this plan has ' + p.targets.length + ' active targets.'));
+      }
+
+      if (p.targets.length) {
+        const ul = el('ul', { class: 'pw-history-list' });
+        p.targets.forEach(t => ul.append(el('li', {}, t.title)));
+        card.append(ul);
+      }
+
+      if (p.suggest.length) {
+        const sugHead = el('p', { style: 'margin:.45rem 0 .15rem;font-weight:650' },
+          'Suggested help lines (off by default — existing help lines are never replaced or removed):');
+        card.append(sugHead);
+        const existingSet = new Set();
+        if (p.assignedPupil >= 1) {
+          const prof = pwGetPupilProfileHelp(p.assignedPupil, roster);
+          [...prof.adapts, ...prof.ticks].forEach(x => existingSet.add(x.toLowerCase()));
+        }
+        const sugList = el('div', { class: 'pw-suggest-list' });
+        p.suggest.forEach((sg, sIdx) => {
+          const cid = 'pwImportSug_' + idx + '_' + sIdx;
+          const already = existingSet.has(sg.toLowerCase());
+          const lbl = el('label', { class: 'pw-check-row', for: cid });
+          const cb = el('input', { type: 'checkbox', id: cid, 'data-import-suggest': sg });
+          cb.checked = p.selectedSuggest.has(sg);
+          cb.addEventListener('change', () => {
+            if (cb.checked) p.selectedSuggest.add(sg);
+            else p.selectedSuggest.delete(sg);
+          });
+          lbl.append(cb, el('span', {}, sg + (already ? ' (already on profile)' : '')));
+          sugList.append(lbl);
+        });
+        card.append(sugList);
+      }
+
+      frag.append(card);
+    });
+
+    const assignedCount = plans.filter(p => p.assignedPupil >= 1).length;
+    const act = el('div', { class: 'pw-actions' });
+    const saveBtn = el('button', { type: 'button', id: 'pwImportSaveBtn', class: 'primary' },
+      'Save ' + assignedCount + ' matched plan' + (assignedCount === 1 ? '' : 's'));
+    if (dupPupils.length > 0 || assignedCount === 0) saveBtn.disabled = true;
+    saveBtn.addEventListener('click', pwSaveImportedPlans);
+
+    const cancelBtn = el('button', { type: 'button', id: 'pwImportCancelBtn' }, 'Cancel');
+    cancelBtn.addEventListener('click', () => pwCancelImportPreview(true));
+    act.append(saveBtn, cancelBtn);
+    frag.append(act);
+
+    pwImportPreview.replaceChildren(frag);
+  }
+
+  function pwSaveImportedPlans() {
+    if (!pwImportPreviewState || pwIsShieldOn()) return;
+    const plans = pwImportPreviewState.plans;
+    const assigned = plans.filter(p => p.assignedPupil >= 1 && p.assignedPupil <= 20);
+    if (!assigned.length) {
+      if (pwImportStatus) pwImportStatus.textContent = 'No plans are matched to a pupil in this class. Nothing was saved.';
+      return;
+    }
+    const seen = new Set();
+    for (const p of assigned) {
+      if (seen.has(p.assignedPupil)) {
+        if (pwImportStatus) pwImportStatus.textContent = 'Warning: two plans are assigned to the same pupil. Fix the pick list before saving.';
+        return;
+      }
+      seen.add(p.assignedPupil);
+    }
+
+    // Exact byte-for-byte Undo snapshot before ANY write
+    let snapPlan = null, snapTargets = null, snapBefore = null, snapProfile = null;
+    try {
+      snapPlan = localStorage.getItem(PW_PLAN_KEY);
+      snapTargets = localStorage.getItem(KEYS.targets);
+      snapBefore = localStorage.getItem(PW_TARGETS_BEFORE_KEY);
+      snapProfile = localStorage.getItem(KEYS.profile);
+    } catch (e) {
+      if (pwImportStatus) pwImportStatus.textContent = 'Not saved: this device could not read saved stores.';
+      return;
+    }
+
+    const existingPlanStore = pwReadPlanStoreRaw();
+    const nextPlanStore = existingPlanStore
+      ? { version: 1, pupils: { ...existingPlanStore.pupils } }
+      : { version: 1, pupils: {} };
+    let nextTargets = pwReadJson(KEYS.targets, {}) || {};
+    if (!pwIsPlainObj(nextTargets)) nextTargets = {};
+
+    const today = dateISO();
+    let profileChanged = false;
+    let skippedSuggestCount = 0;
+    let nextProfile = null;
+    const ensureNextProfile = () => {
+      if (nextProfile) return nextProfile;
+      const rawP = pwReadJson(KEYS.profile, {}) || {};
+      nextProfile = pwIsPlainObj(rawP) ? { ...rawP } : {};
+      if (!nextProfile.version) nextProfile.version = 1;
+      nextProfile.pupils = pwIsPlainObj(nextProfile.pupils) ? { ...nextProfile.pupils } : {};
+      return nextProfile;
+    };
+
+    assigned.forEach(p => {
+      const n = p.assignedPupil;
+      const pk = String(n);
+      if (!pwIsPlainObj(nextPlanStore.pupils[pk])) {
+        pwBackupLegacyTargetOnce(n, nextTargets);
+      }
+      const newRec = {
+        plan: p.plan,
+        targets: p.targets.map(t => ({
+          id: pwMakeTargetId(),
+          status: 'active',
+          need: t.need,
+          title: pwNormTitle(t.title),
+          overall: t.overall || pwNormTitle(t.title),
+          measure: t.measure,
+          subjects: (t.subjects || []).slice(),
+          steps: (t.steps || []).map(st => ({ text: st.text, state: st.state || 'notyet', date: st.date || '', note: st.note || '' })),
+          rating: t.rating || '',
+          links: (t.links || []).slice(),
+          lastChanged: today,
+          lastCopied: '',
+          history: []
+        })),
+        strategies: pwNormStrategies(p.strategies)
+      };
+      nextPlanStore.pupils[pk] = newRec;
+      nextTargets = pwSyncTargetsStoreForPupil(n, newRec, nextTargets);
+
+      // Ticked suggestions ONLY (never replace or remove existing; respect max 4 adapt and max 8 tags)
+      const ticked = [...p.selectedSuggest].map(s => String(s || '').trim().slice(0, 90)).filter(Boolean);
+      if (ticked.length) {
+        const prof = ensureNextProfile();
+        const curRec = pwIsPlainObj(prof.pupils[pk]) ? { ...prof.pupils[pk] } : {};
+        const curAdapt = Array.isArray(curRec.adapt) ? curRec.adapt.map(s => String(s || '').trim()).filter(Boolean) : [];
+        const curTags = Array.isArray(curRec.tags) ? curRec.tags.map(s => String(s || '').trim()).filter(Boolean) : [];
+        const existingLower = new Set([...curAdapt, ...curTags].map(s => s.toLowerCase()));
+        let recModified = false;
+
+        ticked.forEach(line => {
+          const low = line.toLowerCase();
+          if (existingLower.has(low)) return;
+          if (curAdapt.length < 4) {
+            curAdapt.push(line);
+            existingLower.add(low);
+            recModified = true;
+          } else if (curTags.length < 8) {
+            curTags.push(line);
+            existingLower.add(low);
+            recModified = true;
+          } else {
+            skippedSuggestCount++;
+          }
+        });
+
+        if (recModified) {
+          curRec.adapt = curAdapt.slice(0, 4);
+          if (curTags.length) curRec.tags = curTags.slice(0, 8);
+          prof.pupils[pk] = curRec;
+          profileChanged = true;
+        }
+      }
+    });
+
+    pwWriteRawJson(PW_PLAN_KEY, nextPlanStore);
+    pwWriteRawJson(KEYS.targets, nextTargets);
+    if (profileChanged && nextProfile) {
+      pwWriteRawJson(KEYS.profile, nextProfile);
+    }
+
+    const undoLabel = 'Saved ' + assigned.length + ' imported IEDP plan' + (assigned.length === 1 ? '' : 's');
+    pwShowUndoBar({
+      label: undoLabel,
+      keys: {
+        [PW_PLAN_KEY]: snapPlan,
+        [KEYS.targets]: snapTargets,
+        [PW_TARGETS_BEFORE_KEY]: snapBefore,
+        [KEYS.profile]: snapProfile
+      }
+    });
+
+    pwImportPreviewState = null;
+    if (pwImportPreview) pwImportPreview.replaceChildren();
+    if (pwImportFileInput) pwImportFileInput.value = '';
+    const msg = undoLabel + (skippedSuggestCount ? (' (' + skippedSuggestCount + ' suggestion(s) skipped because max 4 help lines and max 8 ticks were full).') : '.');
+    if (pwImportStatus) pwImportStatus.textContent = msg;
+    pwSetStatus(msg, false);
+    pwRenderAll();
+    if (typeof renderAll === 'function') renderAll();
+  }
+
+  // --- Step 1 UI: Private Export & Import of mbm_iedp_plan_v1 (pupil numbers only) ---
+  function pwBuildPlanExportPayload() {
+    const store = pwReadPlanStoreRaw();
+    const cleanPupils = {};
+    if (store && pwIsPlainObj(store.pupils)) {
+      Object.entries(store.pupils).forEach(([k, v]) => {
+        const n = pwNormPupilId(k);
+        if (n !== null && pwIsPlainObj(v)) {
+          cleanPupils[String(n)] = pwNormPupilRecord(v, true);
+        }
+      });
+    }
+    return {
+      schema: PW_PLAN_EXPORT_SCHEMA,
+      exportedAt: new Date().toISOString(),
+      data: { version: 1, pupils: cleanPupils }
+    };
+  }
+
+  function pwCountPlanSummary(pupilsMap) {
+    let pupils = 0, activeTargets = 0, totalTargets = 0, steps = 0, activeStrategies = 0;
+    Object.values(pupilsMap || {}).forEach(rec => {
+      if (!pwIsPlainObj(rec)) return;
+      pupils++;
+      const tList = Array.isArray(rec.targets) ? rec.targets : [];
+      totalTargets += tList.length;
+      tList.forEach(t => {
+        if (t && t.status === 'active') activeTargets++;
+        if (t && Array.isArray(t.steps)) steps += t.steps.length;
+      });
+      (Array.isArray(rec.strategies) ? rec.strategies : []).forEach(s => {
+        if (s && (s.level === 'use' || s.level === 'some') && (s.apply || s.short)) activeStrategies++;
+      });
+    });
+    return { pupils, activeTargets, totalTargets, steps, activeStrategies };
+  }
+
+  function pwDownloadPlanSafetyCopy() {
+    const payload = pwBuildPlanExportPayload();
+    const file = new File(
+      [JSON.stringify(payload, null, 2) + '\n'],
+      'IEDP_PLANS_SAFETY_COPY_' + dateStamp(new Date()) + '.json',
+      { type: 'application/json;charset=utf-8' }
+    );
+    downloadFile(file);
+    return file.name;
+  }
+
+  function pwCancelPlanImportPreview(restoreFocus) {
+    pwPlanImportState = null;
+    if (pwPlanImportPreview) pwPlanImportPreview.replaceChildren();
+    if (pwPlanImportInput) pwPlanImportInput.value = '';
+    if (pwPlanBackupStatus) pwPlanBackupStatus.textContent = 'Cancelled. Nothing was imported.';
+    if (restoreFocus && pwPlanImportBtn) pwPlanImportBtn.focus({ preventScroll: true });
+  }
+
+  function pwRenderPlanImportPreview() {
+    if (!pwPlanImportPreview) return;
+    if (!pwPlanImportState) {
+      pwPlanImportPreview.replaceChildren();
+      return;
+    }
+    const shield = pwIsShieldOn();
+    const roster = pwBuildSafeRoster();
+    const incomingPupils = pwPlanImportState.pupils;
+    const curStore = pwReadPlanStoreRaw();
+    const curPupils = (curStore && pwIsPlainObj(curStore.pupils)) ? curStore.pupils : {};
+    const incCounts = pwCountPlanSummary(incomingPupils);
+    const curCounts = pwCountPlanSummary(curPupils);
+
+    const frag = document.createDocumentFragment();
+    const panel = el('div', { class: 'pw-inline-panel', id: 'pwPlanImportPanel', role: 'region', 'aria-label': 'Private IEDP plan import preview' });
+    panel.append(el('h4', {}, 'Preview before import (pupil numbers only)'));
+
+    if (shield) {
+      panel.append(el('div', { class: 'pw-warn-box', role: 'alert' },
+        'The privacy shield is on. Showing counts and Pupil N only. Switch the shield off to import.'));
+    }
+
+    const grid = el('div', { class: 'pw-count-grid' });
+    const makeBox = (title, c) => {
+      const box = el('div', { class: 'pw-count-box' });
+      box.append(
+        el('strong', {}, title),
+        el('div', { class: 'hint' }, c.pupils + ' pupil' + (c.pupils === 1 ? '' : 's')),
+        el('div', { class: 'hint' }, c.activeTargets + ' active target' + (c.activeTargets === 1 ? '' : 's') + ' (' + c.totalTargets + ' total)'),
+        el('div', { class: 'hint' }, c.steps + ' step' + (c.steps === 1 ? '' : 's') + ' · ' + c.activeStrategies + ' active strategy row' + (c.activeStrategies === 1 ? '' : 's'))
+      );
+      return box;
+    };
+    grid.append(makeBox('In this file', incCounts), makeBox('On this device now', curCounts));
+    panel.append(grid);
+
+    const numsList = Object.keys(incomingPupils).map(Number).sort((a, b) => a - b);
+    panel.append(el('p', { class: 'hint' },
+      'Pupils in file: ' + numsList.map(n => pwPupilLabel(n, roster)).join(', ') + '.'));
+
+    const safetyWrap = el('label', { class: 'pw-check-row', for: 'pwPlanSafetyCopyCb' });
+    const safetyCb = el('input', { type: 'checkbox', id: 'pwPlanSafetyCopyCb' });
+    safetyCb.checked = pwPlanImportState.downloadSafetyCopy;
+    if (shield) safetyCb.disabled = true;
+    safetyCb.addEventListener('change', () => {
+      pwPlanImportState.downloadSafetyCopy = safetyCb.checked;
+    });
+    safetyWrap.append(safetyCb, el('span', {}, 'Download a safety copy of current plans before importing'));
+    panel.append(safetyWrap);
+
+    const act = el('div', { class: 'pw-actions' });
+    const safetyBtn = el('button', { type: 'button', id: 'pwPlanSafetyBtn' }, 'Download safety copy now');
+    safetyBtn.addEventListener('click', () => {
+      const fname = pwDownloadPlanSafetyCopy();
+      if (pwPlanBackupStatus) pwPlanBackupStatus.textContent = 'Downloaded safety copy: ' + fname + '.';
+    });
+    const confirmBtn = el('button', { type: 'button', id: 'pwPlanImportConfirmBtn', class: 'primary' }, 'Import plans');
+    if (shield) confirmBtn.disabled = true;
+    confirmBtn.addEventListener('click', () => {
+      if (!pwPlanImportState || pwIsShieldOn()) return;
+      let snapPlan = null, snapTargets = null, snapBefore = null;
+      try {
+        snapPlan = localStorage.getItem(PW_PLAN_KEY);
+        snapTargets = localStorage.getItem(KEYS.targets);
+        snapBefore = localStorage.getItem(PW_TARGETS_BEFORE_KEY);
+      } catch (e) {
+        if (pwPlanBackupStatus) pwPlanBackupStatus.textContent = 'Not imported: this device could not read saved stores.';
+        return;
+      }
+      let safetyName = '';
+      if (pwPlanImportState.downloadSafetyCopy) {
+        safetyName = pwDownloadPlanSafetyCopy();
+      }
+      let nextTargets = pwReadJson(KEYS.targets, {}) || {};
+      if (!pwIsPlainObj(nextTargets)) nextTargets = {};
+      const existing = pwReadPlanStoreRaw();
+      const existingPupils = (existing && pwIsPlainObj(existing.pupils)) ? existing.pupils : {};
+      Object.entries(incomingPupils).forEach(([pk, rec]) => {
+        const n = Number(pk);
+        if (!pwIsPlainObj(existingPupils[pk])) pwBackupLegacyTargetOnce(n, nextTargets);
+        nextTargets = pwSyncTargetsStoreForPupil(n, rec, nextTargets);
+      });
+      pwWriteRawJson(PW_PLAN_KEY, { version: 1, pupils: incomingPupils });
+      pwWriteRawJson(KEYS.targets, nextTargets);
+
+      const label = 'Imported IEDP plans for ' + incCounts.pupils + ' pupil' + (incCounts.pupils === 1 ? '' : 's');
+      pwShowUndoBar({
+        label,
+        keys: {
+          [PW_PLAN_KEY]: snapPlan,
+          [KEYS.targets]: snapTargets,
+          [PW_TARGETS_BEFORE_KEY]: snapBefore
+        }
+      });
+      pwPlanImportState = null;
+      if (pwPlanImportPreview) pwPlanImportPreview.replaceChildren();
+      if (pwPlanImportInput) pwPlanImportInput.value = '';
+      const msg = label + (safetyName ? (' (safety copy saved as ' + safetyName + ').') : '.');
+      if (pwPlanBackupStatus) pwPlanBackupStatus.textContent = msg;
+      pwSetStatus(msg, false);
+      pwRenderAll();
+      if (typeof renderAll === 'function') renderAll();
+    });
+    const cancelBtn = el('button', { type: 'button', id: 'pwPlanImportCancelBtn' }, 'Cancel');
+    cancelBtn.addEventListener('click', () => pwCancelPlanImportPreview(true));
+    act.append(confirmBtn, safetyBtn, cancelBtn);
+    panel.append(act);
+    frag.append(panel);
+    pwPlanImportPreview.replaceChildren(frag);
   }
 
   function pwRenderIedpCardsOnly() {
@@ -8119,11 +10355,23 @@ function initPaperworkSection() {
     const subjItems = pwReadSubjItemsMap();
     const cfg = pwReadTermCfgSafe();
 
+    if (pwIsShieldOn()) {
+      [pwStatusEl, pwImportStatus, pwPlanBackupStatus, pwImportUndoText].forEach(node => {
+        if (node && node.textContent) node.textContent = redactPublic(node.textContent, roster);
+      });
+      if (pwFallbackArea && pwFallbackArea.value) pwFallbackArea.value = redactPublic(pwFallbackArea.value, roster);
+      if (pwFallbackWrap) pwFallbackWrap.hidden = true;
+    }
+
     pwPopulateWeeks(cfg, +pwWeekSel.value);
     pwPopulatePupils(roster, subjItems);
     pwRenderBankEditor(store, roster, subjItems);
     pwRenderOwnSubjects(pwPathwaySel.value || 'BUILD', store);
     pwRenderWeeklyCards(store, roster, subjItems, cfg);
+    pwRenderTargetsEditor(roster);
+    pwRenderStrategiesEditor(roster);
+    pwRenderImportPreview();
+    pwRenderPlanImportPreview();
     pwRenderBoxesEditor(store);
     const n = +pwPupilSel.value || 1;
     pwRenderLinksEditor(n, pwReadPupilTargets(n), pwAllHelpLinesForPupil(n, roster, subjItems), store, roster);
@@ -8183,13 +10431,168 @@ function initPaperworkSection() {
   });
 
   pwPupilSel.addEventListener('change', () => {
+    pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
     const store = pwLoadStore();
     const roster = pwBuildSafeRoster();
     const subjItems = pwReadSubjItemsMap();
     const cfg = pwReadTermCfgSafe();
     const n = +pwPupilSel.value || 1;
+    pwRenderTargetsEditor(roster);
+    pwRenderStrategiesEditor(roster);
     pwRenderLinksEditor(n, pwReadPupilTargets(n), pwAllHelpLinesForPupil(n, roster, subjItems), store, roster);
     pwRenderIedpCards(store, roster, subjItems, cfg);
+  });
+
+  pwIncludeSomeCb?.addEventListener('change', () => {
+    pwRenderWeeklyCards(pwLoadStore(), pwBuildSafeRoster(), pwReadSubjItemsMap(), pwReadTermCfgSafe());
+  });
+
+  pwImportUndoBtn?.addEventListener('click', pwRunImportUndo);
+
+  pwImportFileBtn?.addEventListener('click', () => {
+    if (pwImportFileInput) {
+      pwImportFileInput.value = '';
+      pwImportFileInput.click();
+    }
+  });
+
+  pwImportFileInput?.addEventListener('change', async e => {
+    const input = e.target;
+    const file = input.files && input.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      input.value = '';
+      if (pwImportStatus) pwImportStatus.textContent = 'This file was not loaded: file is over 2 MB. Nothing was saved.';
+      return;
+    }
+    let text = '';
+    try {
+      text = await file.text();
+    } catch (err) {
+      input.value = '';
+      if (pwImportStatus) pwImportStatus.textContent = 'This file could not be read. Nothing was saved.';
+      return;
+    }
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (err) {
+      input.value = '';
+      if (pwImportStatus) pwImportStatus.textContent = 'This file was not loaded: not valid JSON. Nothing was saved.';
+      return;
+    }
+    const cleaned = pwCleanImport(parsed);
+    if (!cleaned.ok) {
+      input.value = '';
+      pwImportPreviewState = null;
+      if (pwImportPreview) pwImportPreview.replaceChildren();
+      if (pwImportStatus) pwImportStatus.textContent = cleaned.error + ' Nothing was saved.';
+      return;
+    }
+    const roster = pwBuildSafeRoster();
+    const subjItems = pwReadSubjItemsMap();
+    pwMatchImportPlans(cleaned.plans, roster, subjItems);
+    pwImportPreviewState = { fileName: file.name, plans: cleaned.plans };
+    if (pwImportDetails) pwImportDetails.open = true;
+    pwRenderImportPreview();
+    if (pwImportStatus) {
+      pwImportStatus.textContent = pwIsShieldOn()
+        ? 'The privacy shield is on. File contents are hidden beyond Pupil N. Switch it off to review and save.'
+        : ('Preview ready for ' + cleaned.plans.length + ' plan' + (cleaned.plans.length === 1 ? '' : 's') + '. Nothing has been saved yet.');
+    }
+  });
+
+  pwPlanExportBtn?.addEventListener('click', () => {
+    const payload = pwBuildPlanExportPayload();
+    const count = Object.keys(payload.data.pupils).length;
+    const file = new File(
+      [JSON.stringify(payload, null, 2) + '\n'],
+      'IEDP_PLANS_PRIVATE_' + dateStamp(new Date()) + '.json',
+      { type: 'application/json;charset=utf-8' }
+    );
+    downloadFile(file);
+    const msg = 'Exported ' + file.name + ' (' + count + ' pupil' + (count === 1 ? '' : 's') + ', pupil numbers only).';
+    if (pwPlanBackupStatus) pwPlanBackupStatus.textContent = msg;
+    pwSetStatus(msg, false);
+  });
+
+  pwPlanImportBtn?.addEventListener('click', () => {
+    if (pwPlanImportInput) {
+      pwPlanImportInput.value = '';
+      pwPlanImportInput.click();
+    }
+  });
+
+  pwPlanImportInput?.addEventListener('change', async e => {
+    const input = e.target;
+    const file = input.files && input.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      input.value = '';
+      if (pwPlanBackupStatus) pwPlanBackupStatus.textContent = 'This file was not loaded: file is over 2 MB. Nothing was changed.';
+      return;
+    }
+    let parsed;
+    try {
+      parsed = JSON.parse(await file.text());
+    } catch (err) {
+      input.value = '';
+      if (pwPlanBackupStatus) pwPlanBackupStatus.textContent = 'This file was not loaded: not valid JSON. Nothing was changed.';
+      return;
+    }
+    let rawData = null;
+    if (pwIsPlainObj(parsed) && parsed.schema === PW_PLAN_EXPORT_SCHEMA && pwIsPlainObj(parsed.data) && pwIsPlainObj(parsed.data.pupils)) {
+      rawData = parsed.data;
+    } else if (pwIsPlainObj(parsed) && parsed.version === 1 && pwIsPlainObj(parsed.pupils)) {
+      rawData = parsed;
+    }
+    if (!rawData) {
+      input.value = '';
+      if (pwPlanBackupStatus) pwPlanBackupStatus.textContent = 'That file is not an IEDP plans file. Nothing was changed.';
+      return;
+    }
+    const cleanPupils = {};
+    Object.entries(rawData.pupils).forEach(([k, v]) => {
+      const n = pwNormPupilId(k);
+      if (n !== null && pwIsPlainObj(v)) cleanPupils[String(n)] = pwNormPupilRecord(v, true);
+    });
+    const curStore = pwReadPlanStoreRaw();
+    const hasExisting = !!(curStore && pwIsPlainObj(curStore.pupils) && Object.keys(curStore.pupils).length > 0);
+    pwPlanImportState = { pupils: cleanPupils, downloadSafetyCopy: hasExisting };
+    if (pwPlanBackupDetails) pwPlanBackupDetails.open = true;
+    pwRenderPlanImportPreview();
+    if (pwPlanBackupStatus) pwPlanBackupStatus.textContent = 'Preview ready. Nothing has been imported yet.';
+  });
+
+  // Escape closes open inline editor panels and import previews cleanly
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if ($('boardDialog')?.open) return;
+    if ($('pupilPage') && !$('pupilPage').hidden) return;
+    if (pwEditorPanelState.mode) {
+      e.preventDefault();
+      pwCloseEditorPanel(true);
+      return;
+    }
+    if (pwImportPreviewState && pwRoot.contains(document.activeElement)) {
+      e.preventDefault();
+      pwCancelImportPreview(true);
+      return;
+    }
+    if (pwPlanImportState && pwRoot.contains(document.activeElement)) {
+      e.preventDefault();
+      pwCancelPlanImportPreview(true);
+      return;
+    }
+    if (pwImportPreviewState) {
+      e.preventDefault();
+      pwCancelImportPreview(true);
+      return;
+    }
+    if (pwPlanImportState) {
+      e.preventDefault();
+      pwCancelPlanImportPreview(true);
+    }
   });
 
   pwFromInput.addEventListener('change', pwRenderIedpCardsOnly);
