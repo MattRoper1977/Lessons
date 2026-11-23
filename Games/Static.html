@@ -1,6 +1,102 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
+<!-- MBM-R2-KIT:BEGIN v1.0.1 shared play options (graphics tier, one-hand touch, gamepad, daily streak) -->
+<script>/* MBM R2 KIT (head): graphics tier. Device-only, no network. Keys: mbm_gfx_tier (shared), read before the game boots. */
+(function(){"use strict";
+var pref="auto";try{var v=localStorage.getItem("mbm_gfx_tier");if(v==="high"||v==="low"||v==="auto")pref=v;}catch(_){}
+var n=navigator,weak=false;
+try{var coarse=matchMedia("(pointer:coarse)").matches,small=Math.min(screen.width,screen.height)<=820;
+weak=(coarse&&small)||(n.deviceMemory&&n.deviceMemory<=2);}catch(_){}
+var low=pref==="low"||(pref==="auto"&&weak);
+window.__MBM_R2={pref:pref,low:low,tier:low?"low":"high",auto:pref==="auto"};
+if(low){try{var real=window.devicePixelRatio||1;Object.defineProperty(window,"devicePixelRatio",{configurable:true,get:function(){return Math.min(real,1);}});}catch(_){}}
+})();</script>
+<script>/* MBM R2 KIT (body): options panel, one-hand touch, gamepad, daily streak. Device-only, no network.
+   New keys only: mbm_gfx_tier, mbm_r2_onehand, mbm_r2_streak_<game>. Existing game saves are never read or written. */
+(function(){"use strict";
+var CFG={"id":"static","gear":{"left":8,"top":66,"small":{"left":8,"top":66}},"oneHand":{"left":"ArrowLeft","right":"ArrowRight","up":"ArrowUp","down":"ArrowDown","stick":true,"hold":[],"help":"Drag a thumb on the lower board to step focus from card to card and centre each clue."},"pad":{"left":"ArrowLeft","right":"ArrowRight","up":"ArrowUp","down":"ArrowDown","a":"Enter","b":"Escape","x":"KeyL","y":"KeyJ","start":"Digit0","help":"Stick or D-pad steps between cards, A inspects or links, X arms a link, Y opens Journal, B closes or cancels, Start fits the board."}};var R2=window.__MBM_R2||{pref:"auto",low:false,tier:"high",auto:true};
+var doc=document,LS={get:function(k){try{return localStorage.getItem(k);}catch(_){return null;}},set:function(k,v){try{localStorage.setItem(k,v);}catch(_){}}};
+var reduced=false;try{reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(_){}
+function key(type,code){try{var k=code==="Space"?" ":code.indexOf("Key")===0?code.slice(3).toLowerCase():code.indexOf("Arrow")===0?code:code.indexOf("Shift")===0?"Shift":code;window.dispatchEvent(new KeyboardEvent(type,{code:code,key:k,bubbles:true,cancelable:true}));}catch(_){}}
+var held={};function down(c){if(c&&!held[c]){held[c]=1;key("keydown",c);}}function up(c){if(c&&held[c]){delete held[c];key("keyup",c);}}
+function pulse(c,ms){if(!c)return;down(c);setTimeout(function(){up(c);},ms||350);}
+/* ---------- daily streak (one grace day) ---------- */
+var SK="mbm_r2_streak_"+CFG.id;
+function dayNum(d){return Math.floor((d.getTime()-d.getTimezoneOffset()*60000)/86400000);}
+function readStreak(){var s={last:0,n:0,best:0,grace:0};try{var o=JSON.parse(LS.get(SK)||"null");if(o&&typeof o.last==="number"&&typeof o.n==="number"){s.last=o.last;s.n=o.n;s.best=o.best||o.n;s.grace=o.grace||0;}}catch(_){}return s;}
+function markPlayed(){var s=readStreak(),t=dayNum(new Date());if(s.last===t)return s;var gap=t-s.last;
+ if(s.last&&gap===1)s.n+=1;else if(s.last&&gap===2&&t-s.grace>=7){s.n+=1;s.grace=t;}else s.n=1;
+ s.last=t;if(s.n>s.best)s.best=s.n;LS.set(SK,JSON.stringify(s));return s;}
+function streakText(){var s=readStreak(),t=dayNum(new Date());var live=s.last&&t-s.last<=2?s.n:0;return "Daily streak: "+live+(live===1?" day":" days")+(s.best>1?" (best "+s.best+")":"")+(s.last===t?" ✓ played today":"");}
+var active=0,lastAct=0,marked=false;
+function act(){var now=Date.now();if(now-lastAct<5000)active+=now-lastAct;lastAct=now;if(!marked&&active>=45000){marked=true;markPlayed();refresh();}}
+["keydown","pointerdown","touchstart"].forEach(function(t){window.addEventListener(t,act,{capture:true,passive:true});});
+/* ---------- one-hand touch (opt-in) ---------- */
+var OH=CFG.oneHand||null,ohOn=LS.get("mbm_r2_onehand")==="1",touchDev=false;try{touchDev=("ontouchstart" in window)||matchMedia("(pointer:coarse)").matches;}catch(_){}
+var drag=null;
+function ohStart(e){if(!ohOn||!OH||panelOpen||e.pointerType==="mouse")return;if(e.target&&e.target.closest&&e.target.closest("button,a,input,select,textarea,[role=button],#mbmr2-gear,#mbmr2-panel"))return;if(e.clientY<innerHeight*0.35)return;
+ drag={id:e.pointerId,x:e.clientX,y:e.clientY,t:Date.now(),dir:"",v:"",boost:false};(OH.hold||[]).forEach(down);}
+function ohMove(e){if(!drag||e.pointerId!==drag.id)return;var dx=e.clientX-drag.x,dy=e.clientY-drag.y,dead=14;
+ var dir=dx>dead?"R":dx<-dead?"L":"";if(dir!==drag.dir){up(OH.left);up(OH.right);if(dir==="L")down(OH.left);if(dir==="R")down(OH.right);drag.dir=dir;}
+ if(OH.stick){var v=dy>dead?"D":dy<-dead?"U":"";if(v!==drag.v){up(OH.up);up(OH.down);if(v==="U")down(OH.up);if(v==="D")down(OH.down);drag.v=v;}}
+ else if(OH.swipeUp&&!drag.boost&&dy<-60){drag.boost=true;pulse(OH.swipeUp,700);}
+ if(Math.abs(dx)>90)drag.x=e.clientX-(dx>0?90:-90);}
+function ohEnd(e){if(!drag||e.pointerId!==drag.id)return;up(OH.left);up(OH.right);up(OH.up);up(OH.down);(OH.hold||[]).forEach(up);drag=null;}
+window.addEventListener("pointerdown",ohStart,{capture:true,passive:true});window.addEventListener("pointermove",ohMove,{capture:true,passive:true});
+window.addEventListener("pointerup",ohEnd,{capture:true,passive:true});window.addEventListener("pointercancel",ohEnd,{capture:true,passive:true});
+window.addEventListener("blur",function(){Object.keys(held).forEach(up);drag=null;});
+/* ---------- gamepad ---------- */
+var GP=CFG.pad||null,padSeen=false,padState={};
+function padSet(name,on,code){if(!code)return;if(on&&!padState[name]){padState[name]=1;down(code);}else if(!on&&padState[name]){delete padState[name];up(code);}}
+function padPoll(){var pads=[];try{pads=navigator.getGamepads?navigator.getGamepads():[];}catch(_){}var p=null;for(var i=0;i<pads.length;i++)if(pads[i]&&pads[i].connected){p=pads[i];break;}
+ if(p&&GP){if(!padSeen){padSeen=true;refresh();}var ax=p.axes||[],b=p.buttons||[],pr=function(i){return !!(b[i]&&(b[i].pressed||b[i].value>0.5));};
+  padSet("l",(ax[0]||0)<-0.35||pr(14),GP.left);padSet("r",(ax[0]||0)>0.35||pr(15),GP.right);padSet("u",(ax[1]||0)<-0.5||pr(12),GP.up);padSet("d",(ax[1]||0)>0.5||pr(13),GP.down);
+  padSet("a",pr(0),GP.a);padSet("b",pr(1)||pr(7),GP.b);padSet("x",pr(2),GP.x);padSet("y",pr(3),GP.y);padSet("s",pr(9),GP.start);if(pr(0)||pr(9)||Math.abs(ax[0]||0)>0.35)act();}
+ requestAnimationFrame(padPoll);}
+if(GP&&navigator.getGamepads){window.addEventListener("gamepadconnected",function(){if(!padPoll.on){padPoll.on=1;padPoll();}});try{var g0=navigator.getGamepads();for(var gi=0;gi<g0.length;gi++)if(g0[gi]&&!padPoll.on){padPoll.on=1;padPoll();}}catch(_){}}
+/* ---------- panel ---------- */
+var css="#mbmr2-gear{position:fixed;left:8px;top:64px;z-index:2147481000;width:44px;height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.28);background:rgba(8,14,28,.62);color:#e8f6ff;font:700 18px/1 system-ui,sans-serif;cursor:pointer;opacity:.55;padding:0;touch-action:manipulation}#mbmr2-gear:hover,#mbmr2-gear:focus-visible{opacity:1;outline:2px solid #5fd3ff;outline-offset:2px}#mbmr2-gear[data-idle]{opacity:.18}"+
+"#mbmr2-panel{position:fixed;inset:0;z-index:2147481500;display:none;place-items:center;background:rgba(2,6,14,.72);font:500 15px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;color:#e8f2fa}#mbmr2-panel[data-open]{display:grid}"+
+"#mbmr2-card{width:min(92vw,400px);max-height:88vh;overflow:auto;background:#0b1424;border:1px solid rgba(132,224,192,.35);border-radius:18px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.6)}#mbmr2-card h2{margin:0 0 4px;font-size:19px;color:#84e0c0}#mbmr2-card p{margin:6px 0;color:#b4c5d4;font-size:13px}"+
+"#mbmr2-card .r2row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}#mbmr2-card button{min-height:44px;padding:8px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:#13233c;color:#e8f2fa;font:700 14px system-ui,sans-serif;cursor:pointer;touch-action:manipulation}#mbmr2-card button[aria-pressed=true]{background:#1d6e5a;border-color:#84e0c0}#mbmr2-card button[aria-pressed=true]::before{content:'\\2713 '}#mbmr2-card button:focus-visible{outline:2px solid #5fd3ff;outline-offset:2px}#mbmr2-card .r2lab{font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#5fd3ff;margin-top:10px}#mbmr2-streak{font-weight:700;color:#ffe08a}";
+var st=doc.createElement("style");st.id="mbmr2-css";st.textContent=css;doc.head.appendChild(st);
+var gear=doc.createElement("button");gear.id="mbmr2-gear";gear.type="button";gear.setAttribute("aria-label","Play options: graphics, controls and daily streak");gear.textContent="⚙";
+var panel=doc.createElement("div");panel.id="mbmr2-panel";panel.setAttribute("role","dialog");panel.setAttribute("aria-modal","true");panel.setAttribute("aria-label","Play options");
+var panelOpen=false,lastFocus=null;
+function btn(label,pressed,fn){var b=doc.createElement("button");b.type="button";b.textContent=label;if(pressed!==null)b.setAttribute("aria-pressed",pressed?"true":"false");b.addEventListener("click",fn);return b;}
+function refresh(){if(!panel.firstChild)return;build();}
+function build(){var c=doc.createElement("div");c.id="mbmr2-card";var h=doc.createElement("h2");h.textContent="Play options";c.appendChild(h);
+ var s=doc.createElement("p");s.id="mbmr2-streak";s.textContent=streakText();c.appendChild(s);
+ var sp=doc.createElement("p");sp.textContent="Play for a little each day to grow your streak. Miss one day a week and it still counts.";c.appendChild(sp);
+ var l1=doc.createElement("div");l1.className="r2lab";l1.textContent="Graphics";c.appendChild(l1);var r1=doc.createElement("div");r1.className="r2row";
+ [["auto","Auto"],["high","High"],["low","Low"]].forEach(function(o){r1.appendChild(btn(o[1],R2.pref===o[0],function(){LS.set("mbm_gfx_tier",o[0]);R2.pref=o[0];changed=true;build();}));});c.appendChild(r1);
+ var p1=doc.createElement("p");p1.textContent="Now running: "+(R2.low?"Low (smoother on older devices)":"High")+(R2.auto?", chosen automatically.":".")+(changed?" Your change applies when the game reloads.":"");c.appendChild(p1);
+ if(changed){var rr=doc.createElement("div");rr.className="r2row";rr.appendChild(btn("Reload now",null,function(){location.reload();}));c.appendChild(rr);}
+ if(OH&&touchDev){var l2=doc.createElement("div");l2.className="r2lab";l2.textContent="One-hand touch";c.appendChild(l2);var r2=doc.createElement("div");r2.className="r2row";
+  r2.appendChild(btn("On",ohOn,function(){ohOn=true;LS.set("mbm_r2_onehand","1");build();}));r2.appendChild(btn("Off",!ohOn,function(){ohOn=false;LS.set("mbm_r2_onehand","0");build();}));c.appendChild(r2);
+  var p2=doc.createElement("p");p2.textContent=OH.help;c.appendChild(p2);}
+ if(GP){var l3=doc.createElement("div");l3.className="r2lab";l3.textContent="Gamepad";c.appendChild(l3);var p3=doc.createElement("p");p3.textContent=(padSeen?"Connected. ":"Press any button on a gamepad to connect it. ")+GP.help;c.appendChild(p3);}
+ var r9=doc.createElement("div");r9.className="r2row";var cl=btn("Close",null,close);cl.id="mbmr2-close";r9.appendChild(cl);c.appendChild(r9);
+ var keep=doc.activeElement&&panel.contains(doc.activeElement)?doc.activeElement.textContent:null;panel.textContent="";panel.appendChild(c);
+ if(keep){var bs=c.querySelectorAll("button");for(var i=0;i<bs.length;i++)if(bs[i].textContent===keep){bs[i].focus();break;}}}
+var changed=false;
+function open(){lastFocus=doc.activeElement;panelOpen=true;build();panel.setAttribute("data-open","");var b=panel.querySelector("button");if(b)b.focus();}
+function close(){panelOpen=false;panel.removeAttribute("data-open");try{(lastFocus&&lastFocus.focus?lastFocus:gear).focus();}catch(_){}}
+gear.addEventListener("click",function(e){e.stopPropagation();panelOpen?close():open();});
+panel.addEventListener("click",function(e){if(e.target===panel)close();});
+panel.addEventListener("keydown",function(e){e.stopPropagation();if(e.key==="Escape"){e.preventDefault();close();}else if(e.key==="Tab"){var bs=panel.querySelectorAll("button");if(!bs.length)return;var f=bs[0],l=bs[bs.length-1];if(e.shiftKey&&doc.activeElement===f){e.preventDefault();l.focus();}else if(!e.shiftKey&&doc.activeElement===l){e.preventDefault();f.focus();}}},true);
+["keyup","pointerdown","pointerup","touchstart","touchend","mousedown","click"].forEach(function(t){panel.addEventListener(t,function(e){e.stopPropagation();});});
+/* fade the gear while playing so it never hides the game */
+var idleT=0;function wake(){gear.removeAttribute("data-idle");clearTimeout(idleT);idleT=setTimeout(function(){if(!panelOpen)gear.setAttribute("data-idle","");},4000);}
+["pointermove","pointerdown","keydown"].forEach(function(t){window.addEventListener(t,function(e){if(t==="keydown"&&!/Escape|KeyP|Tab/.test(e.code||""))return;wake();},{capture:true,passive:true});});
+function place(){var g=CFG.gear||{},s=(innerWidth<=500&&g.small)||g;gear.style.left=gear.style.right=gear.style.top=gear.style.bottom="auto";if(s.right!=null)gear.style.right=s.right+"px";else gear.style.left=(s.left!=null?s.left:8)+"px";if(s.bottom!=null)gear.style.bottom=s.bottom+"px";else gear.style.top=(s.top!=null?s.top:64)+"px";}
+window.addEventListener("resize",place);
+function mount(){place();(doc.body||doc.documentElement).appendChild(gear);(doc.body||doc.documentElement).appendChild(panel);wake();}
+if(doc.readyState==="loading")doc.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
+window.__MBM_R2_KIT__={version:"1.0.1",game:CFG.id,tier:R2.tier,streak:readStreak,markPlayed:markPlayed,open:open,close:close,selfTest:function(){var t=dayNum(new Date());return{ok:typeof t==="number"&&!!doc.getElementById("mbmr2-gear"),tier:R2.tier};}};
+})();</script>
+<!-- MBM-R2-KIT:END -->
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMTYxRDNEIi8+PHBhdGggZD0iTTI2IDc2IEwyNiAzMCBMNTAgNTUgTDc0IDMwIEw3NCA3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRThFMkQ0IiBzdHJva2Utd2lkdGg9IjEzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -377,7 +473,40 @@ button:focus-visible,.card:focus-visible,[role="button"]:focus-visible,input:foc
 @media (max-width:560px){.icon-btn{width:44px;height:44px;font-size:15px}.accuse-btn{min-height:44px}.progress-pill{display:none}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}#directorHud{background:rgba(0,0,0,.25)}.card.v6-contradiction{animation:none;outline:3px solid var(--red)}}
 body.calm #directorHud{background:rgba(0,0,0,.22)}body.calm .card.v6-contradiction{animation:none;outline:3px solid var(--red)}
-
+/* MBM-R2-STATIC-STYLE */
+.skip-link{min-height:44px;display:inline-flex;align-items:center}
+.accuse-btn{min-height:44px}
+#r2-static-medals{margin-top:16px;padding:10px 14px;border:1px solid rgba(230,179,74,.32);border-radius:10px;background:rgba(16,20,31,.82);max-width:min(92vw,390px);width:100%;text-align:center;font-family:var(--mono);font-size:11px;line-height:1.5;color:#d6dce8}
+#r2-static-medals .r2-st-head{color:var(--gold);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+#r2-static-medals .r2-st-daily{color:#a8c6df;font-size:10px;margin-top:3px}
+#r2-static-medals .r2-st-done{color:var(--good);font-weight:700}
+#r2-static-verdict-seal{margin:10px auto 0;padding:8px 12px;border:1px solid rgba(230,179,74,.38);border-radius:8px;background:rgba(24,22,16,.85);font:700 11px/1.45 var(--mono);color:#f3d285;text-align:center}
+#r2-static-nav{display:none;position:fixed;left:calc(10px + var(--safe-l));bottom:calc(var(--tray-h) + var(--safe-b) + 84px);z-index:41;flex-direction:column;gap:6px}
+#r2-static-nav button{width:44px;height:44px;min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:10px;background:#10131ddd;color:var(--lamp);font:700 16px var(--mono);cursor:pointer;touch-action:manipulation;display:grid;place-items:center}
+#r2-static-nav button:hover,#r2-static-nav button:focus-visible{border-color:var(--lamp)}
+@media (orientation:portrait) and (pointer:coarse){body.r2-playing #r2-static-nav{display:flex}}
+/* 2D+ High-tier corkboard depth, brass pin glint, polaroid border & case-closed stamp */
+body:not(.r2-low):not(.calm) #board{box-shadow:inset 0 0 110px rgba(0,0,0,.42)}
+body:not(.r2-low):not(.calm) .card{box-shadow:0 8px 20px rgba(0,0,0,.44),0 1px 0 rgba(255,255,255,.12) inset}
+body:not(.r2-low):not(.calm) .card:hover,body:not(.r2-low):not(.calm) .card.dragging{box-shadow:0 16px 32px rgba(0,0,0,.56),0 0 0 1px rgba(246,214,138,.28)}
+body:not(.r2-low):not(.calm) .card .pin{box-shadow:inset -2px -2px 4px rgba(0,0,0,.45),inset 2px 2px 3px rgba(255,244,210,.65),0 3px 6px rgba(0,0,0,.5)}
+body:not(.r2-low):not(.calm) .card .art{padding:3px;background:#f7f2e4;border-radius:7px;box-shadow:inset 0 0 0 1px rgba(35,39,51,.18)}
+body:not(.r2-low):not(.calm) .verdict-head.win{animation:r2StampIn .22s cubic-bezier(.2,.9,.3,1.15) both}
+@keyframes r2StampIn{0%{opacity:0;transform:scale(1.22) rotate(-2deg)}100%{opacity:1;transform:none}}
+/* Low-tier graphics relief: skip SVG feGaussianBlur glow, backdrop-filter blur, CRT flicker & heavy shadows */
+body.r2-low #strings line,body.r2-low #strings .v6-preview{filter:none!important}
+body.r2-low #topbar,body.r2-low #zoomctl,body.r2-low #hintbar,body.r2-low #modal,body.r2-low #v6Brand,body.r2-low #landToolsToggle,body.r2-low #landToolsPanel{backdrop-filter:none!important}
+body.r2-low #crt,body.r2-low #flick{display:none!important}
+body.r2-low .card{box-shadow:0 2px 4px rgba(0,0,0,.35)!important}
+@media (max-height:460px){
+  #title{padding:10px 16px}
+  #title .logo{font-size:clamp(32px,6vw,48px);margin-bottom:2px}
+  #title .tag{margin-top:2px;font-size:11px}
+  #title .subtitle{margin:6px 0 10px;font-size:11px}
+  #title .menu{gap:6px}
+  #r2-static-medals{margin-top:8px;padding:5px 10px;font-size:10px}
+}
+@media (prefers-reduced-motion:reduce){.verdict-head.win{animation:none!important}}
 </style>
 <style>.journal-button{min-height:44px;padding:9px 12px;border:1px solid #ddb96d;border-radius:8px;background:#27251f;color:#fff3d8;font:700 13px system-ui;cursor:pointer}.journal-objective{border-left:3px solid #d3ae66;padding:12px;background:#28251f;font:16px/1.6 system-ui}.journal-evidence{display:grid;gap:10px}.journal-evidence label{display:grid;gap:6px;font:14px system-ui}.journal-evidence select{width:100%;min-height:44px;font-size:15px}.journal-clues{display:grid;gap:9px}.journal-clues small{display:block;font:14px/1.5 system-ui;white-space:normal}.event-token{font-family:inherit;color:#eae6d8;text-align:left;min-height:70px}.ferry-case #board{background-color:#152328;background-image:radial-gradient(ellipse at 90% 0,#284e5360,transparent 60%),repeating-linear-gradient(135deg,transparent 0 34px,#bdd9d804 35px 36px)}button:focus-visible{outline:3px solid #fff;outline-offset:3px}@media(max-width:520px){#topbar .progress-pill{display:none}.modal-card{font-size:16px}.modal-card p{line-height:1.6}}</style></head>
 <body>
@@ -420,6 +549,7 @@ body.calm #directorHud{background:rgba(0,0,0,.22)}body.calm .card.v6-contradicti
     <button class="btn" id="howBtn">How to play</button>
     <button class="btn" id="setBtn">Settings</button>
   </div>
+  <div id="r2-static-medals" aria-live="polite"></div>
   <div style="font-family:var(--mono);color:#5b6072;font-size:11px;margin-top:30px;letter-spacing:.1em">
     tune in · connect the evidence · name the truth
   </div>
@@ -452,6 +582,7 @@ body.calm #directorHud{background:rgba(0,0,0,.22)}body.calm .card.v6-contradicti
   <button class="zbtn" id="zOut" aria-label="Zoom out">−</button>
   <button class="zbtn" id="zFit" title="Fit board" aria-label="Fit evidence board to screen">⤢</button>
 </div>
+<div id="r2-static-nav" role="group" aria-label="Step between evidence cards"><button type="button" id="r2CardPrev" aria-label="Focus previous evidence card">◀</button><button type="button" id="r2CardNext" aria-label="Focus next evidence card">▶</button></div>
 
 <!-- hint -->
 <div id="hintbar" class="hidden"></div>
@@ -2040,6 +2171,220 @@ window.addEventListener("resize",()=>{ if(!$("#topbar").classList.contains("hidd
   q("#sptag").textContent="A COLD-CASE DEDUCTION · AFTERLIGHT";q("#titleSub").textContent="FOUR CASE FILES · THE LAST FERRY EDITION";
   const msSub=q(".ms-sub");if(msSub)msSub.textContent="PRESENTS · AFTERLIGHT";
   announce("STATIC Signal Lost, AFTERLIGHT by Made by Matt. Four case files, including The Last Ferry.");
+/* MBM-R2-STATIC-ADDONS: Low-tier relief, Case Closure Seals & UTC Daily goal, Arrow/Gamepad spatial card stepping, keyboard shortcuts, portrait stepper */
+(function installStaticR2(){
+  "use strict";
+  var META_KEY="mbm_r2_static_meta";
+  var CASE_IDS=["signal-lost","understudy","cold-storage","last-ferry"];
+  var R2=window.__MBM_R2||{low:false};
+  if(R2.low)document.body.classList.add("r2-low");
+
+  function utcDay(){var d=new Date();return d.getUTCFullYear()+"-"+String(d.getUTCMonth()+1).padStart(2,"0")+"-"+String(d.getUTCDate()).padStart(2,"0");}
+  function pruneDaily(raw){
+    var clean={};
+    if(!raw||typeof raw!=="object"||Array.isArray(raw))return clean;
+    var ks=Object.keys(raw).filter(function(k){return /^\d{4}-\d{2}-\d{2}$/.test(k);}).sort();
+    if(ks.length>14)ks=ks.slice(ks.length-14);
+    for(var i=0;i<ks.length;i++){
+      var k=ks[i],v=raw[k];
+      if(!v||typeof v!=="object"||Array.isArray(v))continue;
+      clean[k]={done:!!v.done,kind:typeof v.kind==="string"?v.kind.slice(0,16):"case"};
+    }
+    return clean;
+  }
+  function readMeta(){
+    var out={medals:{},clean:{},daily:{}};
+    try{
+      var raw=localStorage.getItem(META_KEY);
+      if(!raw)return out;
+      var o=JSON.parse(raw);
+      if(!o||typeof o!=="object"||Array.isArray(o))return out;
+      if(o.medals&&typeof o.medals==="object"&&!Array.isArray(o.medals)){
+        for(var i=0;i<CASE_IDS.length;i++){
+          var id=CASE_IDS[i],r=o.medals[id];
+          if(typeof r==="number"&&Number.isInteger(r)&&r>=1&&r<=3)out.medals[id]=r;
+        }
+      }
+      if(o.clean&&typeof o.clean==="object"&&!Array.isArray(o.clean)){
+        for(var j=0;j<CASE_IDS.length;j++){
+          var cid=CASE_IDS[j];
+          if(o.clean[cid]===true&&out.medals[cid]>=3)out.clean[cid]=true;
+        }
+      }
+      out.daily=pruneDaily(o.daily);
+    }catch(_){}
+    return out;
+  }
+  function writeMeta(meta){
+    var clean={medals:{},clean:{},daily:pruneDaily(meta&&meta.daily)};
+    if(meta&&meta.medals&&typeof meta.medals==="object"){
+      for(var i=0;i<CASE_IDS.length;i++){
+        var id=CASE_IDS[i],r=meta.medals[id];
+        if(typeof r==="number"&&Number.isInteger(r)&&r>=1&&r<=3)clean.medals[id]=r;
+      }
+    }
+    if(meta&&meta.clean&&typeof meta.clean==="object"){
+      for(var j=0;j<CASE_IDS.length;j++){
+        var cid=CASE_IDS[j];
+        if(meta.clean[cid]===true&&clean.medals[cid]>=3)clean.clean[cid]=true;
+      }
+    }
+    try{localStorage.setItem(META_KEY,JSON.stringify(clean));}catch(_){}
+    return clean;
+  }
+  function tally(meta){
+    var count=0,stars=0,cleanCount=0;
+    for(var i=0;i<CASE_IDS.length;i++){
+      var id=CASE_IDS[i],r=meta.medals[id];
+      if(r>=1&&r<=3){count++;stars+=r;}
+      if(meta.clean[id])cleanCount++;
+    }
+    return{count:count,stars:stars,cleanCount:cleanCount};
+  }
+  function renderTitleMedals(){
+    var el=q("#r2-static-medals");if(!el)return;
+    var meta=readMeta(),t=tally(meta),day=utcDay(),done=!!(meta.daily[day]&&meta.daily[day].done);
+    el.innerHTML='<div class="r2-st-head">★ CASE SEALS: '+t.count+'/4 ('+t.stars+'★)'+(t.cleanCount?' · ✦ '+t.cleanCount+' CLEAN':'')+'</div>'+
+      '<div class="r2-st-daily">'+(done?'<span class="r2-st-done">✓ Daily investigation complete ('+day+')</span>':'◆ Daily ('+day+'): Close a case or Daily Micro-Case')+'</div>';
+  }
+  renderTitleMedals();
+
+  /* Observe verdict & daily micro-case outcomes in #modalCard (zero boot writes, rank-0 never stored) */
+  function inspectModal(){
+    var mc=q("#modalCard");if(!mc)return;
+    var vh=mc.querySelector(".verdict-head");
+    if(vh&&!vh.dataset.r2Processed){
+      vh.dataset.r2Processed="1";
+      var cid=state&&state.caseData&&state.caseData.id;
+      if(CASE_IDS.indexOf(cid)>=0){
+        var stEl=mc.querySelector(".stars"),stTxt=stEl?String(stEl.textContent||""):"";
+        var stars=(stTxt.match(/★/g)||[]).length;
+        var rank=vh.classList.contains("win")?3:(vh.classList.contains("part")?Math.min(2,Math.max(1,stars)):0);
+        var fizzles=Array.isArray(state.links)?state.links.filter(function(l){return l&&l.kind==="fizzle";}).length:0;
+        var isClean=rank===3&&fizzles===0;
+        var meta=readMeta(),day=utcDay();
+        if(rank>=1){
+          if(rank>(meta.medals[cid]||0))meta.medals[cid]=rank;
+          if(isClean)meta.clean[cid]=true;
+          if(rank===3)meta.daily[day]={done:true,kind:"case"};
+          meta=writeMeta(meta);
+          renderTitleMedals();
+        }
+        var t=tally(meta);
+        var seal=document.createElement("div");seal.id="r2-static-verdict-seal";seal.setAttribute("aria-live","polite");
+        if(rank>=1){
+          var tierName=rank===3?"★★★ GOLD SEAL":rank===2?"★★ SILVER SEAL":"★ BRONZE SEAL";
+          seal.textContent=tierName+(isClean?" · ✦ ZERO FALSE LINKS":"")+" · Total "+t.count+"/4 ("+t.stars+"★)";
+        }else{
+          seal.textContent="○ No seal earned — secure the hard contradiction and try again.";
+        }
+        var ep=mc.querySelector(".epilogue");
+        if(ep)ep.insertAdjacentElement("afterend",seal);
+        else mc.appendChild(seal);
+      }
+    }
+    var dailyWin=mc.querySelector("#dailyOut .validator:not(.warn)");
+    if(dailyWin&&!dailyWin.dataset.r2Processed&&/Correct:/i.test(dailyWin.textContent||"")){
+      dailyWin.dataset.r2Processed="1";
+      var meta2=readMeta(),day2=utcDay();
+      meta2.daily[day2]={done:true,kind:"micro"};
+      writeMeta(meta2);
+      renderTitleMedals();
+    }
+  }
+  var mcEl=q("#modalCard");
+  if(mcEl)new MutationObserver(inspectModal).observe(mcEl,{childList:true,subtree:true});
+
+  /* Track playing state for portrait card stepper visibility */
+  var tb=q("#topbar");
+  function syncPlaying(){document.body.classList.toggle("r2-playing",!!(tb&&!tb.classList.contains("hidden")));}
+  if(tb){syncPlaying();new MutationObserver(syncPlaying).observe(tb,{attributes:true,attributeFilter:["class"]});}
+
+  /* Spatial card stepping (Arrow keys, Gamepad D-pad, One-Hand stick, Portrait prev/next buttons) */
+  function unlockedCards(){
+    return qa("#board .card:not(.locked)").filter(function(el){return el.offsetParent!==null;});
+  }
+  function focusCard(card){
+    if(!card)return;
+    card.focus({preventScroll:true});
+    if(card.dataset&&card.dataset.id&&window.V6Camera)window.V6Camera.toCard(card.dataset.id);
+    announce("Focused "+(card.getAttribute("aria-label")||card.dataset.id||"evidence card"));
+  }
+  function stepCardDir(dir){
+    var cards=unlockedCards();if(!cards.length)return;
+    var cur=document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#board .card");
+    if(!cur||cards.indexOf(cur)<0){focusCard(cards[0]);return;}
+    var cr=cur.getBoundingClientRect(),cx=(cr.left+cr.right)/2,cy=(cr.top+cr.bottom)/2;
+    var best=null,bestScore=Infinity;
+    for(var i=0;i<cards.length;i++){
+      var c=cards[i];if(c===cur)continue;
+      var r=c.getBoundingClientRect(),x=(r.left+r.right)/2,y=(r.top+r.bottom)/2;
+      var dx=x-cx,dy=y-cy;
+      var primary=dir==="R"?dx:dir==="L"?-dx:dir==="D"?dy:-dy;
+      var cross=Math.abs(dir==="L"||dir==="R"?dy:dx);
+      if(primary<=10)continue;
+      var score=primary+cross*2.1;
+      if(score<bestScore){bestScore=score;best=c;}
+    }
+    if(best)focusCard(best);
+    else{
+      var idx=cards.indexOf(cur);
+      var delta=(dir==="R"||dir==="D")?1:-1;
+      focusCard(cards[(idx+delta+cards.length)%cards.length]);
+    }
+  }
+  function stepCardCycle(delta){
+    var cards=unlockedCards();if(!cards.length)return;
+    var cur=document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#board .card");
+    var idx=cur?cards.indexOf(cur):-1;
+    var next=idx<0?(delta>0?0:cards.length-1):(idx+delta+cards.length)%cards.length;
+    focusCard(cards[next]);
+  }
+  var prevBtn=q("#r2CardPrev"),nextBtn=q("#r2CardNext");
+  if(prevBtn)prevBtn.addEventListener("click",function(){stepCardCycle(-1);});
+  if(nextBtn)nextBtn.addEventListener("click",function(){stepCardCycle(1);});
+
+  function inKitPanel(){var p=q("#mbmr2-panel");return !!(p&&p.hasAttribute("data-open"));}
+  function boardActive(){
+    if(inKitPanel())return false;
+    var m=q("#modal");if(m&&m.classList.contains("show"))return false;
+    if(!tb||tb.classList.contains("hidden"))return false;
+    return true;
+  }
+  document.addEventListener("keydown",function(e){
+    if(!boardActive()||e.altKey||e.ctrlKey||e.metaKey)return;
+    var tag=(e.target&&e.target.tagName||"").toUpperCase();
+    if(tag==="INPUT"||tag==="TEXTAREA"||tag==="SELECT")return;
+    if(e.code==="ArrowLeft"){e.preventDefault();stepCardDir("L");}
+    else if(e.code==="ArrowRight"){e.preventDefault();stepCardDir("R");}
+    else if(e.code==="ArrowUp"){e.preventDefault();stepCardDir("U");}
+    else if(e.code==="ArrowDown"){e.preventDefault();stepCardDir("D");}
+    else if(e.code==="Digit0"){e.preventDefault();var f=q("#zFit");if(f)f.click();}
+    else if(e.code==="KeyJ"&&!e.repeat){e.preventDefault();var j=q("#journalBtn");if(j)j.click();}
+    else if(e.code==="KeyB"&&!e.repeat){e.preventDefault();var b=q("#briefBtn");if(b)b.click();}
+    else if(e.code==="KeyT"&&!e.repeat){e.preventDefault();var t=q("#tlBtn");if(t)t.click();}
+    else if(e.code==="KeyL"&&!e.repeat){
+      var cur=document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#board .card");
+      if(cur){
+        e.preventDefault();
+        var lb=cur.querySelector("[data-link]");
+        if(lb)lb.click();
+        else if(state.linking&&cur.classList.contains("targetable"))cur.click();
+      }
+    }
+  });
+
+  /* Isolate opt-in One-Hand lower-screen thumb-stick from #viewport drag-pan */
+  if(viewport){
+    viewport.addEventListener("pointerdown",function(e){
+      if(e.pointerType==="mouse"||!boardActive())return;
+      try{if(localStorage.getItem("mbm_r2_onehand")!=="1")return;}catch(_){return;}
+      if(e.clientY<innerHeight*0.35)return;
+      if(e.target&&e.target.closest&&e.target.closest("button,a,[data-link]"))return;
+      e.stopImmediatePropagation();
+    },{capture:true});
+  }
+})();
 })();
 </script>
 <!-- MBM-INLINE-EXIT:BEGIN generated by tools/render_inline_exit.py, do not edit by hand -->
