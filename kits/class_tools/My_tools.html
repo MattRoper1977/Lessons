@@ -323,7 +323,7 @@ textarea.pw-iedp-box{min-height:66px;font:15.5px/1.4 system-ui,sans-serif;backgr
 
 <section id="dayLauncher" class="panel" aria-labelledby="launchTitle">
 <h2 id="launchTitle">Start my day</h2><p id="launchClock"></p>
-<button type="button" id="launchStart">Start my day</button> <button type="button" id="launchShow">See today’s periods</button>
+<button type="button" id="launchStart">Start my day</button> <button type="button" id="launchShow">See today’s periods</button> <button type="button" id="launchTomorrow">See next school day</button>
 <p id="launchSetup">The built-in timetable uses your saved period times and term dates.</p>
 <p><a href="guide/How_it_all_works.html">How it all works</a> · <a href="#paperwork">Paperwork</a></p>
 <details id="launchSample"><summary>See a sample day</summary><p>Example only</p><ol><li>09:30 · Group A · Reading</li><li>10:30 · Group B · Making patterns</li><li>11:30 · Group C · Working together</li></ol></details>
@@ -427,6 +427,7 @@ textarea.pw-iedp-box{min-height:66px;font:15.5px/1.4 system-ui,sans-serif;backgr
 
 <section class="now panel" id="nowCard" aria-labelledby="nowTitle">
 <div class="section-head"><h2 id="nowTitle">Now</h2><span id="nowState" class="badge">Checking clock</span></div>
+<p class="noprint" style="margin:0 0 8px"><button type="button" id="nowNextDay">See next school day’s lessons</button></p>
 <div id="nowProgressWrap" class="now-progress" hidden role="progressbar" aria-label="Current period time elapsed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="nowProgressBar" class="now-progress-bar"></div></div>
 <p id="nowWhen" class="hint"></p><h3 id="nowLesson"></h3><p id="nowCode" class="code"></p>
 <p id="nowHint" class="hint"></p>
@@ -2060,6 +2061,22 @@ $('pickDay').onchange = () => populatePickPeriods($('pickPeriod').value);
 $('applyPreviewBtn').onclick = () => {
   previewOverride = { w: +$('pickWeek').value, day: $('pickDay').value, p: +$('pickPeriod').value };
   $('briefStatus').textContent = 'Previewing Week ' + previewOverride.w + ' ' + previewOverride.day + ' Period ' + previewOverride.p + '.';
+  renderAll();
+};
+// Next school day: load its Period 1 so the P1–P6 strip shows that whole day; tap any period to open it.
+$('nowNextDay').onclick = () => {
+  const now = new Date(), live = schoolSlots(now, times), o = previewOverride;
+  const onOtherDay = o && !live.some(s => s.w === o.w && s.day === o.day);
+  if (onOtherDay) {
+    previewOverride = null;
+    $('briefStatus').textContent = 'Returned to live school clock.';
+  } else {
+    const nd = findNextSchoolDaySlots(now);
+    if (!nd) { $('briefStatus').textContent = 'No more school days in the saved timetable.'; return; }
+    const first = nd.slots.slice().sort((a, b) => a.p - b.p)[0];
+    previewOverride = { w: first.w, day: first.day, p: first.p };
+    $('briefStatus').textContent = 'Showing ' + first.day + ', Week ' + first.w + '. Tap P1 to P6 to load each lesson.';
+  }
   renderAll();
 };
 $('useLiveClockBtn').onclick = () => {
@@ -3710,6 +3727,11 @@ document.querySelectorAll('[data-day-focus]').forEach(btn => {
 function renderPeriodTimeline(now = new Date(), roster = buildRoster()){
   const box = $('periodTimeline');
   if (!box) return;
+  const nb = $('nowNextDay');
+  if (nb) {
+    const o = previewOverride, live = schoolSlots(now, times);
+    nb.textContent = o && !live.some(s => s.w === o.w && s.day === o.day) ? 'Back to today' : 'See next school day’s lessons';
+  }
   box.replaceChildren();
   const liveSlots = schoolSlots(now, times);
   const active = currentActiveSlot(now);
@@ -4582,6 +4604,7 @@ function initDayLauncher() {
   "VOC_LAUNCH_HOSP_A2_W07_L2": "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_HOSP_A2_W07_L2/VOC_LAUNCH_HOSP_A2_W07_L2.html"
 };
   const panel = $('dayLauncher'), list = $('launchList'), details = $('launchDetails');
+  let viewNext = false;
   let openHref = '', signature = '';
   // The school clock and lesson code are shared with the Now card.
   function previousLesson(slot, group) {
@@ -5918,8 +5941,11 @@ function initDayLauncher() {
   function renderDay() {
     const now = new Date();
     const configured = true;
-    const slots = configured ? schoolSlots(now,times).sort((a,b)=>a.start-b.start) : [];
-    const live = configured ? schoolContext(now,times) : {slot:null, current:false};
+    // "See next school day" shows the whole next school day as cards, with nothing marked Now or Next.
+    const ahead = viewNext ? findNextSchoolDaySlots(now) : null;
+    const dayDate = ahead ? ahead.date : now;
+    const slots = viewNext ? (ahead ? ahead.slots.slice().sort((a,b)=>a.start-b.start) : []) : configured ? schoolSlots(now,times).sort((a,b)=>a.start-b.start) : [];
+    const live = viewNext ? {slot:null, current:false} : configured ? schoolContext(now,times) : {slot:null, current:false};
     const next = live.slot;
     const later = next && !slots.some(slot=>+slot.start===+next.start);
     const roster = buildRoster(), tallies = read(KEYS.tally, {}) || {};
@@ -5952,11 +5978,12 @@ function initDayLauncher() {
       else card.append(el('strong',{},'No linked lesson'),el('p',{},'Check the pathway code for this group in Class names.'));
       fragment.append(card);
     });
-    if (now.getDay() === 4 && slots.length) fragment.prepend(lifeSkillsCard(slots[0].w));
-    if ([1,3,5].includes(now.getDay()) && slots.length) fragment.prepend(assemblyCard());
+    if (dayDate.getDay() === 4 && slots.length) fragment.prepend(lifeSkillsCard(slots[0].w));
+    if ([1,3,5].includes(dayDate.getDay()) && slots.length) fragment.prepend(assemblyCard());
     const clock = now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
     $('launchClock').textContent = now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})+' · '+clock;
-    if (!slots.length) fragment.prepend(el('p',{},'There are no periods today.'));
+    if (viewNext) fragment.prepend(el('h3',{},ahead ? 'Next school day · '+dayDate.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}) : 'No more school days in the saved timetable.'));
+    else if (!slots.length) fragment.prepend(el('p',{},'There are no periods today.'));
     else if (!next || later) fragment.prepend(el('p',{},"Today's lessons have finished."));
     // Keep links, keyboard focus and an open tour intact across unchanged clock ticks.
     const newSignature = Array.from(fragment.children).map(node=>node.outerHTML).join('');
@@ -6007,12 +6034,23 @@ function initDayLauncher() {
     else renderNowPacks();
     refreshOpenPupilIfShown();
   };
+  function setViewNext(on){
+    viewNext = on;
+    const b = $('launchTomorrow');
+    b.textContent = on ? 'Back to today' : 'See next school day';
+  }
+  $('launchTomorrow').addEventListener('click', () => {
+    setViewNext(!viewNext);
+    details.hidden = false; renderDay(); panel.dispatchEvent(new Event('launcheropened'));
+  });
   $('launchStart').addEventListener('click', () => {
+    setViewNext(false);
     details.hidden = false; renderDay();
     if (openHref) window.open(openHref,'_blank','noopener');
     panel.dispatchEvent(new Event('launcheropened'));
   });
   $('launchShow').addEventListener('click', () => {
+    setViewNext(false);
     details.hidden = false; renderDay(); panel.dispatchEvent(new Event('launcheropened'));
   });
   renderDay();
