@@ -73,7 +73,7 @@ textarea:focus,input:focus,select:focus{outline:2px solid var(--pink);border-col
 <label for="f-date">Date</label><input type="date" id="f-date">
 <fieldset style="border:0;padding:0;margin:0"><legend style="padding:0;font:inherit;font-weight:600">Pathway</legend>
 <div class="chips" id="pathchips" role="group" aria-label="Pathway">
-<button type="button" class="chip" data-p="BUILD" aria-pressed="false">BUILD</button><button type="button" class="chip" data-p="GROW" aria-pressed="false">GROW</button><button type="button" class="chip" data-p="LAUNCH" aria-pressed="false">LAUNCH</button>
+<button type="button" class="chip" data-p="BUILD" aria-pressed="false">BASE</button><button type="button" class="chip" data-p="GROW" aria-pressed="false">TRACK</button><button type="button" class="chip" data-p="LAUNCH" aria-pressed="false">SUMMIT</button>
 </div></fieldset>
 <label for="f-subj">Subject / episode <span>e.g. "Science — practical re-attempt", pupil initials only</span></label>
 <input type="text" id="f-subj" list="subjects" placeholder="Subject and what was happening">
@@ -105,6 +105,9 @@ textarea:focus,input:focus,select:focus{outline:2px solid var(--pink);border-col
 <script>
 const KEY="lundy_qa_walklog_v1";
 let path="";
+/* Stored pathway keys stay as they are; this is the public display name shown for each. */
+const PATH_NAME={BUILD:"BASE",GROW:"TRACK",LAUNCH:"SUMMIT"};
+function pathName(p){return PATH_NAME[p]||p||"";}
 const $=id=>document.getElementById(id);
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
 function store(a){localStorage.setItem(KEY,JSON.stringify(a));}
@@ -124,7 +127,7 @@ function renderList(){
  $('list').innerHTML=a.map((e,i)=>`
   <div class="entry" data-i="${i}">
    <div class="top" role="button" tabindex="0"><div>
-    <span class="pathchip pc-${esc(e.path||'GROW')}">${esc(e.path||'—')}</span>
+    <span class="pathchip pc-${esc(e.path||'GROW')}">${esc(pathName(e.path)||'—')}</span>
     <b>${esc(e.subj||'(no episode)')}</b>
     <div class="meta">${esc(e.date)}${e.fup?' · follow-up '+esc(e.fup):''}</div></div>
     <span>▾</span></div>
@@ -162,7 +165,7 @@ function exportCSV(){
  if(!a.length){alert('Nothing logged yet.');return;}
  const q=s=>'"'+String(s||'').replace(/"/g,'""')+'"';
  const rows=[["Date","Pathway","Subject/episode","Space","Voice","Audience","Influence","Strength","Coaching next step","Follow-up"].join(",")]
-  .concat(a.map(e=>[e.date,e.path,e.subj,e.space,e.voice,e.aud,e.inf,e.str,e.next,e.fup].map(q).join(",")));
+  .concat(a.map(e=>[e.date,pathName(e.path),e.subj,e.space,e.voice,e.aud,e.inf,e.str,e.next,e.fup].map(q).join(",")));
  const blob=new Blob(["\uFEFF"+rows.join("\r\n")],{type:"text/csv;charset=utf-8"});
  const u=URL.createObjectURL(blob);const l=document.createElement('a');
  l.href=u;l.download="qa_sample_log_"+todayISO()+".csv";document.body.appendChild(l);l.click();l.remove();
@@ -175,7 +178,7 @@ function printVignette(e){
   <h1 style="color:#1e2a4a">Termly Vignette</h1>
   <table>
    <tr><th style="width:28%">Field</th><th>Entry</th></tr>
-   <tr><td><b>Term / pathway</b></td><td>${esc(e.path)||''} — logged ${esc(e.date)}</td></tr>
+   <tr><td><b>Term / pathway</b></td><td>${esc(pathName(e.path))} — logged ${esc(e.date)}</td></tr>
    <tr><td><b>Pupil (initials) and subject episode</b></td><td>${esc(e.subj)}</td></tr>
    <tr><td><b>Space</b> — what made responding possible</td><td>${esc(e.space)}</td></tr>
    <tr><td><b>Voice</b> — what they actually did</td><td>${esc(e.voice)}</td></tr>
