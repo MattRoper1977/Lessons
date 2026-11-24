@@ -6239,6 +6239,55 @@ REVIEWED_PATHS += (
     'build_dt_upcycling.html',
 )
 
+# RECONCILE (24 Nov 2026, ruling side 24 Nov, found while running this tool for public words sweep A2).
+# 1. Commit 227c3013 pinned the help list page and the short-address help pages directly in the gate without
+#    naming them here, so this tool refused to run ("reviewed-path list omits existing admissions"). They are
+#    named here so the tool keeps their pins. Their bytes are unchanged, so their digests do not move.
+# 2. assets/catalogue/lesson-order.json carried five stale sourceSha256 values. Commit b072c487 (#854, 14 Nov,
+#    external-script pins and page policy) edited those five pages and the record was not rebuilt, so the tool
+#    also refused with "Part L lesson order differs". That was real record drift: the pages were right and the
+#    record was old. The record is rebuilt by build_lesson_order.py; only those five digests move.
+REVIEWED_PATHS += (
+    'help/answer/index.html',
+    'help/bridge/index.html',
+    'help/calm/index.html',
+    'help/change/index.html',
+    'help/check/index.html',
+    'help/cue/index.html',
+    'help/follow/index.html',
+    'help/gridmap/index.html',
+    'help/index.html',
+    'help/kitchen/index.html',
+    'help/model/index.html',
+    'help/pace/index.html',
+    'help/private/index.html',
+    'help/record/index.html',
+    'help/safer/index.html',
+    'help/snack/index.html',
+    'help/source/index.html',
+    'help/testclue/index.html',
+    'help/weigh/index.html',
+    'kits/help/answer.html',
+    'kits/help/bridge.html',
+    'kits/help/calm.html',
+    'kits/help/change.html',
+    'kits/help/check.html',
+    'kits/help/cue.html',
+    'kits/help/follow.html',
+    'kits/help/gridmap.html',
+    'kits/help/index.html',
+    'kits/help/kitchen.html',
+    'kits/help/model.html',
+    'kits/help/pace.html',
+    'kits/help/private.html',
+    'kits/help/record.html',
+    'kits/help/safer.html',
+    'kits/help/snack.html',
+    'kits/help/source.html',
+    'kits/help/testclue.html',
+    'kits/help/weigh.html',
+)
+
 def pin(lessons: Path, apps: Path, *, check: bool) -> dict:
     gates = [lessons / GATE, apps / GATE]
     originals = [p.read_text("utf-8") for p in gates]
