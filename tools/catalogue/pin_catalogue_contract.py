@@ -6177,6 +6177,68 @@ def manifest_admitted(lessons: Path) -> set[str]:
 REVIEWED_PATHS = tuple(dict.fromkeys(REVIEWED_PATHS + ('Games/WorldCup_ThreeLions_Final.html', 'Games/WorldCup_v3_MatchDirector.html', 'Games/WorldCup_v5_Showdown.html', 'Games/voxelcraft.html', 'Games/Cup_Final.html', 'Games/Match_Director.html', 'Games/Cup_Showdown.html', 'Games/Block_Builder.html', '5_6 Local Choice/index.html', 'tools/verify_games_offline_runtime.mjs', 'tools/verify_playable.mjs')))
 
 
+# PUBLIC WORDS SWEEP A2 (24 Nov 2026, Lessons #951, ruling side 24 Nov): 70 hub, start-here, scheme-of-work
+# and pack pages show the public pathway display names in visible text and titles. Text-only edits, same
+# paths; addresses, attributes, scripts and spreadsheet tab references are untouched. Seventeen of the 70
+# were already pinned and are re-cut from their reviewed bytes. The 53 below were published but never
+# pinned; each is admitted here by its own reviewed bytes, so the boundary admits exactly these because
+# they are pinned, not because they are exempt.
+REVIEWED_PATHS += (
+    'Art/Build/Autumn2_Printable_Weekly_Evidence_Pack.html',
+    'Art/Build/Autumn2_Scheme_of_Work.html',
+    'Art/Build/Autumn2_Studio_Session_Run_Sheets.html',
+    'Art/Build/Printable_BUILD_Weekly_Evidence_Pack.html',
+    'Art/Build/Scheme_of_Work.html',
+    'Art/Build/Spring1_Printable_Weekly_Evidence_Pack.html',
+    'Art/Build/Spring1_Scheme_of_Work.html',
+    'Art/Build/Spring2_2026-27/START_HERE.html',
+    'Art/Grow/Printable_GROW_Evidence_Lundy_and_LAUNCH_Pack.html',
+    'Art/Grow/START_HERE.html',
+    'Art/Grow/Scheme_of_Work.html',
+    'Art/Grow/Spring2_2026-27/START_HERE.html',
+    'Art/House_Standard_and_Safety.html',
+    'Art/Launch/Printable_LAUNCH_Evidence_and_Lundy_Pack.html',
+    'Art/Launch/START_HERE.html',
+    'Art/Launch/Scheme_of_Work.html',
+    'Art/Launch/Spring2_2026-27/START_HERE.html',
+    'BUILD_ASDAN/BUILD_ASDAN_Hub.html',
+    'BUILD_ASDAN/Careers/START_HERE.html',
+    'BUILD_ASDAN/Community_Project/START_HERE.html',
+    'BUILD_ASDAN/Duke_and_Enterprise/START_HERE.html',
+    'BUILD_ASDAN/FoodWise/START_HERE.html',
+    'BUILD_ASDAN/Living_Independently/START_HERE.html',
+    'BUILD_ASDAN/Resources_and_Tools.html',
+    'BUILD_ASDAN/Scheme_of_Work.html',
+    'DT_Community_Upcycling/Scheme_of_Work.html',
+    'DT_Community_Upcycling/Weekly_Plan.html',
+    'GROW_ASDAN/Enterprise/START_HERE.html',
+    'GROW_ASDAN/GROW_ASDAN_Hub.html',
+    'GROW_ASDAN/PEQ/START_HERE.html',
+    'GROW_ASDAN/PEQ_L2_Kitchen/Cooking_Handover.html',
+    'GROW_ASDAN/PEQ_L2_Kitchen/Criteria_By_Week.html',
+    'GROW_ASDAN/PEQ_L2_Kitchen/Kitchen_Completion_Checklist.html',
+    'GROW_ASDAN/PEQ_L2_Kitchen/Kitchen_Week_Shell.html',
+    'GROW_ASDAN/PEQ_L2_Kitchen/Scheme_of_Work.html',
+    'GROW_ASDAN/PEQ_L2_Kitchen/Staff_Kitchen_Guide.html',
+    'Humanities/BUILD_Printable_Pack.html',
+    'Humanities/BUILD_W9-W14_2026-27/START_HERE.html',
+    'Humanities/GROW_Printable_Pack.html',
+    'Humanities/LAUNCH_Printable_Pack.html',
+    'Humanities/LAUNCH_W9-W14_2026-27/START_HERE.html',
+    'LAUNCH_ASDAN/Careers/START_HERE.html',
+    'LAUNCH_ASDAN/Community_Enterprise/START_HERE.html',
+    'LAUNCH_ASDAN/LAUNCH_ASDAN_Hub.html',
+    'LAUNCH_ASDAN/Living_Independently/START_HERE.html',
+    'LAUNCH_ASDAN/PEQ/START_HERE.html',
+    'LAUNCH_ASDAN/Vocational/START_HERE.html',
+    'Science/Build/W8-W13_2026-27/START_HERE.html',
+    'Science/Build/v4_fieldops/index.html',
+    'Science/Grow/W8-W13_2026-27/START_HERE.html',
+    'Science/Launch/W8-W13_2026-27/START_HERE.html',
+    'build_asdan.html',
+    'build_dt_upcycling.html',
+)
+
 def pin(lessons: Path, apps: Path, *, check: bool) -> dict:
     gates = [lessons / GATE, apps / GATE]
     originals = [p.read_text("utf-8") for p in gates]
