@@ -975,7 +975,7 @@ section.print-only { display: none; }
     return keyObj;
   }
 
-  /* mbm-adapt-v3 START · My pupils print engine v3.8 (Made by Matt). Reads device stores and #mbm-lesson-cards; writes only mbm_lesson_today_v1, mbm_adapt_log_v1, mbm_pupil_target_words_v1, mbm_pupil_subject_v1 and mbm_print_prefs_v1 (true/false only). Runs offline only. */
+  /* mbm-adapt-v3 START · My pupils print engine v3.8.1 (Made by Matt). Reads device stores and #mbm-lesson-cards; writes only mbm_lesson_today_v1, mbm_adapt_log_v1, mbm_pupil_target_words_v1, mbm_pupil_subject_v1 and mbm_print_prefs_v1 (true/false only). Runs offline only. */
   const ADAPT_V3_CSS = [
     '#dynamicPupilPrint .ad2-banner{border:2px solid #10243a;border-radius:2mm;padding:1.4mm 2.5mm;margin:0 0 2mm 0;font-size:13pt;font-weight:700;display:flex;gap:4mm;flex-wrap:wrap}',
     '#dynamicPupilPrint .ad2-banner .ad2-next{font-weight:400}',
@@ -1081,11 +1081,12 @@ section.print-only { display: none; }
     '#dynamicPupilPrint.adapt-large .ad3-gf-line,#dynamicPupilPrint .adapt-large .ad3-gf-line,#dynamicPupilPrint.adapt-large .ad3-gf-words,#dynamicPupilPrint .adapt-large .ad3-gf-words{font-size:16pt !important;line-height:1.3 !important}',
     '#dynamicPupilPrint.adapt-large .write-line,#dynamicPupilPrint .adapt-large .write-line{height:10mm !important}',
     '#dynamicPupilPrint.adapt-tint-blue article.paper.pupil-paper:not(.ad3-meas-auto),#dynamicPupilPrint .adapt-tint-blue article.paper.pupil-paper:not(.ad3-meas-auto),#dynamicPupilPrint.adapt-tint-cream article.paper.pupil-paper:not(.ad3-meas-auto),#dynamicPupilPrint .adapt-tint-cream article.paper.pupil-paper:not(.ad3-meas-auto),#dynamicPupilPrint.adapt-tint-green article.paper.pupil-paper:not(.ad3-meas-auto),#dynamicPupilPrint .adapt-tint-green article.paper.pupil-paper:not(.ad3-meas-auto),#dynamicPupilPrint.adapt-tint-pink article.paper.pupil-paper:not(.ad3-meas-auto),#dynamicPupilPrint .adapt-tint-pink article.paper.pupil-paper:not(.ad3-meas-auto){min-height:276mm !important;box-sizing:border-box !important}',
-    '#dynamicPupilPrint.adapt-tint-cream article.paper.pupil-paper,#dynamicPupilPrint .adapt-tint-cream article.paper.pupil-paper{background:#fdf8e7 !important}',
-    '#dynamicPupilPrint.adapt-tint-blue article.paper.pupil-paper,#dynamicPupilPrint .adapt-tint-blue article.paper.pupil-paper{background:#edf6fd !important}',
-    '#dynamicPupilPrint.adapt-tint-green article.paper.pupil-paper,#dynamicPupilPrint .adapt-tint-green article.paper.pupil-paper{background:#eff9f1 !important}',
-    '#dynamicPupilPrint.adapt-tint-pink article.paper.pupil-paper,#dynamicPupilPrint .adapt-tint-pink article.paper.pupil-paper{background:#fdf0f5 !important}}',
+    '#dynamicPupilPrint.adapt-tint-cream article.paper.pupil-paper,#dynamicPupilPrint .adapt-tint-cream article.paper.pupil-paper{background:#faf0cc !important}',
+    '#dynamicPupilPrint.adapt-tint-blue article.paper.pupil-paper,#dynamicPupilPrint .adapt-tint-blue article.paper.pupil-paper{background:#d6e8f7 !important}',
+    '#dynamicPupilPrint.adapt-tint-green article.paper.pupil-paper,#dynamicPupilPrint .adapt-tint-green article.paper.pupil-paper{background:#dcefe0 !important}',
+    '#dynamicPupilPrint.adapt-tint-pink article.paper.pupil-paper,#dynamicPupilPrint .adapt-tint-pink article.paper.pupil-paper{background:#f8dce6 !important}}',
     '#dynamicPupilPrint .ad3-cont-head{padding-bottom:1mm}',
+    '#dynamicPupilPrint .ad3-paper-note,#ad3ViewHost .ad3-paper-note{display:inline-block;font-size:.8em;font-weight:600;border:1px solid #0b0c0c;border-radius:1.5mm;padding:0 1.5mm;margin-left:2mm;background:#fff;color:#0b0c0c}',
     '#dynamicPupilPrint article.paper.ad3-exit-tight .paper-body{gap:1.2mm !important}',
     '#dynamicPupilPrint article.paper.ad3-exit-tight .exit-meta-strip{display:flex !important;flex-wrap:wrap !important;gap:0.4mm 4mm !important;padding:0.8mm 2mm !important;line-height:1.15 !important}',
     '#dynamicPupilPrint article.paper.ad3-exit-tight-2 .paperhead{padding-bottom:0.8mm !important;margin-bottom:1mm !important}',
@@ -4007,6 +4008,18 @@ section.print-only { display: none; }
       const n = idx + 1;
       const headNum = p.querySelector('.paper-pagenum');
       if (headNum) headNum.textContent = 'Page ' + n + ' of ' + totalPupilPages;
+      p.querySelectorAll('.ad3-paper-note').forEach(x => x.remove());
+      if (idx === 0 && headNum && headNum.parentNode) {
+        const tintHost = p.closest('[class*="adapt-tint-"]');
+        const tc = tintHost ? tintHost.className : '';
+        const colour = /adapt-tint-blue/.test(tc) ? 'blue' : /adapt-tint-pink/.test(tc) ? 'pink' : /adapt-tint-green/.test(tc) ? 'green' : /adapt-tint-cream/.test(tc) ? 'cream' : '';
+        if (colour) {
+          const note = document.createElement('span');
+          note.className = 'ad3-paper-note';
+          note.textContent = 'Adult: print on ' + colour + ' paper';
+          headNum.parentNode.insertBefore(note, headNum.nextSibling);
+        }
+      }
       const footSpans = p.querySelectorAll('.paperfoot span');
       if (footSpans.length >= 2) footSpans[footSpans.length - 1].textContent = n + ' of ' + totalPupilPages;
     });
