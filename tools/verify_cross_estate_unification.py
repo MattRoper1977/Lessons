@@ -770,7 +770,7 @@ CATALOGUE_PINS = {
         "Launch/README.txt": "d298bccc19f2dc4318a5c5e0a9cdd79b81a7bdc7d20c9d07237b069335ac3f50",
         "Launch/index.html": "997eab91b19a7476cf67c81338b6e23932391bcfe2fefaa1d93b917b36335749",
         "LundyLoop/2_leadership/Head_Office_Summary.html": "678b60a87e878f8636600e8ee751909f4cd3491d41282e4cad00e9d53d97581f",
-        "LundyLoop/2_leadership/Loop_Walk_Logger.html": "40075564d6166a2b9e6a91dd63ef52390a0405762b677796c60f3a2f36f88cb8",
+        "LundyLoop/2_leadership/Loop_Walk_Logger.html": "957bccd7deb0ef2ff54a7c628849bf33f18c07274a1cc7786cae5a967f3055cc",
         "LundyLoop/2_leadership/implementation_plan.html": "1641bf743e49a10414170a0cf190ae9758a5273c7b7cbc9120041aab6c42c5f7",
         "LundyLoop/2_leadership/policy_alignment_matrix.html": "0c3028e51fdad33b163abd906536fef43c29111d42816feffc2fa21ab600c71c",
         "LundyLoop/2_leadership/qa_coaching_sheet.html": "a86b54bacac3c4d5984d5c6750d2e488d5e2b713caa9a86729bcf2c53482901f",
