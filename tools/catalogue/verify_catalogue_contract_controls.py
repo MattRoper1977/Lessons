@@ -112,10 +112,26 @@ def run(lessons: Path, apps: Path, canonical: Path) -> list[dict]:
             workflow_bytes = (owner / gate.PUBLICATION_GATE_WORKFLOW_PATH).read_bytes()
             caller_pattern = rb"(?m)^      - (?P<quote>['\"]?)" + re.escape(gate.PUBLICATION_CALLER_PATH.encode()) + rb"(?P=quote)\r?\n"
             caller_triggers = [match.group(0) for match in re.finditer(caller_pattern, workflow_bytes)]
-            check(kind + " trigger controls locate both actual YAML list entries", len(caller_triggers) == 2)
-            first_trigger, last_trigger = caller_triggers
+            # 2026-11-24: the Lessons guard runs push to main with no path filter (gate
+            # change of 2026-11-07, publication_trigger_errors): GitHub refuses a workflow
+            # file over 512 KiB, so the derived path list stays on pull_request only. That
+            # exact unfiltered form watches every path, the caller included, so it carries
+            # one caller list entry, not two. It is accepted here only in that exact form,
+            # and it is then sabotaged directly: narrowing push with a path list, a
+            # paths-ignore or another branch filter must each still be a red.
+            unfiltered_push = b"\n  push:\n    branches: [main]\n"
+            push_unfiltered = (len(caller_triggers) == 1 and workflow_bytes.count(unfiltered_push) == 1
+                               and not re.search(rb"(?m)^  push:\r?\n    branches: \[main\]\r?\n    paths", workflow_bytes))
+            check(kind + " trigger controls locate both actual YAML list entries" if not push_unfiltered else
+                  kind + " trigger controls locate the pull-request entry and the exact unfiltered push", len(caller_triggers) == 2 or push_unfiltered)
+            first_trigger, last_trigger = caller_triggers[0], caller_triggers[-1]
             mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b.replace(first_trigger, b"", 1), kind + " rejects missing pull-request caller trigger", root=owner, kind=kind)
-            mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b"".join(b.rsplit(last_trigger, 1)), kind + " rejects missing push caller trigger", root=owner, kind=kind)
+            if push_unfiltered:
+                mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b.replace(unfiltered_push, unfiltered_push + b"    paths:\n      - 'index.html'\n", 1), kind + " rejects a push path filter that drops the caller", root=owner, kind=kind)
+                mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b.replace(unfiltered_push, unfiltered_push + b"    paths-ignore:\n      - " + first_trigger.strip()[2:] + b"\n", 1), kind + " rejects a push paths-ignore over the caller", root=owner, kind=kind)
+                mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b.replace(unfiltered_push, b"\n  push:\n    branches: [main, unreviewed]\n", 1), kind + " rejects another push branch filter", root=owner, kind=kind)
+            else:
+                mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b"".join(b.rsplit(last_trigger, 1)), kind + " rejects missing push caller trigger", root=owner, kind=kind)
             mutate(gate.PUBLICATION_GATE_WORKFLOW_PATH, lambda b: b.replace(first_trigger, b"      # " + first_trigger.strip() + b"\n", 1), kind + " rejects a comment masquerading as a caller trigger", root=owner, kind=kind)
             mutate(gate.PUBLICATION_CALLER_PATH, lambda b: b.replace(b"contents: read", b"contents: write", 1), kind + " rejects broader publication permissions", root=owner, kind=kind)
             mutate(gate.PUBLICATION_CALLER_PATH, lambda b: b + b"\n  unreviewed-job:\n    runs-on: ubuntu-latest\n", kind + " rejects an extra publication job", root=owner, kind=kind)
