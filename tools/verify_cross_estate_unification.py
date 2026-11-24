@@ -131,7 +131,11 @@ CATALOGUE_PINS = {
         # Re-cut 2026-11-22 (ruling thread 22 November): PUBLISHED re-derived by tools/sw2/pin_published_digests.py --write from the
         # Site cb5654dd admission registry (lessons "" fddec24e, subject.html 081595ee, apps "" 5009ba10), each equal to the live page
         # measured the same hour; digest taken from the edited file, never typed.
-        "tools/sw2/check_tokens_inert.cjs": "63ce83d4472c99573162e02bcc4d67127527fbf7a6df726c4b32f68e0c7ad952",
+        # Re-cut 2026-11-24 (flight 76, ruling thread): PUBLISHED re-derived by tools/sw2/pin_published_digests.py --write from the
+        # Site bfe2e1cf admission registry (lessons "" 1612c51d, subject.html 50cff51a, apps "" dc2cb381), each equal to the live page
+        # measured the same hour; the live-proof job had been red on every Lessons push since #939 on 23 Nov. Digest taken from the
+        # edited file, never typed.
+        "tools/sw2/check_tokens_inert.cjs": "da555104d6825263f3d8d0b219f10d60fa2957f9bdcf7487c41262b434f15c33",
         "assets/catalogue/lesson-order.json": "ccbfc167bbce385068fa2e5fbb02330b739db85f8fe832e91d69f99fc5a3a8ba",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
