@@ -1258,11 +1258,12 @@ section.print-only { display: none; }
     return keyObj;
   }
 
-  /* mbm-adapt-v3 START · My pupils print engine v3.8.1 (Made by Matt). Reads device stores and #mbm-lesson-cards; writes only mbm_lesson_today_v1, mbm_adapt_log_v1, mbm_pupil_target_words_v1, mbm_pupil_subject_v1 and mbm_print_prefs_v1 (true/false only). Runs offline only. */
+  /* mbm-adapt-v3 START · My pupils print engine v3.9 (Made by Matt). Reads device stores, #mbm-lesson-cards and #mbm-rehearse-data; writes only mbm_lesson_today_v1, mbm_adapt_log_v1, mbm_pupil_target_words_v1, mbm_pupil_subject_v1 and mbm_print_prefs_v1 (true/false only). Runs offline only. */
   const ADAPT_V3_CSS = [
-    '#dynamicPupilPrint .ad2-banner{border:2px solid #10243a;border-radius:2mm;padding:1.4mm 2.5mm;margin:0 0 2mm 0;font-size:13pt;font-weight:700;display:flex;gap:4mm;flex-wrap:wrap}',
-    '#dynamicPupilPrint .ad2-banner .ad2-next{font-weight:400}',
-    '#dynamicPupilPrint .ad2-note{border:2px dashed #334e68;border-radius:2mm;padding:1.6mm 2.5mm;margin:1.5mm 0;font-size:13pt}',
+    '#dynamicPupilPrint .ad2-banner{border:1.5px solid #10243a;border-radius:1.8mm;padding:0.9mm 2.2mm;margin:0 0 1.4mm 0;font-size:10.5pt;font-weight:700;display:flex;gap:3mm;flex-wrap:wrap;align-items:center;background:#f4f7fb}',
+    '#dynamicPupilPrint .ad2-banner .ad2-next{font-weight:400;color:#223a54}',
+    '#dynamicPupilPrint .ad2-banner .ad3-bn-step{display:inline-flex;align-items:center;justify-content:center;min-width:5.5mm;height:5.5mm;padding:0 1mm;border-radius:50%;background:#10243a;color:#fff;font-size:9.5pt;font-weight:800;flex:none}',
+    '#dynamicPupilPrint .ad2-note{border:1.5px dashed #334e68;border-radius:1.8mm;padding:1.1mm 2mm;margin:1mm 0;font-size:10.5pt;line-height:1.22}',
     '#dynamicPupilPrint .ad2-must{font-weight:700}',
     '#dynamicPupilPrint .ad2-tag{display:inline-block;border:1.5px solid #10243a;border-radius:1.5mm;padding:0 1.5mm;margin-right:2mm;font-size:11pt;font-weight:700}',
     '#dynamicPupilPrint .ad2-tick{display:inline-block;width:5mm;height:5mm;border:1.8px solid #10243a;border-radius:1mm;margin-right:2.5mm;vertical-align:-0.8mm}',
@@ -1531,10 +1532,179 @@ section.print-only { display: none; }
     '#dynamicPupilPrint.adapt-large .ad3-desk-paper .ad2-card h2,#dynamicPupilPrint .adapt-large .ad3-desk-paper .ad2-card h2{font-size:22pt !important}',
     '#dynamicPupilPrint.adapt-large .ad3-desk-paper .ad2-card p,#dynamicPupilPrint .adapt-large .ad3-desk-paper .ad2-card p,#dynamicPupilPrint.adapt-large .ad3-desk-paper .ad2-card li,#dynamicPupilPrint .adapt-large .ad3-desk-paper .ad2-card li{font-size:18pt !important;line-height:1.26 !important}',
     '#dynamicPupilPrint.adapt-large .ad3-cs-set-h,#dynamicPupilPrint .adapt-large .ad3-cs-set-h,#dynamicPupilPrint.adapt-large .ad3-cs-piece,#dynamicPupilPrint .adapt-large .ad3-cs-piece,#dynamicPupilPrint.adapt-large .ad3-cs-target-h,#dynamicPupilPrint .adapt-large .ad3-cs-target-h,#dynamicPupilPrint.adapt-large .ad3-tpl-h,#dynamicPupilPrint .adapt-large .ad3-tpl-h,#dynamicPupilPrint.adapt-large .ad3-cs-table th,#dynamicPupilPrint .adapt-large .ad3-cs-table th{font-size:16.5pt !important;line-height:1.24 !important}',
-    '#dynamicPupilPrint.adapt-large .ad3-pic svg,#dynamicPupilPrint .adapt-large .ad3-pic svg{max-height:70mm !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-pic svg,#dynamicPupilPrint .adapt-large .ad3-pic svg{max-height:48mm !important}',
     '#dynamicPupilPrint.adapt-book:not(.adapt-large) article.paper.pupil-paper:not(.ad3-exit-paper) .ad3-task-h,#dynamicPupilPrint .adapt-book:not(.adapt-large) article.paper.pupil-paper:not(.ad3-exit-paper) .ad3-task-h{font-size:13pt;line-height:1.2}',
     '#dynamicPupilPrint.adapt-book:not(.adapt-large) article.paper.pupil-paper:not(.ad3-exit-paper) .ad3-sec,#dynamicPupilPrint .adapt-book:not(.adapt-large) article.paper.pupil-paper:not(.ad3-exit-paper) .ad3-sec{padding:0.5mm 0 0.5mm 2mm;margin:0.4mm 0}',
-    '#dynamicPupilPrint.adapt-book:not(.adapt-large) article.paper.pupil-paper:not(.ad3-exit-paper) .ad3-pic svg,#dynamicPupilPrint .adapt-book:not(.adapt-large) article.paper.pupil-paper:not(.ad3-exit-paper) .ad3-pic svg{max-height:58mm}'
+    '#dynamicPupilPrint.adapt-book:not(.adapt-large) article.paper.pupil-paper:not(.ad3-exit-paper) .ad3-pic svg,#dynamicPupilPrint .adapt-book:not(.adapt-large) article.paper.pupil-paper:not(.ad3-exit-paper) .ad3-pic svg{max-height:58mm}',
+    /* v3.9 concise pack styles */
+    '#dynamicPupilPrint article.paper.pupil-paper{padding:7mm 8.5mm 6mm 8.5mm !important}',
+    '#dynamicPupilPrint article.paper.pupil-paper .paperhead{padding-bottom:1.2mm !important;margin-bottom:1.4mm !important}',
+    '#dynamicPupilPrint article.paper.pupil-paper .paper-body{gap:1.4mm !important}',
+    '#dynamicPupilPrint article.paper.pupil-paper .activity-box{padding:1.5mm 2.2mm !important;gap:0.9mm !important}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-stepnum{min-width:8mm;height:8mm;font-size:13.5pt}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-step-h1{font-size:15pt;line-height:1.15;gap:2mm}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-sec{border-left-width:1.8mm;padding:0.6mm 0 0.6mm 2mm;margin:0.5mm 0}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-sec-h{font-size:11pt;margin:0 0 0.5mm 0;gap:1.4mm}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-sec-h svg{width:4.4mm;height:4.4mm}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-sec-read .wynk-box{padding:0.7mm 1.4mm}',
+    '#dynamicPupilPrint article.paper.pupil-paper .wynk-list{font-size:11pt;line-height:1.22;margin:0;padding-left:4.5mm}',
+    '#dynamicPupilPrint article.paper.pupil-paper .wynk-list li{margin:0 0 0.4mm 0}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-task{margin:0.45mm 0 0.8mm 0}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-task-h{font-size:12pt;line-height:1.22;gap:1.5mm}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-task-n{min-width:5.8mm;height:5.8mm;font-size:10.5pt;border-width:1.5px}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-q{font-size:12pt;line-height:1.22;margin:0 0 0.6mm 0}',
+    '#dynamicPupilPrint article.paper.pupil-paper .write-line{height:7.5mm}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-task .answer-space{margin-top:0.3mm;padding-top:0.3mm;gap:1mm}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-example{font-size:11pt;padding:0.7mm 1.6mm;margin:0.5mm 0;line-height:1.2}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-check-row{font-size:11.5pt;line-height:1.2}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-pic{max-width:96mm;margin:0.6mm auto 0.4mm auto;padding:0.5mm}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-pic svg{max-height:42mm}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-frame > div{min-height:9mm;padding:0.8mm 1.8mm;font-size:11pt;line-height:1.18}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-frame .ad3-tall{min-height:22mm}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-cs-table th{padding:0.9mm 1.6mm;font-size:10.5pt}',
+    '#dynamicPupilPrint article.paper.pupil-paper .ad3-cs-table td{height:16mm;padding:1mm}',
+    '#dynamicPupilPrint .ad3-hide-dup-boxhead .box-header{display:none !important}',
+    /* Cover page (Rule 2) */
+    '#dynamicPupilPrint .ad3-cover-sec{border:1.5px solid #223a54;border-radius:2mm;padding:1.8mm 2.6mm;margin:0.6mm 0;background:#fff}',
+    '#dynamicPupilPrint .ad3-cover-sec h2{margin:0 0 1.2mm 0;font-size:12pt;font-weight:800;color:#10243a;text-transform:uppercase;letter-spacing:.03em}',
+    '#dynamicPupilPrint .ad3-cover-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:1mm 4mm;font-size:11.5pt;line-height:1.25}',
+    '#dynamicPupilPrint .ad3-cover-steps li{display:flex;align-items:center;gap:1.5mm;margin:0}',
+    '#dynamicPupilPrint .ad3-cover-steps .ad2-tick{width:4.2mm;height:4.2mm;margin-right:0.8mm;flex:none}',
+    '#dynamicPupilPrint .ad3-cover-wb-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4mm 4mm;margin:0}',
+    '#dynamicPupilPrint .ad3-cover-wb-item{border-left:1.5mm solid #1b4f9c;padding:0.4mm 0 0.4mm 1.8mm;break-inside:avoid}',
+    '#dynamicPupilPrint .ad3-cover-wb-item dt{font-weight:800;font-size:11.5pt;color:#10243a;margin:0;line-height:1.18}',
+    '#dynamicPupilPrint .ad3-cover-wb-item dd{font-size:10.5pt;color:#223a54;margin:0.3mm 0 0 0;line-height:1.2}',
+    /* Formula boxes (Rule 6) */
+    '#dynamicPupilPrint .ad3-formula-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(34mm,1fr));gap:2mm;margin:0.4mm 0}',
+    '#dynamicPupilPrint .ad3-formula-box{border:1.8px solid #1b4f9c;border-radius:2mm;background:#eef5ff;padding:1.4mm 1.8mm;display:flex;align-items:flex-start;gap:1.5mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}',
+    '#dynamicPupilPrint .ad3-formula-num{display:inline-flex;align-items:center;justify-content:center;min-width:5.6mm;height:5.6mm;border-radius:50%;background:#1b4f9c;color:#fff;font-weight:800;font-size:10pt;flex:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}',
+    '#dynamicPupilPrint .ad3-formula-txt{font-size:10.5pt;font-weight:700;line-height:1.18;color:#10243a}',
+    '#dynamicPupilPrint .ad3-formula-mini{display:flex;flex-wrap:wrap;gap:1.2mm;margin:0 0 1mm 0;align-items:center}',
+    '#dynamicPupilPrint .ad3-formula-chip{display:inline-flex;align-items:center;gap:1mm;border:1.2px solid #1b4f9c;border-radius:1.5mm;background:#eef5ff;padding:0.4mm 1.4mm;font-size:9.5pt;font-weight:700;color:#10243a;line-height:1.15;-webkit-print-color-adjust:exact;print-color-adjust:exact}',
+    '#dynamicPupilPrint .ad3-formula-chip b{display:inline-flex;align-items:center;justify-content:center;width:4.2mm;height:4.2mm;border-radius:50%;background:#1b4f9c;color:#fff;font-size:8.5pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}',
+    '#dynamicPupilPrint .ad3-fstep-tag{display:inline-block;border:1px solid #1b4f9c;background:#eef5ff;color:#1b4f9c;border-radius:1.2mm;padding:0 1.2mm;margin-right:1.4mm;font-size:9pt;font-weight:800;vertical-align:0.5px;-webkit-print-color-adjust:exact;print-color-adjust:exact}',
+    /* Combined arrival two-halves (Rule 3) */
+    '#dynamicPupilPrint .ad3-route-banner{border:1.5px solid #10243a;background:#fff8e6;border-radius:1.5mm;padding:0.45mm 1.5mm;font-size:9.2pt;font-weight:700;color:#10243a;margin:0 0 0.4mm 0;-webkit-print-color-adjust:exact;print-color-adjust:exact}',
+    '#dynamicPupilPrint .ad3-route-split{border-top:2px dashed #334e68;margin:0.5mm 0;text-align:center;font-size:8.5pt;font-weight:800;color:#334e68;padding-top:0.3mm}',
+    '#dynamicPupilPrint .ad3-arrival-combined .paperhead{padding-bottom:0.6mm !important;margin-bottom:0.6mm !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .ad2-banner{padding:0.5mm 1.6mm !important;margin:0 0 0.5mm 0 !important;font-size:9.2pt !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .paper-body{gap:0.45mm !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .activity-box{padding:0.7mm 1.4mm !important;gap:0.3mm !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .box-header{display:flex !important;padding-bottom:0.25mm !important;margin:0 !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .box-header h2{font-size:10pt !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .box-num{font-size:8.5pt !important;padding:0.15mm 1mm !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .ad3-sec{padding:0.25mm 0 0.25mm 1.4mm !important;margin:0.2mm 0 !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .ad3-sec-h{font-size:9pt !important;margin:0 0 0.2mm 0 !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .ad3-sec-h svg{width:3.2mm !important;height:3.2mm !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .ad3-sec-read .wynk-box{padding:0.35mm 1mm !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .wynk-list{font-size:9pt !important;line-height:1.13 !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .ad3-task{margin:0.2mm 0 0.35mm 0 !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .ad3-task-h,#dynamicPupilPrint .ad3-arrival-combined .ad3-q{font-size:9.5pt !important;line-height:1.14 !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .ad3-task-n{min-width:4.4mm !important;height:4.4mm !important;font-size:8.5pt !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .ad3-check-row{font-size:9pt !important;line-height:1.13 !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .ad3-example{font-size:9pt !important;padding:0.3mm 1mm !important;margin:0.2mm 0 !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .write-line{height:4.8mm !important}',
+    '#dynamicPupilPrint .ad3-arrival-combined .answer-space{gap:0.45mm !important;margin-top:0.15mm !important;padding-top:0.15mm !important}',
+    /* Inline cut strip at bottom of activity page (Rule 4) */
+    '#dynamicPupilPrint .ad3-cutstrip{border-top:2px dashed #10243a;margin-top:1.4mm;padding-top:1.2mm;break-inside:avoid}',
+    '#dynamicPupilPrint .ad3-cutstrip-head{display:flex;align-items:center;gap:1.5mm;font-size:9.5pt;font-weight:800;color:#10243a;text-transform:uppercase;letter-spacing:.03em;margin:0 0 1mm 0}',
+    '#dynamicPupilPrint .ad3-cutstrip-head svg{width:4.5mm;height:4.5mm;flex:none}',
+    '#dynamicPupilPrint .ad3-cutstrip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(52mm,1fr));gap:1.8mm}',
+    '#dynamicPupilPrint .ad3-rcard-compact{border:1.8px dashed #10243a;border-radius:2mm;overflow:hidden;break-inside:avoid;display:flex;flex-direction:column;background:#fff}',
+    '#dynamicPupilPrint .ad3-rcard-compact .ad3-rcard-top{padding:0.8mm 1.8mm;font-size:10.5pt;gap:1.2mm}',
+    '#dynamicPupilPrint .ad3-rcard-compact .ad3-rcard-shape{width:4mm;height:4mm}',
+    '#dynamicPupilPrint .ad3-rcard-compact .ad3-rcard-shape svg{width:3.8mm;height:3.8mm}',
+    '#dynamicPupilPrint .ad3-rcard-compact .ad3-rcard-body{padding:1mm 1.8mm;gap:0.5mm}',
+    '#dynamicPupilPrint .ad3-rcard-compact .ad3-rcard-lbl{font-size:8pt}',
+    '#dynamicPupilPrint .ad3-rcard-compact .ad3-rcard-val{font-size:9.5pt;line-height:1.16}',
+    '#dynamicPupilPrint .ad3-cs-strip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6mm}',
+    '#dynamicPupilPrint .ad3-cs-piece-compact{border:1.8px dashed #10243a;border-radius:1.8mm;min-height:11mm;padding:1.2mm 1.8mm;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700;font-size:10pt;line-height:1.18;background:#fff;break-inside:avoid}',
+    '#dynamicPupilPrint .ad3-card-reuse{border:1.5px solid #0b6b57;background:#edf7f4;border-radius:1.6mm;padding:0.8mm 1.8mm;font-size:10.5pt;font-weight:700;color:#0b6b57;margin:0.6mm 0;-webkit-print-color-adjust:exact;print-color-adjust:exact}',
+    '#dynamicPupilPrint .ad3-inline-frame{border:1.5px dashed #1b4f9c;background:#f4f8fd;border-radius:1.6mm;padding:0.9mm 1.8mm;margin:0.6mm 0;font-size:10.5pt;line-height:1.22;color:#10243a;-webkit-print-color-adjust:exact;print-color-adjust:exact}',
+    '#dynamicPupilPrint .ad3-inline-frame strong{color:#1b4f9c}',
+    /* Rehearsal card, Exit formula check, NS+ challenge (Rule 6) */
+    '#dynamicPupilPrint .ad3-reh-choices{list-style:none;margin:0.6mm 0 0.4mm 0;padding:0;display:grid;gap:0.8mm}',
+    '#dynamicPupilPrint .ad3-reh-choice{display:flex;align-items:flex-start;gap:1.5mm;font-size:11.5pt;line-height:1.2}',
+    '#dynamicPupilPrint .ad3-reh-choice .ad2-tick{width:4.4mm;height:4.4mm;flex:none;margin-right:0.5mm;margin-top:0.3mm}',
+    '#dynamicPupilPrint .ad3-exit-formula{border:1.5px solid #1b4f9c;border-radius:1.8mm;background:#f4f8fd;padding:1.2mm 2mm;margin:0.8mm 0;break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}',
+    '#dynamicPupilPrint .ad3-ef-head{font-weight:800;font-size:11pt;color:#1b4f9c;margin:0 0 0.8mm 0}',
+    '#dynamicPupilPrint .ad3-ef-order{display:grid;grid-template-columns:1fr 1fr;gap:0.8mm 3mm;margin:0 0 1mm 0}',
+    '#dynamicPupilPrint .ad3-ef-item{display:flex;align-items:center;gap:1.5mm;font-size:10.5pt;font-weight:600;color:#10243a}',
+    '#dynamicPupilPrint .ad3-ef-box{display:inline-block;width:6.5mm;height:6.5mm;border:1.5px solid #10243a;border-radius:1mm;background:#fff;flex:none}',
+    '#dynamicPupilPrint .ad3-ef-missing{font-size:11pt;line-height:1.3;margin:0;color:#10243a}',
+    '#dynamicPupilPrint .ad3-ef-blank{display:inline-block;min-width:26mm;border-bottom:1.8px solid #10243a;margin:0 1mm}',
+    '#dynamicPupilPrint .ad3-ef-hint{font-size:9.5pt;color:#334e68;font-style:italic}',
+    '#dynamicPupilPrint .ad3-nsplus-box{border:1.8px solid #5b2a86;border-radius:2mm;background:#f8f4fc;padding:1.2mm 2mm;margin-top:0.8mm;break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}',
+    '#dynamicPupilPrint .ad3-nsplus-head{font-weight:800;font-size:11pt;color:#5b2a86;margin:0 0 0.5mm 0}',
+    '#dynamicPupilPrint .ad3-nsplus-txt{font-size:10.5pt;line-height:1.22;color:#10243a;margin:0 0 0.5mm 0}',
+    '#dynamicPupilPrint .ad3-nsplus-good{font-size:10pt;line-height:1.2;color:#334e68;margin:0 0 0.5mm 0}',
+    /* Compact fit helpers for Rule 1 (no sparse continued pages) */
+    '#dynamicPupilPrint article.paper.ad3-compact-fit .ad3-task-h,#dynamicPupilPrint article.paper.ad3-compact-fit .ad3-q{font-size:10.8pt !important;line-height:1.18 !important}',
+    '#dynamicPupilPrint article.paper.ad3-compact-fit .wynk-list{font-size:10pt !important;line-height:1.16 !important}',
+    '#dynamicPupilPrint article.paper.ad3-compact-fit .write-line{height:6.2mm !important}',
+    '#dynamicPupilPrint article.paper.ad3-compact-fit .ad3-pic svg{max-height:30mm !important}',
+    '#dynamicPupilPrint article.paper.ad3-compact-fit-2 .ad3-task-h,#dynamicPupilPrint article.paper.ad3-compact-fit-2 .ad3-q{font-size:10pt !important;line-height:1.15 !important}',
+    '#dynamicPupilPrint article.paper.ad3-compact-fit-2 .wynk-list{font-size:9.5pt !important;line-height:1.14 !important}',
+    '#dynamicPupilPrint article.paper.ad3-compact-fit-2 .write-line{height:5.6mm !important}',
+    '#dynamicPupilPrint article.paper.ad3-compact-fit-2 .ad3-pic svg{max-height:24mm !important}',
+    /* Large-print overrides for v3.9 elements */
+    '#dynamicPupilPrint.adapt-large .ad2-banner,#dynamicPupilPrint .adapt-large .ad2-banner{font-size:14.5pt !important;padding:1.2mm 2.4mm !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-cover-sec h2,#dynamicPupilPrint .adapt-large .ad3-cover-sec h2{font-size:16pt !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-cover-steps,#dynamicPupilPrint .adapt-large .ad3-cover-steps{grid-template-columns:1fr !important;font-size:16pt !important;gap:1.2mm !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-cover-wb-grid,#dynamicPupilPrint .adapt-large .ad3-cover-wb-grid{grid-template-columns:1fr !important;gap:1.5mm !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-cover-wb-item dt,#dynamicPupilPrint .adapt-large .ad3-cover-wb-item dt{font-size:16pt !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-cover-wb-item dd,#dynamicPupilPrint .adapt-large .ad3-cover-wb-item dd{font-size:14.5pt !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-formula-txt,#dynamicPupilPrint .adapt-large .ad3-formula-txt{font-size:14pt !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-formula-chip,#dynamicPupilPrint .adapt-large .ad3-formula-chip{font-size:13pt !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-reh-choice,#dynamicPupilPrint .adapt-large .ad3-reh-choice,#dynamicPupilPrint.adapt-large .ad3-ef-item,#dynamicPupilPrint .adapt-large .ad3-ef-item,#dynamicPupilPrint.adapt-large .ad3-ef-missing,#dynamicPupilPrint .adapt-large .ad3-ef-missing{font-size:15.5pt !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-ef-order,#dynamicPupilPrint .adapt-large .ad3-ef-order{grid-template-columns:1fr !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-nsplus-head,#dynamicPupilPrint .adapt-large .ad3-nsplus-head{font-size:16pt !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-nsplus-txt,#dynamicPupilPrint .adapt-large .ad3-nsplus-txt,#dynamicPupilPrint.adapt-large .ad3-nsplus-good,#dynamicPupilPrint .adapt-large .ad3-nsplus-good{font-size:15pt !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-rcard-compact .ad3-rcard-top,#dynamicPupilPrint .adapt-large .ad3-rcard-compact .ad3-rcard-top{font-size:14pt !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-rcard-compact .ad3-rcard-val,#dynamicPupilPrint .adapt-large .ad3-rcard-compact .ad3-rcard-val{font-size:13.5pt !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-cs-strip-grid,#dynamicPupilPrint .adapt-large .ad3-cs-strip-grid{grid-template-columns:1fr 1fr !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-cs-piece-compact,#dynamicPupilPrint .adapt-large .ad3-cs-piece-compact{font-size:14.5pt !important}',
+    '#dynamicPupilPrint.adapt-large .ad3-route-banner,#dynamicPupilPrint .adapt-large .ad3-route-banner,#dynamicPupilPrint.adapt-large .ad3-inline-frame,#dynamicPupilPrint .adapt-large .ad3-inline-frame,#dynamicPupilPrint.adapt-large .ad3-card-reuse,#dynamicPupilPrint .adapt-large .ad3-card-reuse{font-size:14.5pt !important}',
+    '#dynamicPupilPrint.adapt-large article.paper.ad3-compact-fit .ad3-task-h,#dynamicPupilPrint .adapt-large article.paper.ad3-compact-fit .ad3-task-h,#dynamicPupilPrint.adapt-large article.paper.ad3-compact-fit .ad3-q,#dynamicPupilPrint .adapt-large article.paper.ad3-compact-fit .ad3-q{font-size:17.5pt !important;line-height:1.22 !important}',
+    '#dynamicPupilPrint.adapt-large article.paper.ad3-compact-fit .wynk-list,#dynamicPupilPrint .adapt-large article.paper.ad3-compact-fit .wynk-list{font-size:16pt !important;line-height:1.22 !important}',
+    '#dynamicPupilPrint.adapt-large article.paper.ad3-compact-fit .write-line,#dynamicPupilPrint .adapt-large article.paper.ad3-compact-fit .write-line{height:8.5mm !important}',
+    '#dynamicPupilPrint.adapt-large article.paper.ad3-compact-fit-2 .ad3-task-h,#dynamicPupilPrint .adapt-large article.paper.ad3-compact-fit-2 .ad3-task-h,#dynamicPupilPrint.adapt-large article.paper.ad3-compact-fit-2 .ad3-q,#dynamicPupilPrint .adapt-large article.paper.ad3-compact-fit-2 .ad3-q{font-size:16.5pt !important;line-height:1.2 !important}',
+    '#dynamicPupilPrint.adapt-large article.paper.ad3-compact-fit-2 .wynk-list,#dynamicPupilPrint .adapt-large article.paper.ad3-compact-fit-2 .wynk-list{font-size:15pt !important;line-height:1.2 !important}',
+    '#dynamicPupilPrint.adapt-large article.paper.ad3-compact-fit-2 .write-line,#dynamicPupilPrint .adapt-large article.paper.ad3-compact-fit-2 .write-line{height:8mm !important}',
+    /* Round 2 A2/A3/A5: keep white/colour card & cover surfaces on tinted pages; keep staff pages white */
+    '#dynamicPupilPrint article.paper.staff-paper{background:#fff !important}',
+    '#dynamicPupilPrint .ad3-rcard-compact,#dynamicPupilPrint .ad3-cs-piece-compact,#dynamicPupilPrint .ad3-cover-sec,#dynamicPupilPrint .ad3-pic{background:#fff !important}',
+    '#dynamicPupilPrint .ad3-board-choices{margin:0.5mm 0 0.6mm 6.5mm;padding:0;list-style:none;display:grid;gap:0.6mm}',
+    '#dynamicPupilPrint .ad3-board-choices li{display:flex;align-items:flex-start;gap:1.4mm;font-size:11pt;line-height:1.2;color:#10243a}',
+    '#dynamicPupilPrint .ad3-board-choices .ad2-tick{width:4.2mm;height:4.2mm;flex:none;margin-right:0.4mm;margin-top:0.25mm}',
+    '#dynamicPupilPrint.adapt-large .ad3-board-choices li,#dynamicPupilPrint .adapt-large .ad3-board-choices li{font-size:15.5pt !important;line-height:1.25 !important}',
+    '#dynamicPupilPrint .ad3-pic-cap{font-size:9.5pt;font-weight:800;color:#0b6b57;text-transform:uppercase;letter-spacing:.03em;margin:0 0 0.4mm 0;text-align:left}',
+    '#dynamicPupilPrint .ad3-wb-ptr{font-size:10pt;font-weight:700;color:#1b4f9c;margin-top:0.5mm}',
+    '#dynamicPupilPrint.adapt-large .ad3-pic-cap,#dynamicPupilPrint .adapt-large .ad3-pic-cap,#dynamicPupilPrint.adapt-large .ad3-wb-ptr,#dynamicPupilPrint .adapt-large .ad3-wb-ptr{font-size:13.5pt !important}',
+    /* Round 2D F1/F2/F3: Cover tightening & standalone graph fit */
+    '#dynamicPupilPrint article.paper.ad3-cover-tight .ad3-cover-sec{padding:1.2mm 2mm !important;margin:0.4mm 0 !important}',
+    '#dynamicPupilPrint article.paper.ad3-cover-tight .ad3-cover-sec h2{font-size:10.5pt !important;margin:0 0 0.7mm 0 !important}',
+    '#dynamicPupilPrint article.paper.ad3-cover-tight .ad3-cover-steps{gap:0.6mm 3mm !important;font-size:10.5pt !important;line-height:1.18 !important}',
+    '#dynamicPupilPrint article.paper.ad3-cover-tight .ad3-cover-wb-grid{gap:0.9mm 3mm !important}',
+    '#dynamicPupilPrint article.paper.ad3-cover-tight .ad3-cover-wb-item dt{font-size:10.5pt !important;line-height:1.14 !important}',
+    '#dynamicPupilPrint article.paper.ad3-cover-tight .ad3-cover-wb-item dd{font-size:9.5pt !important;line-height:1.15 !important}',
+    '#dynamicPupilPrint article.paper.ad3-cover-tight .ad3-cutstrip{margin-top:0.8mm !important;padding-top:0.8mm !important}',
+    '#dynamicPupilPrint article.paper.ad3-cover-tight .ad3-cutstrip-grid{grid-template-columns:repeat(auto-fit,minmax(40mm,1fr)) !important;gap:1.2mm !important}',
+    '#dynamicPupilPrint article.paper.ad3-cover-tight .ad3-rcard-compact .ad3-rcard-top{padding:0.5mm 1.4mm !important;font-size:9.5pt !important}',
+    '#dynamicPupilPrint article.paper.ad3-cover-tight .ad3-rcard-compact .ad3-rcard-val{font-size:8.8pt !important;line-height:1.12 !important}',
+    '#dynamicPupilPrint article.paper.ad3-cover-tight-2 .paper-body{gap:0.7mm !important}',
+    '#dynamicPupilPrint article.paper.ad3-cover-tight-2 .ad3-cover-sec{padding:0.9mm 1.6mm !important;margin:0.3mm 0 !important}',
+    '#dynamicPupilPrint article.paper.ad3-cover-tight-2 .ad3-cover-wb-item dt{font-size:9.8pt !important}',
+    '#dynamicPupilPrint article.paper.ad3-cover-tight-2 .ad3-cover-wb-item dd{font-size:8.8pt !important;line-height:1.12 !important}',
+    '#dynamicPupilPrint article.paper.ad3-cover-tight-2 .ad3-formula-box{padding:0.9mm 1.4mm !important}',
+    '#dynamicPupilPrint article.paper.ad3-cover-tight-2 .ad3-formula-txt{font-size:9.5pt !important}',
+    '#dynamicPupilPrint.adapt-large article.paper.ad3-cover-tight .ad3-cover-steps,#dynamicPupilPrint .adapt-large article.paper.ad3-cover-tight .ad3-cover-steps{font-size:13.5pt !important;grid-template-columns:1fr 1fr !important}',
+    '#dynamicPupilPrint.adapt-large article.paper.ad3-cover-tight .ad3-cover-wb-grid,#dynamicPupilPrint .adapt-large article.paper.ad3-cover-tight .ad3-cover-wb-grid{grid-template-columns:1fr 1fr !important}',
+    '#dynamicPupilPrint.adapt-large article.paper.ad3-cover-tight .ad3-cover-wb-item dt,#dynamicPupilPrint .adapt-large article.paper.ad3-cover-tight .ad3-cover-wb-item dt{font-size:13.5pt !important}',
+    '#dynamicPupilPrint.adapt-large article.paper.ad3-cover-tight .ad3-cover-wb-item dd,#dynamicPupilPrint .adapt-large article.paper.ad3-cover-tight .ad3-cover-wb-item dd{font-size:12pt !important}',
+    '#dynamicPupilPrint article.paper.ad3-graph-fit-1 .standalone-graph-holder svg{max-height:165mm !important;width:auto !important;max-width:100% !important}',
+    '#dynamicPupilPrint article.paper.ad3-graph-fit-2 .standalone-graph-holder svg{max-height:140mm !important;width:auto !important;max-width:100% !important}',
+    '#dynamicPupilPrint article.paper.ad3-graph-fit-3 .standalone-graph-holder svg{max-height:118mm !important;width:auto !important;max-width:100% !important}'
   ].join('\n');
   (function () {
     if (document.getElementById('mbm-adapt-v3-css')) return;
@@ -1912,6 +2082,18 @@ section.print-only { display: none; }
       return { self: selfCard, prev: prev };
     } catch (_) {
       return { self: null, prev: [null, null, null] };
+    }
+  }
+
+  function ad3LoadRehearseData() {
+    try {
+      const el = document.getElementById('mbm-rehearse-data');
+      if (!el || !el.textContent) return null;
+      const parsed = JSON.parse(el.textContent);
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
+      return parsed;
+    } catch (_) {
+      return null;
     }
   }
 
@@ -2742,6 +2924,31 @@ section.print-only { display: none; }
         if (firstRemaining) firstRemaining.before(built.art);
         else holder.appendChild(built.art);
       }
+    } else if (routeAPages.length && routeBPages.length) {
+      /* v3.9 Rule 3: unknown attendance -> combine Route A and Route B into two halves of ONE page. */
+      const keepA = routeAPages[0];
+      const keepB = routeBPages[0];
+      if (keepA !== keepB) {
+        const bodyA = keepA.querySelector('.paper-body') || keepA;
+        const banner = ad2El('div', 'ad3-route-banner', 'Choose ONE route: do Route A if you were in last lesson, OR Route B if you missed it.');
+        bodyA.prepend(banner);
+        const split = ad2El('div', 'ad3-route-split', 'OR — only do Route B if you missed the last lesson');
+        bodyA.appendChild(split);
+        routeBPages.forEach(bp => {
+          [...bp.querySelectorAll('.activity-box')].forEach(bx => bodyA.appendChild(bx));
+          bp.remove();
+        });
+        for (let i = 1; i < routeAPages.length; i++) {
+          [...routeAPages[i].querySelectorAll('.activity-box')].forEach(bx => split.before(bx));
+          routeAPages[i].remove();
+        }
+        keepA.classList.add('ad3-arrival-combined');
+        const h1 = keepA.querySelector('.paperhead h1');
+        if (h1) {
+          const raw = String(h1.textContent || '');
+          h1.textContent = raw.replace(/\s*\(Part\s*\d+\)\s*$/i, '').trim();
+        }
+      }
     }
 
     if (Array.isArray(skipNums) && skipNums.length) {
@@ -2957,8 +3164,10 @@ section.print-only { display: none; }
   function ad3CollectBoardAssets() {
     const slides = [...document.querySelectorAll('main#boardMain section.slide:not([data-reset-slide])')];
     const svgsByStage = {};
+    const choicesByStage = {};
     let indSlide = null;
     let teamSlide = null;
+    let idoSlide = null;
     slides.forEach(s => {
       const raw = String(s.getAttribute('data-stage') || '').trim();
       if (!raw) return;
@@ -2966,12 +3175,34 @@ section.print-only { display: none; }
       const svg = s.querySelector('.visual-card svg');
       if (svg) {
         if (!svgsByStage[low]) svgsByStage[low] = svg;
+        if (/^title\b/i.test(raw) && !svgsByStage.title) svgsByStage.title = svg;
         if (/^starter\b|team\s+quiz\s+starter/i.test(raw) && !svgsByStage.starter) svgsByStage.starter = svg;
         if (/^we\s+do\b/i.test(raw) && !svgsByStage.wedo) svgsByStage.wedo = svg;
         if (/^independent\b/i.test(raw) && !svgsByStage.independent) svgsByStage.independent = svg;
         if (/^team\s+task\b/i.test(raw) && !svgsByStage.team_task) svgsByStage.team_task = svg;
         if (/^i\s+do\b/i.test(raw) && !svgsByStage.ido) svgsByStage.ido = svg;
       }
+      const chBtns = [...s.querySelectorAll('.choices-stack .choice-btn, [data-choice-group] .choice-btn, button.choice-btn')];
+      if (chBtns.length >= 2) {
+        const seenCh = {};
+        const chTexts = [];
+        chBtns.forEach(b => {
+          const t = String(b.textContent || '').replace(/\s+/g, ' ').trim();
+          const k = t.toLowerCase();
+          if (t && !seenCh[k] && chTexts.length < 4) {
+            seenCh[k] = 1;
+            chTexts.push(t);
+          }
+        });
+        if (chTexts.length >= 2) {
+          if (/^arrival\b/i.test(raw) && !choicesByStage.arrival) choicesByStage.arrival = chTexts;
+          if (/^starter\b|team\s+quiz\s+starter/i.test(raw) && !choicesByStage.starter) choicesByStage.starter = chTexts;
+          if (/^we\s+do\b/i.test(raw) && !choicesByStage.wedo) choicesByStage.wedo = chTexts;
+          if (/^independent\b|^team\s+task\b/i.test(raw) && !choicesByStage.independent) choicesByStage.independent = chTexts;
+          if (/^check\b|^exit\b/i.test(raw) && !choicesByStage.exit) choicesByStage.exit = chTexts;
+        }
+      }
+      if (/^i\s+do$/i.test(raw) && !idoSlide) idoSlide = s;
       if (/^independent$/i.test(raw) && !indSlide) indSlide = s;
       if (/^team\s+task$/i.test(raw) && !teamSlide) teamSlide = s;
     });
@@ -2981,6 +3212,8 @@ section.print-only { display: none; }
     }
     return {
       svgsByStage: svgsByStage,
+      choicesByStage: choicesByStage,
+      idoTable: idoSlide ? idoSlide.querySelector('table') : null,
       indSlide: chosenInd,
       indTable: chosenInd ? chosenInd.querySelector('table') : null,
       indSvg: chosenInd ? chosenInd.querySelector('.visual-card svg') : null
@@ -3457,9 +3690,14 @@ section.print-only { display: none; }
     const ids = (opts && opts.ids) || {};
     const isExitBox = !!(opts && opts.isExitBox);
     const isBook = !!(opts && opts.isBook);
-    const picSvg = (opts && opts.picSvg) || null;
+    const isCombinedArrival = !!(opts && opts.isCombinedArrival);
+    const picSvg = isCombinedArrival ? null : ((opts && opts.picSvg) || null);
     const resCutSticks = (opts && opts.resCutSticks) || [];
     const resTemplates = (opts && opts.resTemplates) || [];
+    const formulaSteps = (opts && Array.isArray(opts.formulaSteps)) ? opts.formulaSteps : null;
+    const inlineWritingFrame = (opts && Array.isArray(opts.inlineWritingFrame)) ? opts.inlineWritingFrame : null;
+    const exitFormulaCheck = (opts && opts.exitFormulaCheck) || null;
+    const boardChoices = (opts && Array.isArray(opts.boardChoices) && opts.boardChoices.length >= 2) ? opts.boardChoices : null;
 
     const header = bx.querySelector('.box-header');
     if (!header) return;
@@ -3489,56 +3727,7 @@ section.print-only { display: none; }
     });
     const place = el => { after.after(el); after = el; };
 
-    /* 1. READ */
-    if (wynk || wb) {
-      const readSec = ad3MakePartSec('ad3-sec-read', 'read', 'Read', 'what you need to know');
-      if (wynk) {
-        const hd = wynk.querySelector('.wynk-head');
-        if (hd) hd.remove();
-        readSec.appendChild(wynk);
-      }
-      if (wb) {
-        const words = String(wb.textContent || '').replace(/^[^:]*:\s*/, '').split(/\s*\u00b7\s*/).map(w => w.trim()).filter(Boolean);
-        if (words.length) {
-          const pills = ad2El('div', 'ad3-pills');
-          pills.appendChild(ad2El('strong', '', 'Key words: '));
-          words.forEach(w => pills.appendChild(ad2El('span', 'ad3-pill', w)));
-          readSec.appendChild(pills);
-        }
-        wb.remove();
-      }
-      place(readSec);
-    }
-
-    /* Pre-read visible step texts for R8 Visual steps strip */
-    const visibleStepTexts = [];
-    if (ol) {
-      [...ol.children].forEach(li => {
-        if (ids.fewer && li.classList.contains('adapt-trim-candidate')) return;
-        const cl = li.cloneNode(true);
-        cl.querySelectorAll('.ad2-tag, .ad2-options').forEach(x => x.remove());
-        const t = String(cl.textContent || '').replace(/\s+/g, ' ').trim();
-        if (t) visibleStepTexts.push(t);
-      });
-    } else if (qblocks.length) {
-      qblocks.forEach(qb => {
-        const q = qb.querySelector('.ad3-q');
-        const t = q ? String(q.textContent || '').replace(/\s+/g, ' ').trim() : '';
-        if (t) visibleStepTexts.push(t);
-      });
-    }
-
-    /* 2. LOOK */
-    let picFig = null;
-    if (picSvg) {
-      const clonedSvg = ad3CloneBoardSvg(picSvg);
-      if (clonedSvg) {
-        picFig = ad2El('figure', 'ad3-pic');
-        picFig.appendChild(clonedSvg);
-        if (opts && typeof opts.onPicAdded === 'function') opts.onPicAdded();
-      }
-    }
-
+    /* Prepare example & board picture (placed inside "What you need to know", words BEFORE pictures; LOOK row dropped per Rule 5). */
     let exampleEl = null;
     if (worked) {
       const subDivs = [...worked.children].filter(ch => ch.tagName === 'DIV');
@@ -3571,34 +3760,73 @@ section.print-only { display: none; }
       worked.remove();
     }
 
-    const stripEl = ids.worked ? ad3BuildVisualStepStrip(visibleStepTexts) : null;
-
-    if (picFig || exampleEl || stripEl) {
-      const lookHint = (picFig && exampleEl)
-        ? 'picture and example'
-        : picFig
-          ? 'the picture from the board'
-          : exampleEl
-            ? 'an example'
-            : 'follow the steps';
-      const lookSec = ad3MakePartSec('ad3-sec-look', 'look', 'Look', lookHint);
-      if (picFig) lookSec.appendChild(picFig);
-      if (stripEl) lookSec.appendChild(stripEl);
-      if (exampleEl) lookSec.appendChild(exampleEl);
-      place(lookSec);
+    let picFig = null;
+    if (picSvg) {
+      const clonedSvg = ad3CloneBoardSvg(picSvg);
+      if (clonedSvg) {
+        picFig = ad2El('figure', 'ad3-pic');
+        /* Round 2B (c): when picture IS printed right below, use "LOOK at the picture" (never "from the board"). */
+        picFig.appendChild(ad2El('figcaption', 'ad3-pic-cap', 'LOOK at the picture'));
+        picFig.appendChild(clonedSvg);
+        if (opts && typeof opts.onPicAdded === 'function') opts.onPicAdded();
+      }
     }
 
-    /* 3. DO */
+    /* 1. WHAT YOU NEED TO KNOW (Rule 5: max 3 lines; Rule 1: words before pictures) */
+    const rawBoxTxtAll = String(bx.textContent || '').replace(/\s+/g, ' ');
+    const namesWordBank = /\b(?:[a-z-]+\s+)?word\s*bank\b/i.test(rawBoxTxtAll);
+    let hasInlineWordBank = false;
+    if (wynk || wb || exampleEl || picFig || namesWordBank) {
+      const readSec = ad3MakePartSec('ad3-sec-read', 'read', 'What you need to know', '');
+      if (wynk) {
+        const hd = wynk.querySelector('.wynk-head');
+        if (hd) hd.remove();
+        const maxWynk = isCombinedArrival ? 2 : 3;
+        const lis = [...wynk.querySelectorAll('.wynk-list li')];
+        for (let i = maxWynk; i < lis.length; i++) lis[i].remove();
+        readSec.appendChild(wynk);
+      }
+      if (wb) {
+        const words = String(wb.textContent || '').replace(/^[^:]*:\s*/, '').split(/\s*\u00b7\s*/).map(w => w.trim()).filter(Boolean).slice(0, 6);
+        if (words.length) {
+          const pills = ad2El('div', 'ad3-pills');
+          pills.appendChild(ad2El('strong', '', 'Key words: '));
+          words.forEach(w => pills.appendChild(ad2El('span', 'ad3-pill', w)));
+          readSec.appendChild(pills);
+          hasInlineWordBank = true;
+        }
+        wb.remove();
+      }
+      /* Round 2B (b): if any line names a word bank and none is printed on this page, print bold words or point to page 1. */
+      if (namesWordBank && !hasInlineWordBank) {
+        const bolds = [...readSec.querySelectorAll('.wynk-box strong')].map(x => x.textContent.trim()).filter(Boolean);
+        const uniqBolds = [...new Set(bolds)].slice(0, 6);
+        if (uniqBolds.length) {
+          const pills = ad2El('div', 'ad3-pills');
+          pills.appendChild(ad2El('strong', '', 'Word bank: '));
+          uniqBolds.forEach(w => pills.appendChild(ad2El('span', 'ad3-pill', w)));
+          readSec.appendChild(pills);
+          hasInlineWordBank = true;
+        }
+        const wbPtr = ad2El('div', 'ad3-wb-ptr', 'Use the word bank on page 1.');
+        readSec.appendChild(wbPtr);
+      }
+      if (exampleEl) readSec.appendChild(exampleEl);
+      if (picFig) readSec.appendChild(picFig);
+      place(readSec);
+    }
+
+    /* 2. DO THIS (Rule 5: numbered steps, each question written ONCE, starter & writing lines straight under it) */
     const starterTxt = starter ? String(starter.textContent || '').replace(/^[^:]*:\s*/, '').replace(/\s+/g, ' ').trim() : '';
     if (starter) starter.remove();
 
-    const hasDoContent = !!(gapfill || ol || qblocks.length || starterTxt || resCutSticks.length || resTemplates.length || timerNotes.length);
+    const hasDoContent = !!(gapfill || ol || qblocks.length || starterTxt || resCutSticks.length || resTemplates.length || timerNotes.length || inlineWritingFrame || exitFormulaCheck);
     if (hasDoContent) {
-      const doSec = ad3MakePartSec('ad3-sec-do', 'doit', 'Do', 'one step at a time');
+      const doSec = ad3MakePartSec('ad3-sec-do', 'doit', 'Do this', 'one step at a time');
       if (gapfill) doSec.appendChild(gapfill);
 
       let placedStarter = false;
-      const lineCount = (ids.space || ids.time) ? 3 : 2;
+      const lineCount = isCombinedArrival ? 1 : ((ids.space || ids.time) ? 3 : 2);
 
       if (ol) {
         const lis = [...ol.children];
@@ -3608,7 +3836,9 @@ section.print-only { display: none; }
           const tagEl = cl.querySelector('.ad2-tag');
           const tagTxt = tagEl ? String(tagEl.textContent || '').trim() : '';
           cl.querySelectorAll('.ad2-tag, .ad2-options, .ad2-tick').forEach(x => x.remove());
-          const cleanTxt = String(cl.textContent || '').replace(/\s+/g, ' ').trim().replace(/^\d+[.)]\s*/, '');
+          const rawCleanTxt = String(cl.textContent || '').replace(/\s+/g, ' ').trim().replace(/^\d+[.)]\s*/, '');
+          /* Round 2B (c): reword "from the board" when picture IS printed on this page. */
+          const cleanTxt = picFig ? rawCleanTxt.replace(/\bthe picture from the board\b/gi, 'the picture above') : rawCleanTxt;
           const optsUl = li.querySelector('ul.ad2-options');
           return {
             idx: idx,
@@ -3622,6 +3852,19 @@ section.print-only { display: none; }
         });
 
         const starterIdx = starterTxt ? ad3PickStarterStepIdx(stepsInfo, starterTxt) : -1;
+        /* Round 2B (a): any line saying Pick/Choose/Select A, B or C (or similar) prints its options from the page's choice buttons. */
+        const boxTextLow = String(bx.textContent || '').replace(/\s+/g, ' ').toLowerCase();
+        const allChoicesPresent = !!(boardChoices && boardChoices.every(c => {
+          const p = c.replace(/^[A-D][.):\s-]+/i, '').trim().slice(0, 22).toLowerCase();
+          return p && boxTextLow.includes(p);
+        }));
+        const abcPromptRe = /\b(?:pick|choose|select|circle|tick)\b[^.\n]{0,60}\b(?:option\s+|choice\s+)?A\s*(?:,|\/|\bor\b)\s*(?:option\s+|choice\s+)?B\b|\(\s*A\s*,\s*B\s*(?:or|\/|and)\s*C\s*\)|\bA\s*,\s*B\s*(?:or|\/)\s*C\b/i;
+        let boardChoiceIdx = stepsInfo.findIndex(it => !it.hidden && abcPromptRe.test(it.text) && !/\bcards?\s+A\s*,\s*B\b/i.test(it.text));
+        const needBoardChoices = !!(boardChoices && !allChoicesPresent && (boardChoiceIdx >= 0 || opts.isStarterBox));
+        if (needBoardChoices && boardChoiceIdx < 0) {
+          boardChoiceIdx = stepsInfo.findIndex(it => !it.hidden && /\b(pick|choose|select|choice|option)\b/i.test(it.text));
+          if (boardChoiceIdx < 0) boardChoiceIdx = stepsInfo.findIndex(it => !it.hidden);
+        }
         let visNum = 0;
 
         stepsInfo.forEach(item => {
@@ -3630,12 +3873,26 @@ section.print-only { display: none; }
           const th = ad2El('div', 'ad3-task-h' + (item.must ? ' ad2-must' : ''));
           th.appendChild(ad2El('span', 'ad3-task-n', item.hidden ? '' : String(visNum)));
           if (ids.concise) th.appendChild(ad2El('span', 'ad2-tick'));
+          if (formulaSteps && !item.hidden && visNum <= formulaSteps.length) {
+            th.appendChild(ad2El('span', 'ad3-fstep-tag', 'Step ' + visNum));
+          }
           if (item.tagTxt) th.appendChild(ad2El('span', 'ad2-tag', item.tagTxt));
           th.appendChild(ad2El('span', 'ad3-task-txt', item.text));
           tEl.appendChild(th);
 
           if (item.optsUl) {
             tEl.appendChild(item.optsUl);
+          }
+
+          if (needBoardChoices && item.idx === boardChoiceIdx) {
+            const chUl = ad2El('ul', 'ad3-board-choices');
+            boardChoices.forEach(chTxt => {
+              const li = ad2El('li');
+              li.appendChild(ad2El('span', 'ad2-tick'));
+              li.appendChild(ad2El('span', '', chTxt));
+              chUl.appendChild(li);
+            });
+            tEl.appendChild(chUl);
           }
 
           if (starterTxt && item.idx === starterIdx) {
@@ -3647,7 +3904,8 @@ section.print-only { display: none; }
           if (frameParts && (!isBook || isExitBox)) {
             tEl.appendChild(ad3BuildLabelledFrame(frameParts));
           } else if (!isBook || isExitBox) {
-            tEl.appendChild(ad3MakeWriteLines(lineCount));
+            const lc = (item.optsUl || isCombinedArrival) ? 1 : (AD3_LONG_Q_RE.test(item.text) ? lineCount : Math.min(lineCount, 2));
+            tEl.appendChild(ad3MakeWriteLines(lc));
           }
           doSec.appendChild(tEl);
         });
@@ -3663,6 +3921,9 @@ section.print-only { display: none; }
             const stripped = rawQ.replace(/^\d+[.)]\s*/, '');
             const th = ad2El('div', 'ad3-task-h');
             th.appendChild(ad2El('span', 'ad3-task-n', String(qi + 1)));
+            if (formulaSteps && qi < formulaSteps.length) {
+              th.appendChild(ad2El('span', 'ad3-fstep-tag', 'Step ' + (qi + 1)));
+            }
             const qSpan = ad2El('span', 'ad3-task-txt ad3-q', stripped);
             th.appendChild(qSpan);
             tEl.appendChild(th);
@@ -3686,6 +3947,13 @@ section.print-only { display: none; }
         doSec.appendChild(ad3MakeExamplePanel('Start with:', starterTxt));
       }
 
+      if (inlineWritingFrame && inlineWritingFrame.length) {
+        const wf = ad2El('div', 'ad3-inline-frame');
+        wf.appendChild(ad2El('strong', '', 'Writing frame: '));
+        wf.appendChild(document.createTextNode(inlineWritingFrame.join('  ·  ')));
+        doSec.appendChild(wf);
+      }
+
       resCutSticks.forEach(set => {
         doSec.appendChild(ad3BuildCutStickTargetEl(set));
       });
@@ -3694,26 +3962,33 @@ section.print-only { display: none; }
         doSec.appendChild(ad3BuildTemplateEl(tpl, isBook, isExitBox));
       });
 
+      if (exitFormulaCheck) {
+        doSec.appendChild(exitFormulaCheck);
+      }
+
       timerNotes.forEach(tn => doSec.appendChild(tn));
       place(doSec);
     }
 
-    /* 4. CHECK */
-    if (done || stretchTickUl) {
-      const checkSec = ad3MakePartSec('ad3-sec-check', 'check', 'Check', 'tick when it is true');
-      if (done) {
-        const doneTxt = String(done.textContent || '').replace(/^[^:]*:\s*/, '').replace(/\s+/g, ' ').trim();
-        const row = ad2El('div', 'ad3-check-row');
-        row.appendChild(ad2El('span', 'ad2-tick'));
-        row.appendChild(ad2El('span', '', doneTxt));
-        checkSec.appendChild(row);
-        done.remove();
-      }
-      if (stretchTickUl) {
-        checkSec.appendChild(stretchTickUl);
-      }
-      place(checkSec);
+    /* 3. CHECK (Rule 5: one tick line, always present in the same place) */
+    const checkSec = ad3MakePartSec('ad3-sec-check', 'check', 'Check', '');
+    if (done) {
+      const doneTxt = String(done.textContent || '').replace(/^[^:]*:\s*/, '').replace(/\s+/g, ' ').trim();
+      const row = ad2El('div', 'ad3-check-row');
+      row.appendChild(ad2El('span', 'ad2-tick'));
+      row.appendChild(ad2El('span', '', doneTxt || 'I have checked my answers.'));
+      checkSec.appendChild(row);
+      done.remove();
+    } else if (!stretchTickUl) {
+      const row = ad2El('div', 'ad3-check-row');
+      row.appendChild(ad2El('span', 'ad2-tick'));
+      row.appendChild(ad2El('span', '', 'I have checked my answers.'));
+      checkSec.appendChild(row);
     }
+    if (stretchTickUl) {
+      checkSec.appendChild(stretchTickUl);
+    }
+    place(checkSec);
   }
 
   function ad3IsIndependentPaper(art, lessonTitle) {
@@ -4345,6 +4620,9 @@ section.print-only { display: none; }
   function ad3MakeContinuedPaper(art) {
     const contArt = document.createElement('article');
     contArt.className = art.className.replace(/\bad3-meas-auto\b/g, '').trim();
+    if (art.dataset.ad3StepName) contArt.dataset.ad3StepName = art.dataset.ad3StepName;
+    if (art.dataset.ad3StepNum) contArt.dataset.ad3StepNum = art.dataset.ad3StepNum;
+    if (art.dataset.ad3StageKind) contArt.dataset.ad3StageKind = art.dataset.ad3StageKind;
     const srcHead = art.querySelector('.paperhead');
     if (srcHead) {
       const headClone = srcHead.cloneNode(true);
@@ -4664,7 +4942,7 @@ section.print-only { display: none; }
 
     const meas = ad3CreateMeasurer(holder.classList);
     try {
-      const maxSheetMm = meas.a4SheetMm - 8;
+      const maxSheetMm = meas.a4SheetMm - 12;
 
       function measurePaper(art) {
         const cl = art.cloneNode(true);
@@ -4716,9 +4994,27 @@ section.print-only { display: none; }
 
         if (AD3_TIGHTEN && !art.querySelector('.standalone-graph-holder')) {
           const overMm = measurePaper(art) - maxSheetMm;
-          if (overMm > 0 && overMm <= 12 && ad3TryTighten(art, meas, maxSheetMm)) {
+          if (overMm > 0 && overMm <= 36 && ad3TryTighten(art, meas, maxSheetMm)) {
             qi += 1;
             continue;
+          }
+          if (measurePaper(art) > maxSheetMm && !art.classList.contains('ad3-compact-fit')) {
+            art.classList.add('ad3-compact-fit');
+            if (measurePaper(art) <= maxSheetMm) {
+              qi += 1;
+              continue;
+            }
+            if ((measurePaper(art) - maxSheetMm) <= 24 && ad3TryTighten(art, meas, maxSheetMm)) {
+              qi += 1;
+              continue;
+            }
+            if (!holder.classList.contains('adapt-large') && (measurePaper(art) - maxSheetMm) <= 18) {
+              art.classList.add('ad3-compact-fit-2');
+              if (measurePaper(art) <= maxSheetMm) {
+                qi += 1;
+                continue;
+              }
+            }
           }
         }
 
@@ -5178,8 +5474,170 @@ section.print-only { display: none; }
         }
       }
 
+      /* v3.9 Rule 1 + Round 2 A4: never leave a "(continued)" page with < 1/3 page OR holding only the Check part. */
       if (didSplit) {
+        const minContMm = maxSheetMm * 0.42;
+        const allP = [...holder.querySelectorAll('article.paper.pupil-paper')];
+        for (let ci = 1; ci < allP.length; ci++) {
+          const cp = allP[ci];
+          const prev = cp.previousElementSibling;
+          if (!prev || !prev.matches('article.paper.pupil-paper')) continue;
+          const h1Txt = String(cp.querySelector('.paperhead h1')?.textContent || '');
+          if (!/\(continued\)/i.test(h1Txt)) continue;
+          const cpBody = cp.querySelector('.paper-body');
+          const cpClone = cpBody ? cpBody.cloneNode(true) : null;
+          if (cpClone) cpClone.querySelectorAll('.ad2-banner, .box-header').forEach(x => x.remove());
+          const cpVisibleTxt = cpClone ? String(cpClone.textContent || '').replace(/\s+/g, ' ').trim() : '';
+          const hasRealContent = !!(cpClone && (cpVisibleTxt.length > 0 || cpClone.querySelector('svg, img, .write-line, .ad3-cs-table, .ad3-frame')));
+          if (!hasRealContent || measurePaper(cp) < 62) {
+            cp.remove();
+            continue;
+          }
+          const cpSecs = [...cp.querySelectorAll('.ad3-sec')];
+          const isCheckOnly = cpSecs.length > 0
+            && cpSecs.every(s => s.classList.contains('ad3-sec-check'))
+            && !cp.querySelector('.ad3-cutstrip, .ad3-nsplus-box, .ad3-task, .ad3-exit-formula, .ad3-cs-target, .ad3-tpl');
+          if (!isCheckOnly && measurePaper(cp) >= minContMm) continue;
+
+          /* First try pulling back onto prev with compact-fit-2 if it fits cleanly (or if Check-only, trim a write-line too). */
+          const prevBody = prev.querySelector('.paper-body');
+          if (cpBody && prevBody) {
+            const snapshotPrev = prevBody.innerHTML;
+            const snapshotCp = cpBody.innerHTML;
+            const hadC1 = prev.classList.contains('ad3-compact-fit');
+            const hadC2 = prev.classList.contains('ad3-compact-fit-2');
+            prev.classList.add('ad3-compact-fit', 'ad3-compact-fit-2');
+            const cpKids = [...cpBody.children].filter(ch => !ch.classList.contains('ad2-banner'));
+            cpKids.forEach(ch => {
+              if (ch.classList.contains('ad3-cont-box')) {
+                const pBox = prevBody.querySelector('.activity-box');
+                if (pBox) {
+                  [...ch.children].filter(x => !x.classList.contains('box-header')).forEach(x => pBox.appendChild(x));
+                } else {
+                  prevBody.appendChild(ch);
+                }
+              } else {
+                prevBody.appendChild(ch);
+              }
+            });
+            if (isCheckOnly && measurePaper(prev) > maxSheetMm + 6) {
+              const pBoxes = [...prev.querySelectorAll('.activity-box')];
+              pBoxes.forEach(pb => ad3RemoveOneWriteLine(pb));
+            }
+            if (measurePaper(prev) <= maxSheetMm + 6) {
+              cp.remove();
+              continue;
+            }
+            prevBody.innerHTML = snapshotPrev;
+            cpBody.innerHTML = snapshotCp;
+            if (!hadC1) prev.classList.remove('ad3-compact-fit');
+            if (!hadC2) prev.classList.remove('ad3-compact-fit-2');
+          }
+
+          /* Otherwise rebalance: move 1+ tasks from prev's Do this section onto cp so cp is never Check-only and has >= 1/3 page. */
+          const prevDo = prev.querySelector('.ad3-sec-do');
+          const prevTasks = prevDo ? [...prevDo.querySelectorAll(':scope > .ad3-task, :scope > .ad3-exit-formula')] : [];
+          const cpDo = cp.querySelector('.ad3-sec-do');
+          if (prevTasks.length >= 2) {
+            let targetDo = cpDo;
+            if (!targetDo) {
+              const cpBox = cp.querySelector('.activity-box');
+              if (cpBox) {
+                targetDo = ad3MakePartSec('ad3-sec-do', 'doit', 'Do this', 'continued');
+                const cpHead = cpBox.querySelector('.box-header');
+                if (cpHead) cpHead.after(targetDo);
+                else cpBox.prepend(targetDo);
+              }
+            }
+            if (targetDo) {
+              while (prevTasks.length >= 2 && (isCheckOnly || measurePaper(cp) < minContMm)) {
+                const mv = prevTasks.pop();
+                const tHead = targetDo.querySelector('.ad3-sec-h');
+                if (tHead) tHead.after(mv);
+                else targetDo.prepend(mv);
+                if (isCheckOnly && measurePaper(cp) >= minContMm) break;
+              }
+            }
+          }
+        }
         ad3RenumberPupilPages(holder);
+      }
+
+      /* Round 2 A1/A9 + Round 2C: place cut strips on activity start page if they fit, else point to exact page N; stamp Cover & reuse pointers. */
+      ad3StampCutoutPageNumbers(holder, measurePaper, maxSheetMm);
+
+      /* Round 2D RULE (F1/F2/F3): Final post-injection fit pass AFTER paper note, card pointers, help line, target, and footers are in place. */
+      let finalDidSplit = false;
+      const allFinal = [...holder.querySelectorAll('article.paper.pupil-paper')];
+      for (let fi = 0; fi < allFinal.length; fi++) {
+        const art = allFinal[fi];
+        if (measurePaper(art) <= maxSheetMm) continue;
+
+        /* F3: Standalone graph pages — scale SVG height down cleanly so graph + axes fit on 1 sheet. */
+        if (art.querySelector('.standalone-graph-holder')) {
+          const gClasses = ['ad3-graph-fit-1', 'ad3-graph-fit-2', 'ad3-graph-fit-3'];
+          for (let gi = 0; gi < gClasses.length && measurePaper(art) > maxSheetMm; gi++) {
+            art.classList.add(gClasses[gi]);
+          }
+          if (measurePaper(art) > maxSheetMm) ad3TryTighten(art, meas, maxSheetMm);
+          continue;
+        }
+
+        /* F1 + F3: Cover page — tighten first; if desk-card cut strip still overflows, move strip onto a headed continued Cover page. */
+        if (art.classList.contains('ad3-cover-paper')) {
+          art.classList.add('ad3-cover-tight');
+          if (measurePaper(art) > maxSheetMm) art.classList.add('ad3-cover-tight-2');
+          if (measurePaper(art) > maxSheetMm) ad3TryTighten(art, meas, maxSheetMm);
+          if (measurePaper(art) > maxSheetMm) {
+            const cStrip = art.querySelector('.ad3-cutstrip');
+            if (cStrip) {
+              const cont = ad3MakeContinuedPaper(art);
+              cont.body.appendChild(cStrip);
+              art.after(cont.art);
+              finalDidSplit = true;
+            }
+          }
+          continue;
+        }
+
+        /* F2: Exit slip ("Feedback loop" footer) & any adapted activity page that grew after pointers/notes. */
+        if (ad3IsExitSlipPaper(art)) {
+          art.classList.add('ad3-exit-tight');
+          if (measurePaper(art) > maxSheetMm) art.classList.add('ad3-exit-tight-2');
+        }
+        if (measurePaper(art) > maxSheetMm) art.classList.add('ad3-compact-fit');
+        if (measurePaper(art) > maxSheetMm) art.classList.add('ad3-compact-fit-2');
+        if (measurePaper(art) > maxSheetMm) ad3TryTighten(art, meas, maxSheetMm);
+        if (measurePaper(art) > maxSheetMm) {
+          const bxs = [...art.querySelectorAll('.activity-box')];
+          let trimGuard = 0;
+          while (measurePaper(art) > maxSheetMm && trimGuard < 6) {
+            trimGuard += 1;
+            let did = false;
+            bxs.forEach(bx => { if (ad3RemoveOneWriteLine(bx)) did = true; });
+            if (!did) break;
+          }
+        }
+        /* Last resort if still overflowing: split trailing cutstrip / NS+ / last section onto a headed continued paper. */
+        if (measurePaper(art) > maxSheetMm) {
+          const body = art.querySelector('.paper-body');
+          const movable = body ? [...body.querySelectorAll(':scope > .ad3-cutstrip, :scope > .ad3-nsplus-box')] : [];
+          if (movable.length) {
+            const cont = ad3MakeContinuedPaper(art);
+            while (movable.length && measurePaper(art) > maxSheetMm) {
+              cont.body.prepend(movable.pop());
+            }
+            if (cont.body.children.length > (cont.body.querySelector('.ad2-banner') ? 1 : 0)) {
+              art.after(cont.art);
+              finalDidSplit = true;
+            }
+          }
+        }
+      }
+
+      if (finalDidSplit) {
+        ad3RenumberPupilPages(holder);
+        ad3StampCutoutPageNumbers(holder, measurePaper, maxSheetMm);
       }
 
       ad3FitStaffPapers(holder, measurePaper, maxSheetMm);
@@ -5366,6 +5824,510 @@ section.print-only { display: none; }
     }
     cbx.appendChild(ul);
     return cbx;
+  }
+
+  function ad3SummarizeCutStrips(strips) {
+    const cardTitles = [];
+    let hasPieces = false;
+    (strips || []).forEach(st => {
+      st.querySelectorAll('.ad3-rcard-title').forEach(el => {
+        const t = String(el.textContent || '').replace(/\s+/g, ' ').trim();
+        if (t && cardTitles.indexOf(t) < 0) cardTitles.push(t);
+      });
+      if (st.querySelector('.ad3-cs-piece-compact')) hasPieces = true;
+    });
+    /* Check for lettered cards like Card A, Card B ... Card F */
+    const letters = [];
+    cardTitles.forEach(t => {
+      const m = t.match(/^Card\s+([A-Z])\b/i);
+      if (m) letters.push(m[1].toUpperCase());
+    });
+    let cardPart = '';
+    if (letters.length >= 2) {
+      const firstL = letters[0];
+      const lastL = letters[letters.length - 1];
+      cardPart = (letters.length === 2) ? ('Cards ' + firstL + ' and ' + lastL) : ('Cards ' + firstL + ' to ' + lastL);
+    } else if (letters.length === 1) {
+      cardPart = 'Card ' + letters[0];
+    } else if (cardTitles.length > 0 && cardTitles.length <= 3) {
+      const shortNames = cardTitles.map(t => t.split(/\s*[\u00b7·:]\s*/)[0].trim());
+      cardPart = 'the ' + shortNames.join(' & ') + (shortNames.length === 1 ? ' card' : ' cards');
+    } else if (cardTitles.length > 3) {
+      cardPart = 'the cards';
+    }
+    if (cardPart && hasPieces) return cardPart + ' and cut-out pieces';
+    if (cardPart) return cardPart;
+    if (hasPieces) return 'the cut-out pieces';
+    return 'the cards';
+  }
+
+  function ad3StampCutoutPageNumbers(holder, measurePaper, maxSheetMm) {
+    holder.querySelectorAll('.ad3-cut-first-ptr').forEach(x => x.remove());
+    const pages = [...holder.querySelectorAll('article.paper.pupil-paper')];
+    /* Step 1 (Round 2C): For each activity, if its cut strip landed on a later continuation page,
+       try moving it onto the page where that activity STARTS; if it truly cannot fit, add
+       "Cut out <Cards> on page N first." on the activity's first page. */
+    const byStep = new Map();
+    pages.forEach((p, idx) => {
+      if (idx === 0) return; /* Cover */
+      const st = String(p.dataset.ad3StepName || '').trim();
+      if (!st) return;
+      if (!byStep.has(st)) byStep.set(st, []);
+      byStep.get(st).push({ p: p, num: idx + 1 });
+    });
+
+    byStep.forEach((list, stName) => {
+      if (list.length < 2) return;
+      const first = list[0];
+      const firstBody = first.p.querySelector('.paper-body') || first.p;
+      if (first.p.querySelector('.ad3-cutstrip')) return;
+
+      const laterWithStrips = list.slice(1).filter(item => !!item.p.querySelector('.ad3-cutstrip'));
+      if (!laterWithStrips.length) return;
+
+      /* Try pulling cut strips back onto the first page of the activity if they genuinely fit. */
+      let movedAllToFirst = false;
+      if (typeof measurePaper === 'function' && Number.isFinite(maxSheetMm) && laterWithStrips.length === 1) {
+        const srcItem = laterWithStrips[0];
+        const strips = [...srcItem.p.querySelectorAll('.ad3-cutstrip')];
+        const srcBody = srcItem.p.querySelector('.paper-body') || srcItem.p;
+        strips.forEach(s => firstBody.appendChild(s));
+        if (measurePaper(first.p) <= maxSheetMm) {
+          movedAllToFirst = true;
+        } else {
+          strips.forEach(s => srcBody.appendChild(s));
+        }
+      }
+
+      if (!movedAllToFirst) {
+        laterWithStrips.forEach(item => {
+          const strips = [...item.p.querySelectorAll('.ad3-cutstrip')];
+          const label = ad3SummarizeCutStrips(strips);
+          const ptr = ad2El('div', 'ad3-card-reuse ad3-cut-first-ptr', 'Cut out ' + label + ' on page ' + item.num + ' first.');
+          const firstBox = firstBody.querySelector('.activity-box');
+          if (firstBox) firstBox.before(ptr);
+          else firstBody.prepend(ptr);
+        });
+        /* Ensure adding the 1-line pointer never overflows first.p onto an extra PDF page. */
+        if (typeof measurePaper === 'function' && Number.isFinite(maxSheetMm) && measurePaper(first.p) > maxSheetMm) {
+          first.p.classList.add('ad3-compact-fit');
+          if (measurePaper(first.p) > maxSheetMm) {
+            first.p.classList.add('ad3-compact-fit-2');
+          }
+          let guard = 0;
+          while (measurePaper(first.p) > maxSheetMm && guard < 4) {
+            guard += 1;
+            const bx = first.p.querySelector('.activity-box');
+            if (!ad3RemoveOneWriteLine(bx)) break;
+          }
+        }
+      }
+    });
+
+    /* Step 2: Re-scan final cut-strip page numbers for Cover & reuse callouts. */
+    const cutPageNums = [];
+    const stageCutInfo = {};
+    pages.forEach((p, idx) => {
+      const pNum = idx + 1;
+      const strips = [...p.querySelectorAll('.ad3-cutstrip')];
+      if (strips.length && idx > 0) {
+        cutPageNums.push(pNum);
+        const stName = String(p.dataset.ad3StepName || '').trim();
+        if (stName && !stageCutInfo[stName]) {
+          stageCutInfo[stName] = { num: pNum, label: ad3SummarizeCutStrips(strips) };
+        }
+      }
+    });
+
+    /* Update reuse callouts with exact verified page number (A9 + Round 2C) */
+    holder.querySelectorAll('.ad3-card-reuse[data-ad3-reuse-stage]').forEach(el => {
+      const stName = el.dataset.ad3ReuseStage || '';
+      const info = stageCutInfo[stName];
+      const ownArt = el.closest('article.paper.pupil-paper');
+      const ownNum = ownArt ? (pages.indexOf(ownArt) + 1) : -1;
+      if (info && info.num !== ownNum) {
+        el.textContent = 'Use ' + info.label + ' you cut out in the ' + stName + ' (page ' + info.num + ').';
+      } else if (info && info.num === ownNum) {
+        el.remove();
+      }
+    });
+
+    /* Update Cover Now & Next tick list with exact final cut-out page numbers (A1) */
+    const cover = holder.querySelector('article.paper.ad3-cover-paper');
+    if (cover && cutPageNums.length) {
+      const ul = cover.querySelector('ul.ad3-cover-steps');
+      if (ul) {
+        ul.querySelectorAll('li.ad3-cover-cut-item').forEach(x => x.remove());
+        const li = ad2El('li', 'ad3-cover-cut-item');
+        li.appendChild(ad2El('span', 'ad2-tick'));
+        const lbl = cutPageNums.length === 1
+          ? ('Cut out the card on page ' + cutPageNums[0])
+          : ('Cut out the cards on pages ' + cutPageNums.join(' & '));
+        li.appendChild(ad2El('span', '', lbl));
+        const lastLi = ul.lastElementChild;
+        if (lastLi) lastLi.before(li);
+        else ul.appendChild(li);
+      }
+    }
+  }
+
+  /* === v3.9 Concise pack helpers (Rules 1-6 + Round 2 A1-A9) === */
+  function ad3ParseTableToCardGroups(tbl, groups, byTitle) {
+    if (!tbl) return;
+    let headCells = [...tbl.querySelectorAll('thead th')];
+    if (!headCells.length) {
+      const firstTr = tbl.querySelector('tr');
+      if (firstTr) headCells = [...firstTr.querySelectorAll('th')];
+    }
+    const heads = headCells.map(th => String(th.textContent || '').replace(/\s+/g, ' ').trim());
+    let bodyTrs = [...tbl.querySelectorAll('tbody tr')];
+    if (!bodyTrs.length) {
+      bodyTrs = [...tbl.querySelectorAll('tr')].filter(tr => tr.querySelector('td'));
+    }
+    const rows = bodyTrs
+      .map(tr => [...tr.children].map(c => String(c.textContent || '').replace(/\s+/g, ' ').trim()))
+      .filter(r => r.some(Boolean));
+    let tc = heads.findIndex(h => /card|case|rock|term|object|check|word/i.test(h));
+    if (tc < 0) tc = 0;
+    rows.forEach((r, ri) => {
+      const rawTitle = (tc < r.length && r[tc]) ? r[tc] : ('Card ' + (ri + 1));
+      const key = rawTitle.toLowerCase();
+      if (!byTitle[key]) {
+        byTitle[key] = { title: rawTitle, entries: [], idx: groups.length };
+        groups.push(byTitle[key]);
+      } else {
+        return; /* avoid duplicating an identical card from a second table */
+      }
+      const fields = [];
+      for (let ci = 0; ci < r.length; ci++) {
+        if (ci === tc || !r[ci]) continue;
+        fields.push({ head: heads[ci] || '', val: r[ci] });
+      }
+      if (fields.length) byTitle[key].entries.push(fields);
+    });
+  }
+
+  function ad3ExtractResourceCardGroups(boardAssets) {
+    if (!boardAssets) return [];
+    const groups = [];
+    const byTitle = {};
+    if (boardAssets.indTable) {
+      ad3ParseTableToCardGroups(boardAssets.indTable, groups, byTitle);
+    }
+    /* A9: also capture distinct named case/card/check rows from I do table (skipping pure vocab glossaries already on Cover) */
+    if (boardAssets.idoTable && boardAssets.idoTable !== boardAssets.indTable) {
+      const idoFirstTh = String((boardAssets.idoTable.querySelector('th') || {}).textContent || '').replace(/\s+/g, ' ').trim();
+      const isVocabTable = /^(word|term|re\s+term|word\s*\/\s*cue|key\s*word)$/i.test(idoFirstTh);
+      if (!isVocabTable) {
+        const idoGroups = [];
+        const idoByTitle = {};
+        ad3ParseTableToCardGroups(boardAssets.idoTable, idoGroups, idoByTitle);
+        idoGroups.forEach(g => {
+          const key = g.title.toLowerCase();
+          if (!byTitle[key]) {
+            g.fromIdo = true;
+            g.idx = groups.length;
+            byTitle[key] = g;
+            groups.push(g);
+          }
+        });
+      }
+    }
+    return groups;
+  }
+
+  function ad3CardNameNeedles(title) {
+    const raw = String(title || '').trim();
+    const needles = [];
+    if (raw) needles.push(raw.toLowerCase());
+    const mCard = raw.match(/^(card\s+[a-z0-9]+)/i);
+    if (mCard) needles.push(mCard[1].toLowerCase());
+    const beforeDot = raw.split(/\s*[\u00b7·:]\s*/)[0].trim();
+    if (beforeDot && beforeDot.length >= 3 && needles.indexOf(beforeDot.toLowerCase()) < 0) {
+      needles.push(beforeDot.toLowerCase());
+    }
+    return needles;
+  }
+
+  function ad3PaperMentionsCard(paper, cardGroup) {
+    const txt = String(paper.textContent || '').replace(/\s+/g, ' ').toLowerCase();
+    const needles = ad3CardNameNeedles(cardGroup.title);
+    for (let i = 0; i < needles.length; i++) {
+      const n = needles[i];
+      if (!n || n.length < 3) continue;
+      const esc = n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      if (new RegExp('\\b' + esc + '\\b', 'i').test(txt)) return true;
+    }
+    return false;
+  }
+
+  function ad3BuildCompactResourceCard(g) {
+    const card = ad2El('div', 'ad3-rcard-compact');
+    card.dataset.cardKind = 'table';
+    card.style.setProperty('--ad3-rc', AD3_CARD_COLOURS[g.idx % AD3_CARD_COLOURS.length]);
+    const top = ad2El('div', 'ad3-rcard-top');
+    top.appendChild(ad3ShapeEl(g.idx, 'ad3-rcard-shape'));
+    top.appendChild(ad2El('span', 'ad3-rcard-title', g.title));
+    card.appendChild(top);
+    const body = ad2El('div', 'ad3-rcard-body');
+    g.entries.forEach(fields => {
+      const entry = ad2El('div', 'ad3-rcard-entry');
+      fields.forEach(f => {
+        const fld = ad2El('div', 'ad3-rcard-field');
+        if (f.head) fld.appendChild(ad2El('span', 'ad3-rcard-lbl', f.head));
+        fld.appendChild(ad2El('span', 'ad3-rcard-val', f.val));
+        entry.appendChild(fld);
+      });
+      body.appendChild(entry);
+    });
+    card.appendChild(body);
+    return card;
+  }
+
+  function ad3BuildCutStrip(labelText, gridEl) {
+    const strip = ad2El('div', 'ad3-cutstrip');
+    const head = ad2El('div', 'ad3-cutstrip-head');
+    const ic = ad3IconEl('cut');
+    if (ic) head.appendChild(ic);
+    head.appendChild(ad2El('span', '', labelText || 'Cut along the dashed line'));
+    strip.appendChild(head);
+    strip.appendChild(gridEl);
+    return strip;
+  }
+
+  function ad3BuildFormulaRow(formula, mini) {
+    if (!Array.isArray(formula) || !formula.length) return null;
+    if (mini) {
+      const bar = ad2El('div', 'ad3-formula-mini');
+      formula.forEach((step, idx) => {
+        const chip = ad2El('span', 'ad3-formula-chip');
+        chip.appendChild(ad2El('b', '', String(idx + 1)));
+        chip.appendChild(document.createTextNode(' ' + String(step)));
+        bar.appendChild(chip);
+      });
+      return bar;
+    }
+    const row = ad2El('div', 'ad3-formula-row');
+    formula.forEach((step, idx) => {
+      const box = ad2El('div', 'ad3-formula-box');
+      box.appendChild(ad2El('span', 'ad3-formula-num', String(idx + 1)));
+      box.appendChild(ad2El('span', 'ad3-formula-txt', String(step)));
+      row.appendChild(box);
+    });
+    return row;
+  }
+
+  function ad3BuildRehearsalWeDoBox(wedo, formula, ids, isBook) {
+    const bx = ad2El('section', 'activity-box ad3-rehearse-wedo-box');
+    const hdr = ad2El('div', 'box-header');
+    hdr.appendChild(ad2El('span', 'box-num', 'We rehearse together'));
+    hdr.appendChild(ad2El('h2', '', String(wedo.title || 'Rehearsal card')));
+    bx.appendChild(hdr);
+    if (isBook) {
+      bx.appendChild(ad2El('p', 'ad3-book-line', 'In your book: write "We rehearse together", then number your answers.'));
+    }
+
+    /* 1. What you need to know (max 3 lines) */
+    const readSec = ad3MakePartSec('ad3-sec-read', 'read', 'What you need to know', '');
+    const wb = ad2El('div', 'wynk-box');
+    const ul = ad2El('ul', 'wynk-list');
+    if (wedo.title) {
+      const li0 = ad2El('li');
+      li0.appendChild(ad2El('strong', '', String(wedo.title)));
+      ul.appendChild(li0);
+    }
+    if (wedo.scenario) {
+      ul.appendChild(ad2El('li', '', String(wedo.scenario)));
+    }
+    if (wedo.stage1 && wedo.stage1.think) {
+      ul.appendChild(ad2El('li', '', String(wedo.stage1.think)));
+    }
+    wb.appendChild(ul);
+    readSec.appendChild(wb);
+    bx.appendChild(readSec);
+
+    /* 2. Do this (lined up with formula steps 1, 2, 3) */
+    const doSec = ad3MakePartSec('ad3-sec-do', 'doit', 'Do this', 'follow the formula steps');
+    const lineCount = (ids && (ids.space || ids.time)) ? 3 : 2;
+    let stepN = 0;
+
+    if (wedo.stage1) {
+      stepN += 1;
+      const t1 = ad2El('div', 'ad3-task');
+      const h1 = ad2El('div', 'ad3-task-h');
+      h1.appendChild(ad2El('span', 'ad3-task-n', String(stepN)));
+      if (ids && ids.concise) h1.appendChild(ad2El('span', 'ad2-tick'));
+      h1.appendChild(ad2El('span', 'ad3-fstep-tag', 'Step 1'));
+      h1.appendChild(ad2El('span', 'ad3-task-txt', 'Spot the clue in the case above. What key detail matters most?'));
+      t1.appendChild(h1);
+      if (!isBook) t1.appendChild(ad3MakeWriteLines(1));
+      doSec.appendChild(t1);
+    }
+
+    if (wedo.stage2) {
+      stepN += 1;
+      const t2 = ad2El('div', 'ad3-task');
+      const h2 = ad2El('div', 'ad3-task-h');
+      h2.appendChild(ad2El('span', 'ad3-task-n', String(stepN)));
+      if (ids && ids.concise) h2.appendChild(ad2El('span', 'ad2-tick'));
+      h2.appendChild(ad2El('span', 'ad3-fstep-tag', 'Step 2'));
+      h2.appendChild(ad2El('span', 'ad3-task-txt', String(wedo.stage2.prompt || 'Choose the safe action:')));
+      t2.appendChild(h2);
+      if (Array.isArray(wedo.stage2.choices) && wedo.stage2.choices.length) {
+        const chUl = ad2El('ul', 'ad3-reh-choices');
+        wedo.stage2.choices.forEach(c => {
+          const li = ad2El('li', 'ad3-reh-choice');
+          li.appendChild(ad2El('span', 'ad2-tick'));
+          li.appendChild(ad2El('span', '', String(c.label || '')));
+          chUl.appendChild(li);
+        });
+        t2.appendChild(chUl);
+      } else if (!isBook) {
+        t2.appendChild(ad3MakeWriteLines(1));
+      }
+      doSec.appendChild(t2);
+    }
+
+    if (wedo.stage3) {
+      stepN += 1;
+      const t3 = ad2El('div', 'ad3-task');
+      const h3 = ad2El('div', 'ad3-task-h');
+      h3.appendChild(ad2El('span', 'ad3-task-n', String(stepN)));
+      if (ids && ids.concise) h3.appendChild(ad2El('span', 'ad2-tick'));
+      h3.appendChild(ad2El('span', 'ad3-fstep-tag', 'Step 3'));
+      const p3 = String(wedo.stage3.prompt || 'Say why this is the safe action (use "because").')
+        .replace(/^Ask the class:\s*/i, '')
+        .replace(/\s*Type what the class says:?\s*$/i, '');
+      h3.appendChild(ad2El('span', 'ad3-task-txt', p3));
+      t3.appendChild(h3);
+      if (wedo.stage3.starter) {
+        t3.appendChild(ad3MakeExamplePanel('Start with:', String(wedo.stage3.starter)));
+      }
+      if (!isBook) t3.appendChild(ad3MakeWriteLines(lineCount));
+      doSec.appendChild(t3);
+    }
+    bx.appendChild(doSec);
+
+    /* 3. Check */
+    const checkSec = ad3MakePartSec('ad3-sec-check', 'check', 'Check', '');
+    const chkTxt = (wedo.stage3 && Array.isArray(wedo.stage3.checkChecklist) && wedo.stage3.checkChecklist.length)
+      ? wedo.stage3.checkChecklist.join(' · ')
+      : String(wedo.doneWhen || 'Class rehearsal checked and ready to start Independent.');
+    const row = ad2El('div', 'ad3-check-row');
+    row.appendChild(ad2El('span', 'ad2-tick'));
+    row.appendChild(ad2El('span', '', chkTxt));
+    checkSec.appendChild(row);
+    bx.appendChild(checkSec);
+
+    return bx;
+  }
+
+  function ad3BuildExitFormulaCheck(rehearse) {
+    if (!rehearse || !rehearse.exit || !Array.isArray(rehearse.formula) || !rehearse.formula.length) return null;
+    const ex = rehearse.exit;
+    const wrap = ad2El('div', 'ad3-exit-formula');
+    wrap.appendChild(ad2El('div', 'ad3-ef-head', 'Formula check: number the steps 1 to ' + rehearse.formula.length + ', then fill the missing word'));
+    const order = (Array.isArray(ex.scrambleOrder) && ex.scrambleOrder.length === rehearse.formula.length)
+      ? ex.scrambleOrder
+      : rehearse.formula.map((_, i) => i);
+    const grid = ad2El('div', 'ad3-ef-order');
+    order.forEach(idx => {
+      const txt = rehearse.formula[idx];
+      if (!txt) return;
+      const item = ad2El('div', 'ad3-ef-item');
+      item.appendChild(ad2El('span', 'ad3-ef-box'));
+      item.appendChild(ad2El('span', '', String(txt)));
+      grid.appendChild(item);
+    });
+    wrap.appendChild(grid);
+
+    if (ex.patternBefore !== undefined || ex.patternAfter !== undefined) {
+      const p = ad2El('p', 'ad3-ef-missing');
+      p.appendChild(ad2El('strong', '', 'Missing word: '));
+      p.appendChild(document.createTextNode(String(ex.patternBefore || '')));
+      p.appendChild(ad2El('span', 'ad3-ef-blank'));
+      p.appendChild(document.createTextNode(String(ex.patternAfter || '')));
+      if (ex.patternHint) {
+        p.appendChild(document.createTextNode(' '));
+        p.appendChild(ad2El('span', 'ad3-ef-hint', '(' + String(ex.patternHint) + ')'));
+      }
+      wrap.appendChild(p);
+    }
+    return wrap;
+  }
+
+  function ad3BuildNsPlusBox(nsPlus, isBook) {
+    if (!nsPlus || !nsPlus.challenge) return null;
+    const box = ad2El('div', 'ad3-nsplus-box');
+    box.appendChild(ad2El('div', 'ad3-nsplus-head', 'NS+ challenge (optional)'));
+    box.appendChild(ad2El('p', 'ad3-nsplus-txt', String(nsPlus.challenge)));
+    if (nsPlus.goodLooksLike) {
+      const g = ad2El('p', 'ad3-nsplus-good');
+      g.appendChild(ad2El('strong', '', 'What good looks like: '));
+      g.appendChild(document.createTextNode(String(nsPlus.goodLooksLike)));
+      box.appendChild(g);
+    }
+    if (!isBook) {
+      box.appendChild(ad3MakeWriteLines(2));
+    }
+    return box;
+  }
+
+  function ad3BuildCoverPage(who, code, lessonTitle, steps, wbWords, rehearse, deskMiniCards) {
+    const title = lessonTitle ? (lessonTitle + ' · My lesson pack') : 'My lesson pack';
+    const p = ad2Paper('pupil', who, title, code);
+    p.art.classList.add('ad3-keep-paper', 'ad3-cover-paper');
+
+    /* Formula boxes (Rule 2 + Rule 6) */
+    if (rehearse && Array.isArray(rehearse.formula) && rehearse.formula.length) {
+      const fSec = ad2El('div', 'ad3-cover-sec');
+      fSec.appendChild(ad2El('h2', '', 'Today\'s lesson formula'));
+      const fRow = ad3BuildFormulaRow(rehearse.formula, false);
+      if (fRow) fSec.appendChild(fRow);
+      p.body.appendChild(fSec);
+    }
+
+    /* Now & Next steps tick list (Rule 2) */
+    const sSec = ad2El('div', 'ad3-cover-sec');
+    sSec.appendChild(ad2El('h2', '', 'Now and next — tick each step when done'));
+    const ul = ad2El('ul', 'ad3-cover-steps');
+    (steps || []).forEach((s, i) => {
+      const li = ad2El('li');
+      li.appendChild(ad2El('span', 'ad2-tick'));
+      li.appendChild(ad2El('span', '', (i + 1) + '. ' + s));
+      ul.appendChild(li);
+    });
+    const fin = ad2El('li');
+    fin.appendChild(ad2El('span', 'ad2-tick'));
+    fin.appendChild(ad2El('span', '', ((steps || []).length + 1) + '. Finished — show your adult'));
+    ul.appendChild(fin);
+    sSec.appendChild(ul);
+    p.body.appendChild(sSec);
+
+    /* This lesson's word bank — max 6 words, NO "From last lesson" (Rule 2) */
+    const words = Array.isArray(wbWords) ? wbWords.slice(0, 6) : [];
+    if (words.length) {
+      const wSec = ad2El('div', 'ad3-cover-sec ad3-cover-wb');
+      wSec.appendChild(ad2El('h2', '', 'This lesson\'s key words'));
+      const dl = ad2El('dl', 'ad3-cover-wb-grid');
+      words.forEach(item => {
+        const entry = ad2El('div', 'ad3-cover-wb-item');
+        entry.appendChild(ad2El('dt', '', item.word));
+        if (item.meaning) entry.appendChild(ad2El('dd', '', item.meaning));
+        dl.appendChild(entry);
+      });
+      wSec.appendChild(dl);
+      p.body.appendChild(wSec);
+    }
+
+    /* Optional compact desk cards (help / move / calm / extra time) as a cut strip on cover */
+    if (Array.isArray(deskMiniCards) && deskMiniCards.length) {
+      const grid = ad2El('div', 'ad3-cutstrip-grid');
+      deskMiniCards.forEach(c => grid.appendChild(c));
+      p.body.appendChild(ad3BuildCutStrip('Cut along the dashed line — keep on your desk', grid));
+    }
+
+    return p.art;
   }
 
   function ad2Apply(dyn, plan, ctx) {
@@ -5678,11 +6640,27 @@ section.print-only { display: none; }
       });
     }
 
-    /* R5: Compute unified step numbers (matching Now and next list) and rewrite headings + Box N -> Step N. */
+    /* v3.9 Rule 6: load optional mbm-rehearse-data block (absent on older lessons -> null). */
+    const rehearse = ad3LoadRehearseData();
+    const hasRehearse = !!(rehearse && Array.isArray(rehearse.formula) && rehearse.formula.length);
+
+    /* R5: Compute unified step numbers (matching Cover tick list) and rewrite headings + Box N -> Step N. */
     const steps = [];
     pupilPapers.forEach(a => {
       const origH1 = String(a.dataset.ad3OrigH1 || a.querySelector('.paperhead h1')?.textContent || '').trim();
-      const baseStep = ad2StepName(origH1, lessonTitle);
+      let baseStep = ad2StepName(origH1, lessonTitle);
+      let stageKind = '';
+      if (a.classList.contains('ad3-arrival-paper') || a.classList.contains('ad3-arrival-combined') || /^arrival\b/i.test(baseStep)) stageKind = 'arrival';
+      else if (/^starter\b|starter/i.test(baseStep)) stageKind = 'starter';
+      else if (/^we\s+do\b/i.test(baseStep)) stageKind = 'wedo';
+      else if (/^independent\b|^team\s+task\b/i.test(baseStep)) stageKind = 'independent';
+      else if (a.classList.contains('ad3-exit-paper') || /^exit\b/i.test(baseStep)) stageKind = 'exit';
+      a.dataset.ad3StageKind = stageKind;
+
+      if (hasRehearse && rehearse.wedo && stageKind === 'wedo') {
+        baseStep = 'We rehearse together';
+      }
+
       if (!steps.length || steps[steps.length - 1] !== baseStep) steps.push(baseStep);
       const stepNum = steps.length;
       a.dataset.ad3StepName = baseStep;
@@ -5692,12 +6670,17 @@ section.print-only { display: none; }
       if (h1) {
         const isHands = a.classList.contains('ad3-handson-paper');
         const isArrivalSpec = a.classList.contains('ad3-arrival-paper');
+        const isCombinedArr = a.classList.contains('ad3-arrival-combined');
         const cut = origH1.lastIndexOf(': ');
         const paperLesson = (!isHands && !isArrivalSpec && cut > 0) ? origH1.slice(0, cut).trim() : lessonTitle;
         const stageRaw = (!isHands && !isArrivalSpec && cut > 0) ? origH1.slice(cut + 2).trim() : origH1;
         const firstH2 = String(a.querySelector('.activity-box .box-header h2')?.textContent || '').trim();
         let displayStage;
-        if (isHands || isArrivalSpec) {
+        if (hasRehearse && rehearse.wedo && stageKind === 'wedo') {
+          displayStage = 'We rehearse together';
+        } else if (isCombinedArr) {
+          displayStage = 'Arrival task (Route A or Route B)';
+        } else if (isHands || isArrivalSpec) {
           displayStage = origH1;
         } else if (/^Route\s+[A-Z]\b/i.test(firstH2)) {
           displayStage = baseStep + ': ' + firstH2.replace(/\s*\u00b7\s*/, ', ');
@@ -5719,6 +6702,10 @@ section.print-only { display: none; }
           bn.textContent = 'Step ' + stepNum;
         }
       });
+
+      if (!a.classList.contains('ad3-arrival-combined') && a.querySelectorAll('.activity-box').length === 1) {
+        a.classList.add('ad3-hide-dup-boxhead');
+      }
 
       const isExitPaper = a.classList.contains('ad3-exit-paper');
       if (ids.book && !isExitPaper && !a.classList.contains('ad3-handson-paper')) {
@@ -5777,28 +6764,65 @@ section.print-only { display: none; }
       }
     }
 
-    /* R3 + R4 + R7 + R8 + N4: structure every activity box (except Hands-on & Check my work). */
+    /* v3.9 Rule 4: Writing frame lines go inside the Independent task (no separate desk card page). */
+    const isSci = String(ctx.brandSubject || '').trim().toLowerCase() === 'science';
+    const writingFrameLines = (ids.starter || ids.starterlong)
+      ? (isSci
+        ? ['I predict ...', 'I tested ...', 'I saw ...', 'This shows ... because ...']
+        : ['First, ...', 'Next, ...', 'This is because ...', 'So I think ...'])
+      : null;
+
+    /* R3 + R4 + R7 + R8 + N4 + v3.9 Rules 5 & 6: structure every activity box (fixed 3-part shape). */
     const picStagesUsed = [];
     const csAttachedStages = {};
+    const csPaperByStage = {};
     const tplAttachedStages = {};
     let templatesUsedCount = 0;
     let cutStickUsedCount = 0;
+    let nsPlusAttached = false;
+    let exitFormulaAttached = false;
 
     pupilPapers.forEach(a => {
       const isExitPaper = a.classList.contains('ad3-exit-paper');
+      const stageKind = a.dataset.ad3StageKind || '';
+      const isCombinedArr = a.classList.contains('ad3-arrival-combined');
       if (a.classList.contains('ad3-handson-paper')) return;
+
+      /* Rule 6: Replace We do Quick match with Rehearsal card when mbm-rehearse-data is present. */
+      if (hasRehearse && rehearse.wedo && stageKind === 'wedo') {
+        const body = a.querySelector('.paper-body') || a;
+        const oldBoxes = [...body.querySelectorAll('.activity-box')];
+        const rehBox = ad3BuildRehearsalWeDoBox(rehearse.wedo, rehearse.formula, ids, !!ids.book);
+        if (oldBoxes.length) {
+          oldBoxes[0].replaceWith(rehBox);
+          for (let i = 1; i < oldBoxes.length; i++) oldBoxes[i].remove();
+        } else {
+          body.appendChild(rehBox);
+        }
+        const fMini = ad3BuildFormulaRow(rehearse.formula, true);
+        if (fMini) body.prepend(fMini);
+        return;
+      }
+
       a.querySelectorAll('.activity-box').forEach(bx => {
         if (bx.classList.contains('ad3-check-box')) return;
         const isExitBox = isExitPaper || ad3IsExitSlipBox(bx);
         const picStage = bx.dataset.ad3PicStage || '';
         const picLabel = bx.dataset.ad3PicLabel || '';
-        const picSvg = picStage ? (boardAssets.svgsByStage[picStage] || null) : null;
+        let picSvg = picStage ? (boardAssets.svgsByStage[picStage] || null) : null;
+        if (!picSvg && /\btitle\s+diagram\b/i.test(String(bx.textContent || '')) && boardAssets.svgsByStage.title) {
+          picSvg = boardAssets.svgsByStage.title;
+        }
+        const stageChoices = (boardAssets.choicesByStage && stageKind && boardAssets.choicesByStage[stageKind])
+          ? boardAssets.choicesByStage[stageKind]
+          : null;
         const resStage = bx.dataset.ad3ResStage || '';
         const stageCs = (resStage && !csAttachedStages[resStage])
           ? resData.cut_and_stick.filter(s => s.stage === resStage)
           : [];
         if (stageCs.length) {
           csAttachedStages[resStage] = 1;
+          csPaperByStage[resStage] = a;
           cutStickUsedCount += stageCs.length;
         }
         const stageTpls = (resStage && !tplAttachedStages[resStage])
@@ -5808,18 +6832,44 @@ section.print-only { display: none; }
           tplAttachedStages[resStage] = 1;
           templatesUsedCount += stageTpls.length;
         }
+        const exCheck = (hasRehearse && rehearse.exit && isExitBox && !exitFormulaAttached)
+          ? ad3BuildExitFormulaCheck(rehearse)
+          : null;
+        if (exCheck) exitFormulaAttached = true;
+
         ad3StructureActivityBox(bx, {
           ids: ids,
           isExitBox: isExitBox,
+          isStarterBox: stageKind === 'starter',
           isBook: !!ids.book,
+          isCombinedArrival: isCombinedArr,
           picSvg: picSvg,
+          boardChoices: stageChoices,
           resCutSticks: stageCs,
           resTemplates: stageTpls,
+          formulaSteps: (hasRehearse && stageKind === 'independent') ? rehearse.formula : null,
+          inlineWritingFrame: (writingFrameLines && stageKind === 'independent') ? writingFrameLines : null,
+          exitFormulaCheck: exCheck,
           onPicAdded: () => {
             if (picLabel && picStagesUsed.indexOf(picLabel) < 0) picStagesUsed.push(picLabel);
           }
         });
       });
+
+      /* Rule 6: Small numbered formula boxes on Independent page + optional NS+ challenge box at end. */
+      if (hasRehearse && stageKind === 'independent') {
+        const body = a.querySelector('.paper-body') || a;
+        const fMini = ad3BuildFormulaRow(rehearse.formula, true);
+        if (fMini) body.prepend(fMini);
+        if (rehearse.nsPlus && !nsPlusAttached) {
+          const nsEl = ad3BuildNsPlusBox(rehearse.nsPlus, !!ids.book);
+          if (nsEl) {
+            body.appendChild(nsEl);
+            nsPlusAttached = true;
+          }
+        }
+      }
+
       if (ids.book && !isExitPaper) {
         a.querySelectorAll('.answer-space, .write-line').forEach(x => x.remove());
       }
@@ -5836,61 +6886,99 @@ section.print-only { display: none; }
       });
     }
 
-    /* R1 Resource cards sheet + N4 Cut-and-stick pieces + R2 Desk cards (built before packing so front flags are exact). */
-    const resResult = ad3BuildResourceCardsPage(boardAssets, who, code);
-    const csSetsToPrint = resData.cut_and_stick.filter(s => !!csAttachedStages[s.stage]);
-    const csArt = csSetsToPrint.length ? ad3BuildCutStickPiecesPage(csSetsToPrint, who, code) : null;
+    /* v3.9 Rule 4: Cards & cut-out pieces where used (cut strip at bottom of first-use activity page; reuse note on later pages; NO separate cards or desk-card pages). */
+    const cardGroups = ad3ExtractResourceCardGroups(boardAssets);
+    const indPaperDefault = pupilPapers.find(p => p.dataset.ad3StageKind === 'independent')
+      || pupilPapers.find(p => !p.classList.contains('ad3-exit-paper'))
+      || pupilPapers[0] || null;
+    const cardsForPaper = new Map();
+    const reuseForPaper = new Map();
+    let inlineResourceCardCount = 0;
 
-    const deskCards = [];
-    const addDeskCard = (title, lines) => {
-      const c = ad2El('div', 'ad2-card');
-      const top = ad2El('div');
-      top.appendChild(ad2El('h2', '', title));
-      const ul = ad2El('ul');
-      lines.forEach(l => ul.appendChild(ad2El('li', '', l)));
-      top.appendChild(ul);
+    cardGroups.forEach(g => {
+      const mentioningNonExit = pupilPapers.filter(p => !p.classList.contains('ad3-exit-paper') && ad3PaperMentionsCard(p, g));
+      const mentioningExit = pupilPapers.filter(p => p.classList.contains('ad3-exit-paper') && ad3PaperMentionsCard(p, g));
+      if (g.fromIdo && !mentioningNonExit.length && !mentioningExit.length) return;
+      const firstPaper = mentioningNonExit.length ? mentioningNonExit[0] : (g.fromIdo ? mentioningExit[0] : indPaperDefault);
+      if (!firstPaper) return;
+      if (!cardsForPaper.has(firstPaper)) cardsForPaper.set(firstPaper, []);
+      cardsForPaper.get(firstPaper).push(g);
+      inlineResourceCardCount += 1;
+      const firstStageName = firstPaper.dataset.ad3StepName || 'earlier step';
+      const allLater = mentioningNonExit.concat(mentioningExit);
+      for (let mi = 0; mi < allLater.length; mi++) {
+        const lp = allLater[mi];
+        if (lp === firstPaper) continue;
+        if (!reuseForPaper.has(lp)) reuseForPaper.set(lp, new Set());
+        reuseForPaper.get(lp).add(firstStageName);
+      }
+    });
+
+    reuseForPaper.forEach((stageSet, paper) => {
+      const body = paper.querySelector('.paper-body') || paper;
+      stageSet.forEach(stName => {
+        const note = ad2El('div', 'ad3-card-reuse', 'Use the card you cut out in the ' + stName + '.');
+        note.dataset.ad3ReuseStage = stName;
+        const firstBox = body.querySelector('.activity-box');
+        if (firstBox) firstBox.before(note);
+        else body.prepend(note);
+      });
+    });
+
+    cardsForPaper.forEach((groups, paper) => {
+      const body = paper.querySelector('.paper-body') || paper;
+      const grid = ad2El('div', 'ad3-cutstrip-grid');
+      groups.forEach(g => grid.appendChild(ad3BuildCompactResourceCard(g)));
+      body.appendChild(ad3BuildCutStrip('Cut along the dashed line — cards for this task', grid));
+    });
+
+    const csSetsToPrint = resData.cut_and_stick.filter(s => !!csAttachedStages[s.stage]);
+    csSetsToPrint.forEach(set => {
+      const targetPaper = csPaperByStage[set.stage] || indPaperDefault;
+      if (!targetPaper) return;
+      const body = targetPaper.querySelector('.paper-body') || targetPaper;
+      const grid = ad2El('div', 'ad3-cs-strip-grid');
+      set.pieces.forEach(pc => {
+        grid.appendChild(ad2El('div', 'ad3-cs-piece-compact', pc));
+      });
+      body.appendChild(ad3BuildCutStrip('Cut along the dashed line — stick onto the grid above', grid));
+    });
+
+    const resResult = inlineResourceCardCount > 0 ? { art: null, tableCards: inlineResourceCardCount, hasPicCard: false } : null;
+
+    /* Compact desk mini-cards (if help/move/calm/time requested) go on Cover page cut strip (no separate desk card page). */
+    const deskMiniCards = [];
+    const addMiniDesk = (title, line) => {
+      const c = ad2El('div', 'ad3-rcard-compact');
+      c.style.setProperty('--ad3-rc', '#10243a');
+      const top = ad2El('div', 'ad3-rcard-top');
+      top.appendChild(ad2El('span', 'ad3-rcard-title', title));
       c.appendChild(top);
-      c.appendChild(ad2El('div', 'ad2-cut', 'cut along the dashed line'));
-      deskCards.push(c);
+      const body = ad2El('div', 'ad3-rcard-body');
+      body.appendChild(ad2El('div', 'ad3-rcard-val', line));
+      c.appendChild(body);
+      deskMiniCards.push(c);
     };
     if (ids.help) {
-      addDeskCard('I need help', ['Put this card on your desk.', 'Try the next step while you wait.', 'Your adult will come to you.']);
-      addDeskCard('I am finished', ['Check every box is ticked.', 'Show your adult your work.']);
+      addMiniDesk('I need help', 'Put on desk. Try the next step while you wait.');
+      addMiniDesk('I am finished', 'Check every box is ticked. Show your adult.');
     }
-    if (ids.move) addDeskCard('Movement break', ['Show this card to your adult.', 'Stand, stretch or walk for 2 minutes.', 'Come back and carry on.']);
-    if (ids.calm) addDeskCard('Calm card', ['Show this card. You do not need to talk.', 'Choose: 5 slow breaths / quiet space / talk to an adult.', 'Come back when you are ready.']);
-    if (ids.time) addDeskCard('Extra time', ['I can take more time on this task.', 'Do the Must do lines first.', 'If time lines are a bonus.']);
-    if (ids.starter || ids.starterlong) {
-      const isSci = String(ctx.brandSubject || '').trim().toLowerCase() === 'science';
-      addDeskCard('Writing frame', isSci
-        ? ['I predict ...', 'I tested ...', 'I saw ...', 'This shows ... because ...']
-        : ['First, ...', 'Next, ...', 'This is because ...', 'So I think ...']
-      );
-    }
-    let deskArt = null;
-    if (deskCards.length) {
-      const dp = ad2Paper('pupil', who, 'My desk cards', code);
-      dp.art.classList.add('ad3-keep-paper', 'ad3-desk-paper');
-      dp.body.appendChild(ad3MakeCutNote('Cut along the dashed lines. Keep these on your desk.'));
-      const grid = ad2El('div', 'ad2-cards');
-      deskCards.forEach(c => grid.appendChild(c));
-      dp.body.appendChild(grid);
-      deskArt = dp.art;
-    }
-
-    const hasCutouts = !!(resResult || csArt || deskArt);
+    if (ids.move) addMiniDesk('Movement break', 'Show adult. Stand & stretch for 2 minutes, then carry on.');
+    if (ids.calm) addMiniDesk('Calm card', 'Show adult (no need to talk). 5 slow breaths or quiet space.');
+    if (ids.time) addMiniDesk('Extra time', 'Do Must do lines first. If time lines are a bonus.');
 
     const helpAddr = ctx.helpSlug
       ? ('madebymatt.uk/Lessons/help/' + ctx.helpSlug + '#' + ad3BuildHelpCode(ctx.tier, dyn.classList, ids, ctx.todayAdult))
       : '';
 
+    /* v3.9 Rule 2: This lesson's word bank ONLY (max 6 words, NO "From last lesson") on Cover page. */
     const wbThisWords = [];
-    const wbPrevWords = [];
-    if (ids.words) {
+    {
       const done = {};
       const cardWords = (ctx.selfCard && Array.isArray(ctx.selfCard.key_words)) ? ctx.selfCard.key_words : [];
       if (cardWords.length) {
         cardWords.forEach(item => {
+          if (wbThisWords.length >= 6) return;
           const w = item && typeof item.word === 'string' ? item.word.trim() : '';
           const k = w.toLowerCase();
           if (!w || done[k]) return;
@@ -5900,118 +6988,102 @@ section.print-only { display: none; }
       } else {
         dyn.querySelectorAll('.wynk-list li').forEach(li => {
           li.querySelectorAll('strong').forEach(s => {
+            if (wbThisWords.length >= 6) return;
             const w = s.textContent.trim();
             const k = w.toLowerCase();
-            if (!w || done[k] || wbThisWords.length >= 14) return;
+            if (!w || done[k]) return;
             done[k] = 1;
             wbThisWords.push({ word: w, meaning: li.textContent.replace(/\s+/g, ' ').trim() });
           });
         });
       }
-      const prevWords = (ctx.prev0Card && Array.isArray(ctx.prev0Card.key_words)) ? ctx.prev0Card.key_words : [];
-      if (prevWords.length) {
-        prevWords.forEach(item => {
+      /* Round 2D A9 fix: if any question/recall line names a word from prev0Card/selfCard alongside "word bank" (e.g. "shade"),
+         ensure that word is in the max-6 Cover word bank by dropping the least-used word if needed. */
+      const wbMentionLines = [];
+      const collectWbLines = rootEl => {
+        if (!rootEl) return;
+        rootEl.querySelectorAll('.ad3-task-txt, .ad3-q, li.inst-line').forEach(el => {
+          const t = String(el.textContent || '').replace(/\s+/g, ' ').trim();
+          if (/\bword\s*bank\b/i.test(t)) wbMentionLines.push(t.toLowerCase());
+        });
+      };
+      collectWbLines(dyn);
+      if (recallBox) collectWbLines(recallBox);
+
+      if (wbMentionLines.length) {
+        const allQuestionTxt = (String(dyn.textContent || '') + ' ' + (recallBox ? String(recallBox.textContent || '') : '')).toLowerCase();
+        const extraPool = [];
+        if (ctx.selfCard && Array.isArray(ctx.selfCard.key_words)) extraPool.push(...ctx.selfCard.key_words);
+        if (ctx.prev0Card && Array.isArray(ctx.prev0Card.key_words)) extraPool.push(...ctx.prev0Card.key_words);
+        const wbMentionJoined = wbMentionLines.join(' ');
+        extraPool.forEach(item => {
           const w = item && typeof item.word === 'string' ? item.word.trim() : '';
           const k = w.toLowerCase();
           if (!w || done[k]) return;
+          const esc = k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          if (!new RegExp('\\b' + esc + '\\b', 'i').test(wbMentionJoined)) return;
           done[k] = 1;
-          wbPrevWords.push({ word: w, meaning: item && typeof item.meaning === 'string' ? item.meaning.trim() : '' });
+          const newEntry = { word: w, meaning: item && typeof item.meaning === 'string' ? item.meaning.trim() : '', pinned: true };
+          if (wbThisWords.length < 6) {
+            wbThisWords.push(newEntry);
+          } else {
+            /* Drop the least-used non-pinned word in wbThisWords */
+            let dropIdx = -1;
+            let minCnt = Infinity;
+            wbThisWords.forEach((ex, ei) => {
+              if (ex.pinned) return;
+              const ek = ex.word.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              const m = allQuestionTxt.match(new RegExp('\\b' + ek + '\\b', 'gi'));
+              const cnt = m ? m.length : 0;
+              if (cnt < minCnt) { minCnt = cnt; dropIdx = ei; }
+            });
+            if (dropIdx >= 0) wbThisWords.splice(dropIdx, 1, newEntry);
+          }
         });
       }
     }
 
     const willHaveRecallPage = !!recallArt;
-    const willHaveWbPage = !!(ids.words && (wbThisWords.length || wbPrevWords.length));
     const willHaveLabelPage = !!(ids.label && validLabel);
-    const willHaveFront = !!(ids.ownwork || ids.nownext || ids.checklist || hasCutouts || willHaveRecallPage || willHaveWbPage || willHaveLabelPage);
-    let wbPages = [];
+    const willHaveFront = true; /* v3.9 Rule 2: Cover page is always page 1 */
 
-    if (ids.book || willHaveWbPage) {
+    if (ids.book) {
       const meas = ad3CreateMeasurer(dyn.classList);
       try {
-        if (ids.book) {
-          ad3PackBookPages(dyn, ctx, ids, meas, willHaveFront, helpAddr);
-          pupilPapers = [...dyn.querySelectorAll('article.paper')];
-        }
-        if (willHaveWbPage) {
-          const wbIsFirst = !ids.ownwork && !ids.nownext && !hasCutouts && !ids.checklist && !willHaveRecallPage;
-          wbPages = ad3BuildWordBankPages(who, code, wbThisWords, wbPrevWords, meas, {
-            isFirstPupilPage: wbIsFirst,
-            helpAddr: helpAddr,
-            pupilTarget: ctx.pupilTarget
-          });
-        }
+        ad3PackBookPages(dyn, ctx, ids, meas, willHaveFront, helpAddr);
+        pupilPapers = [...dyn.querySelectorAll('article.paper')];
       } finally {
         meas.cleanup();
       }
     }
 
+    /* v3.9 Rule 5: Header "NOW: x · NEXT: y" plus step number on EVERY activity page. */
     pupilPapers.forEach((a, pi) => {
       const pageStep = a.dataset.ad3StepName || ad2StepName(a.dataset.ad3OrigH1 || a.querySelector('.paperhead h1')?.textContent, lessonTitle);
+      const stepNum = a.dataset.ad3StepNum || String(pi + 1);
       const si = steps.indexOf(pageStep);
       const body = a.querySelector('.paper-body') || a;
-      if (ids.nownext) {
-        const b = ad2El('div', 'ad2-banner');
-        b.appendChild(ad2El('span', '', 'NOW: ' + pageStep));
-        b.appendChild(ad2El('span', 'ad2-next', 'NEXT: ' + (steps[si + 1] || 'Finished. Show your adult.')));
-        body.prepend(b);
-      }
+      const b = ad2El('div', 'ad2-banner');
+      b.appendChild(ad2El('span', 'ad3-bn-step', stepNum));
+      b.appendChild(ad2El('span', '', 'NOW: ' + pageStep));
+      b.appendChild(ad2El('span', 'ad2-next', '\u00b7 NEXT: ' + (steps[si + 1] || 'Finished. Show your adult.')));
+      body.prepend(b);
       if (ids.move && pi % 2 === 1 && pi < pupilPapers.length - 1) {
         body.appendChild(ad2El('div', 'ad2-note', 'Movement break: stand up, stretch high, roll your shoulders 5 times, then sit back down and start the next page.'));
       }
     });
 
-    /* R2 Front page order: now and next card (if any), R1 sheet, cut-and-stick pieces (if any), My desk cards, then the rest. */
+    /* v3.9 Rule 2: Page 1 is the single Cover page (Now/Next tick list + max-6 word bank + formula boxes). */
     const front = [];
     const back = [];
 
-    if (ids.nownext) {
-      const p = ad2Paper('pupil', who, 'My now and next card', code);
-      p.art.classList.add('ad3-keep-paper');
-      const nn = ad2El('div', 'ad2-nn');
-      const nowBox = ad2El('div');
-      nowBox.appendChild(ad2El('h2', '', 'NOW'));
-      nowBox.appendChild(ad2El('p', '', steps[0] || 'Arrival task'));
-      const nextBox = ad2El('div');
-      nextBox.appendChild(ad2El('h2', '', 'NEXT'));
-      nextBox.appendChild(ad2El('p', '', steps[1] || 'Show your adult'));
-      nn.appendChild(nowBox);
-      nn.appendChild(nextBox);
-      p.body.appendChild(nn);
-      p.body.appendChild(ad2El('p', 'ad2-note', 'Keep this card on your desk. Tick each step when it is done. Your adult can move the NOW and NEXT words along.'));
-      const ul = ad2El('ul', 'ad2-steps');
-      if (hasCutouts) ul.appendChild(ad2Tick('First: cut out my cards'));
-      steps.forEach((s, i) => ul.appendChild(ad2Tick((i + 1) + '. ' + s)));
-      ul.appendChild(ad2Tick((steps.length + 1) + '. Finished: show your adult'));
-      p.body.appendChild(ul);
-      front.push(p.art);
-    }
-    if (resResult) {
-      front.push(resResult.art);
-    }
-    if (csArt) {
-      front.push(csArt);
-    }
-    if (deskArt) {
-      front.push(deskArt);
-    }
+    front.push(ad3BuildCoverPage(who, code, lessonTitle, steps, wbThisWords, rehearse, deskMiniCards));
+
     if (ids.ownwork) {
       front.push(ad3BuildOwnPlanPage(ctx, ids, who, code, tierBoxHeaders));
     }
     if (recallArt) {
       front.push(recallArt);
-    }
-    if (ids.checklist && !ids.nownext) {
-      const p = ad2Paper('pupil', who, 'My task list', code);
-      const ul = ad2El('ul', 'ad2-steps');
-      if (hasCutouts) ul.appendChild(ad2Tick('First: cut out my cards'));
-      steps.forEach((s, i) => ul.appendChild(ad2Tick((i + 1) + '. ' + s)));
-      ul.appendChild(ad2Tick((steps.length + 1) + '. Finished: show your adult'));
-      p.body.appendChild(ul);
-      front.push(p.art);
-    }
-    if (wbPages.length) {
-      wbPages.forEach(art => front.push(art));
     }
     if (willHaveLabelPage) {
       front.push(ad3BuildLabelPage(validLabel, who, code, !!ids.book));
@@ -6042,20 +7114,20 @@ section.print-only { display: none; }
       hr.appendChild(ad2El('th', '', 'In this pack'));
       table.appendChild(hr);
       const what = {
-        nownext: 'Now and next card at the front; NOW / NEXT banner on every page.',
+        nownext: 'Now and next tick list on the cover; NOW / NEXT header on every page.',
         concise: 'Each instruction split into one short ticked step; choices listed one per line.',
         reader: 'Reader note on every box; adult reading script on the next page.',
-        move: 'Movement break after every second page; break card to cut out.',
-        time: 'Must do / If time marked on every box; extra writing lines; extra time card.',
-        words: 'Lesson word bank page at the front; word bank in each box.',
+        move: 'Movement break after every second page; compact break card on cover.',
+        time: 'Must do / If time marked on every box; extra writing lines; compact extra time card on cover.',
+        words: 'This lesson\'s key words (max 6) on the cover; word bank in each box.',
         large: 'Enlarged print on every page.',
-        starter: 'Sentence starters shown in every box; writing frame card.',
+        starter: 'Sentence starters shown under each step; writing frame inside the Independent task.',
         fewer: 'Lead-in and stretch lines removed.',
         tint: 'Coloured page background. Print in colour, or print on matching coloured paper.',
-        worked: 'Visual numbered step strip (with board picture where present) in every box.',
-        help: 'I need help and I am finished cards.',
-        checklist: 'Task list at the front.',
-        calm: 'Calm card to cut out.',
+        worked: 'Worked example and board picture (words first) in What you need to know.',
+        help: 'Compact I need help and I am finished cards on the cover cut strip.',
+        checklist: 'Step tick list on the cover.',
+        calm: 'Compact calm card on the cover cut strip.',
         timer: 'Timer strip in every box.',
         space: 'Extra writing lines.',
         recall: !ctx.prev0Card
@@ -6064,7 +7136,7 @@ section.print-only { display: none; }
             ? 'Covered by the catch-up page.'
             : 'Last lesson key fact and two recall questions on a Last lesson page at the front; answers below.'),
         book: 'Answer lines removed and question pages packed together; the pupil writes answers in their book. Exit slip stays on paper.',
-        starterlong: 'Sentence starters only in boxes with a why / explain / how / compare question; writing frame card.',
+        starterlong: 'Sentence starters on long questions; writing frame inside the Independent task.',
         gapfill: gapfillAnswers.length
           ? ('Fill the gaps added before questions. Answers: ' + gapfillAnswers.map(g => ad3BookBoxLabel(g.bx) + ': ' + g.words.join(', ')).join('; ') + '.')
           : 'No bold words found in What you need to know boxes.',
@@ -6096,10 +7168,9 @@ section.print-only { display: none; }
       if (resResult) {
         const parts = [];
         if (resResult.tableCards > 0) parts.push(resResult.tableCards + ' resource card' + (resResult.tableCards === 1 ? '' : 's'));
-        if (resResult.hasPicCard) parts.push('1 Picture card');
         const cRow = ad2El('tr');
-        cRow.appendChild(ad2El('td', '', 'Cards sheet'));
-        cRow.appendChild(ad2El('td', '', 'My cards for this lesson at the front (' + parts.join(' + ') + ').'));
+        cRow.appendChild(ad2El('td', '', 'Lesson cards'));
+        cRow.appendChild(ad2El('td', '', 'Printed as cut strips on the activity pages where first used (' + parts.join(' + ') + ').'));
         table.appendChild(cRow);
       }
       if (picStagesUsed.length) {
@@ -6112,7 +7183,7 @@ section.print-only { display: none; }
         const csRow = ad2El('tr');
         csRow.appendChild(ad2El('td', '', 'Cut and stick'));
         const td = ad2El('td');
-        td.appendChild(ad2El('div', '', csSetsToPrint.map(s => s.title).join('; ') + ' (pieces at the front; grid in the task).'));
+        td.appendChild(ad2El('div', '', csSetsToPrint.map(s => s.title).join('; ') + ' (cut strip at bottom of the task page).'));
         if (csAnswers.length) {
           const ul = ad2El('ul', 'ad3-ans-list');
           csAnswers.forEach(ans => {
