@@ -208,6 +208,35 @@ body.board-open>main{visibility:hidden}
   .sheet-doc tr{display:table-row!important;border:1px solid #000!important;break-inside:avoid}
   .sheet-doc th,.sheet-doc td{display:table-cell!important;border:1px solid #000!important;padding:5px 7px!important;color:#000!important;background:#fff!important}
 }
+.brief-target-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:2px 0;max-width:100%}
+.brief-target-wrap .target-line{flex:1 1 180px;min-width:0}
+.brief-target-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;max-width:100%}
+.brief-target-chip{min-height:44px;min-width:44px;padding:6px 10px;font-size:14.5px;border:2px solid var(--accent);border-radius:10px;background:var(--bg);color:var(--accent);font-weight:700;max-width:100%;text-align:left}
+.brief-target-chip[aria-expanded="true"]{background:var(--accent);color:var(--bg)}
+.brief-target-more{min-height:44px;min-width:44px;padding:6px 10px;font-size:14px;border:1.5px solid var(--line);border-radius:10px;background:var(--soft);color:var(--ink);font-weight:650;max-width:100%}
+.brief-target-more[aria-expanded="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.brief-nudge-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:2px 0;max-width:100%}
+.brief-nudge-btn{min-height:44px;min-width:44px;padding:6px 12px;font-size:14.5px;border:2px dashed var(--warn);border-radius:10px;background:var(--warn-bg);color:var(--warn);font-weight:700;max-width:100%}
+.brief-step-undo{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:2px solid var(--ok);border-radius:10px;background:var(--ok-bg);color:var(--ok);font-size:15px;font-weight:700;max-width:100%}
+.brief-step-undo button{min-height:44px;min-width:44px;padding:6px 12px;font-size:14.5px;border:2px solid var(--ok);background:var(--bg);color:var(--ok)}
+.brief-step-panel{margin-top:4px;padding:10px;border:2px solid var(--accent);border-radius:12px;background:var(--soft);display:flex;flex-direction:column;gap:8px;max-width:100%;min-width:0;overflow-wrap:anywhere}
+.brief-step-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px}
+.brief-step-title{font-size:15.5px;font-weight:700;min-width:0;flex:1 1 160px;overflow-wrap:anywhere}
+.brief-step-close{min-height:44px;min-width:44px;padding:6px 12px;font-size:14.5px}
+.brief-step-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:14px}
+.brief-step-note-wrap{padding:8px;border:1px solid var(--line);border-radius:10px;background:var(--bg);display:flex;flex-direction:column;gap:6px;max-width:100%}
+.brief-step-attach{display:flex;align-items:center;gap:10px;min-height:44px;font-size:15px;font-weight:650;cursor:pointer;margin:0}
+.brief-step-note-preview{font-size:14px;color:var(--ink);opacity:.9;margin:0;overflow-wrap:anywhere}
+.brief-step-list{display:flex;flex-direction:column;gap:6px}
+.brief-step-item{padding:8px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);display:flex;flex-direction:column;gap:6px;max-width:100%}
+.brief-step-item.is-next{border:2px solid var(--accent);background:var(--warn-bg)}
+.brief-step-item-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:15px}
+.brief-step-btns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.brief-step-btns button{min-height:44px;min-width:44px;padding:6px 4px;font-size:14px;width:100%}
+.brief-step-btns button[data-step-set="partly"][aria-pressed="true"]{background:var(--warn);border-color:var(--warn);color:var(--bg)}
+.brief-step-btns button[data-step-set="met"][aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:var(--bg)}
+.brief-step-btns button[data-step-set="notyet"][aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.brief-step-err{padding:8px 10px;border:2px solid var(--miss);border-radius:10px;background:var(--miss-bg);color:var(--miss);font-size:15px;font-weight:700;max-width:100%}
 </style>
 <style>.tour-tip,.tour-help{font:600 15px/1.35 system-ui,sans-serif!important}.tour-help,.tour-actions button{background:#fff!important;color:#183c31!important;border:1px solid #365b49!important;min-height:44px!important;padding:.4rem .65rem!important;border-radius:7px!important;cursor:pointer}.tour-tip{position:relative;z-index:1;margin:.4rem 0;max-width:calc(100vw - 12px);width:300px;color:#172e2a!important;background:#fffbea!important;border:2px solid #355944;border-radius:9px;padding:10px 12px;box-sizing:border-box;box-shadow:0 3px 10px #172e2a26}.tour-tip[hidden]{display:none!important}.tour-tip small,.tour-tip p,.tour-tip a{color:#172e2a!important}.tour-tip p{margin:.35rem 0}.tour-actions{display:flex;flex-wrap:wrap;gap:.3rem}.tour-tip a{display:inline-block;margin-top:.4rem;text-decoration:underline}.tour-target{outline:3px dashed #345f43!important;outline-offset:2px}.tour-actions button:disabled{opacity:1;color:#384734!important;background:#eceee4!important}.tour-tip,.tour-tip *,.tour-target{animation:none!important;transition:none!important}@media print{.tour-tip,.tour-help{display:none!important}.tour-target{outline:0!important}}
 </style>
@@ -326,6 +355,18 @@ textarea.pw-iedp-box{min-height:66px;font:15.5px/1.4 system-ui,sans-serif;backgr
 .pw-history-list{margin:.35rem 0 0;padding-left:1.25rem;font-size:14.5px}
 @media(max-width:680px){
   .pw-step-ctrls select{width:100%}
+}
+.pw-date-presets{display:flex;flex-wrap:wrap;gap:.45rem;margin:.35rem 0 .6rem;align-items:center;max-width:100%}
+.pw-date-presets-lbl{font-size:15px;font-weight:650;color:#142d26;margin-right:.15rem}
+.pw-whole-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem;margin:.6rem 0 .25rem;max-width:100%}
+.pw-iedp-head-acts{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;max-width:100%}
+textarea.pw-iedp-box.is-editing{background:#fff!important;border:2px solid #153e33}
+.pw-edit-hint{font-size:14px;color:#663a00;font-weight:650;margin:.2rem 0 0}
+.pw-rating-inline{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;margin:.35rem 0;max-width:100%}
+.pw-rating-inline select{width:auto;min-width:185px;flex:0 1 auto}
+.pw-other-progress{background:#f8fbf9;border:1.5px solid #335d50;border-radius:10px;padding:.75rem;margin-top:.65rem;max-width:100%}
+@media(max-width:680px){
+  .pw-rating-inline select{width:100%}
 }
 </style></head>
 <body>
@@ -448,6 +489,12 @@ textarea.pw-iedp-box{min-height:66px;font:15.5px/1.4 system-ui,sans-serif;backgr
         <input type="date" id="pwTo">
       </div>
     </div>
+    <div id="pwDatePresets" class="pw-date-presets" role="group" aria-label="IEDP date range presets">
+      <span class="pw-date-presets-lbl">Date presets:</span>
+      <button type="button" id="pwPresetWeek" data-pw-preset="week">This week</button>
+      <button type="button" id="pwPreset2Weeks" data-pw-preset="twoWeeks">Last 2 weeks</button>
+      <button type="button" id="pwPresetHalfTerm" data-pw-preset="halfTerm">This half term</button>
+    </div>
     <details id="pwTargetsDetails" class="pw-subdetails">
       <summary>Edit targets</summary>
       <p id="pwTargetsNote" class="hint"></p>
@@ -491,6 +538,10 @@ textarea.pw-iedp-box{min-height:66px;font:15.5px/1.4 system-ui,sans-serif;backgr
       <summary>Link help lines to targets</summary>
       <div id="pwLinksList"></div>
     </details>
+    <div id="pwWholeIedpBar" class="pw-whole-bar" hidden>
+      <button type="button" id="pwCopyWholeIedpBtn" class="primary">Copy whole IEDP</button>
+      <span class="hint">Copies every active target’s Review then Evidence in order (plain text).</span>
+    </div>
     <div id="pwIedpCards"></div>
     <p id="pwUnlinkedLine" class="pw-unlinked" hidden></p>
   </section>
@@ -1702,6 +1753,7 @@ function setBriefPupilTally(slot, effPath, n, nextState, nextNote, skipUndo = fa
   write(KEYS.tracker, tracker);
   write(KEYS.tally, tallies);
   write(KEYS.qcQueue, sendQueue);
+  if (nextState !== undefined) window.mbmStep2?.onTally?.(slot, effPath, n, nextState);
   if (reRender) {
     renderAll();
   } else {
@@ -1874,6 +1926,7 @@ function renderRoomBrief(activeCtx, roster = buildRoster()){
   );
 
   const box = $('briefPupils');
+  window.mbmStep2?.beforeBriefRender?.();
   box.replaceChildren();
   m.rows.forEach(r => {
     const card = el('article', { class: 'brief-card ' + m.effPath + (r.out ? ' is-out' : ''), 'data-pupil': r.n });
@@ -1911,9 +1964,11 @@ function renderRoomBrief(activeCtx, roster = buildRoster()){
       });
       card.append(aWrap);
     }
+    let targetLineEl = null;
     if (r.firstTarget) {
       const cleanT = roster.show === 'number' ? redactPublic(r.firstTarget, roster) : redactPrivateInitials(r.firstTarget, roster);
-      card.append(el('p', { class: 'target-line' }, 'Target: ' + (cleanT.length > 78 ? cleanT.slice(0, 75) + '…' : cleanT)));
+      targetLineEl = el('p', { class: 'target-line' }, 'Target: ' + (cleanT.length > 78 ? cleanT.slice(0, 75) + '…' : cleanT));
+      card.append(targetLineEl);
     }
 
     // In-place 1-tap Exit Tally buttons (Got it / Partly / Not yet)
@@ -1991,8 +2046,10 @@ function renderRoomBrief(activeCtx, roster = buildRoster()){
 
     actions.append(outBtn, taBtn, noteBtn);
     card.append(actions, noteBox);
+    window.mbmStep2?.decorateCard?.(card, r, m, targetLineEl, tallyBar);
     box.append(card);
   });
+  window.mbmStep2?.afterBriefRender?.();
 
   refreshBriefPreviews(m);
 }
@@ -3355,13 +3412,26 @@ function buildFullSafeBackup(roster = buildRoster()){
           overall: typeof t.overall === 'string' ? redactPublic(t.overall, roster) : '',
           measure: typeof t.measure === 'string' ? redactPublic(t.measure, roster) : '',
           subjects: Array.isArray(t.subjects) ? t.subjects.map(s => redactPublic(String(s || ''), roster)).filter(Boolean) : [],
-          steps: Array.isArray(t.steps) ? t.steps.filter(st => st && typeof st === 'object').map(st => ({
-            text: typeof st.text === 'string' ? redactPublic(st.text, roster) : '',
-            state: ['notyet', 'partly', 'met'].includes(st.state) ? st.state : 'notyet',
-            date: typeof st.date === 'string' ? st.date : '',
-            note: typeof st.note === 'string' ? redactPublic(st.note, roster) : ''
-          })) : [],
+          steps: Array.isArray(t.steps) ? t.steps.filter(st => st && typeof st === 'object').map(st => {
+            const outSt = {
+              text: typeof st.text === 'string' ? redactPublic(st.text, roster) : '',
+              state: ['notyet', 'partly', 'met'].includes(st.state) ? st.state : 'notyet',
+              date: typeof st.date === 'string' ? st.date : '',
+              note: typeof st.note === 'string' ? redactPublic(st.note, roster) : ''
+            };
+            if (st.lesson && typeof st.lesson === 'object' && !Array.isArray(st.lesson)) {
+              outSt.lesson = {
+                w: Number(st.lesson.w) || 0,
+                day: typeof st.lesson.day === 'string' ? st.lesson.day : '',
+                p: Number(st.lesson.p) || 0,
+                code: typeof st.lesson.code === 'string' ? redactPublic(st.lesson.code, roster) : '',
+                subj: typeof st.lesson.subj === 'string' ? redactPublic(st.lesson.subj, roster) : ''
+              };
+            }
+            return outSt;
+          }) : [],
           rating: typeof t.rating === 'string' ? redactPublic(t.rating, roster) : '',
+          ...(t.ratingManual === true ? { ratingManual: true } : {}),
           links: Array.isArray(t.links) ? t.links.filter(x => typeof x === 'string') : [],
           lastChanged: typeof t.lastChanged === 'string' ? t.lastChanged : '',
           lastCopied: typeof t.lastCopied === 'string' ? t.lastCopied : '',
@@ -6226,7 +6296,7 @@ function initDayLauncher() {
 }
 initDayLauncher();
 
-setInterval(() => { if (!document.activeElement?.dataset?.briefNoteInput) renderAll(); }, 30000);
+setInterval(() => { if (!document.activeElement?.dataset?.briefNoteInput && !document.activeElement?.dataset?.stepNoteInput) renderAll(); }, 30000);
 
 const icon = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="38" fill="#153e64"/><g fill="#fff"><rect x="40" y="40" width="48" height="48" rx="10"/><rect x="104" y="40" width="48" height="48" rx="10"/><rect x="40" y="104" width="48" height="48" rx="10"/><rect x="104" y="104" width="48" height="48" rx="10"/></g></svg>');
 const start = new URL('My_tools.html', location.href).href;
@@ -6737,6 +6807,11 @@ function initPaperworkSection() {
   const pwPlanImportInput = $('pwPlanImportInput');
   const pwPlanBackupStatus = $('pwPlanBackupStatus');
   const pwPlanImportPreview = $('pwPlanImportPreview');
+  const pwPresetWeekBtn = $('pwPresetWeek');
+  const pwPreset2WeeksBtn = $('pwPreset2Weeks');
+  const pwPresetHalfTermBtn = $('pwPresetHalfTerm');
+  const pwWholeIedpBar = $('pwWholeIedpBar');
+  const pwCopyWholeIedpBtn = $('pwCopyWholeIedpBtn');
 
   if (!pwRoot) return;
 
@@ -6883,7 +6958,18 @@ function initPaperworkSection() {
     const state = ['notyet', 'partly', 'met'].includes(raw.state) ? raw.state : 'notyet';
     const date = typeof raw.date === 'string' ? raw.date.trim() : '';
     const note = typeof raw.note === 'string' ? raw.note.trim() : '';
-    return { text, state, date, note };
+    const out = { text, state, date, note };
+    if (pwIsPlainObj(raw.lesson)) {
+      const lw = Number(raw.lesson.w) || 0;
+      const lday = typeof raw.lesson.day === 'string' ? raw.lesson.day.trim() : '';
+      const lp = Number(raw.lesson.p) || 0;
+      const lcode = typeof raw.lesson.code === 'string' ? raw.lesson.code.trim() : '';
+      const lsubj = typeof raw.lesson.subj === 'string' ? raw.lesson.subj.trim() : '';
+      if (lw || lday || lp || lcode || lsubj) {
+        out.lesson = { w: lw, day: lday, p: lp, code: lcode, subj: lsubj };
+      }
+    }
+    return out;
   }
 
   function pwNormTarget(raw, assignIdIfMissing) {
@@ -6913,7 +6999,9 @@ function initPaperworkSection() {
           was: h.was.trim()
         }))
       : [];
-    return { id, status, need, title, overall, measure, subjects, steps, rating, links, lastChanged, lastCopied, history };
+    const out = { id, status, need, title, overall, measure, subjects, steps, rating, links, lastChanged, lastCopied, history };
+    if (raw.ratingManual === true) out.ratingManual = true;
+    return out;
   }
 
   function pwNormPupilRecord(raw, assignIds) {
@@ -7020,7 +7108,7 @@ function initPaperworkSection() {
       localStorage.setItem(key, JSON.stringify(obj));
       return true;
     } catch (err) {
-      pwSetStatus('Your change shows for this visit. This device could not save it.', true);
+      pwSetStatus('Could not write to storage on this device. Your change was not recorded.', true);
       return false;
     }
   }
@@ -7112,13 +7200,23 @@ function initPaperworkSection() {
     const res = mutatorFn(rec, { upgradedFromLegacy: !hadPlan });
     if (res === false) return false;
 
+    let snapPlan = null;
+    try { snapPlan = localStorage.getItem(PW_PLAN_KEY); } catch (e) {}
     const cleanRec = pwNormPupilRecord(rec, true);
     planStore.pupils[String(n)] = cleanRec;
     const okPlan = pwWriteRawJson(PW_PLAN_KEY, planStore);
+    if (!okPlan) return false;
     const nextTargets = pwSyncTargetsStoreForPupil(n, cleanRec, rawTargets);
     const okTargets = pwWriteRawJson(KEYS.targets, nextTargets);
+    if (!okTargets) {
+      try {
+        if (snapPlan === null) localStorage.removeItem(PW_PLAN_KEY);
+        else localStorage.setItem(PW_PLAN_KEY, snapPlan);
+      } catch (e) {}
+      return false;
+    }
     if (!opts.skipGlobalRender && typeof renderAll === 'function') renderAll();
-    return okPlan && okTargets;
+    return true;
   }
 
   function pwResolveTargetInRecord(rec, targetId, targetIdx) {
@@ -8341,9 +8439,10 @@ function initPaperworkSection() {
     const defWeek = pwDefaultNextWeek(now, cfg);
     pwPopulateWeeks(cfg, defWeek);
 
-    const toDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12);
-    const fromDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 28, 12);
-    pwToInput.value = dateISO(toDate);
+    const ukTodayISO = pwUkDateISO(now);
+    const [ty, tm, td] = ukTodayISO.split('-').map(Number);
+    const fromDate = new Date(ty, tm - 1, td - 28, 12);
+    pwToInput.value = ukTodayISO;
     pwFromInput.value = dateISO(fromDate);
   }
 
@@ -8770,20 +8869,1130 @@ function initPaperworkSection() {
     return out;
   }
 
+  // --- Step 2: Subject table, Rating rule, Class record reader, Auto Review & Evidence, Room Brief live controls ---
+  const PW_CLASS_RECORD_KEY = 'mbm_class_record_v1';
+  const PW_TRACKER_CODE_RE = /^(SC10|SC[1-9]|M1[0-6]|M[1-9]|[RW][1-7]|S[1-4]|[BCP][1-4]|G[1-9])(?![0-9])/i;
+  const PW_CLASS_RESULT_LABEL = { got: 'Secure', partly: 'Developing', notyet: 'Emerging' };
+  const PW_RATING_OPTIONS = ['Not yet', 'Partial', 'Met', 'Changed'];
+  const PW_CLASS_CORE_SUBJS = new Set([
+    '', 'english', 'literacy', 'writing', 'reading', 'speaking', 'spoken language', 'grammar', 'spag', 'gps',
+    'maths', 'mathematics', 'numeracy', 'science', 'biology', 'chemistry', 'physics'
+  ]);
+
+  const PW_SUBJECT_TABLE = [
+    { key: 'all', aliases: ['all', 'all subjects', 'all lessons', 'cross-curricular', 'cross curricular', 'general', 'any'], lessons: ['*'], codes: [] },
+    { key: 'writing', aliases: ['writing'], lessons: ['writing', 'english', 'literacy'], codes: ['W', 'G'] },
+    { key: 'reading', aliases: ['reading', 'phonics', 'comprehension'], lessons: ['reading', 'english', 'literacy'], codes: ['R'] },
+    { key: 'speaking', aliases: ['speaking', 'spoken language', 'speaking and listening', 'oracy', 'communication'], lessons: ['speaking', 'spoken language', 'english', 'literacy'], codes: ['S'] },
+    { key: 'grammar', aliases: ['grammar', 'spag', 'gps', 'spelling', 'punctuation'], lessons: ['grammar', 'spag', 'gps', 'writing', 'english', 'literacy'], codes: ['G'] },
+    { key: 'english', aliases: ['english', 'literacy'], lessons: ['english', 'literacy', 'writing', 'reading', 'speaking', 'spoken language', 'grammar', 'spag', 'gps'], codes: ['R', 'W', 'S', 'G'] },
+    { key: 'maths', aliases: ['maths', 'mathematics', 'numeracy', 'number'], lessons: ['maths', 'mathematics', 'numeracy'], codes: ['M'] },
+    { key: 'science', aliases: ['science', 'working scientifically'], lessons: ['science', 'biology', 'chemistry', 'physics'], codes: ['SC', 'B', 'C', 'P'] },
+    { key: 'biology', aliases: ['biology'], lessons: ['science', 'biology'], codes: ['B'] },
+    { key: 'chemistry', aliases: ['chemistry'], lessons: ['science', 'chemistry'], codes: ['C'] },
+    { key: 'physics', aliases: ['physics'], lessons: ['science', 'physics'], codes: ['P'] },
+    { key: 'creative arts', aliases: ['creative arts', 'art', 'arts', 'music', 'drama'], lessons: ['creative arts', 'art', 'arts', 'music', 'drama'], codes: [] },
+    { key: 'humanities', aliases: ['humanities', 'history', 'geography'], lessons: ['humanities', 'history', 'geography'], codes: [] },
+    { key: 'vocational', aliases: ['vocational', 'hospitality', 'catering', 'work skills'], lessons: ['vocational', 'hospitality', 'catering', 'work skills'], codes: [] },
+    { key: 'careers', aliases: ['careers', 'careers education', 'ceiag'], lessons: ['careers'], codes: [] },
+    { key: 're', aliases: ['re', 'r.e.', 'r e', 'religious education', 'religious studies', 'rs'], lessons: ['re', 'religious education', 'religious studies'], codes: [] },
+    { key: 'ict', aliases: ['ict', 'computing', 'it', 'computer science'], lessons: ['ict', 'computing', 'it', 'computer science'], codes: [] },
+    { key: 'dt', aliases: ['dt', 'd&t', 'd and t', 'design technology', 'design and technology', 'food'], lessons: ['dt', 'd&t', 'design technology', 'design and technology', 'food'], codes: [] },
+    { key: 'pshe', aliases: ['pshe', 'p.s.h.e.'], lessons: ['pshe'], codes: [] },
+    { key: 'rshe', aliases: ['rshe', 'rse', 'sre'], lessons: ['rshe', 'rse', 'sre'], codes: [] },
+    { key: 'community projects', aliases: ['community projects', 'community'], lessons: ['community projects', 'community'], codes: [] }
+  ];
+
+  const PW_SUBJECT_BY_ALIAS = new Map();
+  PW_SUBJECT_TABLE.forEach(row => {
+    row.aliases.forEach(a => PW_SUBJECT_BY_ALIAS.set(a, row));
+  });
+
+  function pwNormSubjStr(s) {
+    return String(s || '').trim().toLowerCase().replace(/\s+/g, ' ');
+  }
+
+  function pwLookupSubjectRow(raw) {
+    const low = pwNormSubjStr(raw);
+    if (!low) return null;
+    return PW_SUBJECT_BY_ALIAS.get(low) || null;
+  }
+
+  function pwTargetHasAllSubject(target) {
+    if (!target) return false;
+    if (!Array.isArray(target.subjects) || !target.subjects.some(s => String(s || '').trim())) return true;
+    return target.subjects.some(s => {
+      const row = pwLookupSubjectRow(s);
+      return !!(row && row.key === 'all');
+    });
+  }
+
+  function pwDirectSubjectMatch(targetSubj, lessonSubj) {
+    const tLow = pwNormSubjStr(targetSubj);
+    const lLow = pwNormSubjStr(lessonSubj);
+    if (!tLow || !lLow) return false;
+    const tRow = pwLookupSubjectRow(tLow);
+    if (tRow && tRow.key === 'all') return false;
+    const lRow = pwLookupSubjectRow(lLow);
+    if (tLow === lLow) return true;
+    if (tRow && lRow && tRow.key === lRow.key) return true;
+    if (tRow && (tRow.lessons.includes(lLow) || (lRow && tRow.lessons.includes(lRow.key)))) return true;
+    return false;
+  }
+
+  function pwPickRoomBriefTarget(activeTargets, slotSubject) {
+    if (!Array.isArray(activeTargets) || !activeTargets.length) return null;
+    for (const t of activeTargets) {
+      const subjs = Array.isArray(t.subjects) ? t.subjects : [];
+      const matched = subjs.find(s => pwDirectSubjectMatch(s, slotSubject));
+      if (matched) {
+        return { target: t, matchKind: 'subject', matchedLabel: matched, others: activeTargets.filter(x => x.id !== t.id) };
+      }
+    }
+    for (const t of activeTargets) {
+      if (pwTargetHasAllSubject(t)) {
+        return { target: t, matchKind: 'all', matchedLabel: (Array.isArray(t.subjects) && t.subjects.some(s => String(s || '').trim())) ? 'All' : '', others: activeTargets.filter(x => x.id !== t.id) };
+      }
+    }
+    const first = activeTargets[0];
+    const firstSubj = (Array.isArray(first.subjects) && first.subjects[0]) || '';
+    return { target: first, matchKind: 'fallback', matchedLabel: firstSubj, others: activeTargets.slice(1) };
+  }
+
+  function pwTallySubjectMatchesTarget(tallySubj, target) {
+    if (!target) return false;
+    if (pwTargetHasAllSubject(target)) return true;
+    return target.subjects.some(ts => pwDirectSubjectMatch(ts, tallySubj));
+  }
+
+  function pwTrackerCodePrefix(skillCode) {
+    const up = String(skillCode || '').toUpperCase();
+    if (up.startsWith('SC')) return 'SC';
+    return up.slice(0, 1);
+  }
+
+  function pwClassCodeMatchScore(skillCode, targetSubj) {
+    const pref = pwTrackerCodePrefix(skillCode);
+    if (!pref) return 0;
+    const row = pwLookupSubjectRow(targetSubj);
+    if (!row || row.key === 'all' || !Array.isArray(row.codes) || !row.codes.includes(pref)) return 0;
+    // Exact strand / specific subject match scores 2; broad subject match (e.g. English/Science) scores 1
+    if (row.codes.length === 1) return 2;
+    if (pref === 'W' && row.key === 'writing') return 2;
+    if (pref === 'SC' && row.key === 'science') return 2;
+    return 1;
+  }
+
+  function pwClassRecordMatchesTarget(skillCode, lessonSubj, target) {
+    if (!target || !Array.isArray(target.subjects) || !target.subjects.length) return false;
+    const lLow = pwNormSubjStr(lessonSubj);
+    if (lLow && !PW_CLASS_CORE_SUBJS.has(lLow)) return false;
+    return target.subjects.some(ts => pwClassCodeMatchScore(skillCode, ts) > 0);
+  }
+
+  function pwAssignClassRecordFactsToTargets(activeTargets, crFacts) {
+    const byTargetIdx = (Array.isArray(activeTargets) ? activeTargets : []).map(() => []);
+    const otherProgress = [];
+    (Array.isArray(crFacts) ? crFacts : []).forEach(fact => {
+      let bestIdx = -1;
+      let bestScore = 0;
+      (activeTargets || []).forEach((t, idx) => {
+        if (!t || !Array.isArray(t.subjects) || !t.subjects.length) return;
+        let score = 0;
+        t.subjects.forEach(ts => {
+          const s = pwClassCodeMatchScore(fact.code, ts);
+          if (s > score) score = s;
+        });
+        if (score > bestScore) {
+          bestScore = score;
+          bestIdx = idx;
+        }
+      });
+      if (bestIdx >= 0) byTargetIdx[bestIdx].push(fact);
+      else otherProgress.push(fact);
+    });
+    return { byTargetIdx, otherProgress };
+  }
+
+  function pwUkDateISO(input) {
+    const dt = input instanceof Date ? input : (input !== undefined && input !== null && input !== '' ? new Date(input) : new Date());
+    if (Number.isNaN(dt.getTime())) return '';
+    try {
+      const parts = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Europe/London',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }).formatToParts(dt);
+      const y = parts.find(p => p.type === 'year')?.value;
+      const m = parts.find(p => p.type === 'month')?.value;
+      const d = parts.find(p => p.type === 'day')?.value;
+      if (y && m && d) return y + '-' + m + '-' + d;
+    } catch (e) {}
+    return dateISO(dt);
+  }
+
+  function pwTallyDateISO(r, sl, cfg) {
+    if (r && typeof r.ts === 'number' && Number.isFinite(r.ts)) {
+      const uk = pwUkDateISO(r.ts);
+      if (/^\d{4}-\d{2}-\d{2}$/.test(uk)) return uk;
+    }
+    if (r && typeof r.ts === 'string' && r.ts.trim()) {
+      const uk = pwUkDateISO(r.ts.trim());
+      if (/^\d{4}-\d{2}-\d{2}$/.test(uk)) return uk;
+      if (/^\d{4}-\d{2}-\d{2}/.test(r.ts.trim())) return r.ts.trim().slice(0, 10);
+    }
+    if (r && typeof r.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(r.date.trim())) {
+      return r.date.trim();
+    }
+    if (sl) return pwLessonDateISO(sl.w, sl.day, cfg);
+    return '';
+  }
+
+  function pwComputeSuggestedRating(t) {
+    if (!t) return 'Not yet';
+    if (t.status === 'changed') return 'Changed';
+    const steps = Array.isArray(t.steps) ? t.steps : [];
+    if (!steps.length) return t.rating || '';
+    const met = steps.filter(s => s.state === 'met').length;
+    const partly = steps.filter(s => s.state === 'partly').length;
+    if (met === steps.length) return 'Met';
+    if (met > 0 || partly > 0) return 'Partial';
+    return 'Not yet';
+  }
+
+  function pwApplyRatingRule(t) {
+    if (!t) return;
+    if (t.status === 'changed') {
+      if (t.ratingManual !== true) t.rating = 'Changed';
+      return;
+    }
+    if (t.ratingManual === true) return;
+    if (!Array.isArray(t.steps) || !t.steps.length) return;
+    t.rating = pwComputeSuggestedRating(t);
+  }
+
+  function pwEffectiveRating(t) {
+    if (!t) return 'Not yet';
+    if (t.status === 'changed' && t.ratingManual !== true) return 'Changed';
+    if (t.ratingManual === true && t.rating) return t.rating;
+    if (Array.isArray(t.steps) && t.steps.length) return t.rating || pwComputeSuggestedRating(t);
+    return t.rating || 'Not yet';
+  }
+
+  function pwFormatShortDate(iso) {
+    if (typeof iso !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return '';
+    const [, m, d] = iso.split('-').map(Number);
+    if (!m || m < 1 || m > 12 || !d) return '';
+    return d + ' ' + MONTHS_SHORT[m - 1];
+  }
+
+  function pwFormatCompactDateSpan(minISO, maxISO) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(minISO) || !/^\d{4}-\d{2}-\d{2}$/.test(maxISO)) return '';
+    const [y1, m1, d1] = minISO.split('-').map(Number);
+    const [y2, m2, d2] = maxISO.split('-').map(Number);
+    const mon1 = MONTHS_SHORT[m1 - 1];
+    const mon2 = MONTHS_SHORT[m2 - 1];
+    if (minISO === maxISO) return d1 + ' ' + mon1;
+    if (y1 === y2 && m1 === m2) return d1 + '\u2013' + d2 + ' ' + mon2;
+    if (y1 === y2) return d1 + ' ' + mon1 + '\u2013' + d2 + ' ' + mon2;
+    return d1 + ' ' + mon1 + ' ' + y1 + '\u2013' + d2 + ' ' + mon2 + ' ' + y2;
+  }
+
+  function pwProsePupilLabel(n, roster) {
+    if (pwIsShieldOn() || roster.show === 'number') return 'Pupil ' + n;
+    const tag = pupilTag(n, roster);
+    if (/^P\d+$/.test(tag)) return 'Pupil ' + n;
+    return tag;
+  }
+
+  function pwScrubTextForDisplay(text, roster) {
+    const s = String(text ?? '');
+    if (!s) return '';
+    if (pwIsShieldOn() || roster.show === 'number') return redactPublic(s, roster);
+    if (roster.show === 'initials') return redactPrivateInitials(s, roster);
+    return s;
+  }
+
+  function pwFormatNoteForOutput(rawNote, roster) {
+    const s = String(rawNote ?? '').trim();
+    if (!s) return '';
+    if (pwIsShieldOn()) return '';
+    if (roster.show === 'number') return redactPublic(s, roster);
+    if (roster.show === 'initials') return redactPrivateInitials(s, roster);
+    return s;
+  }
+
+  function pwCleanPlainCopy(text, roster) {
+    let s = String(text ?? '');
+    if (pwIsShieldOn() && roster) s = redactPublic(s, roster);
+    s = s.replace(/<[^>]*>/g, '');
+    s = s.replace(/[\u25cb\u25d0\u25cf\u2713\u2714\u2717\u2715\u21bb\u2192\u2190\u2605\u2606\u21c4\u2022\u25c6\u25b2\u25bc\u25a0\u25a1\u25b8\u26a0\u2139]/g, '');
+    s = s.replace(/\s*\u00b7\s*/g, ' - ');
+    s = s.replace(/\r\n?/g, '\n')
+      .split('\n')
+      .map(line => line.replace(/[ \t]{2,}/g, ' ').replace(/[ \t]+$/g, ''))
+      .join('\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+    return s;
+  }
+
+  function pwExtractChangedReason(target) {
+    const hist = Array.isArray(target?.history) ? target.history : [];
+    for (let i = hist.length - 1; i >= 0; i--) {
+      const m = String(hist[i]?.was || '').match(/^Changed \(([^)]+)\):/i);
+      if (m && m[1].trim()) return m[1].trim();
+    }
+    return 'Target updated';
+  }
+
+  function pwCollectTargetTallyCounts(n, target, startISO, endISO, cfg) {
+    const rawTallies = pwReadJson(KEYS.tally, {}) || {};
+    const tallyBySlot = new Map();
+    let fbIdx = 0;
+    if (pwIsPlainObj(rawTallies)) {
+      Object.entries(rawTallies).forEach(([k, r]) => {
+        if (!pwIsPlainObj(r) || typeof r.state !== 'string') return;
+        const st = r.state.trim();
+        if (!['got', 'nearly', 'again', 'absent'].includes(st)) return;
+        const parts = k.split('|');
+        let dISO = '';
+        let slotId = '';
+        let subj = typeof r.subj === 'string' ? r.subj.trim() : '';
+        if (parts.length === 4) {
+          if (pwNormPupilId(parts[3]) !== n) return;
+          const sl = pwParseSlotTriple(parts[0], parts[1], parts[2]);
+          if (sl) {
+            dISO = pwTallyDateISO(r, sl, cfg);
+            slotId = sl.w + '|' + sl.day + '|' + sl.p;
+            if (!subj) {
+              const ttRow = (TT[sl.day] || []).find(row => row[0] === sl.p);
+              if (ttRow) subj = ttRow[2];
+            }
+          }
+        }
+        if (!dISO) {
+          const recN = pwNormPupilId(r.n ?? r.pupil);
+          if (recN !== n) return;
+          dISO = pwTallyDateISO(r, null, cfg);
+          slotId = 'fb_' + (fbIdx++);
+        }
+        if (!dISO || dISO < startISO || dISO > endISO) return;
+        if (!pwTallySubjectMatchesTarget(subj, target)) return;
+        const prev = tallyBySlot.get(slotId);
+        const ts = typeof r.ts === 'string' ? r.ts : '';
+        if (!prev || ts >= prev.ts) {
+          tallyBySlot.set(slotId, { state: st, ts });
+        }
+      });
+    }
+    const counts = { got: 0, nearly: 0, again: 0, absent: 0 };
+    tallyBySlot.forEach(v => { counts[v.state]++; });
+    counts.attended = counts.got + counts.nearly + counts.again;
+    counts.total = counts.attended + counts.absent;
+    return counts;
+  }
+
+  // Strictly READ-ONLY on mbm_class_record_v1 (version 2 only; ignores missing/bad/older or out-of-roster rows)
+  function pwReadAllClassRecordFactsForPupil(n, startISO, endISO, roster) {
+    const raw = pwReadJson(PW_CLASS_RECORD_KEY, null);
+    if (!pwIsPlainObj(raw) || raw.version !== 2 || !pwIsPlainObj(raw.lessons) || !pwIsPlainObj(raw.rows)) return [];
+    const rosterNums = new Set(Array.isArray(roster?.allPupils) ? roster.allPupils : []);
+    if (!rosterNums.has(n)) return [];
+    const bySkill = new Map();
+    Object.entries(raw.rows).forEach(([rowKey, row]) => {
+      if (!pwIsPlainObj(row)) return;
+      const sep = rowKey.lastIndexOf('|');
+      if (sep <= 0) return;
+      const lessonId = rowKey.slice(0, sep);
+      const pupilPart = rowKey.slice(sep + 1);
+      const pNum = pwNormPupilId(pupilPart);
+      if (pNum === null || !rosterNums.has(pNum) || pNum !== n) return;
+      const lesson = raw.lessons[lessonId];
+      if (!pwIsPlainObj(lesson)) return;
+      const dISO = typeof lesson.date === 'string' ? lesson.date.trim() : '';
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(dISO) || dISO > endISO) return;
+      const lLow = pwNormSubjStr(lesson.subject);
+      if (lLow && !PW_CLASS_CORE_SUBJS.has(lLow)) return;
+      const skillMatch = String(lesson.skill || '').trim().match(PW_TRACKER_CODE_RE);
+      if (!skillMatch) return;
+      const skillCode = skillMatch[1].toUpperCase();
+      const resKey = typeof row.result === 'string' ? row.result.trim() : '';
+      if (!PW_CLASS_RESULT_LABEL[resKey]) return;
+      const period = Number(lesson.period) || 0;
+      if (!bySkill.has(skillCode)) bySkill.set(skillCode, []);
+      bySkill.get(skillCode).push({ date: dISO, period, lessonId, result: resKey });
+    });
+
+    const facts = [];
+    bySkill.forEach((obsList, skillCode) => {
+      obsList.sort((a, b) => a.date.localeCompare(b.date) || (a.period - b.period) || a.lessonId.localeCompare(b.lessonId));
+      const byDate = new Map();
+      obsList.forEach(o => byDate.set(o.date, o));
+      const dedup = [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
+      const before = dedup.filter(o => o.date < startISO);
+      const inRange = dedup.filter(o => o.date >= startISO && o.date <= endISO);
+      if (!inRange.length) return;
+      const latest = inRange[inRange.length - 1];
+      const prev = before.length ? before[before.length - 1] : (inRange.length >= 2 ? inRange[0] : null);
+      const shortD = pwFormatShortDate(latest.date);
+      const latestLbl = PW_CLASS_RESULT_LABEL[latest.result];
+      if (prev && prev.result !== latest.result) {
+        const prevLbl = PW_CLASS_RESULT_LABEL[prev.result];
+        facts.push({
+          dateISO: latest.date,
+          kind: 'skill',
+          order: 0,
+          code: skillCode,
+          reviewText: skillCode + ' moved ' + prevLbl + ' to ' + latestLbl + ' (' + shortD + ')',
+          evidenceLine: shortD + ': ' + skillCode + ' moved ' + prevLbl + ' to ' + latestLbl
+        });
+      } else {
+        facts.push({
+          dateISO: latest.date,
+          kind: 'skill',
+          order: 0,
+          code: skillCode,
+          reviewText: skillCode + ' at ' + latestLbl + ' (' + shortD + ')',
+          evidenceLine: shortD + ': ' + skillCode + ' at ' + latestLbl
+        });
+      }
+    });
+    facts.sort((a, b) => a.dateISO.localeCompare(b.dateISO) || a.code.localeCompare(b.code));
+    return facts;
+  }
+
+  function pwBuildAutoReviewAndEvidence(n, target, startISO, endISO, roster, cfg, assignedCrFacts) {
+    const shield = pwIsShieldOn();
+    const steps = Array.isArray(target.steps) ? target.steps : [];
+    const metCount = steps.filter(s => s.state === 'met').length;
+    const partlyCount = steps.filter(s => s.state === 'partly').length;
+    const effRating = pwEffectiveRating(target);
+
+    // Part 1: Status sentence
+    let part1 = '';
+    if (target.status === 'changed' || effRating === 'Changed') {
+      const chDate = pwFormatShortDate(target.lastChanged);
+      const reasonRaw = pwExtractChangedReason(target);
+      const reason = shield ? redactPublic(reasonRaw, roster) : pwScrubTextForDisplay(reasonRaw, roster);
+      part1 = 'Changed' + (chDate ? ' (' + chDate + ')' : '') + ': ' + pwEnsurePeriod(reason);
+    } else {
+      const datedSteps = steps
+        .map(s => (typeof s.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s.date)) ? s.date : '')
+        .filter(Boolean)
+        .sort();
+      const latestStepISO = datedSteps.length ? datedSteps[datedSteps.length - 1]
+        : (/^\d{4}-\d{2}-\d{2}$/.test(target.lastChanged || '') ? target.lastChanged : '');
+      const dPart = latestStepISO ? (' (' + pwFormatShortDate(latestStepISO) + ')') : '';
+      if (steps.length) {
+        part1 = effRating + dPart + ': ' + metCount + ' of ' + steps.length + ' ' +
+          (steps.length === 1 ? 'step' : 'steps') + ' met, ' + partlyCount + ' partly met.';
+      } else {
+        part1 = effRating + dPart + ': no steps recorded yet.';
+      }
+    }
+
+    // Part 2: Exit tally for target's subjects in range
+    const counts = pwCollectTargetTallyCounts(n, target, startISO, endISO, cfg);
+    let part2 = '';
+    if (!counts.total) {
+      part2 = 'No linked lessons in this period.';
+    } else {
+      const subjList = Array.isArray(target.subjects) ? target.subjects : [];
+      const subjLabel = pwTargetHasAllSubject(target)
+        ? 'all subjects'
+        : pwJoinList(subjList.map(s => pwScrubTextForDisplay(s, roster)));
+      const span = pwFormatCompactDateSpan(startISO, endISO);
+      const pLbl = pwProsePupilLabel(n, roster);
+      const absBit = counts.absent ? (' (' + counts.absent + ' absent)') : '';
+      if (!counts.attended) {
+        part2 = 'In ' + subjLabel + ' (' + span + '), ' + pLbl + ' had 0 attended lessons' + absBit + '.';
+      } else {
+        const clauses = [];
+        const lessonWord = counts.attended === 1 ? 'lesson' : 'lessons';
+        if (counts.got) {
+          clauses.push('Got it in ' + counts.got + ' of ' + counts.attended + ' ' + lessonWord);
+        }
+        if (counts.nearly) {
+          clauses.push(clauses.length
+            ? ('Nearly in ' + counts.nearly)
+            : ('Nearly in ' + counts.nearly + ' of ' + counts.attended + ' ' + lessonWord));
+        }
+        if (counts.again) {
+          clauses.push(clauses.length
+            ? ('Not yet in ' + counts.again)
+            : ('Not yet in ' + counts.again + ' of ' + counts.attended + ' ' + lessonWord));
+        }
+        part2 = 'In ' + subjLabel + ' (' + span + '), ' + pLbl + ' had ' + pwJoinList(clauses) + absBit + '.';
+      }
+    }
+
+    // Part 3: Dated facts (step changes in range + Class record skill moves assigned to this target), oldest first
+    const facts = [];
+    steps.forEach((st, sIdx) => {
+      if (typeof st.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(st.date)) return;
+      if (st.date < startISO || st.date > endISO) return;
+      const shortD = pwFormatShortDate(st.date);
+      const stPhrase = st.state === 'met' ? 'met' : (st.state === 'partly' ? 'partly met' : 'not yet');
+      const noteOut = pwFormatNoteForOutput(st.note, roster);
+      const noteBit = noteOut ? (' ("' + noteOut + '")') : '';
+      facts.push({
+        dateISO: st.date,
+        kind: 'step',
+        order: sIdx + 1,
+        code: '',
+        reviewText: 'Step ' + (sIdx + 1) + ' ' + stPhrase + ' ' + shortD + noteBit,
+        evidenceLine: shortD + ': Step ' + (sIdx + 1) + ' ' + stPhrase + noteBit
+      });
+    });
+
+    const crFacts = Array.isArray(assignedCrFacts) ? assignedCrFacts : [];
+    crFacts.forEach(f => facts.push(f));
+
+    facts.sort((a, b) =>
+      a.dateISO.localeCompare(b.dateISO) ||
+      (a.kind === b.kind ? 0 : (a.kind === 'step' ? -1 : 1)) ||
+      (a.order - b.order) ||
+      a.code.localeCompare(b.code)
+    );
+
+    const part3 = facts.length ? (facts.map(f => f.reviewText).join('; ') + '.') : '';
+    const reviewText = [part1, part2, part3, 'My judgement: '].filter(Boolean).join(' ');
+    const evidenceText = facts.length
+      ? facts.map(f => f.evidenceLine).join('\n')
+      : 'No dated step changes or Class record skill moves in this period.';
+    return { reviewText, evidenceText, facts };
+  }
+
+  // --- Step 2: Room Brief Live Target Chips, Two-Tap Step Panel, Note Reuse, Undo, Redraw Focus & Tally Nudge ---
+  let briefStepPanel = null; // { pupil, targetId, slotKey }
+  const briefMoreOpen = new Set();
+  let briefNudge = null; // { pupil, targetId, stepIdx, stepNum, slotKey }
+  let briefStepUndo = null; // { pupil, planRaw, targetsRaw, label, timerId }
+  let briefStepError = null; // { pupil, msg }
+  let briefLastSlotKey = '';
+  let briefFocusSnap = null; // { sel, selStart, selEnd }
+  const briefDraftNotes = new Map(); // slotKey|pupil|targetId -> string
+  const briefDraftAttach = new Map(); // slotKey|pupil|targetId -> boolean
+
+  function pwStep2BeforeBriefRender() {
+    const box = $('briefPupils');
+    if (!box) return;
+    // Save live panel draft note/attach state before DOM rebuild
+    if (briefStepPanel) {
+      const dk = briefStepPanel.slotKey + '|' + briefStepPanel.pupil + '|' + briefStepPanel.targetId;
+      const nInp = box.querySelector('[data-brief-step-panel="1"][data-pupil="' + briefStepPanel.pupil + '"] [data-step-note-input="1"]');
+      if (nInp) briefDraftNotes.set(dk, nInp.value);
+      const aCb = box.querySelector('[data-brief-step-panel="1"][data-pupil="' + briefStepPanel.pupil + '"] [data-step-attach-note="1"]');
+      if (aCb) briefDraftAttach.set(dk, !!aCb.checked);
+    }
+    const ae = document.activeElement;
+    if (!ae || !box.contains(ae)) {
+      briefFocusSnap = null;
+      return;
+    }
+    const card = ae.closest('.brief-card[data-pupil]');
+    const pScope = card ? ('.brief-card[data-pupil="' + card.dataset.pupil + '"] ') : '';
+    let sel = '';
+    if (ae.id) {
+      sel = '#' + ae.id;
+    } else if (ae.dataset?.briefTally) {
+      sel = '[data-brief-tally="' + ae.dataset.briefTally + '"]';
+    } else if (ae.dataset?.briefTargetChip === '1' && ae.dataset?.targetId) {
+      sel = '[data-brief-target-chip="1"][data-pupil="' + ae.dataset.pupil + '"][data-target-id="' + ae.dataset.targetId + '"]';
+    } else if (ae.dataset?.briefTargetMore) {
+      sel = '[data-brief-target-more="' + ae.dataset.briefTargetMore + '"]';
+    } else if (ae.dataset?.briefStepClose === '1') {
+      sel = pScope + '[data-brief-step-close="1"]';
+    } else if (ae.dataset?.stepSet && ae.dataset?.stepIdx !== undefined) {
+      sel = pScope + '[data-step-idx="' + ae.dataset.stepIdx + '"][data-step-set="' + ae.dataset.stepSet + '"]';
+    } else if (ae.dataset?.briefStepUndoBtn === '1') {
+      sel = pScope + '[data-brief-step-undo-btn="1"]';
+    } else if (ae.dataset?.briefNudgeBtn === '1') {
+      sel = pScope + '[data-brief-nudge-btn="1"]';
+    } else if (ae.dataset?.briefOut) {
+      sel = '[data-brief-out="' + ae.dataset.briefOut + '"]';
+    } else if (ae.dataset?.briefTa) {
+      sel = '[data-brief-ta="' + ae.dataset.briefTa + '"]';
+    } else if (ae.dataset?.briefNoteBtn) {
+      sel = '[data-brief-note-btn="' + ae.dataset.briefNoteBtn + '"]';
+    } else if (ae.dataset?.briefNoteInput) {
+      sel = '[data-brief-note-input="' + ae.dataset.briefNoteInput + '"]';
+    } else if (ae.dataset?.invitedTurn) {
+      sel = '[data-invited-turn="' + ae.dataset.invitedTurn + '"]';
+    } else if (ae.dataset?.praiseBtn) {
+      sel = '[data-praise-btn="' + ae.dataset.praiseBtn + '"]';
+    }
+    if (sel) {
+      let selStart = null, selEnd = null;
+      try {
+        if (typeof ae.selectionStart === 'number') { selStart = ae.selectionStart; selEnd = ae.selectionEnd; }
+      } catch (e) {}
+      briefFocusSnap = { sel, selStart, selEnd };
+    } else {
+      briefFocusSnap = null;
+    }
+  }
+
+  function pwStep2AfterBriefRender() {
+    if (!briefFocusSnap) return;
+    const snap = briefFocusSnap;
+    briefFocusSnap = null;
+    const target = $('briefPupils')?.querySelector(snap.sel);
+    if (target && typeof target.focus === 'function') {
+      target.focus({ preventScroll: true });
+      if (snap.selStart !== null && typeof target.setSelectionRange === 'function') {
+        try { target.setSelectionRange(snap.selStart, snap.selEnd); } catch (e) {}
+      }
+    }
+  }
+
+  function pwStepChipSymbol(target) {
+    const steps = Array.isArray(target?.steps) ? target.steps : [];
+    if (!steps.length) {
+      const r = pwEffectiveRating(target);
+      if (r === 'Met') return '\u25cf';
+      if (r === 'Partial') return '\u25d0';
+      return '\u25cb';
+    }
+    const met = steps.filter(s => s.state === 'met').length;
+    const partly = steps.filter(s => s.state === 'partly').length;
+    if (met === steps.length) return '\u25cf';
+    if (met > 0 || partly > 0) return '\u25d0';
+    return '\u25cb';
+  }
+
+  function pwStepChipText(target, preferredSubj, roster) {
+    const steps = Array.isArray(target?.steps) ? target.steps : [];
+    const met = steps.filter(s => s.state === 'met').length;
+    const sym = pwStepChipSymbol(target);
+    const rawSubj = preferredSubj || (Array.isArray(target.subjects) && target.subjects[0]) || (target.title || 'Target').slice(0, 22);
+    const subjLbl = pwScrubTextForDisplay(rawSubj, roster);
+    if (!steps.length) return subjLbl + ' \u00b7 No steps ' + sym;
+    return subjLbl + ' \u00b7 ' + met + ' of ' + steps.length + ' met ' + sym;
+  }
+
+  function pwBriefRefreshOnly() {
+    if (typeof currentActiveSlot !== 'function' || typeof renderRoomBrief !== 'function') return;
+    const now = new Date();
+    const roster = buildRoster();
+    const active = currentActiveSlot(now);
+    renderRoomBrief(active, roster);
+    if (typeof decoratePupilCardsAndRadar === 'function') decoratePupilCardsAndRadar(now, roster);
+  }
+
+  function pwStep2ClearNudge(n) {
+    if (briefNudge && (n === undefined || briefNudge.pupil === n)) {
+      briefNudge = null;
+    }
+  }
+
+  function pwStep2OnTally(slot, effPath, n, nextState) {
+    const slotKey = [slot.w, slot.day, slot.p, effPath].join('|');
+    if (nextState !== 'got' && nextState !== 'nearly') {
+      pwStep2ClearNudge(n);
+      return;
+    }
+    const plan = pwReadPupilPlan(n);
+    if (!plan) { pwStep2ClearNudge(n); return; }
+    const activeTargets = plan.targets.filter(t => t.status === 'active');
+    const pick = pwPickRoomBriefTarget(activeTargets, slot.subject);
+    if (!pick || (pick.matchKind !== 'subject' && pick.matchKind !== 'all')) {
+      pwStep2ClearNudge(n);
+      return;
+    }
+    const steps = Array.isArray(pick.target.steps) ? pick.target.steps : [];
+    if (!steps.length) { pwStep2ClearNudge(n); return; }
+    let sIdx = steps.findIndex(s => s.state === 'notyet');
+    if (sIdx < 0) sIdx = steps.findIndex(s => s.state !== 'met');
+    if (sIdx < 0) { pwStep2ClearNudge(n); return; }
+    briefNudge = { pupil: n, targetId: pick.target.id, stepIdx: sIdx, stepNum: sIdx + 1, slotKey };
+  }
+
+  function pwStep2RecordStep(n, targetId, stepIdx, nextState, slot, effPath, noteOpts, focusAfterSel) {
+    const failWrite = () => {
+      if (briefStepUndo && briefStepUndo.pupil === n) {
+        if (briefStepUndo.timerId) clearTimeout(briefStepUndo.timerId);
+        briefStepUndo = null;
+      }
+      const errMsg = 'Could not write to storage on this device. Change not recorded.';
+      briefStepError = { pupil: n, msg: errMsg };
+      const bStat = $('briefStatus');
+      if (bStat) bStat.textContent = errMsg;
+      pwBriefRefreshOnly();
+      return false;
+    };
+
+    briefStepError = null;
+    let snapPlan = null;
+    let snapTargets = null;
+    try {
+      snapPlan = localStorage.getItem(PW_PLAN_KEY);
+      snapTargets = localStorage.getItem(KEYS.targets);
+    } catch (e) {
+      return failWrite();
+    }
+    const existingStore = pwReadPlanStoreRaw();
+    if (!existingStore || !pwIsPlainObj(existingStore.pupils) || !pwIsPlainObj(existingStore.pupils[String(n)])) return false;
+    const planStore = { version: 1, pupils: { ...existingStore.pupils } };
+    const rec = pwNormPupilRecord(planStore.pupils[String(n)], true);
+    const t = rec.targets.find(item => item.id === targetId);
+    if (!t || !Array.isArray(t.steps) || !t.steps[stepIdx]) return false;
+
+    const st = t.steps[stepIdx];
+    const today = pwUkDateISO();
+    st.state = nextState;
+    if (nextState === 'partly' || nextState === 'met') {
+      st.date = today;
+      st.lesson = {
+        w: +slot.w,
+        day: slot.day,
+        p: +slot.p,
+        code: activeLessonCode(slot, effPath),
+        subj: slot.subject
+      };
+      if (noteOpts) {
+        if (noteOpts.attachTallyNote && noteOpts.tallyNote) {
+          st.note = String(noteOpts.tallyNote).trim();
+        } else if (typeof noteOpts.shortNote === 'string' && noteOpts.shortNote.trim()) {
+          st.note = noteOpts.shortNote.trim().slice(0, 140);
+        }
+      }
+    } else {
+      st.date = '';
+      if (st.lesson) st.note = '';
+      delete st.lesson;
+    }
+
+    pwApplyRatingRule(t);
+    t.lastChanged = today;
+
+    const cleanRec = pwNormPupilRecord(rec, true);
+    planStore.pupils[String(n)] = cleanRec;
+    const rawTargets = pwReadJson(KEYS.targets, {}) || {};
+    const okPlan = pwWriteRawJson(PW_PLAN_KEY, planStore);
+    if (!okPlan) return failWrite();
+    const nextTargets = pwSyncTargetsStoreForPupil(n, cleanRec, rawTargets);
+    const okTargets = pwWriteRawJson(KEYS.targets, nextTargets);
+    if (!okTargets) {
+      try {
+        if (snapPlan === null) localStorage.removeItem(PW_PLAN_KEY);
+        else localStorage.setItem(PW_PLAN_KEY, snapPlan);
+      } catch (e) {}
+      return failWrite();
+    }
+
+    const slotKey = [slot.w, slot.day, slot.p, effPath].join('|');
+    briefDraftNotes.delete(slotKey + '|' + n + '|' + targetId);
+    pwStep2ClearNudge(n);
+    if (briefStepUndo && briefStepUndo.timerId) clearTimeout(briefStepUndo.timerId);
+    const stateTxt = nextState === 'met' ? 'Met' : (nextState === 'partly' ? 'Partly' : 'Not yet');
+    const undoObj = {
+      pupil: n,
+      planRaw: snapPlan,
+      targetsRaw: snapTargets,
+      label: 'Saved \u00b7 Step ' + (stepIdx + 1) + ' set to ' + stateTxt,
+      timerId: null
+    };
+    undoObj.timerId = setTimeout(() => {
+      if (briefStepUndo === undoObj) {
+        briefStepUndo = null;
+        pwBriefRefreshOnly();
+      }
+    }, 8000);
+    briefStepUndo = undoObj;
+
+    const bStat = $('briefStatus');
+    if (bStat) bStat.textContent = undoObj.label + '.';
+    pwRenderAll();
+    pwBriefRefreshOnly();
+    if (focusAfterSel) {
+      $('briefPupils')?.querySelector(focusAfterSel)?.focus({ preventScroll: true });
+    }
+    return true;
+  }
+
+  function pwStep2Undo() {
+    if (!briefStepUndo) return;
+    const u = briefStepUndo;
+    let ok = true;
+    try {
+      if (u.planRaw === null) localStorage.removeItem(PW_PLAN_KEY);
+      else localStorage.setItem(PW_PLAN_KEY, u.planRaw);
+      if (u.targetsRaw === null) localStorage.removeItem(KEYS.targets);
+      else localStorage.setItem(KEYS.targets, u.targetsRaw);
+    } catch (e) {
+      ok = false;
+    }
+    if (u.timerId) clearTimeout(u.timerId);
+    briefStepUndo = null;
+    const bStat = $('briefStatus');
+    if (!ok) {
+      const errMsg = 'Could not restore storage on this device.';
+      briefStepError = { pupil: u.pupil, msg: errMsg };
+      if (bStat) bStat.textContent = errMsg;
+    } else {
+      briefStepError = null;
+      if (bStat) bStat.textContent = 'Undone. Both target stores restored exactly as before.';
+    }
+    pwRenderAll();
+    pwBriefRefreshOnly();
+  }
+
+  function pwStep2ClosePanel(restoreFocus) {
+    if (!briefStepPanel) return;
+    const prev = briefStepPanel;
+    briefStepPanel = null;
+    briefFocusSnap = null;
+    pwBriefRefreshOnly();
+    if (restoreFocus) {
+      const sel = '[data-brief-target-chip="1"][data-pupil="' + prev.pupil + '"][data-target-id="' + prev.targetId + '"]';
+      const chip = $('briefPupils')?.querySelector(sel) ||
+        $('briefPupils')?.querySelector('[data-brief-target-chip="1"][data-pupil="' + prev.pupil + '"]');
+      chip?.focus({ preventScroll: true });
+    }
+  }
+
+  function pwStep2DecorateCard(card, r, m, targetLineEl, tallyBar) {
+    if (m.slotKey !== briefLastSlotKey) {
+      briefStepPanel = null;
+      briefMoreOpen.clear();
+      briefNudge = null;
+      briefStepError = null;
+      briefLastSlotKey = m.slotKey;
+    }
+    if (r.out || r.curState === 'absent') {
+      pwStep2ClearNudge(r.n);
+    }
+
+    const plan = pwReadPupilPlan(r.n);
+    if (!plan) return;
+    const activeTargets = plan.targets.filter(t => t.status === 'active');
+    if (!activeTargets.length) return;
+
+    const shield = pwIsShieldOn();
+    const roster = m.roster;
+    const safePupilLbl = pwProsePupilLabel(r.n, roster);
+    const pick = pwPickRoomBriefTarget(activeTargets, m.slot.subject);
+    if (!pick) return;
+
+    const makeChipBtn = (target, preferredSubj, isPrimary) => {
+      const isOpen = !!(briefStepPanel && briefStepPanel.pupil === r.n && briefStepPanel.targetId === target.id && briefStepPanel.slotKey === m.slotKey);
+      const chipTxt = pwStepChipText(target, preferredSubj, roster);
+      const btn = el('button', {
+        type: 'button',
+        class: 'brief-target-chip',
+        'data-brief-target-chip': '1',
+        'data-pupil': String(r.n),
+        'data-target-id': target.id,
+        'data-primary-chip': isPrimary ? '1' : '0',
+        'aria-expanded': String(isOpen),
+        'aria-label': safePupilLbl + ' target: ' + chipTxt
+      }, chipTxt);
+      btn.addEventListener('click', () => {
+        if (briefStepPanel && briefStepPanel.pupil === r.n && briefStepPanel.targetId === target.id && briefStepPanel.slotKey === m.slotKey) {
+          pwStep2ClosePanel(true);
+        } else {
+          briefStepPanel = { pupil: r.n, targetId: target.id, slotKey: m.slotKey };
+          pwBriefRefreshOnly();
+          const panelEl = $('briefPupils')?.querySelector('[data-brief-step-panel="1"][data-pupil="' + r.n + '"]');
+          panelEl?.querySelector('[data-brief-step-close="1"]')?.focus({ preventScroll: true });
+        }
+      });
+      return btn;
+    };
+
+    const chipsWrap = el('div', { class: 'brief-target-chips' });
+    chipsWrap.append(makeChipBtn(pick.target, pick.matchedLabel, true));
+
+    if (pick.others.length) {
+      const isMoreOpen = briefMoreOpen.has(r.n);
+      const moreBtn = el('button', {
+        type: 'button',
+        class: 'brief-target-more',
+        'data-brief-target-more': String(r.n),
+        'aria-expanded': String(isMoreOpen),
+        'aria-label': 'More targets for ' + safePupilLbl + ' (' + pick.others.length + ')'
+      }, 'More (' + pick.others.length + ')');
+      moreBtn.addEventListener('click', () => {
+        if (briefMoreOpen.has(r.n)) briefMoreOpen.delete(r.n);
+        else briefMoreOpen.add(r.n);
+        pwBriefRefreshOnly();
+        $('briefPupils')?.querySelector('[data-brief-target-more="' + r.n + '"]')?.focus({ preventScroll: true });
+      });
+      chipsWrap.append(moreBtn);
+      if (isMoreOpen) {
+        pick.others.forEach(ot => {
+          chipsWrap.append(makeChipBtn(ot, '', false));
+        });
+      }
+    }
+
+    const targetWrap = el('div', { class: 'brief-target-wrap' });
+    if (targetLineEl && targetLineEl.parentNode === card) {
+      card.insertBefore(targetWrap, targetLineEl);
+      targetWrap.append(targetLineEl, chipsWrap);
+    } else if (tallyBar && tallyBar.parentNode === card) {
+      card.insertBefore(targetWrap, tallyBar);
+      targetWrap.append(chipsWrap);
+    } else {
+      card.append(targetWrap);
+      targetWrap.append(chipsWrap);
+    }
+
+    // Tally nudge: ignorable "Mark step N partly?" button after got/nearly on a matching active target (never on absent)
+    if (!r.out && r.curState !== 'absent' && briefNudge && briefNudge.pupil === r.n && briefNudge.slotKey === m.slotKey) {
+      const nTarget = activeTargets.find(t => t.id === briefNudge.targetId);
+      if (nTarget && Array.isArray(nTarget.steps) && nTarget.steps[briefNudge.stepIdx]) {
+        const nudgeRow = el('div', { class: 'brief-nudge-row', 'data-brief-nudge-row': String(r.n) });
+        const nudgeBtn = el('button', {
+          type: 'button',
+          class: 'brief-nudge-btn',
+          'data-brief-nudge-btn': '1',
+          'aria-label': 'Mark step ' + briefNudge.stepNum + ' partly for ' + safePupilLbl
+        }, 'Mark step ' + briefNudge.stepNum + ' partly?');
+        const pupilTallyNote = String((m.tallies[[m.slot.w, m.slot.day, m.slot.p, r.n].join('|')]?.note) || '').trim();
+        nudgeBtn.addEventListener('click', () => {
+          pwStep2RecordStep(
+            r.n,
+            nTarget.id,
+            briefNudge.stepIdx,
+            'partly',
+            m.slot,
+            m.effPath,
+            { attachTallyNote: !!pupilTallyNote, tallyNote: pupilTallyNote },
+            '[data-brief-step-undo-btn="1"]'
+          );
+        });
+        nudgeRow.append(nudgeBtn);
+        if (tallyBar && tallyBar.parentNode === card) {
+          tallyBar.insertAdjacentElement('afterend', nudgeRow);
+        } else {
+          card.append(nudgeRow);
+        }
+        card.addEventListener('click', ev => {
+          if (!briefNudge || briefNudge.pupil !== r.n) return;
+          if (ev.target && ev.target.closest('[data-brief-nudge-btn="1"]')) return;
+          if (ev.target && ev.target.closest('[data-tally-state="got"], [data-tally-state="nearly"]')) return;
+          pwStep2ClearNudge(r.n);
+          nudgeRow.remove();
+        }, true);
+      }
+    }
+
+    // Refused storage write error strip (plain, never shows "Saved")
+    if (briefStepError && briefStepError.pupil === r.n) {
+      card.append(el('div', {
+        class: 'brief-step-err',
+        role: 'alert',
+        'data-brief-step-err': String(r.n)
+      }, briefStepError.msg));
+    }
+
+    // Saved + Undo strip (lasts >= 5 seconds, survives redraws, restores both stores byte-for-byte)
+    if (briefStepUndo && briefStepUndo.pupil === r.n) {
+      const undoDiv = el('div', {
+        class: 'brief-step-undo',
+        role: 'status',
+        'aria-live': 'polite',
+        'data-brief-step-undo': String(r.n)
+      });
+      undoDiv.append(el('span', {}, briefStepUndo.label));
+      const undoBtn = el('button', {
+        type: 'button',
+        'data-brief-step-undo-btn': '1',
+        'aria-label': 'Undo step save for ' + safePupilLbl
+      }, 'Undo');
+      undoBtn.addEventListener('click', pwStep2Undo);
+      undoDiv.append(undoBtn);
+      card.append(undoDiv);
+    }
+
+    // Calm inline step panel under that card (Tap 1 -> Tap 2; survives redraws)
+    if (briefStepPanel && briefStepPanel.pupil === r.n && briefStepPanel.slotKey === m.slotKey) {
+      const openTarget = activeTargets.find(t => t.id === briefStepPanel.targetId);
+      if (openTarget) {
+        const draftKey = m.slotKey + '|' + r.n + '|' + openTarget.id;
+        const panel = el('div', {
+          class: 'brief-step-panel',
+          role: 'region',
+          'data-brief-step-panel': '1',
+          'data-pupil': String(r.n),
+          'data-target-id': openTarget.id,
+          'aria-label': 'Target steps for ' + safePupilLbl
+        });
+        const pHead = el('div', { class: 'brief-step-head' });
+        const dispTitle = pwScrubTextForDisplay(openTarget.title || openTarget.overall, roster);
+        pHead.append(el('span', { class: 'brief-step-title' }, dispTitle));
+        const closeBtn = el('button', {
+          type: 'button',
+          class: 'brief-step-close',
+          'data-brief-step-close': '1',
+          'aria-label': 'Close steps for ' + safePupilLbl
+        }, 'Close');
+        closeBtn.addEventListener('click', () => pwStep2ClosePanel(true));
+        pHead.append(closeBtn);
+        panel.append(pHead);
+
+        const pMeta = el('div', { class: 'brief-step-meta' });
+        pMeta.append(el('span', { class: 'pill' }, 'Rating: ' + pwEffectiveRating(openTarget)));
+        if (openTarget.subjects && openTarget.subjects.length) {
+          pMeta.append(el('span', { class: 'pill' }, openTarget.subjects.map(s => pwScrubTextForDisplay(s, roster)).join(', ')));
+        }
+        panel.append(pMeta);
+
+        // Note reuse (this pupil & slot ONLY; never another pupil's note; hidden under Privacy Shield)
+        const pupilTallyNote = String((m.tallies[[m.slot.w, m.slot.day, m.slot.p, r.n].join('|')]?.note) || '').trim();
+        let attachCb = null;
+        let shortNoteInp = null;
+        const noteWrap = el('div', { class: 'brief-step-note-wrap' });
+        if (shield) {
+          noteWrap.append(el('p', { class: 'brief-step-note-preview' }, 'Privacy shield is on: notes are hidden (counts only).'));
+        } else if (pupilTallyNote) {
+          const attachId = 'briefAttachNote_' + r.n;
+          const attachLbl = el('label', { class: 'brief-step-attach', for: attachId });
+          attachCb = el('input', { type: 'checkbox', id: attachId, 'data-step-attach-note': '1' });
+          attachCb.checked = briefDraftAttach.has(draftKey) ? briefDraftAttach.get(draftKey) : true;
+          attachCb.addEventListener('change', () => briefDraftAttach.set(draftKey, !!attachCb.checked));
+          attachLbl.append(attachCb, el('span', {}, 'Attach lesson note'));
+          noteWrap.append(attachLbl);
+          const previewTxt = roster.show === 'number' ? redactPublic(pupilTallyNote, roster)
+            : (roster.show === 'initials' ? redactPrivateInitials(pupilTallyNote, roster) : pupilTallyNote);
+          noteWrap.append(el('p', { class: 'brief-step-note-preview' }, 'Lesson note: "' + previewTxt + '"'));
+        } else {
+          const noteInpId = 'briefStepNote_' + r.n;
+          noteWrap.append(el('label', { for: noteInpId, class: 'small' }, 'Short note (optional, max 140 characters)'));
+          shortNoteInp = el('input', {
+            type: 'text',
+            id: noteInpId,
+            maxlength: '140',
+            autocomplete: 'off',
+            'data-step-note-input': '1',
+            value: briefDraftNotes.get(draftKey) || '',
+            placeholder: 'Optional short note for the step you tap'
+          });
+          shortNoteInp.addEventListener('input', () => briefDraftNotes.set(draftKey, shortNoteInp.value));
+          noteWrap.append(shortNoteInp);
+        }
+        panel.append(noteWrap);
+
+        const steps = Array.isArray(openTarget.steps) ? openTarget.steps : [];
+        if (!steps.length) {
+          panel.append(el('p', { class: 'hint' }, 'No steps on this target yet. Add steps in Paperwork under Edit targets.'));
+        } else {
+          const firstUnfinished = steps.findIndex(st => st.state !== 'met');
+          const list = el('div', { class: 'brief-step-list' });
+          steps.forEach((st, sIdx) => {
+            const isNext = sIdx === firstUnfinished;
+            const item = el('div', {
+              class: 'brief-step-item' + (isNext ? ' is-next' : ''),
+              'data-brief-step-idx': String(sIdx),
+              'data-next-step': isNext ? '1' : '0'
+            });
+            const headRow = el('div', { class: 'brief-step-item-head' });
+            const stSym = st.state === 'met' ? '\u25cf Met' : (st.state === 'partly' ? '\u25d0 Partly' : '\u25cb Not yet');
+            headRow.append(el('span', { class: 'pill ' + (st.state === 'met' ? 'ok' : (st.state === 'partly' ? 'warn' : '')) }, stSym));
+            if (isNext) headRow.append(el('span', { class: 'pill warn' }, 'Next step'));
+            headRow.append(el('span', {}, (sIdx + 1) + '. ' + pwScrubTextForDisplay(st.text, roster)));
+            item.append(headRow);
+
+            const noteShown = pwFormatNoteForOutput(st.note, roster);
+            if (st.date || noteShown) {
+              item.append(el('div', { class: 'brief-step-note-preview' }, [st.date, noteShown].filter(Boolean).join(' \u00b7 ')));
+            }
+
+            const btnRow = el('div', { class: 'brief-step-btns', role: 'group', 'aria-label': 'Set step ' + (sIdx + 1) + ' state' });
+            [['notyet', '\u25cb Not yet'], ['partly', '\u25d0 Partly'], ['met', '\u25cf Met']].forEach(([stKey, stLbl]) => {
+              const sb = el('button', {
+                type: 'button',
+                'data-step-set': stKey,
+                'data-step-idx': String(sIdx),
+                'aria-pressed': String(st.state === stKey),
+                'aria-label': 'Step ' + (sIdx + 1) + ' ' + stLbl.slice(2)
+              }, stLbl);
+              sb.addEventListener('click', () => {
+                const noteOpts = {
+                  attachTallyNote: !!(attachCb && attachCb.checked && !shield),
+                  tallyNote: pupilTallyNote,
+                  shortNote: (!shield && shortNoteInp) ? shortNoteInp.value : ''
+                };
+                pwStep2RecordStep(
+                  r.n,
+                  openTarget.id,
+                  sIdx,
+                  stKey,
+                  m.slot,
+                  m.effPath,
+                  noteOpts,
+                  '[data-brief-step-panel="1"][data-pupil="' + r.n + '"] [data-step-idx="' + sIdx + '"][data-step-set="' + stKey + '"]'
+                );
+              });
+              btnRow.append(sb);
+            });
+            item.append(btnRow);
+            list.append(item);
+          });
+          panel.append(list);
+        }
+
+        card.append(panel);
+      }
+    }
+  }
+
+  window.mbmStep2 = {
+    onTally: pwStep2OnTally,
+    decorateCard: pwStep2DecorateCard,
+    beforeBriefRender: pwStep2BeforeBriefRender,
+    afterBriefRender: pwStep2AfterBriefRender,
+    closePanel: pwStep2ClosePanel,
+    hasOpenPanel: () => !!briefStepPanel,
+    refreshBrief: pwBriefRefreshOnly,
+    subjectTable: PW_SUBJECT_TABLE
+  };
+
+  function pwRenderOtherProgressCard(otherFacts, pupilLbl, roster) {
+    if (!Array.isArray(otherFacts) || !otherFacts.length) return null;
+    const text = 'Other progress: ' + otherFacts.map(f => f.reviewText).join('; ') + '.';
+    const card = el('article', { class: 'pw-card pw-other-progress', id: 'pwOtherProgressBox' });
+    const head = el('div', { class: 'pw-iedp-head' });
+    head.append(el('label', { for: 'pwOtherProgressText' }, 'Other progress'));
+    const cBtn = el('button', { type: 'button', id: 'pwCopyOtherProgressBtn', 'aria-label': 'Copy Other progress' }, 'Copy');
+    const area = el('textarea', { id: 'pwOtherProgressText', class: 'pw-iedp-box', readonly: 'readonly', rows: '2' });
+    area.value = text;
+    cBtn.addEventListener('click', () => {
+      pwCopy(pwCleanPlainCopy(area.value, roster), 'Copied: ' + pupilLbl + ' · Other progress', cBtn);
+    });
+    head.append(cBtn);
+    card.append(head, area);
+    return card;
+  }
+
   function pwRenderIedpCards(store, roster, subjItems, cfg) {
     const n = +pwPupilSel.value || 1;
     const pupilLbl = pwPupilLabel(n, roster);
     const shield = pwIsShieldOn();
-    const pwToday = new Date();
-    const rawFrom = pwFromInput.value || dateISO(new Date(pwToday.getFullYear(), pwToday.getMonth(), pwToday.getDate() - 28, 12));
-    const rawTo = pwToInput.value || dateISO(pwToday);
+    const ukTodayISO = pwUkDateISO();
+    const [ty, tm, td] = ukTodayISO.split('-').map(Number);
+    const rawFrom = pwFromInput.value || dateISO(new Date(ty, tm - 1, td - 28, 12));
+    const rawTo = pwToInput.value || ukTodayISO;
     const [startISO, endISO] = rawFrom <= rawTo ? [rawFrom, rawTo] : [rawTo, rawFrom];
 
     const plan = pwReadPupilPlan(n);
     const helpLines = pwAllHelpLinesForPupil(n, roster, subjItems);
     const activePlanTargets = plan ? plan.targets.filter(t => t.status === 'active') : null;
+    const inactivePlanTargets = plan ? plan.targets.filter(t => t.status !== 'active') : [];
     const targets = activePlanTargets ? activePlanTargets.map(t => t.title) : pwReadLegacyTargetLines(n);
     const activeStratLines = plan ? pwFormatPlanStrategyLines(plan, roster) : [];
+
+    // Compute per-pupil Class record moves ONCE and assign each move to at most one matching active target or Other progress
+    const allCrFacts = plan ? pwReadAllClassRecordFactsForPupil(n, startISO, endISO, roster) : [];
+    const assignedCr = pwAssignClassRecordFactsToTargets(activePlanTargets || [], allCrFacts);
+
+    if (pwWholeIedpBar) {
+      pwWholeIedpBar.hidden = !(activePlanTargets && activePlanTargets.length > 0);
+    }
 
     if (!targets.length) {
       const emptyFrag = document.createDocumentFragment();
@@ -8797,7 +10006,7 @@ function initPaperworkSection() {
         const stratTxt = activeStratLines.join('\n');
         const cBtn = el('button', { type: 'button' }, 'Copy');
         cBtn.addEventListener('click', () => {
-          pwCopy(stratTxt, 'Copied: ' + pupilLbl + ' · Strategy', cBtn);
+          pwCopy(pwCleanPlainCopy(stratTxt, roster), 'Copied: ' + pupilLbl + ' · Strategy', cBtn);
         });
         head.append(cBtn);
         const area = el('textarea', { id: areaId, class: 'pw-iedp-box', readonly: 'readonly', rows: '3' });
@@ -8805,6 +10014,8 @@ function initPaperworkSection() {
         sCard.append(head, area);
         emptyFrag.append(sCard);
       }
+      const otherOnlyCard = pwRenderOtherProgressCard(assignedCr.otherProgress, pupilLbl, roster);
+      if (otherOnlyCard) emptyFrag.append(otherOnlyCard);
       pwIedpCards.replaceChildren(emptyFrag);
       pwUnlinkedLine.hidden = true;
       pwUnlinkedLine.textContent = '';
@@ -8814,7 +10025,7 @@ function initPaperworkSection() {
     const boxes = pwResolveBoxes(store);
     const linksMap = pwReadPupilLinksMap(n, store);
     const logRows = pwReadPupilLogRowsInRange(n, startISO, endISO);
-    const reviewText = pwComputeReviewStats(n, startISO, endISO, roster, cfg);
+    const legacyReviewText = pwComputeReviewStats(n, startISO, endISO, roster, cfg);
     const dateSpan = logRows.length ? pwFormatDateSpan(logRows[0].d, logRows[logRows.length - 1].d) : '';
 
     const unlinked = [];
@@ -8841,21 +10052,22 @@ function initPaperworkSection() {
       if (planTarget) {
         const tParts = [];
         const overallRaw = (planTarget.overall || planTarget.title || '').trim();
-        if (overallRaw) tParts.push(shield ? redactPublic(overallRaw, roster) : overallRaw);
-        if (planTarget.need) tParts.push('Area of need: ' + (shield ? redactPublic(planTarget.need, roster) : planTarget.need));
+        if (overallRaw) tParts.push(pwScrubTextForDisplay(overallRaw, roster));
+        if (planTarget.need) tParts.push('Area of need: ' + pwScrubTextForDisplay(planTarget.need, roster));
         if (planTarget.subjects && planTarget.subjects.length) {
-          tParts.push('Subjects: ' + planTarget.subjects.map(s => shield ? redactPublic(s, roster) : s).join(', '));
+          tParts.push('Subjects: ' + planTarget.subjects.map(s => pwScrubTextForDisplay(s, roster)).join(', '));
         }
         if (planTarget.steps && planTarget.steps.length) {
           tParts.push('Steps:');
           planTarget.steps.forEach((st, sIdx) => {
-            const stTxt = shield ? redactPublic(st.text, roster) : st.text;
-            const stNote = st.note ? (' — ' + (shield ? redactPublic(st.note, roster) : st.note)) : '';
+            const stTxt = pwScrubTextForDisplay(st.text, roster);
+            const noteClean = pwFormatNoteForOutput(st.note, roster);
+            const stNote = noteClean ? (' \u2014 ' + noteClean) : '';
             const stDate = st.date ? (', ' + st.date) : '';
             tParts.push((sIdx + 1) + '. ' + stTxt + ' [' + pwStepStateLabel(st.state) + stDate + stNote + ']');
           });
         }
-        if (planTarget.measure) tParts.push('Measure: ' + (shield ? redactPublic(planTarget.measure, roster) : planTarget.measure));
+        if (planTarget.measure) tParts.push('Measure: ' + pwScrubTextForDisplay(planTarget.measure, roster));
         targetText = tParts.join('\n');
       } else {
         targetText = shield ? redactPublic(rawTargetLine, roster) : rawTargetLine;
@@ -8926,49 +10138,129 @@ function initPaperworkSection() {
         }).join(' ');
       }
 
+      const autoRE = planTarget
+        ? pwBuildAutoReviewAndEvidence(n, planTarget, startISO, endISO, roster, cfg, assignedCr.byTargetIdx[idx])
+        : null;
+
       const valueById = {
         target: targetText,
         strategy: strategyText,
         provided: providedText,
-        review: reviewText,
-        evidence: 'Not recorded on this page yet.'
+        review: autoRE ? autoRE.reviewText : legacyReviewText,
+        evidence: autoRE ? autoRE.evidenceText : 'Not recorded on this page yet.'
       };
 
-      const card = el('article', { class: 'pw-card pw-iedp-card', 'data-target-num': String(tNum) });
+      const card = el('article', {
+        class: 'pw-card pw-iedp-card',
+        'data-target-num': String(tNum),
+        ...(planTarget ? { 'data-plan-target-id': planTarget.id } : {})
+      });
       const headBits = [pupilLbl + ' · Target ' + tNum];
       if (plan && plan.plan) headBits.push(shield ? redactPublic(plan.plan, roster) : plan.plan);
       card.append(el('h4', {}, headBits.join(' · ')));
 
+      const areaById = {};
       boxes.forEach(b => {
         const fieldWrap = el('div', { class: 'pw-iedp-field', 'data-iedp-box': b.id });
         const fieldHead = el('div', { class: 'pw-iedp-head' });
         const areaId = 'pwIedp_' + tNum + '_' + b.id;
         fieldHead.append(el('label', { for: areaId }, b.label));
-        const copyBoxBtn = el('button', { type: 'button', 'aria-label': 'Copy ' + b.label + ' for Target ' + tNum }, 'Copy');
-        const boxText = valueById[b.id] ?? '';
-        copyBoxBtn.addEventListener('click', () => {
-          pwCopy(boxText, 'Copied: ' + pupilLbl + ' · Target ' + tNum + ' · ' + b.label, copyBoxBtn);
-          if (planTarget) pwRecordTargetLastCopied(n, planTarget.id);
-        });
-        fieldHead.append(copyBoxBtn);
 
-        const area = el('textarea', { id: areaId, class: 'pw-iedp-box', readonly: 'readonly', rows: b.id === 'target' && planTarget ? '4' : '2' });
+        const headActs = el('div', { class: 'pw-iedp-head-acts' });
+        const boxText = valueById[b.id] ?? '';
+        const area = el('textarea', {
+          id: areaId,
+          class: 'pw-iedp-box',
+          readonly: 'readonly',
+          rows: (b.id === 'target' || b.id === 'review' || b.id === 'evidence') && planTarget ? '4' : '2'
+        });
         area.value = boxText;
+        areaById[b.id] = area;
+
+        let editHint = null;
+        if (planTarget && (b.id === 'review' || b.id === 'evidence')) {
+          const editBtn = el('button', {
+            type: 'button',
+            class: 'pw-edit-toggle',
+            'data-pw-edit-toggle': b.id,
+            'aria-pressed': 'false',
+            'aria-label': 'Edit ' + b.label + ' before copying for Target ' + tNum
+          }, 'Edit before copying');
+          if (shield) editBtn.disabled = true;
+          editHint = el('p', { class: 'pw-edit-hint', hidden: 'hidden' },
+            'Temporary edit only: not saved to the plan, and resets if the pupil or dates change.');
+          editBtn.addEventListener('click', () => {
+            if (pwIsShieldOn()) return;
+            const nextEditing = editBtn.getAttribute('aria-pressed') !== 'true';
+            editBtn.setAttribute('aria-pressed', String(nextEditing));
+            area.readOnly = !nextEditing;
+            area.classList.toggle('is-editing', nextEditing);
+            editHint.hidden = !nextEditing;
+            if (nextEditing) area.focus({ preventScroll: true });
+          });
+          headActs.append(editBtn);
+        }
+
+        const copyBoxBtn = el('button', {
+          type: 'button',
+          'data-pw-copy-box': b.id,
+          'aria-label': 'Copy ' + b.label + ' for Target ' + tNum
+        }, 'Copy');
+        copyBoxBtn.addEventListener('click', () => {
+          const toCopy = pwCleanPlainCopy(area.value, roster);
+          pwCopy(toCopy, 'Copied: ' + pupilLbl + ' · Target ' + tNum + ' · ' + b.label, copyBoxBtn);
+        });
+        headActs.append(copyBoxBtn);
+        fieldHead.append(headActs);
+
         fieldWrap.append(fieldHead, area);
+        if (editHint) fieldWrap.append(editHint);
         card.append(fieldWrap);
       });
 
       const allRow = el('div', { class: 'pw-actions' });
       const copyAllBtn = el('button', { type: 'button', class: 'primary' }, 'Copy all for this target');
       copyAllBtn.addEventListener('click', () => {
-        const joined = boxes.map(b => b.label + ': ' + (valueById[b.id] ?? '')).join('\n');
-        pwCopy(joined, 'Copied: ' + pupilLbl + ' · Target ' + tNum + ' · all boxes', copyAllBtn);
-        if (planTarget) pwRecordTargetLastCopied(n, planTarget.id);
+        const joined = boxes.map(b => b.label + ': ' + pwCleanPlainCopy(areaById[b.id]?.value ?? '', roster)).join('\n');
+        pwCopy(pwCleanPlainCopy(joined, roster), 'Copied: ' + pupilLbl + ' · Target ' + tNum + ' · all boxes', copyAllBtn);
       });
       allRow.append(copyAllBtn);
       card.append(allRow);
       frag.append(card);
     });
+
+    // Show unmatched Class record skill moves ONCE in an "Other progress" line (never repeated under targets)
+    const otherCard = pwRenderOtherProgressCard(assignedCr.otherProgress, pupilLbl, roster);
+    if (otherCard) frag.append(otherCard);
+
+    // Collapsed past targets (changed / retired) with read-only auto Review & Evidence
+    if (inactivePlanTargets.length) {
+      const pastDet = el('details', { class: 'pw-subdetails', id: 'pwPastTargetsIedp' });
+      pastDet.append(el('summary', {}, 'Past targets (changed and retired: ' + inactivePlanTargets.length + ')'));
+      inactivePlanTargets.forEach((pt, pIdx) => {
+        const pastRE = pwBuildAutoReviewAndEvidence(n, pt, startISO, endISO, roster, cfg, []);
+        const pCard = el('article', { class: 'pw-card pw-iedp-card', 'data-past-target': pt.status });
+        const dispTitle = pwScrubTextForDisplay(pt.title, roster);
+        pCard.append(el('h4', {}, (pt.status === 'changed' ? 'Changed' : 'Retired') + ' · ' + dispTitle));
+        [['review', 'Review', pastRE.reviewText], ['evidence', 'Evidence', pastRE.evidenceText]].forEach(([bid, blbl, bval]) => {
+          const fWrap = el('div', { class: 'pw-iedp-field', 'data-iedp-box': bid });
+          const fHead = el('div', { class: 'pw-iedp-head' });
+          const aid = 'pwPastIedp_' + pIdx + '_' + bid;
+          fHead.append(el('label', { for: aid }, blbl));
+          const cBtn = el('button', { type: 'button', 'aria-label': 'Copy past target ' + blbl }, 'Copy');
+          const area = el('textarea', { id: aid, class: 'pw-iedp-box', readonly: 'readonly', rows: '3' });
+          area.value = bval;
+          cBtn.addEventListener('click', () => {
+            pwCopy(pwCleanPlainCopy(area.value, roster), 'Copied: ' + pupilLbl + ' · Past target · ' + blbl, cBtn);
+          });
+          fHead.append(cBtn);
+          fWrap.append(fHead, area);
+          pCard.append(fWrap);
+        });
+        pastDet.append(pCard);
+      });
+      frag.append(pastDet);
+    }
 
     pwIedpCards.replaceChildren(frag);
 
@@ -9034,9 +10326,21 @@ function initPaperworkSection() {
     measDiv.append(measureInp);
 
     const ratDiv = el('div', {});
-    ratDiv.append(el('label', { for: ratingId }, 'Teacher rating note (optional)'));
-    const ratingInp = el('input', { type: 'text', id: ratingId, maxlength: '80', autocomplete: 'off', value: initial.rating || '' });
-    ratDiv.append(ratingInp);
+    ratDiv.append(el('label', { for: ratingId }, 'Rating (auto-suggested or manual override)'));
+    const suggestedR = pwComputeSuggestedRating(initial);
+    const ratingSel = el('select', { id: ratingId });
+    ratingSel.append(el('option', { value: '' }, 'Auto' + (suggestedR ? ' (suggested: ' + suggestedR + ')' : '')));
+    PW_RATING_OPTIONS.forEach(opt => {
+      ratingSel.append(el('option', { value: opt }, opt + ' (manual)'));
+    });
+    if (initial.rating && !PW_RATING_OPTIONS.includes(initial.rating)) {
+      ratingSel.append(el('option', { value: initial.rating }, initial.rating + ' (manual)'));
+    }
+    ratingSel.value = (initial.ratingManual === true || (initial.rating && !(initial.steps && initial.steps.length))) ? (initial.rating || '') : '';
+    let ratingDirty = false;
+    ratingSel.addEventListener('change', () => { ratingDirty = true; });
+    if (shield) ratingSel.disabled = true;
+    ratDiv.append(ratingSel);
     grid2.append(measDiv, ratDiv);
 
     const linksDetails = el('details', { class: 'pw-subdetails' });
@@ -9062,7 +10366,6 @@ function initPaperworkSection() {
       subjInp.readOnly = true;
       overallInp.readOnly = true;
       measureInp.readOnly = true;
-      ratingInp.readOnly = true;
     }
 
     wrap.append(titleWrap, grid1, overallDiv, grid2, linksDetails);
@@ -9075,7 +10378,9 @@ function initPaperworkSection() {
         overall: overallInp.value.trim() || pwNormTitle(titleInp.value),
         measure: measureInp.value.trim(),
         subjects: subjInp.value.split(',').map(s => s.trim()).filter(Boolean),
-        rating: ratingInp.value.trim(),
+        rating: ratingSel.value.trim(),
+        ratingManual: ratingSel.value.trim() !== '',
+        ratingDirty,
         links: linkBoxes.filter(cb => cb.checked).map(cb => cb.value)
       })
     };
@@ -9191,7 +10496,7 @@ function initPaperworkSection() {
           return;
         }
         const ok = pwMutatePupilPlan(n, r => {
-          r.targets.push({
+          const nextT = {
             id: pwMakeTargetId(),
             status: 'active',
             need: vals.need,
@@ -9202,14 +10507,18 @@ function initPaperworkSection() {
             steps: [],
             rating: vals.rating,
             links: vals.links,
-            lastChanged: dateISO(),
+            lastChanged: pwUkDateISO(),
             lastCopied: '',
             history: []
-          });
+          };
+          if (vals.ratingManual) nextT.ratingManual = true;
+          r.targets.push(nextT);
         });
-        pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
-        if (ok) pwRefreshAfterPlanEdit(n, 'Added target for ' + pupilLbl + '.');
-        pwTargetsEditor.querySelector('#pwAddTargetBtn')?.focus({ preventScroll: true });
+        if (ok) {
+          pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
+          pwRefreshAfterPlanEdit(n, 'Added target for ' + pupilLbl + '.');
+          pwTargetsEditor.querySelector('#pwAddTargetBtn')?.focus({ preventScroll: true });
+        }
       });
       cancelAddBtn.addEventListener('click', () => pwCloseEditorPanel(true));
       act.append(saveAddBtn, cancelAddBtn);
@@ -9291,11 +10600,50 @@ function initPaperworkSection() {
       card.append(head);
 
       const meta = el('div', { class: 'pw-target-meta' });
+      const effR = pwEffectiveRating(t);
+      meta.append(el('span', { class: 'pw-badge' }, 'Rating: ' + effR + (t.ratingManual === true ? ' (manual)' : '')));
       if (dispNeed) meta.append(el('span', { class: 'pw-badge' }, dispNeed));
       if (dispSubjects.length) meta.append(el('span', { class: 'pw-badge' }, dispSubjects.join(', ')));
       if (t.links && t.links.length) meta.append(el('span', { class: 'pw-badge' }, t.links.length + ' linked help line' + (t.links.length === 1 ? '' : 's')));
       if (t.lastChanged) meta.append(el('span', { class: 'hint' }, 'Changed: ' + t.lastChanged));
       if (meta.childNodes.length) card.append(meta);
+
+      const ratingBar = el('div', { class: 'pw-rating-inline' });
+      const rSelId = 'pwTargetRating_' + activePos;
+      ratingBar.append(el('label', { for: rSelId, style: 'margin:0' }, 'Target rating'));
+      const rSel = el('select', { id: rSelId, 'data-target-rating-sel': '1' });
+      const sugRating = pwComputeSuggestedRating(t);
+      rSel.append(el('option', { value: '' }, 'Auto' + (sugRating ? ' (' + sugRating + ')' : '')));
+      PW_RATING_OPTIONS.forEach(opt => {
+        rSel.append(el('option', { value: opt }, opt + ' (override)'));
+      });
+      if (t.rating && !PW_RATING_OPTIONS.includes(t.rating)) {
+        rSel.append(el('option', { value: t.rating }, t.rating + ' (override)'));
+      }
+      rSel.value = t.ratingManual === true ? (t.rating || '') : '';
+      if (shield) rSel.disabled = true;
+      rSel.addEventListener('change', () => {
+        if (pwIsShieldOn()) return;
+        const chosen = rSel.value.trim();
+        const ok = pwMutatePupilPlan(n, r => {
+          const i = pwResolveTargetInRecord(r, t.id, entry.idx);
+          if (i < 0) return false;
+          const item = r.targets[i];
+          if (chosen) {
+            item.rating = chosen;
+            item.ratingManual = true;
+          } else {
+            delete item.ratingManual;
+            if (item.steps && item.steps.length) pwApplyRatingRule(item);
+            else item.rating = '';
+          }
+          item.lastChanged = pwUkDateISO();
+          return true;
+        });
+        if (ok) pwRefreshAfterPlanEdit(n, chosen ? ('Set manual rating ' + chosen + ' for Target ' + tNum + '.') : ('Restored automatic rating for Target ' + tNum + '.'));
+      });
+      ratingBar.append(rSel);
+      card.append(ratingBar);
 
       if (dispOverall && dispOverall !== dispTitle) {
         card.append(el('p', { style: 'margin:.3rem 0' }, dispOverall));
@@ -9347,12 +10695,15 @@ function initPaperworkSection() {
           if (i < 0) return false;
           const item = r.targets[i];
           item.status = 'retired';
-          item.lastChanged = dateISO();
-          item.history.push({ date: dateISO(), was: 'Retired: ' + item.title });
+          const todayUk = pwUkDateISO();
+          item.lastChanged = todayUk;
+          item.history.push({ date: todayUk, was: 'Retired: ' + item.title });
           return true;
         });
-        pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
-        if (ok) pwRefreshAfterPlanEdit(n, 'Retired target for ' + pupilLbl + '.');
+        if (ok) {
+          pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
+          pwRefreshAfterPlanEdit(n, 'Retired target for ' + pupilLbl + '.');
+        }
       });
       actRow.append(rewordBtn, changeBtn, retireBtn);
       card.append(actRow);
@@ -9385,20 +10736,31 @@ function initPaperworkSection() {
               const oldText = item.overall && item.overall !== item.title
                 ? (item.title + ' — ' + item.overall)
                 : item.title;
-              item.history.push({ date: dateISO(), was: oldText });
+              item.history.push({ date: pwUkDateISO(), was: oldText });
             }
             item.title = vals.title;
             item.overall = vals.overall;
             item.need = vals.need;
             item.measure = vals.measure;
             item.subjects = vals.subjects;
-            item.rating = vals.rating;
+            if (vals.ratingDirty) {
+              if (vals.ratingManual) {
+                item.rating = vals.rating;
+                item.ratingManual = true;
+              } else {
+                delete item.ratingManual;
+                if (item.steps && item.steps.length) pwApplyRatingRule(item);
+                else item.rating = vals.rating;
+              }
+            }
             item.links = vals.links;
-            item.lastChanged = dateISO();
+            item.lastChanged = pwUkDateISO();
             return true;
           });
-          pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
-          if (ok) pwRefreshAfterPlanEdit(n, 'Reworded Target ' + tNum + ' for ' + pupilLbl + '. Old wording saved in history.');
+          if (ok) {
+            pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
+            pwRefreshAfterPlanEdit(n, 'Reworded Target ' + tNum + ' for ' + pupilLbl + '. Old wording saved in history.');
+          }
         });
         cancelBtn.addEventListener('click', () => pwCloseEditorPanel(true));
         pAct.append(saveBtn, cancelBtn);
@@ -9431,9 +10793,11 @@ function initPaperworkSection() {
             const i = pwResolveTargetInRecord(r, t.id, entry.idx);
             if (i < 0) return false;
             const item = r.targets[i];
+            const todayUk = pwUkDateISO();
             item.status = 'changed';
-            item.lastChanged = dateISO();
-            item.history.push({ date: dateISO(), was: 'Changed (' + reason + '): ' + item.title });
+            pwApplyRatingRule(item);
+            item.lastChanged = todayUk;
+            item.history.push({ date: todayUk, was: 'Changed (' + reason + '): ' + item.title });
             if (replacement) {
               r.targets.splice(i + 1, 0, {
                 id: pwMakeTargetId(),
@@ -9446,15 +10810,17 @@ function initPaperworkSection() {
                 steps: [],
                 rating: '',
                 links: item.links.slice(),
-                lastChanged: dateISO(),
+                lastChanged: todayUk,
                 lastCopied: '',
                 history: []
               });
             }
             return true;
           });
-          pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
-          if (ok) pwRefreshAfterPlanEdit(n, 'Marked Target ' + tNum + ' as changed for ' + pupilLbl + '.');
+          if (ok) {
+            pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
+            pwRefreshAfterPlanEdit(n, 'Marked Target ' + tNum + ' as changed for ' + pupilLbl + '.');
+          }
         });
         cancelBtn.addEventListener('click', () => pwCloseEditorPanel(true));
         pAct.append(saveBtn, cancelBtn);
@@ -9468,8 +10834,8 @@ function initPaperworkSection() {
       stepsWrap.append(stepsTitle);
 
       (t.steps || []).forEach((st, sIdx) => {
-        const dispSt = shield ? redactPublic(st.text, roster) : st.text;
-        const dispNote = st.note ? (shield ? redactPublic(st.note, roster) : st.note) : '';
+        const dispSt = pwScrubTextForDisplay(st.text, roster);
+        const dispNote = pwFormatNoteForOutput(st.note, roster);
         const stepRow = el('div', { class: 'pw-step-row', 'data-step-idx': String(sIdx) });
         const mainLine = el('div', { class: 'pw-step-main' });
         const txtSpan = el('div', { class: 'pw-step-text' });
@@ -9498,11 +10864,13 @@ function initPaperworkSection() {
           const ok = pwMutatePupilPlan(n, r => {
             const i = pwResolveTargetInRecord(r, t.id, entry.idx);
             if (i < 0 || !r.targets[i].steps[sIdx]) return false;
+            const todayUk = pwUkDateISO();
             r.targets[i].steps[sIdx].state = nextState;
             if (nextState !== 'notyet' && !r.targets[i].steps[sIdx].date) {
-              r.targets[i].steps[sIdx].date = dateISO();
+              r.targets[i].steps[sIdx].date = todayUk;
             }
-            r.targets[i].lastChanged = dateISO();
+            pwApplyRatingRule(r.targets[i]);
+            r.targets[i].lastChanged = todayUk;
             return true;
           });
           if (ok) pwRefreshAfterPlanEdit(n, 'Updated step ' + (sIdx + 1) + ' state.');
@@ -9533,11 +10901,14 @@ function initPaperworkSection() {
             const i = pwResolveTargetInRecord(r, t.id, entry.idx);
             if (i < 0 || !r.targets[i].steps[sIdx]) return false;
             r.targets[i].steps.splice(sIdx, 1);
-            r.targets[i].lastChanged = dateISO();
+            pwApplyRatingRule(r.targets[i]);
+            r.targets[i].lastChanged = pwUkDateISO();
             return true;
           });
-          pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
-          if (ok) pwRefreshAfterPlanEdit(n, 'Removed step from Target ' + tNum + '.');
+          if (ok) {
+            pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
+            pwRefreshAfterPlanEdit(n, 'Removed step from Target ' + tNum + '.');
+          }
         });
 
         ctrls.append(stateSel, editStepBtn, remStepBtn);
@@ -9570,11 +10941,14 @@ function initPaperworkSection() {
               r.targets[i].steps[sIdx].text = newTxt;
               r.targets[i].steps[sIdx].date = dInp.value.trim();
               r.targets[i].steps[sIdx].note = nInp.value.trim();
-              r.targets[i].lastChanged = dateISO();
+              pwApplyRatingRule(r.targets[i]);
+              r.targets[i].lastChanged = pwUkDateISO();
               return true;
             });
-            pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
-            if (ok) pwRefreshAfterPlanEdit(n, 'Saved step edit.');
+            if (ok) {
+              pwEditorPanelState = { mode: null, pupil: 0, targetIdx: -1, targetId: '', stepIdx: -1, openerSelector: '' };
+              pwRefreshAfterPlanEdit(n, 'Saved step edit.');
+            }
           });
           sCancel.addEventListener('click', () => pwCloseEditorPanel(true));
           sAct.append(sSave, sCancel);
@@ -9600,7 +10974,8 @@ function initPaperworkSection() {
             const i = pwResolveTargetInRecord(r, t.id, entry.idx);
             if (i < 0) return false;
             r.targets[i].steps.push({ text: txt, state: 'notyet', date: '', note: '' });
-            r.targets[i].lastChanged = dateISO();
+            pwApplyRatingRule(r.targets[i]);
+            r.targets[i].lastChanged = pwUkDateISO();
             return true;
           });
           if (ok) pwRefreshAfterPlanEdit(n, 'Added step to Target ' + tNum + '.');
@@ -9651,8 +11026,10 @@ function initPaperworkSection() {
             const i = pwResolveTargetInRecord(r, t.id, entry.idx);
             if (i < 0) return false;
             r.targets[i].status = 'active';
-            r.targets[i].lastChanged = dateISO();
-            r.targets[i].history.push({ date: dateISO(), was: 'Restored to active' });
+            pwApplyRatingRule(r.targets[i]);
+            const todayUk = pwUkDateISO();
+            r.targets[i].lastChanged = todayUk;
+            r.targets[i].history.push({ date: todayUk, was: 'Restored to active' });
             return true;
           });
           if (ok) pwRefreshAfterPlanEdit(n, 'Restored target to active for ' + pupilLbl + '.');
@@ -9975,6 +11352,26 @@ function initPaperworkSection() {
           'Note: this plan has ' + p.targets.length + ' active targets.'));
       }
 
+      if (p.assignedPupil >= 1) {
+        const existingRec = pwReadPupilPlan(p.assignedPupil);
+        if (existingRec && Array.isArray(existingRec.targets)) {
+          let tickedSteps = 0;
+          existingRec.targets.forEach(et => {
+            (et.steps || []).forEach(st => {
+              if (st && (st.state === 'partly' || st.state === 'met')) tickedSteps++;
+            });
+          });
+          if (tickedSteps > 0) {
+            const pLbl = pwPupilLabel(p.assignedPupil, roster);
+            mLine.append(el('span', { class: 'pw-badge pw-badge-changed', 'data-import-tick-badge': String(tickedSteps) },
+              '\u26a0 ' + tickedSteps + ' ticked ' + (tickedSteps === 1 ? 'step' : 'steps')));
+            card.append(el('p', { class: 'pw-soft-note', role: 'status', 'data-import-tick-warn': String(tickedSteps), style: 'margin:.3rem 0' },
+              '\u26a0 Reload warning: ' + pLbl + ' has ' + tickedSteps + ' ticked ' + (tickedSteps === 1 ? 'step' : 'steps') +
+              ' saved on this device. Saving will keep state, date, note and lesson for every step whose text is unchanged.'));
+          }
+        }
+      }
+
       if (p.targets.length) {
         const ul = el('ul', { class: 'pw-history-list' });
         p.targets.forEach(t => ul.append(el('li', {}, t.title)));
@@ -10025,6 +11422,134 @@ function initPaperworkSection() {
     pwImportPreview.replaceChildren(frag);
   }
 
+  function pwMergeReloadedTargets(incomingTargets, existingRec, today) {
+    const oldTargets = (existingRec && Array.isArray(existingRec.targets)) ? existingRec.targets : [];
+    const usedOldTarget = new Set();
+    const usedOldStep = new Set(); // "tIdx:sIdx"
+
+    const copyStepData = (inSt, oldSt) => {
+      const out = {
+        text: inSt.text,
+        state: oldSt ? oldSt.state : (inSt.state || 'notyet'),
+        date: oldSt ? (oldSt.date || '') : (inSt.date || ''),
+        note: oldSt ? (oldSt.note || '') : (inSt.note || '')
+      };
+      const les = oldSt ? oldSt.lesson : inSt.lesson;
+      if (pwIsPlainObj(les)) out.lesson = { ...les };
+      return out;
+    };
+
+    const hasTickData = st => !!(st && (st.state === 'partly' || st.state === 'met' || st.date || st.note || pwIsPlainObj(st.lesson)));
+
+    // Pass 1a: match incoming targets to existing targets by target id first
+    const matchedOldIdxByIn = incomingTargets.map(() => -1);
+    incomingTargets.forEach((t, idx) => {
+      if (!t.id) return;
+      const byId = oldTargets.findIndex((ot, oi) => !usedOldTarget.has(oi) && ot.id && ot.id === t.id);
+      if (byId >= 0) {
+        usedOldTarget.add(byId);
+        matchedOldIdxByIn[idx] = byId;
+      }
+    });
+    // Pass 1b: match remaining incoming targets by target title
+    incomingTargets.forEach((t, idx) => {
+      if (matchedOldIdxByIn[idx] >= 0) return;
+      const tNorm = pwNormTitle(t.title);
+      if (!tNorm) return;
+      let byTitle = oldTargets.findIndex((ot, oi) => !usedOldTarget.has(oi) && pwNormTitle(ot.title) === tNorm);
+      if (byTitle < 0) {
+        const tLow = tNorm.toLowerCase();
+        byTitle = oldTargets.findIndex((ot, oi) => !usedOldTarget.has(oi) && pwNormTitle(ot.title).toLowerCase() === tLow);
+      }
+      if (byTitle >= 0) {
+        usedOldTarget.add(byTitle);
+        matchedOldIdxByIn[idx] = byTitle;
+      }
+    });
+
+    // Build merged targets: first match steps within matched target, then fallback across all unused existing steps by exact step text
+    const draftTargets = incomingTargets.map((t, idx) => {
+      const oi = matchedOldIdxByIn[idx];
+      const oldT = oi >= 0 ? oldTargets[oi] : null;
+      const mergedSteps = (t.steps || []).map(inSt => {
+        const wantTxt = String(inSt.text || '').trim();
+        let foundOld = null;
+        if (oldT && Array.isArray(oldT.steps)) {
+          for (let si = 0; si < oldT.steps.length; si++) {
+            const sk = oi + ':' + si;
+            if (usedOldStep.has(sk)) continue;
+            if (String(oldT.steps[si]?.text || '').trim() === wantTxt) {
+              usedOldStep.add(sk);
+              foundOld = oldT.steps[si];
+              break;
+            }
+          }
+        }
+        return { inSt, foundOld };
+      });
+      return { t, oldT, mergedSteps };
+    });
+
+    // Pass 2: for any step still unmatched, match by unchanged step text across all remaining existing steps (preferring ticked steps)
+    draftTargets.forEach(entry => {
+      entry.mergedSteps.forEach(ms => {
+        if (ms.foundOld) return;
+        const wantTxt = String(ms.inSt.text || '').trim();
+        let best = null;
+        for (let oi = 0; oi < oldTargets.length; oi++) {
+          const oSteps = Array.isArray(oldTargets[oi]?.steps) ? oldTargets[oi].steps : [];
+          for (let si = 0; si < oSteps.length; si++) {
+            const sk = oi + ':' + si;
+            if (usedOldStep.has(sk)) continue;
+            if (String(oSteps[si]?.text || '').trim() !== wantTxt) continue;
+            if (hasTickData(oSteps[si])) { best = { oi, si, sk, st: oSteps[si] }; break; }
+            if (!best) best = { oi, si, sk, st: oSteps[si] };
+          }
+          if (best && hasTickData(best.st)) break;
+        }
+        if (best) {
+          usedOldStep.add(best.sk);
+          ms.foundOld = best.st;
+        }
+      });
+    });
+
+    return draftTargets.map(({ t, oldT, mergedSteps }) => {
+      let carriedAnyTick = false;
+      const steps = mergedSteps.map(ms => {
+        if (ms.foundOld && hasTickData(ms.foundOld)) {
+          carriedAnyTick = true;
+          return copyStepData(ms.inSt, ms.foundOld);
+        }
+        return copyStepData(ms.inSt, null);
+      });
+      const out = {
+        id: (oldT && oldT.id) || (t.id ? t.id : pwMakeTargetId()),
+        status: 'active',
+        need: t.need,
+        title: pwNormTitle(t.title),
+        overall: t.overall || pwNormTitle(t.title),
+        measure: t.measure,
+        subjects: (t.subjects || []).slice(),
+        steps,
+        rating: t.rating || '',
+        links: (t.links || []).slice(),
+        lastChanged: today,
+        lastCopied: (oldT && oldT.lastCopied) || t.lastCopied || '',
+        history: (oldT && Array.isArray(oldT.history)) ? oldT.history.map(h => ({ ...h })) : []
+      };
+      if (oldT && oldT.ratingManual === true) {
+        out.rating = oldT.rating || out.rating;
+        out.ratingManual = true;
+      } else if (t.ratingManual === true) {
+        out.ratingManual = true;
+      } else if (carriedAnyTick && out.steps.length) {
+        pwApplyRatingRule(out);
+      }
+      return out;
+    });
+  }
+
   function pwSaveImportedPlans() {
     if (!pwImportPreviewState || pwIsShieldOn()) return;
     const plans = pwImportPreviewState.plans;
@@ -10050,7 +11575,7 @@ function initPaperworkSection() {
       snapBefore = localStorage.getItem(PW_TARGETS_BEFORE_KEY);
       snapProfile = localStorage.getItem(KEYS.profile);
     } catch (e) {
-      if (pwImportStatus) pwImportStatus.textContent = 'Not saved: this device could not read saved stores.';
+      if (pwImportStatus) pwImportStatus.textContent = 'Could not read storage on this device. Nothing was recorded.';
       return;
     }
 
@@ -10061,7 +11586,7 @@ function initPaperworkSection() {
     let nextTargets = pwReadJson(KEYS.targets, {}) || {};
     if (!pwIsPlainObj(nextTargets)) nextTargets = {};
 
-    const today = dateISO();
+    const today = pwUkDateISO();
     let profileChanged = false;
     let skippedSuggestCount = 0;
     let nextProfile = null;
@@ -10077,26 +11602,13 @@ function initPaperworkSection() {
     assigned.forEach(p => {
       const n = p.assignedPupil;
       const pk = String(n);
-      if (!pwIsPlainObj(nextPlanStore.pupils[pk])) {
+      const existingRec = pwIsPlainObj(nextPlanStore.pupils[pk]) ? pwNormPupilRecord(nextPlanStore.pupils[pk], false) : null;
+      if (!existingRec) {
         pwBackupLegacyTargetOnce(n, nextTargets);
       }
       const newRec = {
         plan: p.plan,
-        targets: p.targets.map(t => ({
-          id: pwMakeTargetId(),
-          status: 'active',
-          need: t.need,
-          title: pwNormTitle(t.title),
-          overall: t.overall || pwNormTitle(t.title),
-          measure: t.measure,
-          subjects: (t.subjects || []).slice(),
-          steps: (t.steps || []).map(st => ({ text: st.text, state: st.state || 'notyet', date: st.date || '', note: st.note || '' })),
-          rating: t.rating || '',
-          links: (t.links || []).slice(),
-          lastChanged: today,
-          lastCopied: '',
-          history: []
-        })),
+        targets: pwMergeReloadedTargets(p.targets, existingRec, today),
         strategies: pwNormStrategies(p.strategies)
       };
       nextPlanStore.pupils[pk] = newRec;
@@ -10137,10 +11649,25 @@ function initPaperworkSection() {
       }
     });
 
-    pwWriteRawJson(PW_PLAN_KEY, nextPlanStore);
-    pwWriteRawJson(KEYS.targets, nextTargets);
-    if (profileChanged && nextProfile) {
-      pwWriteRawJson(KEYS.profile, nextProfile);
+    const rollbackImport = () => {
+      [[PW_PLAN_KEY, snapPlan], [KEYS.targets, snapTargets], [PW_TARGETS_BEFORE_KEY, snapBefore], [KEYS.profile, snapProfile]].forEach(([k, v]) => {
+        try {
+          if (v === null) localStorage.removeItem(k);
+          else localStorage.setItem(k, v);
+        } catch (e) {}
+      });
+    };
+
+    const okPlan = pwWriteRawJson(PW_PLAN_KEY, nextPlanStore);
+    const okTargets = okPlan && pwWriteRawJson(KEYS.targets, nextTargets);
+    const okProf = okTargets && (!profileChanged || !nextProfile || pwWriteRawJson(KEYS.profile, nextProfile));
+    if (!okPlan || !okTargets || !okProf) {
+      rollbackImport();
+      pwHideUndoBar();
+      const errMsg = 'Could not write to storage on this device. Nothing was recorded.';
+      if (pwImportStatus) pwImportStatus.textContent = errMsg;
+      pwSetStatus(errMsg, true);
+      return;
     }
 
     const undoLabel = 'Saved ' + assigned.length + ' imported IEDP plan' + (assigned.length === 1 ? '' : 's');
@@ -10303,8 +11830,21 @@ function initPaperworkSection() {
         if (!pwIsPlainObj(existingPupils[pk])) pwBackupLegacyTargetOnce(n, nextTargets);
         nextTargets = pwSyncTargetsStoreForPupil(n, rec, nextTargets);
       });
-      pwWriteRawJson(PW_PLAN_KEY, { version: 1, pupils: incomingPupils });
-      pwWriteRawJson(KEYS.targets, nextTargets);
+      const okPlan = pwWriteRawJson(PW_PLAN_KEY, { version: 1, pupils: incomingPupils });
+      const okTargets = okPlan && pwWriteRawJson(KEYS.targets, nextTargets);
+      if (!okPlan || !okTargets) {
+        [[PW_PLAN_KEY, snapPlan], [KEYS.targets, snapTargets], [PW_TARGETS_BEFORE_KEY, snapBefore]].forEach(([k, v]) => {
+          try {
+            if (v === null) localStorage.removeItem(k);
+            else localStorage.setItem(k, v);
+          } catch (e) {}
+        });
+        pwHideUndoBar();
+        const errMsg = 'Could not write to storage on this device. Nothing was imported.';
+        if (pwPlanBackupStatus) pwPlanBackupStatus.textContent = errMsg;
+        pwSetStatus(errMsg, true);
+        return;
+      }
 
       const label = 'Imported IEDP plans for ' + incCounts.pupils + ' pupil' + (incCounts.pupils === 1 ? '' : 's');
       pwShowUndoBar({
@@ -10564,11 +12104,16 @@ function initPaperworkSection() {
     if (pwPlanBackupStatus) pwPlanBackupStatus.textContent = 'Preview ready. Nothing has been imported yet.';
   });
 
-  // Escape closes open inline editor panels and import previews cleanly
+  // Escape closes open inline editor panels, Room brief step panels, and import previews cleanly
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
     if ($('boardDialog')?.open) return;
     if ($('pupilPage') && !$('pupilPage').hidden) return;
+    if (briefStepPanel) {
+      e.preventDefault();
+      pwStep2ClosePanel(true);
+      return;
+    }
     if (pwEditorPanelState.mode) {
       e.preventDefault();
       pwCloseEditorPanel(true);
@@ -10598,6 +12143,67 @@ function initPaperworkSection() {
   pwFromInput.addEventListener('change', pwRenderIedpCardsOnly);
   pwToInput.addEventListener('change', pwRenderIedpCardsOnly);
 
+  function pwApplyDatePreset(kind) {
+    const ukTodayISO = pwUkDateISO();
+    const [ty, tm, td] = ukTodayISO.split('-').map(Number);
+    const today = new Date(ty, tm - 1, td, 12);
+    const cfg = pwReadTermCfgSafe();
+    let fromISO = '';
+    let toISO = '';
+    let label = '';
+    if (kind === 'week') {
+      const dow = (today.getDay() + 6) % 7;
+      const mon = new Date(today.getFullYear(), today.getMonth(), today.getDate() - dow, 12);
+      const fri = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + 4, 12);
+      fromISO = dateISO(mon);
+      toISO = dateISO(fri);
+      label = 'This week';
+    } else if (kind === 'twoWeeks') {
+      const start = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 14, 12);
+      fromISO = dateISO(start);
+      toISO = ukTodayISO;
+      label = 'Last 2 weeks';
+    } else {
+      const termEnd = new Date(cfg.y, cfg.m - 1, cfg.d + 6 * 7 + 4, 12);
+      fromISO = cfg.w1Monday;
+      toISO = dateISO(termEnd);
+      label = 'This half term';
+    }
+    pwFromInput.value = fromISO;
+    pwToInput.value = toISO;
+    pwRenderIedpCardsOnly();
+    pwSetStatus('Dates set to ' + label + ' (' + fromISO + ' to ' + toISO + ').', false);
+  }
+  pwPresetWeekBtn?.addEventListener('click', () => pwApplyDatePreset('week'));
+  pwPreset2WeeksBtn?.addEventListener('click', () => pwApplyDatePreset('twoWeeks'));
+  pwPresetHalfTermBtn?.addEventListener('click', () => pwApplyDatePreset('halfTerm'));
+
+  pwCopyWholeIedpBtn?.addEventListener('click', () => {
+    const n = +pwPupilSel.value || 1;
+    const roster = pwBuildSafeRoster();
+    const plan = pwReadPupilPlan(n);
+    if (!plan) return;
+    const activeTargets = plan.targets.filter(t => t.status === 'active');
+    if (!activeTargets.length) return;
+    const pLbl = pwProsePupilLabel(n, roster);
+    const blocks = [];
+    activeTargets.forEach((t, idx) => {
+      const tNum = idx + 1;
+      const revArea = $('pwIedp_' + tNum + '_review');
+      const evArea = $('pwIedp_' + tNum + '_evidence');
+      const revTxt = pwCleanPlainCopy(revArea ? revArea.value : '', roster);
+      const evTxt = pwCleanPlainCopy(evArea ? evArea.value : '', roster);
+      const cleanTitle = pwCleanPlainCopy(pwScrubTextForDisplay(t.title || t.overall, roster), roster);
+      blocks.push('Target ' + tNum + ': ' + cleanTitle + '\nReview:\n' + revTxt + '\nEvidence:\n' + evTxt);
+    });
+    const otherArea = $('pwOtherProgressText');
+    if (otherArea && otherArea.value.trim()) {
+      blocks.push(pwCleanPlainCopy(otherArea.value, roster));
+    }
+    const whole = pwCleanPlainCopy(pLbl + '\n\n' + blocks.join('\n\n'), roster);
+    pwCopy(whole, 'Copied whole IEDP for ' + pLbl + ' (' + activeTargets.length + ' active ' + (activeTargets.length === 1 ? 'target' : 'targets') + ').', pwCopyWholeIedpBtn);
+  });
+
   pwResetBoxesBtn.addEventListener('click', () => {
     const fresh = pwLoadStore();
     fresh.boxes = PW_DEFAULT_BOXES.slice();
@@ -10623,6 +12229,7 @@ function initPaperworkSection() {
 
   new MutationObserver(() => {
     pwRenderAll();
+    pwBriefRefreshOnly();
   }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-privacy-shield'] });
 
   window.addEventListener('storage', pwRenderAll);
@@ -10645,6 +12252,7 @@ function initPaperworkSection() {
 
   pwInitPickers();
   pwRenderAll();
+  pwBriefRefreshOnly();
   pwOpenOnHash();
 }
 initPaperworkSection();
