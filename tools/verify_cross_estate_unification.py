@@ -136,7 +136,9 @@ CATALOGUE_PINS = {
         # measured the same hour; the live-proof job had been red on every Lessons push since #939 on 23 Nov. Digest taken from the
         # edited file, never typed.
         "tools/sw2/check_tokens_inert.cjs": "da555104d6825263f3d8d0b219f10d60fa2957f9bdcf7487c41262b434f15c33",
-        "assets/catalogue/lesson-order.json": "ccbfc167bbce385068fa2e5fbb02330b739db85f8fe832e91d69f99fc5a3a8ba",
+        # RECONCILE 2026-11-24 (ruling thread 24 Nov): lesson-order.json rebuilt by tools/catalogue/build_lesson_order.py; five
+        # stale sourceSha256 values left by b072c487 (#854) now equal their pages. Digest taken from the rebuilt file, never typed.
+        "assets/catalogue/lesson-order.json": "933bfc94401c6767268b6b1c861fb44e5dbad337d9fe62ef3a7056417df64fc1",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "37c58d618211658a21c76b5955815422287c27a25cc1dc8bdf98e193c48a25e0",
