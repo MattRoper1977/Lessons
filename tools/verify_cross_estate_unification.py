@@ -99,7 +99,7 @@ MORE_ROUTES = ["/stats/", "/members/", "/#about", "/privacy/"]
 #
 # resources.json keeps the blanket rule. Only apps.json was ruled on.
 MANIFEST_PINS = {
-    "apps.json": "a4a06b999b5f16d19f0a4a87952ea1fe53f4fcbe2c38bc702c51ba89140a6047",
+    "apps.json": "cdd7516c4b02f343ab86b2297b29f6bf0e25db5af07b1c07d5e387614bf97b57",
     # Ruled onto the pin 2026-08-12 (Ruling 3): the deck install is a
     # resources.json edit, and the blanket rule forbade it the same way it
     # once forbade studio adds. Same pattern, same tool, same commit rule.
@@ -135,7 +135,7 @@ CATALOGUE_PINS = {
         # Site bfe2e1cf admission registry (lessons "" 1612c51d, subject.html 50cff51a, apps "" dc2cb381), each equal to the live page
         # measured the same hour; the live-proof job had been red on every Lessons push since #939 on 23 Nov. Digest taken from the
         # edited file, never typed.
-        "tools/sw2/check_tokens_inert.cjs": "da555104d6825263f3d8d0b219f10d60fa2957f9bdcf7487c41262b434f15c33",
+        "tools/sw2/check_tokens_inert.cjs": "4e52b917e475ff4de2bca91ace010e437f3d1738c86610367dfb4867bbfa90af",
         # RECONCILE 2026-11-24 (ruling thread 24 Nov): lesson-order.json rebuilt by tools/catalogue/build_lesson_order.py; five
         # stale sourceSha256 values left by b072c487 (#854) now equal their pages. Digest taken from the rebuilt file, never typed.
         "assets/catalogue/lesson-order.json": "68d111475840048d06a16ff8133fefc6aee8081cbfd6b86cba41cbf18f8f63ed",
@@ -4121,7 +4121,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-01 (Merge Letters A1-A6, LD28 standing step): the Apps repository moves its own publisher pin cfc92e84 -> e25aa76a,
 # the squash merge of Site #533. Digest derived with sha256 over the edited file, never transcribed.
 # Re-cut 2026-11-14: the Apps repository moves its own publisher pin e25aa76a -> 2f12d3cf, the merge of Site #642. Digest derived with sha256 over the edited file, never transcribed.
-    "apps": "6ef08c5936808292fd1f44eed33e21ba2f7176bf6d06866f1fe7bfafab225914"
+    "apps": "a45cb563082a264192de486c9f0fdd82f8d15776a2537e5eb816b5c4aff02ba5"
 }
 PUBLICATION_GATE_WORKFLOW_PATH = ".github/workflows/mbm-cross-estate-unification.yml"
 
@@ -4138,7 +4138,7 @@ LUNDYLOOP_CI_PINS = {
     # Re-cut 2026-10-22 (ruling ty, ty-2, option A): PUBLISHED re-derived from the Site cfc92e84 registry, the one
     # builder both estates now publish with (lessons "" d74addfa, subject.html b2a6f3cb, apps "" 53d82c52); digest
     # taken from the edited file, never typed.
-    "tools/sw2/check_tokens_inert.cjs": "2cbb482b66a72cbba628fba80b8fbdd431553356c95a66d36614fa35189d6434",
+    "tools/sw2/check_tokens_inert.cjs": "4e52b917e475ff4de2bca91ace010e437f3d1738c86610367dfb4867bbfa90af",
     ".github/workflows/verify-lundyloop-professional-os.yml": "db2f0404944884869d84349a68b80858f81af8dbfb7eb64ddec71151f7928256",
     "tools/lundyloop/verify_live_bytes.py": "a27f791633260e7e2d8ba7ca2abe5a35db105b9ccbf96d26205628dcc1e636ad",
     "tools/lundyloop/test_live_bytes.py": "972ca2ae06da44722bfd011fda03a361c6011c699f95bb6ce78bca95b71f2e77"
