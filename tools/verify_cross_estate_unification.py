@@ -131,7 +131,11 @@ CATALOGUE_PINS = {
         # Re-cut 2026-11-22 (ruling thread 22 November): PUBLISHED re-derived by tools/sw2/pin_published_digests.py --write from the
         # Site cb5654dd admission registry (lessons "" fddec24e, subject.html 081595ee, apps "" 5009ba10), each equal to the live page
         # measured the same hour; digest taken from the edited file, never typed.
-        "tools/sw2/check_tokens_inert.cjs": "63ce83d4472c99573162e02bcc4d67127527fbf7a6df726c4b32f68e0c7ad952",
+        # Re-cut 2026-11-24 (flight 76, ruling thread): PUBLISHED re-derived by tools/sw2/pin_published_digests.py --write from the
+        # Site bfe2e1cf admission registry (lessons "" 1612c51d, subject.html 50cff51a, apps "" dc2cb381), each equal to the live page
+        # measured the same hour; the live-proof job had been red on every Lessons push since #939 on 23 Nov. Digest taken from the
+        # edited file, never typed.
+        "tools/sw2/check_tokens_inert.cjs": "da555104d6825263f3d8d0b219f10d60fa2957f9bdcf7487c41262b434f15c33",
         "assets/catalogue/lesson-order.json": "ccbfc167bbce385068fa2e5fbb02330b739db85f8fe832e91d69f99fc5a3a8ba",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
@@ -3283,7 +3287,7 @@ CATALOGUE_PINS = {
         "kits/class_tools/Class_names.html": "7465659a2aabfb2ba9afce1fe4ec48f6781e0c4dcbc1b7d177b7687b2a8eecb5",
         "kits/class_tools/Class_record.html": "b8d1f644e4e51f9c43a1102f18c33161367a7e316b0b07d65840be3eb2c9a009",
         "kits/class_tools/How_to_use.html": "0eb6033c3cc108950d6ec2cf731bd041ba1006cfc6f648b1fc763017b6637c10",
-        "kits/class_tools/My_tools.html": "5872878f8703091fd949c809646a6e788172800436feeddf78127d38a2cb2251",
+        "kits/class_tools/My_tools.html": "e1975de33fd24d984f90cf128461d1529a69902436740ddb6a19cb40e73e07fd",
         "kits/class_tools/Practical_log.html": "6fded535b36c2768955ae9a9486fb6cb5fe24ed6109d3502208026ae01193f26",
         "kits/class_tools/Requests.html": "affb763c12ae2d873ecbc7cffd08bcb404ab8bf30bc4854e10d91e5e07f160e7",
         "kits/class_tools/Missed_last_week.html": "b33ff12ee8364ad6b9d387d6c79fd620ef62088b2580f17c9d0a9bc7a053f9bf",
@@ -4046,7 +4050,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "c42e6ca5b2645953797c622982dee106862fecddf1840f04af3fe6f683f3a9c2",
+    "lessons": "af3941a0f2896e34e514ca69d1796fae5818cd968cf5c97c1c79a45c06f48513",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
