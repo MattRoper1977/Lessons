@@ -236,42 +236,52 @@ jobs:
               '## Served digest census\n\n```json\n' + json.dumps(published, indent=2, sort_keys=True) + '\n```\n')
           PY
 
-      # MEASUREMENT-ONLY (ruling thread, 25 Nov 2026): rendered door-link counts and the Site's
-      # audience browser proof, both against the tree this job just built, so a Site branch can be
-      # proved before it publishes. Skipped unless door_probe is set. Report only; it admits nothing.
-      - name: Door-link counts and audience browser proof on the built tree (opt-in)
+      # MEASUREMENT-ONLY (ruling thread, 25 Nov 2026): rendered door-link counts and the Site's own
+      # audience browser check (the one publication step 25 runs), both against the tree this job just
+      # built, mounted exactly as step 25 mounts it. Skipped unless door_probe is set. Report only.
+      - name: Door-link counts and audience browser check on the built tree (opt-in)
         if: ${{ inputs.door_probe != '' }}
+        timeout-minutes: 12
+        working-directory: .sources/Site
+        env:
+          MBM_REQUIRE_TEACHING_PACKS: 'true'
+          MBM_EDUCATION_ORIGIN: http://127.0.0.1:4173
+          MBM_PRIMARY_ORIGIN: http://127.0.0.1:4173
+          MBM_PRIMARY_LESSONS_SOURCE: ../Lessons
+          MBM_USAGE_LESSONS_SOURCE: ../Lessons
         run: |
           set -euo pipefail
-          python3 -m pip install --quiet playwright
-          python3 -m playwright install --with-deps chromium > /dev/null
-          (cd .sources/Site/domain-split/output/education-site && python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/door.log 2>&1 &)
-          for _ in $(seq 1 20); do curl -sf -o /dev/null http://127.0.0.1:4173/ && break || sleep 1; done
-          python3 - <<'PY'
-          import json
-          from urllib.parse import urlparse
-          from playwright.sync_api import sync_playwright
-          base = 'http://127.0.0.1:4173'
-          pages = ['/', '/for/pupils/', '/for/teachers/', '/for/parents-carers/']
-          out = {}
-          with sync_playwright() as pw:
-              b = pw.chromium.launch()
-              for w in (390, 1366):
-                  pg = b.new_page(viewport={'width': w, 'height': 900})
-                  for p in pages:
-                      pg.goto(base + p, wait_until='networkidle'); pg.wait_for_timeout(800)
-                      links = pg.eval_on_selector_all('a[href]', 'ns => ns.map(n => [n.href, !!(n.offsetWidth || n.offsetHeight || n.getClientRects().length)])')
-                      row = {}
-                      for href, vis in links:
-                          u = urlparse(href)
-                          if u.netloc not in ('127.0.0.1:4173', 'madebymatt.uk') or not u.path.startswith('/for/'): continue
-                          d = u.path if u.path.endswith('/') else u.path.rsplit('/', 1)[0] + '/'
-                          c = row.setdefault(d, [0, 0]); c[0] += 1; c[1] += vis
-                      out['%d %s' % (w, p)] = row
-                  pg.close()
-              b.close()
-          print('=== RENDERED DOOR LINKS [in DOM, visible] ===')
-          print(json.dumps(out, indent=1, sort_keys=True))
-          PY
-          cd .sources/Site
-          MBM_BASE_URL=http://127.0.0.1:4173/ python3 tools/verify_audience_discovery_browser.py --artifacts "$RUNNER_TEMP/door-proof"
+          mkdir -p _served/Lessons _served/Matt-s-Apps-
+          rsync -a domain-split/output/education-site/ _served/
+          rsync -a domain-split/output/education-lessons/ _served/Lessons/
+          rsync -a domain-split/output/education-apps/ _served/Matt-s-Apps-/
+          python -m http.server 4173 --bind 127.0.0.1 --directory _served > /tmp/door-http.log 2>&1 &
+          for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:4173/ && break || sleep 1; done
+          npm i --no-save --no-package-lock playwright@1.56.1 > /dev/null
+          npx playwright install --with-deps chromium > /dev/null
+          cat > /tmp/doors.cjs <<'JS'
+          const { chromium } = require(process.cwd() + '/node_modules/playwright');
+          (async () => {
+            const b = await chromium.launch(), out = {};
+            for (const width of [390, 1366]) for (const p of ['/', '/for/pupils/', '/for/teachers/', '/for/parents-carers/']) {
+              const pg = await b.newPage({ viewport: { width, height: 900 } });
+              await pg.goto('http://127.0.0.1:4173' + p, { waitUntil: 'networkidle' }); await pg.waitForTimeout(800);
+              out[width + ' ' + p] = await pg.evaluate(() => {
+                const row = {};
+                for (const a of document.querySelectorAll('a[href]')) {
+                  const u = new URL(a.href, location.href);
+                  if (!['127.0.0.1:4173', 'madebymatt.uk'].includes(u.host) || !u.pathname.startsWith('/for/')) continue;
+                  const d = u.pathname.endsWith('/') ? u.pathname : u.pathname.replace(/[^/]*$/, '');
+                  const c = row[d] || (row[d] = { page: 0, main: 0, visible_main: 0 });
+                  c.page++; if (a.closest('main')) { c.main++; if (a.getClientRects().length) c.visible_main++; }
+                }
+                return row;
+              });
+              await pg.close();
+            }
+            await b.close();
+            console.log('=== RENDERED DOOR LINKS ===\n' + JSON.stringify(out, null, 1) + '\n=== END DOOR LINKS ===');
+          })().catch(e => { console.error(e); process.exit(1); });
+          JS
+          node /tmp/doors.cjs
+          node domain-split/check_audience_discovery.cjs && echo 'AUDIENCE CHECK: PASS' || { echo 'AUDIENCE CHECK: FAIL'; exit 1; }
