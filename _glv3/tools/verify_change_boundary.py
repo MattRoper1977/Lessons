@@ -435,6 +435,11 @@ WEBSITE_EDITIONS_BATCH_79_REVIEW_BASE = 'e6fdd516d940db060bfadd7ce611fa3f3b201e8
 # it replaces carried; no companion file moves. Base is the merge base with main; blobs read there,
 # written with admit_sx3_release.write(). Every member also carries a CATALOGUE_PINS admission.
 WEBSITE_EDITIONS_BATCH_80_REVIEW_BASE = 'b1e2b11dfbe00fb5328890bfcfb8a7a70b748718'
+# Website editions batch 82 (owner-requested 15 Nov 2026: the redesigned lesson boards replace the earlier pages at their
+# landed paths). Each member keeps its way home, its term and week line and every local link the page
+# it replaces carried; no companion file moves. Base is the merge base with main; blobs read there,
+# written with admit_sx3_release.write(). Every member also carries a CATALOGUE_PINS admission.
+WEBSITE_EDITIONS_BATCH_82_REVIEW_BASE = 'df533f2dbb521da435486927ee1e770aaabaa5a1'
 # BEGIN DECLARED TRANSACTIONS
 # BEGIN S3 OFFLINE EDITION REPLACEMENTS
 CX2_S3_REPLACEMENTS = {'Science/Teaching_Packs/web-slides.html': {'beforeGitBlob': '6596d65c7a9bd5bb1875c5b46bbc331df8652144', 'afterSha256': 'f31f09d03f5d8c417af1745b38309fa537afb8bb4c6a08f387db3349d9e1cba2', 'bytes': 18607}}
@@ -698,6 +703,9 @@ WEBSITE_EDITIONS_BATCH_79_REPLACEMENTS = {'Art/Grow/CREATIVE_ARTS_A2_W04/Public/
 # BEGIN WEBSITE_EDITIONS_BATCH_80 REPLACEMENTS
 WEBSITE_EDITIONS_BATCH_80_REPLACEMENTS = {'Art/Grow/CREATIVE_ARTS_A2_W04/Public/ART_GROW_A2_W04_P1.html': {'beforeGitBlob': 'ad2fd0e76d2390bbfca205f8961d01dfbbf8dbc2', 'afterSha256': 'bbd03f264e7a26ba4cbedc57157de8099616666bbe1e31559992556415e48359', 'bytes': 806108}, 'Humanities/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W03/HUM_BUILD_A2_W03.html': {'beforeGitBlob': '7ad820b745ceadbd4e30fe8c30a2e30018cc4ba8', 'afterSha256': 'f46224b733943b240fbbed6faf34564579a1cc11f5bba220bdbbcf8ab0ba6dab', 'bytes': 715884}, 'Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W03/GROW_RE_A2_W03.html': {'beforeGitBlob': 'e09d53a69db510845416644b39bff41cc4434bfa', 'afterSha256': '0bf97e442d41e7f840017691a654767701362d37301011e318ff6ffabe6d6395', 'bytes': 718848}, 'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L1.html': {'beforeGitBlob': 'ea0cc363c06146bbff88845e83b2f50b52f698fb', 'afterSha256': 'f29dbbc05ba484a72854cae6324269e138ef28df2936b4efc009187db4907800', 'bytes': 821543}, 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03_L3.html': {'beforeGitBlob': 'e643ffcf6f1d0a5b7603e554eccc37453e39a274', 'afterSha256': 'c9b1ac3792b67a68c6b5b38744b5781364dc7d5a6791b1e039da8598266ec630', 'bytes': 1006997}}
 # END WEBSITE_EDITIONS_BATCH_80 REPLACEMENTS
+# BEGIN WEBSITE_EDITIONS_BATCH_82 REPLACEMENTS
+WEBSITE_EDITIONS_BATCH_82_REPLACEMENTS = {'Humanities/Teaching_Packs/HUM_Autumn_2_BUILD_Reviewed/BUILD/Autumn_2/W03/HUM_BUILD_A2_W03.html': {'beforeGitBlob': 'f53b8da283ee821b27f1e4346bcbe63bc27b7d51', 'afterSha256': '18fb7c4503a523299041e57b0e52053977b27bfb1849f3ef644f36009409d4fc', 'bytes': 884885}, 'Humanities/Teaching_Packs/RE_Autumn_GROW_Reviewed/GROW/Autumn_2/W03/GROW_RE_A2_W03.html': {'beforeGitBlob': '4fd52daa8ef829d88575e0f0b7bb33d49adf4a41', 'afterSha256': 'c15c1a3c47c29fe26fa42ae5256a2dead538181aefb7c654739b6194ee38a9f4', 'bytes': 888479}}
+# END WEBSITE_EDITIONS_BATCH_82 REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -887,6 +895,7 @@ REPLACEMENT_TRANSACTIONS = {
     'Website editions batch 78': (WEBSITE_EDITIONS_BATCH_78_REVIEW_BASE, WEBSITE_EDITIONS_BATCH_78_REPLACEMENTS),
     'Website editions batch 79': (WEBSITE_EDITIONS_BATCH_79_REVIEW_BASE, WEBSITE_EDITIONS_BATCH_79_REPLACEMENTS),
     'Website editions batch 80': (WEBSITE_EDITIONS_BATCH_80_REVIEW_BASE, WEBSITE_EDITIONS_BATCH_80_REPLACEMENTS),
+    'Website editions batch 82': (WEBSITE_EDITIONS_BATCH_82_REVIEW_BASE, WEBSITE_EDITIONS_BATCH_82_REPLACEMENTS),
 }
 # RULING um add.5 (24 Oct 2026): the retired member type is admitted only inside a transaction listed here against the
 # lettered ruling that retired it. Today that is um only. Any other transaction that carries a retired member fails
