@@ -25,6 +25,10 @@ on:
         description: Lessons commit to build from; blank means the branch this job is run on. Give the carrier pin here to measure what a Site-triggered publication builds.
         required: false
         default: ''
+      door_probe:
+        description: MEASUREMENT-ONLY (ruling thread, 25 Nov 2026). Non-blank serves the built education-site tree at / and, in a real browser, counts the rendered links to each /for/ door on the home page and the three audience pages, then runs the Site's own audience discovery browser proof against that tree. Report only; it admits nothing.
+        required: false
+        default: ''
       apps_ref:
         description: MEASUREMENT-ONLY BRANCH, never merged (names flight N1-Apps, ruling thread 21 Nov 2026). Apps commit to build from; blank keeps the pinned Apps source below. Give an Apps branch head here, with the carrier as lessons_ref, to measure what the Apps caller's own publication builds.
         required: false
@@ -231,3 +235,43 @@ jobs:
           pathlib.Path(os.environ['GITHUB_STEP_SUMMARY']).write_text(
               '## Served digest census\n\n```json\n' + json.dumps(published, indent=2, sort_keys=True) + '\n```\n')
           PY
+
+      # MEASUREMENT-ONLY (ruling thread, 25 Nov 2026): rendered door-link counts and the Site's
+      # audience browser proof, both against the tree this job just built, so a Site branch can be
+      # proved before it publishes. Skipped unless door_probe is set. Report only; it admits nothing.
+      - name: Door-link counts and audience browser proof on the built tree (opt-in)
+        if: ${{ inputs.door_probe != '' }}
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet playwright
+          python3 -m playwright install --with-deps chromium > /dev/null
+          (cd .sources/Site/domain-split/output/education-site && python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/door.log 2>&1 &)
+          for _ in $(seq 1 20); do curl -sf -o /dev/null http://127.0.0.1:4173/ && break || sleep 1; done
+          python3 - <<'PY'
+          import json
+          from urllib.parse import urlparse
+          from playwright.sync_api import sync_playwright
+          base = 'http://127.0.0.1:4173'
+          pages = ['/', '/for/pupils/', '/for/teachers/', '/for/parents-carers/']
+          out = {}
+          with sync_playwright() as pw:
+              b = pw.chromium.launch()
+              for w in (390, 1366):
+                  pg = b.new_page(viewport={'width': w, 'height': 900})
+                  for p in pages:
+                      pg.goto(base + p, wait_until='networkidle'); pg.wait_for_timeout(800)
+                      links = pg.eval_on_selector_all('a[href]', 'ns => ns.map(n => [n.href, !!(n.offsetWidth || n.offsetHeight || n.getClientRects().length)])')
+                      row = {}
+                      for href, vis in links:
+                          u = urlparse(href)
+                          if u.netloc not in ('127.0.0.1:4173', 'madebymatt.uk') or not u.path.startswith('/for/'): continue
+                          d = u.path if u.path.endswith('/') else u.path.rsplit('/', 1)[0] + '/'
+                          c = row.setdefault(d, [0, 0]); c[0] += 1; c[1] += vis
+                      out['%d %s' % (w, p)] = row
+                  pg.close()
+              b.close()
+          print('=== RENDERED DOOR LINKS [in DOM, visible] ===')
+          print(json.dumps(out, indent=1, sort_keys=True))
+          PY
+          cd .sources/Site
+          MBM_BASE_URL=http://127.0.0.1:4173/ python3 tools/verify_audience_discovery_browser.py --artifacts "$RUNNER_TEMP/door-proof"
