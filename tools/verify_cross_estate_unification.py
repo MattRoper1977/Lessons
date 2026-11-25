@@ -3761,7 +3761,13 @@ CATALOGUE_PINS = {
         "Science/Grow/W8-W13_2026-27/START_HERE.html": "4cd49abf556ed9529948069dd2a6b2714c9e1438f19359c365bb7fe0594acffe",
         "Science/Launch/W8-W13_2026-27/START_HERE.html": "e27a8c68c89345bbbd9c47f581c37b3b6f1b449dd355e2950ec77ecb8694c2eb",
         "build_asdan.html": "b3f80b0ceb14759ac40b0580b876eebd4abac8a92366c0575ca8866c08de81da",
-        "build_dt_upcycling.html": "f051fa9845163b9bc321cc5b16402076d2e0ce93f5aa311c2e42c208156242cc"
+        "build_dt_upcycling.html": "f051fa9845163b9bc321cc5b16402076d2e0ce93f5aa311c2e42c208156242cc",
+        # FLIGHT 81 (25 Nov 2026, ruling thread 25 Nov): the two assembly decks rebuilt by #774 on 2 Nov were catalogued but
+        # never pinned, so that rebuild could drop their teacher-tools include unseen. Each is admitted by its own reviewed
+        # bytes (the include restored), the same two named in REVIEWED_PATHS of tools/catalogue/pin_catalogue_contract.py;
+        # digests taken from the files, never typed.
+        "Assembly/Behaviour Focus/resilience_assembly.html": "4d035e6b3bf70a379721439186a8815da1c1d61108514103468174fdac8bacb5",
+        "Assembly/KCSIE/emergency_kcsie_assembly (1).html": "10428b62e9e7d298a359cf746b93898e82cfc2e02509c2a0fd0d975eaba46dc9"
     }
 }
 # END REVIEWED CATALOGUE PINS
