@@ -6288,6 +6288,13 @@ REVIEWED_PATHS += (
     'kits/help/weigh.html',
 )
 
+# FLIGHT 81 (25 Nov 2026, ruling thread 25 Nov): the two assembly decks rebuilt by #774 on 2 Nov, catalogued
+# but never pinned; admitted by name so the boundary gate now watches them.
+REVIEWED_PATHS += (
+    'Assembly/Behaviour Focus/resilience_assembly.html',
+    'Assembly/KCSIE/emergency_kcsie_assembly (1).html',
+)
+
 def pin(lessons: Path, apps: Path, *, check: bool) -> dict:
     gates = [lessons / GATE, apps / GATE]
     originals = [p.read_text("utf-8") for p in gates]
