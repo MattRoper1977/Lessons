@@ -138,7 +138,7 @@ CATALOGUE_PINS = {
         "tools/sw2/check_tokens_inert.cjs": "4e52b917e475ff4de2bca91ace010e437f3d1738c86610367dfb4867bbfa90af",
         # RECONCILE 2026-11-24 (ruling thread 24 Nov): lesson-order.json rebuilt by tools/catalogue/build_lesson_order.py; five
         # stale sourceSha256 values left by b072c487 (#854) now equal their pages. Digest taken from the rebuilt file, never typed.
-        "assets/catalogue/lesson-order.json": "f33d1b46e2d1f54985e5d9521c604707c8942ff4b368678858a7ca30abefb151",
+        "assets/catalogue/lesson-order.json": "68714fb118ef858bd8ac1cd3f32520dc313fb7c94b4229bd2d5900afee7e760b",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "37c58d618211658a21c76b5955815422287c27a25cc1dc8bdf98e193c48a25e0",
@@ -256,7 +256,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "9ebb30e0f8fb6423f433d79e0510d997447c7b44bcc968758545d0ad7cf5c9ee",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "45bc79d4589033bb7d129f6f81bacb0449c36c3700a50548ab0bd834496ed918",
         "tools/catalogue/TERM_REVIEW.json": "202e6fb09a1b163114d806f085e4712f9bfde4d1a55a89fcef4392d24a366847",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -3112,7 +3112,7 @@ CATALOGUE_PINS = {
         "Community_Projects/Launch/Autumn_1_2026-27/COMM_LAUNCH_A1_W05_P1/COMM_LAUNCH_A1_W05_P1.html": "81b1252e74a115010788ef5302edb22f2b33577e8501980d9103418c27ac93d8",
         "Community_Projects/Launch/Autumn_1_2026-27/COMM_LAUNCH_A1_W06_P1/COMM_LAUNCH_A1_W06_P1.html": "86737d594596f8f53df31aec531f2167392a8a2c143633f06dce390ceb3b40a1",
         "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W01/COMMUNITY_A2_W01.html": "f65c61d2511dad4d38bde320d52f79efb4cea341560b08aa313b95e5636e9683",
-        "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W03/COMMUNITY_A2_W03.html": "a1adac820c4c12583bc98f238065667e90beef7f7ccc78c28b011ce382f60ae9",
+        "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W03/COMMUNITY_A2_W03.html": "f9264b8831e8c1816f969e414ad9ea1a1cc92a39a87b06cbc8464b62deeeaaee",
         "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W04/COMMUNITY_A2_W04.html": "12c7de5077f621bbc6a48c3e306d5bbfa8cd3335de143a5567635bc8d291dfae",
         "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W05/COMMUNITY_A2_W05.html": "9b3054dd0a41ea180ed5a6d2d9a56c05ebd36f4a60fd49b89ef67fead507ed83",
         "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W06/COMMUNITY_A2_W06.html": "572441a238370731f43698eb36e217df27e4b6b797dbf939a5d67a6d82a4876c",
