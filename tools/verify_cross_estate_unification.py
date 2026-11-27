@@ -138,7 +138,7 @@ CATALOGUE_PINS = {
         "tools/sw2/check_tokens_inert.cjs": "4e52b917e475ff4de2bca91ace010e437f3d1738c86610367dfb4867bbfa90af",
         # RECONCILE 2026-11-24 (ruling thread 24 Nov): lesson-order.json rebuilt by tools/catalogue/build_lesson_order.py; five
         # stale sourceSha256 values left by b072c487 (#854) now equal their pages. Digest taken from the rebuilt file, never typed.
-        "assets/catalogue/lesson-order.json": "f33d1b46e2d1f54985e5d9521c604707c8942ff4b368678858a7ca30abefb151",
+        "assets/catalogue/lesson-order.json": "29f8dbb17edd44e5f1ef8cde8aef34ea7ad55179f6a867830c123d1626e28dde",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "37c58d618211658a21c76b5955815422287c27a25cc1dc8bdf98e193c48a25e0",
@@ -244,7 +244,7 @@ CATALOGUE_PINS = {
         "Science/Grow/W8-W13_2026-27/SCI_G_W9_Turn_Earth_explain_the_sky_Classic.html": "178c695fe2dc166a80abfd26e41174e28ecfa39d4700db0870d7ee27bbffd6e8",
         "Science/Build/W8-W13_2026-27/SCI_B_W12_Give_a_rock_a_job_Classic.html": "509f38056bd09e903c70b0426ac55ab7ff73f7da10261a97eec11d49d7b27d1c",
         ".github/workflows/glv3-verify.yml": "4bf27ca7471a21359e35d1bc7277c5fa0adeb5f31a47c769f192165796037088",
-        "_glv3/tools/verify_change_boundary.py": "17ce18be4dad9da8def984d5c656611741224b5209132453a4e1664ac3b08589",
+        "_glv3/tools/verify_change_boundary.py": "323be2d86981ff3f3761438fabf04e138fccf04814e848a21f3891474d42a51b",
         "_glv3/tools/browser_verify.mjs": "737ad30f297e061407161743f017614179cc6c56f1c9a3904bbe7c98df38c888",
         "_glv3/tools/chip_gate.mjs": "6e5d07c0c4a4855442c09c4c6ae259acfbbe123c8bbb9e643eb21c980c562a67",
         "_glv3/tools/catalogue_membership.mjs": "4d7ab03e23ee0d3c3fc934f4f0a901afc61169754db099f4f5c24dd9cce058ec",
@@ -256,7 +256,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "9ebb30e0f8fb6423f433d79e0510d997447c7b44bcc968758545d0ad7cf5c9ee",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "1122f01a668f863af5a185a65f1486b0a31f5c59a5de19da3d6b2c603346085e",
         "tools/catalogue/TERM_REVIEW.json": "202e6fb09a1b163114d806f085e4712f9bfde4d1a55a89fcef4392d24a366847",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -603,7 +603,7 @@ CATALOGUE_PINS = {
         "Science/Launch/Autumn2_W7_2026-27/SHA256SUMS.txt": "c03b36ddb50b9d4e626a13c67c33f7d399f6f8d9e94a94133b1efcb42af9bdd2",
         "Science/Launch/W14-W15_2026-27/SHA256SUMS.txt": "0bb93ca935491473b9df0d0f5605f3ea67057c6a00eb78c4925e154b71c8d5eb",
         "Science/Launch/W8-W13_2026-27/SHA256SUMS.txt": "e8c3db8150760d44c9dbac0472200ac8b4043771db89c92dd5665a0232a5c1e1",
-        "tools/catalogue/SCIENCE_CHASSIS_CENSUS.json": "648dce78ff697d2387ebe84c95aa0a80288c5c29ee0d1db72a3d744961bef5a9",
+        "tools/catalogue/SCIENCE_CHASSIS_CENSUS.json": "5d6294454c3e9c9790a5b81341886577b7a723a4cfbd5ded0c8b0a11bdb41c1f",
         "tools/rx3_recommended.py": "5f3d591ecc376f43ed82b4f759155df5fdc85ba315bd9e60c11439cf92c564d7",
         "tools/catalogue/check_title_slide.py": "49815bce6b54d97aed864e403d10bd49d19d886bf5a39cbe7583375ee47ab77e",
         "tools/catalogue/title_slide.py": "3e4e7e8dfa590f3e0a8e24f49939edd9be2d59e4f955aea0935caa003f104788",
@@ -1657,7 +1657,7 @@ CATALOGUE_PINS = {
         "Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W07/GROW_SCI_A2_W07_P2.html": "de061d787f9f43ee87e68412e7a58f9b26f5a6bfa71a43840edc848462726ff6",
         "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W02/SCI_LAUNCH_A2_W02_L1.html": "ded1674cf38c653d0bcba85472679f867cec8b1d785103a227ac23c04c5b656a",
         "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W03/SCI_LAUNCH_A2_W03_L1.html": "468c73102a7c7572dd38d3a543d96142881a0aaa384f5b66768ddb6685b16490",
-        "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L1.html": "d7c761fd6ea01539f5e4f53eef3dc45a971ca333bb2074bec3e5a573ebed940d",
+        "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L1.html": "8b9e5e004ceda03ebc6f63ee79f4dc18831ac5e67e7a2d3abad7d43ab2f9f2d5",
         "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L3.html": "c00452c1f11094cdabb4f2adbc672493c7fe1c696a5965ea1642c682d64142b1",
         "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_L1.html": "8c6c9de7c03ae5f49c24dbfbadc09e8c6dcb34536fad97ea480d8e9b0e80582f",
         "Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W05/SCI_LAUNCH_A2_W05_L2.html": "8c0e4e35b408af5935c17a691a7c8a5145f12c211a6c4eabb3ea961b103575b2",
@@ -1763,7 +1763,7 @@ CATALOGUE_PINS = {
         "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W02/HUM_GROW_A2_W02_Tier_Pack_Standard.pdf": "0854a64b2a71d9053b1d1276d0fdbb2d135f3502326731a3c1ffe5ca0dc5e53a",
         "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W02/HUM_GROW_A2_W02_Tier_Pack_Stretch.pdf": "8f971905d3fe51819b18001107b5768f5a31d459986c7484a8a80de9fa60e2d8",
         "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W02/HUM_GROW_A2_W02_Tier_Pack_Supported.pdf": "1a25730fce8c40d4644d600b2fc1f6b644ba86d04b60905649fc66b2266c9f0e",
-        "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W03/HUM_GROW_A2_W03.html": "8d57b5b3e3926515d584cb76a5d36315fe494d353beffb9d1d38c8ead20d9b80",
+        "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W03/HUM_GROW_A2_W03.html": "4b26b045e9f5fbab26e2e1447790a7b1194910c0ad6cdca210b32e6d519dfabf",
         "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W03/HUM_GROW_A2_W03_Editable_Pack.docx": "a38abc17f142199a06150600624acc47c692d12be5a53399bcb82e23037f7cd3",
         "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W03/HUM_GROW_A2_W03_Knowledge_Organiser.pdf": "4290aedee7861c580abd7cd7c8341360b4eda4cf721356f29f911d88735f4fb2",
         "Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W03/HUM_GROW_A2_W03_Pupil_Resources.pdf": "de040b572b0312015ff4e958eb55ee9b895c922536450cc749e7fe7c18e324dd",
@@ -2025,7 +2025,7 @@ CATALOGUE_PINS = {
         "Careers/Build/Autumn_2_2026-27/CAREERS_BUILD_A2_W06/CAREERS_BUILD_A2_W06.html": "49e862c7bcb0c1a69bfb2e7dc7fe185835357b182cf4e3aeaa84c8ff78ce6b54",
         "Careers/Build/Autumn_2_2026-27/CAREERS_BUILD_A2_W07/CAREERS_BUILD_A2_W07.html": "142fce3d218bb25406f28be5f6d368db844b148f97749516c814f5e4b83bc001",
         "Careers/Launch/Autumn_2_2026-27/CAREERS_LAUNCH_A2_W01/CAREERS_LAUNCH_A2_W01.html": "e3463c17670c59cd38ded8168cb8e4bb95c81669f5178b81d2d2b7712dd43db7",
-        "Careers/Launch/Autumn_2_2026-27/CAREERS_LAUNCH_A2_W03/CAREERS_LAUNCH_A2_W03.html": "cd889d3ac718cef65098c793b0e7cad91ed051a9cadc620f3386a05761d404bc",
+        "Careers/Launch/Autumn_2_2026-27/CAREERS_LAUNCH_A2_W03/CAREERS_LAUNCH_A2_W03.html": "7fd040fb52e833c650368ff47a0998d500f84e3558c166592c39b57af7f61855",
         "Careers/Launch/Autumn_2_2026-27/CAREERS_LAUNCH_A2_W04/CAREERS_LAUNCH_A2_W04.html": "2e7f9ee18033f990d9cd865520eecc8ce6e77982ad70155c6cf1e1d594094bc7",
         "Careers/Launch/Autumn_2_2026-27/CAREERS_LAUNCH_A2_W05/CAREERS_LAUNCH_A2_W05.html": "c2d44174e561532c8e93f67cd5a559f49d151805170599dccee49235736a6d4d",
         "Careers/Launch/Autumn_2_2026-27/CAREERS_LAUNCH_A2_W06/CAREERS_LAUNCH_A2_W06.html": "3568e6db8201420e9f54e19dc7e926ac3a76f764fb1bddbf0041e27227ecf524",
@@ -2110,7 +2110,7 @@ CATALOGUE_PINS = {
         "PSHE/Grow/Autumn_2_2026-27/PSHE_GROW_A2_W02/PSHE_GROW_A2_W02.html": "58a99239992628e00901fbc43fbeb296f47c670ecce1f32a66be6886b81466f1",
         "RSE/Launch/Autumn_2_2026-27/RSE_LAUNCH_A2_W02/RSE_LAUNCH_A2_W02.html": "57f59c1d5d88807df0e5705eca1bb4b0501ba3e40b490320fd069036ef2c1ab7",
         "RSHE/Build/Autumn_2_2026-27/RSHE_BUILD_A2_W02/RSHE_BUILD_A2_W02.html": "5e80884d7882b3c1e7920d15f9cfd81c7772040cbb4e5422772f94753469cd02",
-        "Vocational/Build/Autumn_2_2026-27/VOC_BUILD_A2_W02/VOC_BUILD_A2_W02.html": "be71844e9822ed92d3f53d782409e9e4f17b7ac93d4e4b6655ffed64182581dd",
+        "Vocational/Build/Autumn_2_2026-27/VOC_BUILD_A2_W02/VOC_BUILD_A2_W02.html": "8d61cc33745b61f8f32ccaa44ed072957ad0840c0c531b480e077c7b23979226",
         "Vocational/Launch/Autumn_2_2026-27/VOC_LAUNCH_A2_W02/VOC_LAUNCH_A2_W02.html": "9b7280c53c9802f6b036abf8b80b5e9801bcc7d26eccd291797e0e64389425fa",
         "Art/Build/ART_BUILD_A2_W05_P1/Public/ART_BUILD_A2_W05_P1.html": "11ae497c15f3e45b48adb06e1c74f6490aa58a68baa37fdf285fbb694c06c4e8",
         "Art/Build/ART_BUILD_A2_W05_P2/Public/ART_BUILD_A2_W05_P2.html": "56936fee2a617d7b7c195b25bd39489a46a38a8b89e91699c61f8c5b7db57c68",
@@ -4115,7 +4115,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "91cae4246c96ac7f8991a6d6ee1e1195ba6608038593c09abfbdc8e4834a1182",
+    "lessons": "641e2189f96c0eeed7fb7d034cd65890e7c83d6544df054873c65c2d4aeca2e9",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
