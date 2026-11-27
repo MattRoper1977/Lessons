@@ -138,7 +138,7 @@ CATALOGUE_PINS = {
         "tools/sw2/check_tokens_inert.cjs": "4e52b917e475ff4de2bca91ace010e437f3d1738c86610367dfb4867bbfa90af",
         # RECONCILE 2026-11-24 (ruling thread 24 Nov): lesson-order.json rebuilt by tools/catalogue/build_lesson_order.py; five
         # stale sourceSha256 values left by b072c487 (#854) now equal their pages. Digest taken from the rebuilt file, never typed.
-        "assets/catalogue/lesson-order.json": "29f8dbb17edd44e5f1ef8cde8aef34ea7ad55179f6a867830c123d1626e28dde",
+        "assets/catalogue/lesson-order.json": "1261f2f183311959c3ff700c143a37cb5438af81163920ea38c94781abb82530",
         "tools/catalogue/build_lesson_order.py": "67358d5f5852f2085e3fda5baaa53328ddb176fe0bc7545b161172b79049ed14",
         "tools/ux2/hub_gates.mjs": "3d3120df94b1789041370c4045fbcc983635af0b30a0705447f18371bed98944",
         "index.html": "37c58d618211658a21c76b5955815422287c27a25cc1dc8bdf98e193c48a25e0",
@@ -256,7 +256,7 @@ CATALOGUE_PINS = {
         "tools/humanities_resources/check_resources.py": "ec5383e3a34cbff999f190b0014a4a73e00a3a29e2714498f7620fd638dc2aa5",
         "tools/humanities_resources/resource.css": "1aed9aaca0d73a4b200c4e5d0977e73f4e906c747d7340c7a62f4197a8344bae",
         "tools/humanities_resources/resource.js": "ad40afed95490bfcce92dc062da46e1b27bcb96bdc80e37eabdfe02bf6ffc446",
-        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "1122f01a668f863af5a185a65f1486b0a31f5c59a5de19da3d6b2c603346085e",
+        "tools/catalogue/TERM_AND_STYLE_EVIDENCE.json": "4be67b5f19947dd656c410c154929eb379bea3a0ad65248cda7e2c6ad60a7cae",
         "tools/catalogue/TERM_REVIEW.json": "202e6fb09a1b163114d806f085e4712f9bfde4d1a55a89fcef4392d24a366847",
         "tools/catalogue/SCIENCE_WEEK_BINDINGS.json": "9fa98ad78b0bd3c3f3ee15f88a7b2fd40eea810e6c9fb65ee93b3c5192888071",
         "primary/year5/science/autumn/forces/Lesson8_ExploreGravity.html": "20047720bf1d309055abdf232d341b6fd99b833631efa0bcbfb3dabed9671196",
@@ -3112,7 +3112,7 @@ CATALOGUE_PINS = {
         "Community_Projects/Launch/Autumn_1_2026-27/COMM_LAUNCH_A1_W05_P1/COMM_LAUNCH_A1_W05_P1.html": "81b1252e74a115010788ef5302edb22f2b33577e8501980d9103418c27ac93d8",
         "Community_Projects/Launch/Autumn_1_2026-27/COMM_LAUNCH_A1_W06_P1/COMM_LAUNCH_A1_W06_P1.html": "86737d594596f8f53df31aec531f2167392a8a2c143633f06dce390ceb3b40a1",
         "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W01/COMMUNITY_A2_W01.html": "f65c61d2511dad4d38bde320d52f79efb4cea341560b08aa313b95e5636e9683",
-        "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W03/COMMUNITY_A2_W03.html": "a1adac820c4c12583bc98f238065667e90beef7f7ccc78c28b011ce382f60ae9",
+        "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W03/COMMUNITY_A2_W03.html": "f9264b8831e8c1816f969e414ad9ea1a1cc92a39a87b06cbc8464b62deeeaaee",
         "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W04/COMMUNITY_A2_W04.html": "12c7de5077f621bbc6a48c3e306d5bbfa8cd3335de143a5567635bc8d291dfae",
         "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W05/COMMUNITY_A2_W05.html": "9b3054dd0a41ea180ed5a6d2d9a56c05ebd36f4a60fd49b89ef67fead507ed83",
         "Community_Projects/Autumn_2_2026-27/COMMUNITY_A2_W06/COMMUNITY_A2_W06.html": "572441a238370731f43698eb36e217df27e4b6b797dbf939a5d67a6d82a4876c",
@@ -4115,7 +4115,7 @@ PUBLICATION_CALLER_SHA256_BY_KIND = {
 # Re-cut 2026-11-13 (pin edit on this branch, made by the ruling side at the owner's word): the carrier moves to Site main 80069b0f, the merge of Site #639 (admission of the class tools tabs and books update with a home-screen manifest and three icons); no other line of the caller file changes.
 # Re-cut 2026-11-13 (second pin edit of the day, made by the ruling side at the owner's word): the carrier moves to Site main db52baa4, the merge of Site #641 (admission of the class tools prompt studio on three unlisted staff pages), carrying Site #640; no other line of the caller file changes.
 # Re-cut 2026-11-14 (pin edit on this branch, made at the owner's word): the carrier moves to Site main 2f12d3cf, the merge of Site #642 (security hardening and transition admission pairs); no other line of the caller file changes.
-    "lessons": "641e2189f96c0eeed7fb7d034cd65890e7c83d6544df054873c65c2d4aeca2e9",
+    "lessons": "d682f33c4f6e0d80763a6714e69dadf9680b30adc239034d4bf40e9f693297f6",
 # Advanced 2026-09-16 (served-defect amendment D-2): the Apps repository moved its own
 # publisher pin to the Site carrier that carries EDU-D3, so its caller file changed. This is
 # that file's digest on Apps main, re-cut from its bytes.
