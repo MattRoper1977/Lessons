@@ -1,0 +1,7 @@
+Public edition · BUILD Humanities · Spring 1 Week 6 · Year A
+Thursday 11 February 2027, P3, forty minutes, three to four pupils.
+Outcome: Record 'then & now' with photos/captions.
+Theme: Resilience & Change. Assessing week.
+Use Shared_Resources and assets from this bundle. White/Pink sheets are equivalent. Keep word bank, sentence starters and visible model throughout assessment. Exact scribing and usual aids are available. No public questioning, cold calling or required reading aloud. The town scenes and changes are invented and reused from Week4. Choose one matched pair and make two book panels: Then left, Now right. Draw or use the supplied pictures in place of photos. Give each panel one caption that fits. Short selected phrases and confirmed exact scribing are valid. No real people, places or events as subjects, no personal photos or disclosure. Use the six-outcome teacher grid once per pupil, with dated evidence and actual support. Do not infer all six outcomes from one piece. Missing evidence is not failure; use U not seen. Actual responses and judgements remain blank until teaching. School files stay in store. No publication or external contact performed. This closes BUILD Humanities Spring1; pause for the next brief.
+
+Correction re-issue CORR1: this bundle supersedes the original HUM_BUILD_S1_W06_BUNDLE.zip. All existing filenames, lesson id, dates, period and curriculum outcomes are retained; award wording is standardised to the unit award.
