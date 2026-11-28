@@ -445,6 +445,11 @@ WEBSITE_EDITIONS_BATCH_83_REVIEW_BASE = 'df533f2dbb521da435486927ee1e770aaabaa5a
 # it replaces carried; no companion file moves. Base is the merge base with main; blobs read there,
 # written with admit_sx3_release.write(). Every member also carries a CATALOGUE_PINS admission.
 WEBSITE_EDITIONS_BATCH_87_REVIEW_BASE = '494c2dffbd2b3e51d6cbb8b0f68636536f3b8444'
+# Website editions batch 91 (owner-requested 15 Nov 2026: the redesigned lesson boards replace the earlier pages at their
+# landed paths). Each member keeps its way home, its term and week line and every local link the page
+# it replaces carried; no companion file moves. Base is the merge base with main; blobs read there,
+# written with admit_sx3_release.write(). Every member also carries a CATALOGUE_PINS admission.
+WEBSITE_EDITIONS_BATCH_91_REVIEW_BASE = 'b5e4e0176e155f0ac5fd118a442030000fc8806a'
 # BEGIN DECLARED TRANSACTIONS
 # BEGIN S3 OFFLINE EDITION REPLACEMENTS
 CX2_S3_REPLACEMENTS = {'Science/Teaching_Packs/web-slides.html': {'beforeGitBlob': '6596d65c7a9bd5bb1875c5b46bbc331df8652144', 'afterSha256': 'f31f09d03f5d8c417af1745b38309fa537afb8bb4c6a08f387db3349d9e1cba2', 'bytes': 18607}}
@@ -714,6 +719,9 @@ WEBSITE_EDITIONS_BATCH_83_REPLACEMENTS = {'Humanities/Teaching_Packs/HUM_Autumn_
 # BEGIN WEBSITE_EDITIONS_BATCH_87 REPLACEMENTS
 WEBSITE_EDITIONS_BATCH_87_REPLACEMENTS = {'Humanities/Teaching_Packs/HUM_Autumn_2_GROW_Reviewed/GROW/Autumn_2/W03/HUM_GROW_A2_W03.html': {'beforeGitBlob': '23dd32dd371020ef9bdbd28c644dfe95f317e782', 'afterSha256': '4b26b045e9f5fbab26e2e1447790a7b1194910c0ad6cdca210b32e6d519dfabf', 'bytes': 910851}, 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L1.html': {'beforeGitBlob': '7b95eb0ff1123f2cdc3be131dcbc36373a5a4bc1', 'afterSha256': '8b9e5e004ceda03ebc6f63ee79f4dc18831ac5e67e7a2d3abad7d43ab2f9f2d5', 'bytes': 916158}}
 # END WEBSITE_EDITIONS_BATCH_87 REPLACEMENTS
+# BEGIN WEBSITE_EDITIONS_BATCH_91 REPLACEMENTS
+WEBSITE_EDITIONS_BATCH_91_REPLACEMENTS = {'Science/Build/Autumn_2_2026-27/SCI_BUILD_A2_W04/SCI_BUILD_A2_W04_L2.html': {'beforeGitBlob': 'dd6207c0ac808630ce7d1d1357b19b85663a021e', 'afterSha256': 'c37cbc5c63bf813c3ba98a7839ea85a52aaa7a9b111a3a97494d1a8d707e246d', 'bytes': 757892}, 'Science/Grow/Autumn_2_2026-27/GROW_SCI_A2_W04/GROW_SCI_A2_W04_P2.html': {'beforeGitBlob': 'c2cb06db0e848b2bab51ce3b16d7c4261ebc9cad', 'afterSha256': 'b671453672afda66f2206e19acb33ac2fd55a0a5eb2511dcc29df66a74deafb2', 'bytes': 776882}, 'Science/Launch/Autumn_2_2026-27/SCI_LAUNCH_A2_W04/SCI_LAUNCH_A2_W04_L1.html': {'beforeGitBlob': 'b2e1688cdd267386b05111d2d202881b4e24653e', 'afterSha256': 'b645b08090b7ae6a1259b896ee9b7c201cbeac46e6253d4aace3a47b20fb810b', 'bytes': 904354}}
+# END WEBSITE_EDITIONS_BATCH_91 REPLACEMENTS
 # END DECLARED TRANSACTIONS
 
 # Each transaction is judged on its own: every member present as exactly one
@@ -905,6 +913,7 @@ REPLACEMENT_TRANSACTIONS = {
     'Website editions batch 80': (WEBSITE_EDITIONS_BATCH_80_REVIEW_BASE, WEBSITE_EDITIONS_BATCH_80_REPLACEMENTS),
     'Website editions batch 83': (WEBSITE_EDITIONS_BATCH_83_REVIEW_BASE, WEBSITE_EDITIONS_BATCH_83_REPLACEMENTS),
     'Website editions batch 87': (WEBSITE_EDITIONS_BATCH_87_REVIEW_BASE, WEBSITE_EDITIONS_BATCH_87_REPLACEMENTS),
+    'Website editions batch 91': (WEBSITE_EDITIONS_BATCH_91_REVIEW_BASE, WEBSITE_EDITIONS_BATCH_91_REPLACEMENTS),
 }
 # RULING um add.5 (24 Oct 2026): the retired member type is admitted only inside a transaction listed here against the
 # lettered ruling that retired it. Today that is um only. Any other transaction that carries a retired member fails
